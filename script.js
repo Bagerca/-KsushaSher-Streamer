@@ -59,7 +59,7 @@ const gamesData = [
         rating: 4,
         description: 'Легендарный тактический шутер с безупречным геймплеем. Competitive игра, в которой каждый матч уникален и непредсказуем.',
         videoId: 'dQw4w9WgXcQ',
-        image: 'https://steamcdn-a.akamaihd.net/steam/apps/622650/library_600x900.jpg',
+        image: 'https://cdn2.steamgriddb.com/grid/0662aa1719017e0efa5fa8daf0880c6e.png',
         genres: ['shooter', 'fps']
     },
     {
@@ -84,7 +84,7 @@ const gamesData = [
         id: 'bendy-franchise',
         title: 'Bendy Franchise',
         rating: 4,
-        description: 'Трилогия хоррор-игр в стиле старых мультфильмов с уникальной атмосферой. Захватывающая история о тайнах анимационной студии.',
+        description: 'Трилогия хоррор-игр в стиле старых мультфильмов с уникальной атмосферой. Загхватывающая история о тайнах анимационной студии.',
         videoId: 'dQw4w9WgXcQ',
         image: '',
         franchise: true,
@@ -494,22 +494,9 @@ let isExpanded = false;
 
 toggleGamesBtn.addEventListener('click', () => {
     isExpanded = !isExpanded;
-    const activeGrid = document.querySelector(`#${currentTab}-content .games-grid`);
-    activeGrid.classList.toggle('expanded', isExpanded);
+    const activeContainer = document.querySelector('.games-content-container');
+    activeContainer.classList.toggle('expanded', isExpanded);
     toggleGamesBtn.textContent = isExpanded ? 'Свернуть' : 'Развернуть';
-    
-    // Update container height to accommodate expanded content
-    const gamesContainer = document.querySelector('.games-content-container');
-    if (isExpanded) {
-        gamesContainer.style.minHeight = 'auto';
-    } else {
-        gamesContainer.style.minHeight = '500px';
-    }
-});
-
-window.addEventListener('resize', () => {
-    setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
-    setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
 });
 
 // Easter egg - history section on image click
@@ -568,5 +555,10 @@ function updateToggleButtonPosition() {
 }
 
 // Initial update
-
 updateToggleButtonPosition();
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
+    setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
+});
