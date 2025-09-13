@@ -84,7 +84,7 @@ const gamesData = [
         id: 'bendy-franchise',
         title: 'Bendy Franchise',
         rating: 4,
-        description: 'Трилогия хоррор-игр в стиле старых мультфильмов с уникальной атмосферой. Захватывающая история о тайнах анимационной студии.',
+        description: 'Трилогия хоррор-игр в стиле старых мультфильмов с уникальной атмосферой. Захватывающая история о тайны анимационной студии.',
         videoId: 'dQw4w9WgXcQ',
         image: '',
         franchise: true,
@@ -592,3 +592,31 @@ document.addEventListener('DOMContentLoaded', function() {
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
 });
+
+// Дополнительное исправление для проблемы с верхом первого ряда
+// Добавляем отступ сверху для первой строки карточек
+function fixFirstRowOverlap() {
+    const gamesGrid = document.querySelector('.games-grid');
+    if (gamesGrid) {
+        const firstRowCards = gamesGrid.querySelectorAll('.game-card');
+        if (firstRowCards.length > 0) {
+            // Добавляем дополнительный отступ для первых карточек
+            firstRowCards.forEach((card, index) => {
+                if (index < 4) { // Предполагаем 4 карточки в строке
+                    card.style.marginTop = '20px';
+                }
+            });
+        }
+    }
+}
+
+// Вызываем функцию после загрузки и после фильтрации/сортировки
+setTimeout(fixFirstRowOverlap, 500);
+window.addEventListener('resize', fixFirstRowOverlap);
+
+// Модифицируем функцию сортировки и фильтрации для вызова fixFirstRowOverlap
+const originalSortAndFilterData = sortAndFilterData;
+sortAndFilterData = function() {
+    originalSortAndFilterData();
+    setTimeout(fixFirstRowOverlap, 100);
+};
