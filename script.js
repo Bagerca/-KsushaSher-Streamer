@@ -84,7 +84,7 @@ const gamesData = [
         id: 'bendy-franchise',
         title: 'Bendy Franchise',
         rating: 4,
-        description: 'Трилогия хоррор-игр в стиле старых мультфильмов с уникальной атмосферой. Загхватывающая история о тайнах анимационной студии.',
+        description: 'Трилогия хоррор-игр в стиле старых мультфильмов с уникальной атмосферой. Захватывающая история о тайнах анимационной студии.',
         videoId: 'dQw4w9WgXcQ',
         image: '',
         franchise: true,
@@ -488,15 +488,39 @@ gamesTabs.forEach(tab => {
     });
 });
 
-// Toggle games grid
+// Toggle games grid - ИСПРАВЛЕННАЯ ВЕРСИЯ
 const toggleGamesBtn = document.getElementById('toggle-games');
 let isExpanded = false;
 
 toggleGamesBtn.addEventListener('click', () => {
     isExpanded = !isExpanded;
-    const activeContainer = document.querySelector('.games-content-container');
-    activeContainer.classList.toggle('expanded', isExpanded);
+    const activeContent = document.querySelector('.games-content.active');
+    const activeGrid = activeContent.querySelector('.games-grid');
+    
+    activeGrid.classList.toggle('expanded', isExpanded);
     toggleGamesBtn.textContent = isExpanded ? 'Свернуть' : 'Развернуть';
+    
+    // Плавная прокрутка к кнопке после раскрытия
+    if (isExpanded) {
+        setTimeout(() => {
+            toggleGamesBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 300);
+    }
+});
+
+// Сброс состояния кнопки при переключении вкладок
+gamesTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        isExpanded = false;
+        const allGrids = document.querySelectorAll('.games-grid');
+        allGrids.forEach(grid => grid.classList.remove('expanded'));
+        toggleGamesBtn.textContent = 'Развернуть';
+    });
+});
+
+window.addEventListener('resize', () => {
+    setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
+    setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
 });
 
 // Easter egg - history section on image click
@@ -557,8 +581,14 @@ function updateToggleButtonPosition() {
 // Initial update
 updateToggleButtonPosition();
 
-// Handle window resize
-window.addEventListener('resize', () => {
-    setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
-    setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
+// Исправление для корректной работы кнопки "Развернуть/Свернуть"
+document.addEventListener('DOMContentLoaded', function() {
+    // Перерисовка карточек при загрузке страницы
+    sortAndFilterData();
+    
+    // Обновление позиции слайдеров
+    setTimeout(() => {
+        setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
+        setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
+    }, 100);
 });
