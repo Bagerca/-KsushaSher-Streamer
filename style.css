@@ -274,12 +274,12 @@ nav ul li a:hover::after { width: 100%; }
 
 @keyframes rotate-ring {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @keyframes orbit {
     0% { transform: translateX(-50%) rotate(0deg) translateY(-190px) rotate(0deg); }
-    100% { transform: translateX(-50%) rotate(360deg) translateY(-190px) rotate(-360deg); }
+   100% { transform: translateX(-50%) rotate(360deg) translateY(-190px) rotate(-360deg); }
 }
 
 .hero-buttons {
@@ -517,56 +517,19 @@ section { padding: 100px 0; }
     padding: 80px 0;
 }
 
-/* Исправляем проблему с обрезанием карточек при наведении */
-.games-content-container {
-    position: relative;
-    z-index: 1;
-    padding-top: 30px; /* Увеличиваем отступ сверху */
-}
-
-.games-grid {
-    position: relative;
-    z-index: 2;
-}
-
-/* Увеличиваем пространство для поднятия карточек */
-.game-card {
-    margin-bottom: 30px; /* Увеличиваем отступ снизу */
-}
-
-/* Уменьшаем высоту поднятия при наведении */
-.game-card:hover {
-    transform: translateY(-8px); /* Было -10px */
-}
-
-/* Добавляем плавный переход */
-.game-card {
-    transition: all 0.3s ease;
-}
-
-/* Увеличиваем z-index при наведении, чтобы карточки были поверх других элементов */
-.game-card:hover {
-    z-index: 50;
-}
-
-/* Убедимся, что элементы управления остаются поверх карточек */
-.games-controls {
-    position: relative;
-    z-index: 100;
-    background: rgba(15, 15, 25, 0.95); /* Добавляем фон для перекрытия */
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 45, 149, 0.3);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
 .games-controls {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 100;
+    background: rgba(15, 15, 25, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 45, 149, 0.3);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
 }
 
 .games-tabs, .sort-tabs {
@@ -674,8 +637,10 @@ section { padding: 100px 0; }
 
 .sort-tab { padding: 12px 20px; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
 
-.games-content { 
-    position: relative; 
+.games-content-container {
+    position: relative;
+    z-index: 1;
+    padding-top: 30px;
 }
 
 .games-content {
@@ -697,22 +662,21 @@ section { padding: 100px 0; }
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
+    gap: 30px;
     position: relative;
-    max-height: 650px;
+    max-height: 800px;
     overflow: hidden;
     transition: all 0.5s ease;
-    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 98%);
-    mask-image: linear-gradient(to bottom, black 80%, transparent 98%);
+    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
+    mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
 }
 
 .games-grid.expanded { 
-    max-height: 2000px;
+    max-height: 5000px;
     -webkit-mask-image: none;
     mask-image: none;
 }
 
-/* Исправляем обрезание верхней части карточек */
 .game-card {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
@@ -721,20 +685,18 @@ section { padding: 100px 0; }
     border: 1px solid rgba(255, 45, 149, 0.3);
     position: relative;
     cursor: pointer;
-    z-index: 1;
-    margin-top: 10px;
+    z-index: 5;
+    margin-bottom: 20px;
     transform: translateZ(0);
 }
 
 .game-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(57, 255, 20, 0.3);
     border-color: var(--neon-green);
     z-index: 50;
-    margin-top: 0;
 }
 
-/* Контейнер для изображения с исправлением обрезания */
 .game-image-container {
     width: 100%;
     height: 350px;
@@ -752,30 +714,10 @@ section { padding: 100px 0; }
     border-radius: 6px;
 }
 
-/* Псевдоэлемент для рамки, который не будет обрезан */
-.game-image-container::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    z-index: -1;
-}
-
-.game-card:hover .game-image-container::before {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
-}
-
 .game-card:hover .game-image {
     transform: scale(1.05);
 }
 
-/* Для франшиз с несколькими обложками */
 .franchise-covers {
     position: relative;
     height: 350px;
@@ -1064,7 +1006,7 @@ section { padding: 100px 0; }
 
 @keyframes shine-over {
     0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+   100% { transform: translateX(100%); }
 }
 
 .donation-option h3 { margin-bottom: 10px; }
