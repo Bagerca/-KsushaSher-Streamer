@@ -81,18 +81,21 @@ const gamesData = [
         genres: ['adventure', 'platformer']
     },
     {
-        id: 'bendy-franchise',
-        title: 'Bendy Franchise',
+        id: 'batim',
+        title: 'Bendy and the Ink Machine',
         rating: 4,
-        description: 'Трилогия хоррор-игр в стиле старых мультфильмов с уникальной атмосферой. Захватывающая история о тайны анимационной студии.',
+        description: 'Уникальный хоррор в стиле старых мультфильмов с атмосферной историей и запоминающимися персонажами.',
         videoId: 'dQw4w9WgXcQ',
-        image: '',
-        franchise: true,
-        franchiseImages: [
-            'https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png',
-            'https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png',
-            'https://cdn2.steamgriddb.com/grid/fc423c11f06856a5507d3b91e393ddb4.jpg'
-        ],
+        image: 'https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png',
+        genres: ['horror', 'adventure']
+    },
+    {
+        id: 'batdr',
+        title: 'Bendy and the Dark Revival',
+        rating: 4.5,
+        description: 'Продолжение культового хоррора с улучшенной графикой, новыми механиками и захватывающим сюжетом.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png',
         genres: ['horror', 'adventure']
     }
 ];
@@ -218,6 +221,23 @@ function generateStars(rating) {
     return starsHtml;
 }
 
+// Словарь для перевода жанров
+const genreTranslations = {
+    'puzzle': 'Головоломка',
+    'adventure': 'Приключения',
+    'simulator': 'Симулятор',
+    'horror': 'Хоррор',
+    'coop': 'Кооператив',
+    'sandbox': 'Песочница',
+    'metroidvania': 'Метроидвания',
+    'fps': 'Шутер',
+    'shooter': 'Шутер',
+    'platformer': 'Платформер',
+    'animation': 'Анимация',
+    'fantasy': 'Фэнтези',
+    'crossover': 'Кроссовер'
+};
+
 // Render game/movie cards
 function renderCards(container, data, type) {
     container.innerHTML = '';
@@ -227,15 +247,10 @@ function renderCards(container, data, type) {
         card.className = 'game-card';
         card.setAttribute(`data-${type}`, item.id);
         
-        let imageHtml = '';
-        if (item.franchise) {
-            imageHtml = `<div class="franchise-covers">${item.franchiseImages.map((img, index) => `<img src="${img}" alt="${item.title} ${index+1}" class="franchise-cover">`).join('')}</div>`;
-        } else {
-            imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image"></div>`;
-        }
+        const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image"></div>`;
         
         const starsHtml = generateStars(item.rating);
-        const genresHtml = item.genres.map(genre => `<span class="game-genre">${genre}</span>`).join('');
+        const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
         card.innerHTML = `${imageHtml}<div class="game-info"><h3 class="game-title">${item.title}</h3><div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div><div class="game-genres">${genresHtml}</div><p class="game-description">${item.description}</p></div>`;
         container.appendChild(card);
@@ -440,7 +455,7 @@ filterOptions.forEach(option => {
     });
 });
 
-// Sort tab click handler
+// Sort tab click handler with animation
 sortTabs.forEach(tab => {
     tab.addEventListener('click', function() {
         const sort = this.getAttribute('data-sort');
@@ -452,11 +467,23 @@ sortTabs.forEach(tab => {
         // Update sort slider position
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
         
+        // Add animation class
+        const activeContent = document.querySelector('.games-content.active');
+        const activeGrid = activeContent.querySelector('.games-grid');
+        activeGrid.classList.add('sorting');
+        
         currentSort = sort;
-        sortAndFilterData();
+        
+        setTimeout(() => {
+            sortAndFilterData();
+            setTimeout(() => {
+                activeGrid.classList.remove('sorting');
+            }, 300);
+        }, 300);
     });
 });
 
+// Games tabs with animation
 gamesTabs.forEach(tab => {
     tab.addEventListener('click', () => {
         gamesTabs.forEach(t => t.classList.remove('active'));
@@ -465,30 +492,47 @@ gamesTabs.forEach(tab => {
         // Animate tab slider
         setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
         
+        // Add animation class
+        const previousContent = document.querySelector('.games-content.active');
+        if (previousContent) {
+            previousContent.classList.add('fade-out');
+        }
+        
         currentTab = tab.dataset.tab;
         
-        // Show/hide appropriate filter groups
-        if (currentTab === 'movies') {
-            document.querySelector('.games-filters').style.display = 'none';
-            document.querySelector('.movies-filters').style.display = 'block';
-            gamesContent.classList.remove('active');
-            setTimeout(() => {
-                moviesContent.classList.add('active');
-                sortAndFilterData();
-            }, 300);
-        } else {
-            document.querySelector('.movies-filters').style.display = 'none';
-            document.querySelector('.games-filters').style.display = 'block';
-            moviesContent.classList.remove('active');
-            setTimeout(() => {
-                gamesContent.classList.add('active');
-                sortAndFilterData();
-            }, 300);
-        }
+        setTimeout(() => {
+            // Show/hide appropriate filter groups
+            if (currentTab === 'movies') {
+                document.querySelector('.games-filters').style.display = 'none';
+                document.querySelector('.movies-filters').style.display = 'block';
+                gamesContent.classList.remove('active');
+                moviesContent.classList.add('fade-in');
+                setTimeout(() => {
+                    moviesContent.classList.remove('fade-in');
+                    moviesContent.classList.add('active');
+                    sortAndFilterData();
+                }, 300);
+            } else {
+                document.querySelector('.movies-filters').style.display = 'none';
+                document.querySelector('.games-filters').style.display = 'block';
+                moviesContent.classList.remove('active');
+                gamesContent.classList.add('fade-in');
+                setTimeout(() => {
+                    gamesContent.classList.remove('fade-in');
+                    gamesContent.classList.add('active');
+                    sortAndFilterData();
+                }, 300);
+            }
+            
+            if (previousContent) {
+                previousContent.classList.remove('fade-out');
+                previousContent.classList.remove('active');
+            }
+        }, 300);
     });
 });
 
-// Toggle games grid - ИСПРАВЛЕННАЯ ВЕРСИЯ
+// Toggle games grid
 const toggleGamesBtn = document.getElementById('toggle-games');
 let isExpanded = false;
 
@@ -591,10 +635,14 @@ document.addEventListener('DOMContentLoaded', function() {
         setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
+    
+    // Установка галочки "Все" по умолчанию
+    document.querySelectorAll('.filter-option input[data-filter="all"]').forEach(input => {
+        input.checked = true;
+    });
 });
 
 // Дополнительное исправление для проблемы с верхом первого ряда
-// Добавляем отступ сверху для первой строки карточек
 function fixFirstRowOverlap() {
     const gamesGrid = document.querySelector('.games-grid');
     if (gamesGrid) {
