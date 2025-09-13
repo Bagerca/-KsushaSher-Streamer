@@ -659,6 +659,22 @@ section { padding: 100px 0; }
     position: relative;
 }
 
+/* Анимации для переключения контента */
+.games-content.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.games-content.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.games-content.fade-in.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -669,6 +685,13 @@ section { padding: 100px 0; }
     transition: all 0.5s ease;
     -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
     mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
+}
+
+/* Анимация для сортировки */
+.games-grid.sorting {
+    opacity: 0.5;
+    transform: scale(0.98);
+    transition: all 0.3s ease;
 }
 
 .games-grid.expanded { 
@@ -718,55 +741,6 @@ section { padding: 100px 0; }
     transform: scale(1.05);
 }
 
-.franchise-covers {
-    position: relative;
-    height: 350px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    overflow: visible;
-}
-
-.franchise-cover {
-    position: absolute;
-    width: 70%;
-    height: 90%;
-    object-fit: cover;
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.franchise-cover:nth-child(1) { 
-    z-index: 3; 
-    transform: translateX(-35%) rotate(-5deg); 
-}
-.franchise-cover:nth-child(2) { 
-    z-index: 2; 
-    transform: translateX(0) rotate(0deg); 
-}
-.franchise-cover:nth-child(3) { 
-    z-index: 1; 
-    transform: translateX(35%) rotate(5deg); 
-}
-
-.game-card:hover .franchise-cover:nth-child(1) { 
-    transform: translateX(-40%) rotate(-8deg); 
-}
-.game-card:hover .franchise-cover:nth-child(2) { 
-    transform: translateX(0) rotate(-2deg); 
-}
-.game-card:hover .franchise-cover:nth-child(3) { 
-    transform: translateX(40%) rotate(8deg); 
-}
-
-.game-card:hover .franchise-cover {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
-}
-
 .game-info { padding: 15px; }
 
 .game-title {
@@ -794,6 +768,7 @@ section { padding: 100px 0; }
     overflow: hidden;
 }
 
+/* Стили для русских тегов */
 .game-genre {
     display: inline-block;
     padding: 4px 8px;
