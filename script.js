@@ -59,7 +59,7 @@ const gamesData = [
         rating: 4,
         description: 'Легендарный тактический шутер с безупречным геймплеем. Competitive игра, в которой каждый матч уникален и непредсказуем.',
         videoId: 'dQw4w9WgXcQ',
-        image: 'https://cdn2.steamgriddb.com/grid/0662aa1719017e0efa5fa8daf0880c6e.png',
+        image: 'https://steamcdn-a.akamaihd.net/steam/apps/622650/library_600x900.jpg',
         genres: ['shooter', 'fps']
     },
     {
@@ -568,4 +568,5 @@ function updateToggleButtonPosition() {
 }
 
 // Initial update
+
 updateToggleButtonPosition();
