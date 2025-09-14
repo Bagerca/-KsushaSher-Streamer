@@ -7,7 +7,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png',
         genres: ['puzzle', 'adventure'],
-        status: 'completed'
+        status: 'completed',
+        customColor: '#39ff14'
     },
     {
         id: 'mouthwashing',
@@ -17,7 +18,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/50a36d2cac80b1dc1b56246ffab8b073.png',
         genres: ['simulator'],
-        status: 'playing'
+        status: 'playing',
+        customColor: '#ff2d95'
     },
     {
         id: 'minecraft',
@@ -27,7 +29,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/53344d4d9596276b9b7f70158bf95779.webp',
         genres: ['adventure', 'sandbox'],
-        status: 'on-hold'
+        status: 'on-hold',
+        customColor: '#ffd700'
     },
     {
         id: 'lethal-company',
@@ -37,17 +40,19 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/fd729ccc51bbb0d182ac464d2f34e4f2.webp',
         genres: ['horror', 'coop'],
-        status: 'dropped'
+        status: 'dropped',
+        customColor: '#ff6464'
     },
     {
         id: 'hollow-knight',
         title: 'Hollow Knight',
         rating: 5,
-        description: 'Изумительный метроидвания с красивым миром и сложными боями. Одна из лучших инди-игр всех времен с глубоком лором и атмосферой.',
+        description: 'Изумительный метроидвания с красивым миром и сложными боями. Одна из лучших инди-игр всех времен с глубоким лором и атмосферой.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp',
         genres: ['adventure', 'metroidvania'],
-        status: 'completed'
+        status: 'completed',
+        customColor: '#39ff14'
     },
     {
         id: 'content-warning',
@@ -57,7 +62,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/ec6fbf0d38ffc435686348723a08c839.png',
         genres: ['horror', 'coop'],
-        status: 'playing'
+        status: 'playing',
+        customColor: '#ff2d95'
     },
     {
         id: 'cs2',
@@ -67,7 +73,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/0662aa1719017e0efa5fa8daf0880c6e.png',
         genres: ['shooter', 'fps'],
-        status: 'on-hold'
+        status: 'on-hold',
+        customColor: '#ffd700'
     },
     {
         id: 'sally-face',
@@ -77,7 +84,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png',
         genres: ['adventure', 'horror'],
-        status: 'completed'
+        status: 'completed',
+        customColor: '#39ff14'
     },
     {
         id: 'gris',
@@ -87,7 +95,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/28c3c3e591be4d57567ec7830f7b3b46.webp',
         genres: ['adventure', 'platformer'],
-        status: 'completed'
+        status: 'completed',
+        customColor: '#39ff14'
     },
     {
         id: 'batim',
@@ -97,7 +106,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png',
         genres: ['horror', 'adventure'],
-        status: 'dropped'
+        status: 'dropped',
+        customColor: '#ff6464'
     },
     {
         id: 'batdr',
@@ -107,7 +117,8 @@ const gamesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png',
         genres: ['horror', 'adventure'],
-        status: 'playing'
+        status: 'playing',
+        customColor: '#ff2d95'
     }
 ];
 
@@ -120,7 +131,8 @@ const moviesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://images-s.kinorium.com/movie/poster/2754301/w1500_50222111.jpg',
         genres: ['animation', 'fantasy'],
-        status: 'watched'
+        status: 'watched',
+        customColor: '#39ff14'
     },
     {
         id: 'indie-cross',
@@ -130,7 +142,8 @@ const moviesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://i.redd.it/hskopjmudyxe1.png',
         genres: ['animation', 'crossover'],
-        status: 'watching'
+        status: 'watching',
+        customColor: '#ff2d95'
     },
     {
         id: 'spider-verse',
@@ -140,7 +153,8 @@ const moviesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://images.kinorium.com/movie/poster/2288844/w1500_43025325.jpg',
         genres: ['animation', 'fantasy'],
-        status: 'watched'
+        status: 'watched',
+        customColor: '#39ff14'
     },
     {
         id: 'rick-morty',
@@ -150,7 +164,8 @@ const moviesData = [
         videoId: 'dQw4w9WgXcQ',
         image: 'https://images.kinorium.com/movie/poster/2999112/w1500_43545645.jpg',
         genres: ['animation', 'crossover'],
-        status: 'watching'
+        status: 'watching',
+        customColor: '#ff2d95'
     }
 ];
 
@@ -280,32 +295,33 @@ function renderCards(container, data, type) {
         card.className = 'game-card';
         card.setAttribute(`data-${type}`, item.id);
         
-        // Убраны смайлики из статусов
-        const statusText = type === 'game' ? 
-            (item.status === 'completed' ? 'Пройдено' : 
-             item.status === 'playing' ? 'Проходим' : 
-             item.status === 'dropped' ? 'Брошено' : 'Под вопросом') :
-            (item.status === 'watched' ? 'Посмотрено' : 
-             item.status === 'watching' ? 'Смотрим' : 
-             item.status === 'dropped' ? 'Бросили' : 'Под вопросом');
+        // Добавляем класс статуса для цветной рамки
+        if (type === 'game') {
+            card.classList.add(item.status);
+        } else {
+            // Для фильмов используем соответствующие статусы
+            if (item.status === 'watched') {
+                card.classList.add('watched');
+            } else if (item.status === 'watching') {
+                card.classList.add('watching');
+            } else {
+                card.classList.add(item.status);
+            }
+        }
         
-        const statusClass = type === 'game' ? 
-            `status-${item.status}` : 
-            (item.status === 'watched' ? 'status-watched' : 
-             item.status === 'watching' ? 'status-watching' : 
-             `status-${item.status}`);
+        // Устанавливаем кастомный цвет для hover-эффекта
+        card.style.setProperty('--custom-hover-color', item.customColor);
         
         const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image"></div>`;
         
         const starsHtml = generateStars(item.rating);
         const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
-        // Изменен порядок: статусы отображаются перед жанрами
+        // Не отображаем теги статусов, но оставляем данные для фильтрации
         card.innerHTML = `
             ${imageHtml}
             <div class="game-info">
                 <h3 class="game-title">${item.title}</h3>
-                <div class="game-status ${statusClass}">${statusText}</div>
                 <div class="game-genres">${genresHtml}</div>
                 <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
                 <p class="game-description">${item.description}</p>
@@ -661,7 +677,7 @@ gamesTabs.forEach(tab => {
 const toggleGamesBtn = document.getElementById('toggle-games');
 let isExpanded = false;
 
-toggleGamesBtn.addEventListener('click', () => {
+toggleGamesBtn.addEventListener('click', () {
     isExpanded = !isExpanded;
     const activeContent = document.querySelector('.games-content.active');
     const activeGrid = activeContent.querySelector('.games-grid');
