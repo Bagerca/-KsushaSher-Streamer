@@ -43,7 +43,7 @@ const gamesData = [
         id: 'hollow-knight',
         title: 'Hollow Knight',
         rating: 5,
-        description: 'Изумительный метроидвания с красивым миром и сложными боями. Одна из лучших инди-игр всех времен с глубоким лором и атмосферой.',
+        description: 'Изумительный метроидвания с красивым миром и сложными боями. Одна из лучших инди-игр всех времен с глубоком лором и атмосферой.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp',
         genres: ['adventure', 'metroidvania'],
@@ -280,13 +280,14 @@ function renderCards(container, data, type) {
         card.className = 'game-card';
         card.setAttribute(`data-${type}`, item.id);
         
+        // Убраны смайлики из статусов
         const statusText = type === 'game' ? 
-            (item.status === 'completed' ? '✅ Пройдено' : 
-             item.status === 'playing' ? '🔴 Проходим' : 
-             item.status === 'dropped' ? '❌ Брошено' : '❓ Под вопросом') :
-            (item.status === 'watched' ? '✅ Посмотрено' : 
-             item.status === 'watching' ? '🔴 Смотрим' : 
-             item.status === 'dropped' ? '❌ Бросили' : '❓ Под вопросом');
+            (item.status === 'completed' ? 'Пройдено' : 
+             item.status === 'playing' ? 'Проходим' : 
+             item.status === 'dropped' ? 'Брошено' : 'Под вопросом') :
+            (item.status === 'watched' ? 'Посмотрено' : 
+             item.status === 'watching' ? 'Смотрим' : 
+             item.status === 'dropped' ? 'Бросили' : 'Под вопросом');
         
         const statusClass = type === 'game' ? 
             `status-${item.status}` : 
@@ -299,13 +300,14 @@ function renderCards(container, data, type) {
         const starsHtml = generateStars(item.rating);
         const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
+        // Изменен порядок: статусы отображаются перед жанрами
         card.innerHTML = `
             ${imageHtml}
             <div class="game-info">
                 <h3 class="game-title">${item.title}</h3>
                 <div class="game-status ${statusClass}">${statusText}</div>
-                <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
                 <div class="game-genres">${genresHtml}</div>
+                <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
                 <p class="game-description">${item.description}</p>
             </div>
         `;
@@ -313,7 +315,6 @@ function renderCards(container, data, type) {
     });
     
     attachCardListeners(type);
-    centerCards();
 }
 
 // Attach event listeners to game/movie cards
@@ -676,39 +677,10 @@ toggleGamesBtn.addEventListener('click', () => {
         activeGrid.style.maskImage = 'linear-gradient(to bottom, black 85%, transparent 98%)';
         toggleGamesBtn.textContent = 'Развернуть';
         
-        // Плавная прокрутка к началу секции вместо конца
+        // Плавная прокрутка к началу секции
         document.getElementById('games').scrollIntoView({ behavior: 'smooth' });
     }
 });
-
-// Функция для центрирования карточек
-function centerCards() {
-    const gamesGrid = document.querySelector('.games-grid');
-    if (!gamesGrid) return;
-    
-    const cards = gamesGrid.querySelectorAll('.game-card');
-    const containerWidth = gamesGrid.offsetWidth;
-    const cardWidth = cards[0] ? cards[0].offsetWidth + 30 : 0; // width + gap
-    
-    if (cardWidth > 0 && cards.length > 0) {
-        const cardsPerRow = Math.floor(containerWidth / cardWidth);
-        const remainingSpace = containerWidth - (cardsPerRow * cardWidth);
-        
-        if (remainingSpace > 0) {
-            gamesGrid.style.justifyContent = 'center';
-            gamesGrid.style.paddingLeft = `${remainingSpace / 2}px`;
-            gamesGrid.style.paddingRight = `${remainingSpace / 2}px`;
-        } else {
-            gamesGrid.style.justifyContent = 'flex-start';
-            gamesGrid.style.paddingLeft = '0';
-            gamesGrid.style.paddingRight = '0';
-        }
-    }
-}
-
-// Вызываем центрирование при загрузке и изменении размера окна
-window.addEventListener('load', centerCards);
-window.addEventListener('resize', centerCards);
 
 // Easter egg - history section on image click
 const heroImage = document.getElementById('hero-image-click');
