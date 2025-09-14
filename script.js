@@ -455,15 +455,18 @@ function renderCards(container, data, type) {
         const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
         card.innerHTML = `
-            ${imageHtml}
-            <div class="game-info">
-                <h3 class="game-title">${item.title}</h3>
-                <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
-                <div class="game-genres">${genresHtml}</div>
-                <div class="game-status ${statusClass}">${statusText}</div>
-                <p class="game-description">${item.description}</p>
+        ${imageHtml}
+        <div class="game-info">
+            <h3 class="game-title">${item.title}</h3>
+            <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
+            <div class="game-tags">
+                <span class="game-status ${statusClass}">${statusText}</span>
+                ${genresHtml}
             </div>
-        `;
+            <p class="game-description">${item.description}</p>
+        </div>
+`;
+
         container.appendChild(card);
     });
     
@@ -975,3 +978,4 @@ sortAndFilterData = function() {
     originalSortAndFilterData();
     setTimeout(fixFirstRowOverlap, 100);
 };
+
