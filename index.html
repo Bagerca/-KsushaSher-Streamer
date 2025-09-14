@@ -46,8 +46,8 @@
                 </div>
             </div>
             <div class="hero-buttons">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
+                <a href="https://t.me/pizdeckakoi_to" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
             </div>
         </div>
     </section>
@@ -101,41 +101,30 @@
         <div class="container">
             <h2 class="section-title">Расписание</h2>
             <div class="schedule-container">
-                <div class="schedule-header">
-                    <div class="schedule-day">День</div>
-                    <div class="schedule-time">Время</div>
-                    <div class="schedule-game">Игра/Активность</div>
-                    <div class="schedule-status">Статус</div>
-                </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Понедельник</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">Valorant</div>
-                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Вторник</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">Genshin Impact</div>
-                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Среда</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">League of Legends</div>
-                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Четверг</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">Мудсочетверг</div>
-                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Пятница</div>
                     <div class="schedule-time">20:00 - 23:00</div>
                     <div class="schedule-game">Новые игры</div>
-                    <div class="schedule-status active">По расписанию</div>
                 </div>
             </div>
         </div>
@@ -152,7 +141,8 @@
                 </div>
                 <div class="filter-container">
                     <div class="filter-toggle" id="filter-toggle">
-                        <i class="fas fa-filter"></i>
+                        <span>Фильтры</span>
+                        <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="filter-dropdown" id="filter-dropdown">
                         <div class="filter-group games-filters">
@@ -173,15 +163,6 @@
                             <label class="filter-option"><input type="checkbox" data-filter="fantasy" data-type="movies"> Фэнтези</label>
                             <label class="filter-option"><input type="checkbox" data-filter="crossover" data-type="movies"> Кроссовер</label>
                         </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group status-filters">
-                            <div class="filter-group-title">Статус прохождения</div>
-                            <label class="filter-option"><input type="checkbox" data-filter="all" data-type="status" checked> Все</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="status"> Пройдено</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="abandoned" data-type="status"> Брошено</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="in-progress" data-type="status"> Проходим</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="questionable" data-type="status"> Под вопросом</label>
-                        </div>
                     </div>
                 </div>
                 <div class="sort-tabs">
@@ -190,26 +171,6 @@
                     <div class="sort-slider"></div>
                 </div>
             </div>
-            
-            <div class="status-legend">
-                <div class="status-item">
-                    <span class="status-dot completed"></span>
-                    <span>Пройдено</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-dot abandoned"></span>
-                    <span>Брошено</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-dot in-progress"></span>
-                    <span>Проходим</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-dot questionable"></span>
-                    <span>Под вопросом</span>
-                </div>
-            </div>
-            
             <div class="games-content-container">
                 <div class="games-content active" id="games-content">
                     <div class="games-grid"></div>
@@ -225,28 +186,18 @@
     <div id="gameModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <div class="modal-layout">
-                <div class="modal-left">
-                    <img id="modalGameImage" src="" alt="Обложка" class="modal-cover">
-                    <div class="modal-game-info">
-                        <h2 class="modal-game-title" id="modalGameTitle">Название игры</h2>
-                        <div class="modal-game-rating" id="modalGameRating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>4/5</span>
-                        </div>
-                        <div class="modal-game-tags" id="modalGameTags"></div>
-                        <p class="modal-game-description" id="modalGameDescription">Описание игры...</p>
-                    </div>
-                </div>
-                <div class="modal-right">
-                    <div class="video-container">
-                        <iframe id="modalGameVideo" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
+            <h2 class="modal-game-title" id="modalGameTitle">Название игры</h2>
+            <div class="modal-game-rating" id="modalGameRating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+                <span>4/5</span>
+            </div>
+            <p class="modal-game-description" id="modalGameDescription">Описание игры...</p>
+            <div class="video-container">
+                <iframe id="modalGameVideo" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
     </div>
@@ -325,15 +276,15 @@
             <h2 class="section-title">Поддержать</h2>
             <p>Если тебе нравится мой контент, ты можешь поддержать меня финансово</p>
             <div class="donation-options">
-                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" rel="noopener noreferrer" class="donation-option">
+                <a href="https://www.donationalerts.com/r/ksusha__sher" class="donation-option">
                     <h3>DonationAlerts</h3>
                     <p>Прямые донаты</p>
                 </a>
-                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" rel="noopener noreferrer" class="donation-option">
+                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" class="donation-option">
                     <h3>MemeAlerts</h3>
                     <p>Альтернативные донаты</p>
                 </a>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" class="donation-option">
                     <h3>Twitch Подписка</h3>
                     <p>Подписка на канале</p>
                 </a>
@@ -348,11 +299,11 @@
     <footer>
         <div class="container">
             <div class="social-links">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitch"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a"><i class="fab fa-twitch"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="https://t.me/pizdeckakoi_to"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
             </div>
             <p>&copy; 2025 Ksusha Sher. Все права защищены. Сайт создан BAGERca.</p>
         </div>
@@ -361,3 +312,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
