@@ -101,30 +101,41 @@
         <div class="container">
             <h2 class="section-title">Расписание</h2>
             <div class="schedule-container">
+                <div class="schedule-header">
+                    <div class="schedule-day">День</div>
+                    <div class="schedule-time">Время</div>
+                    <div class="schedule-game">Игра/Активность</div>
+                    <div class="schedule-status">Статус</div>
+                </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Понедельник</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">Valorant</div>
+                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Вторник</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">Genshin Impact</div>
+                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Среда</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">League of Legends</div>
+                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Четверг</div>
                     <div class="schedule-time">19:00 - 22:00</div>
                     <div class="schedule-game">Мудсочетверг</div>
+                    <div class="schedule-status active">По расписанию</div>
                 </div>
                 <div class="schedule-item">
                     <div class="schedule-day">Пятница</div>
                     <div class="schedule-time">20:00 - 23:00</div>
                     <div class="schedule-game">Новые игры</div>
+                    <div class="schedule-status active">По расписанию</div>
                 </div>
             </div>
         </div>
@@ -135,8 +146,8 @@
             <h2 class="section-title">Игры и кино</h2>
             <div class="games-controls">
                 <div class="games-tabs">
-                    <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i></div>
-                    <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i></div>
+                    <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i> Игры</div>
+                    <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i> Кино</div>
                     <div class="tab-slider"></div>
                 </div>
                 <div class="filter-container">
@@ -166,11 +177,32 @@
                     </div>
                 </div>
                 <div class="sort-tabs">
-                    <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i></div>
-                    <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i></div>
+                    <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i> По имени</div>
+                    <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i> По рейтингу</div>
                     <div class="sort-slider"></div>
                 </div>
             </div>
+            
+            <!-- Легенда статусов -->
+            <div class="status-legend">
+                <div class="status-item">
+                    <span class="status-dot completed"></span>
+                    <span>Пройдено</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot abandoned"></span>
+                    <span>Брошено</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot in-progress"></span>
+                    <span>Проходим</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot questionable"></span>
+                    <span>Под вопросом</span>
+                </div>
+            </div>
+            
             <div class="games-content-container">
                 <div class="games-content active" id="games-content">
                     <div class="games-grid"></div>
@@ -186,18 +218,29 @@
     <div id="gameModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2 class="modal-game-title" id="modalGameTitle">Название игры</h2>
-            <div class="modal-game-rating" id="modalGameRating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-                <span>4/5</span>
-            </div>
-            <p class="modal-game-description" id="modalGameDescription">Описание игры...</p>
-            <div class="video-container">
-                <iframe id="modalGameVideo" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+            <div class="modal-layout">
+                <div class="modal-left">
+                    <img id="modalGameImage" src="" alt="Обложка" class="modal-cover">
+                    <div class="modal-game-info">
+                        <h2 class="modal-game-title" id="modalGameTitle">Название игры</h2>
+                        <div class="modal-game-rating" id="modalGameRating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span>4/5</span>
+                        </div>
+                        <div class="modal-game-genres" id="modalGameGenres"></div>
+                        <div class="modal-game-status" id="modalGameStatus"></div>
+                        <p class="modal-game-description" id="modalGameDescription">Описание игры...</p>
+                    </div>
+                </div>
+                <div class="modal-right">
+                    <div class="video-container">
+                        <iframe id="modalGameVideo" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -312,4 +355,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
