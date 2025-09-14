@@ -677,7 +677,7 @@ gamesTabs.forEach(tab => {
 const toggleGamesBtn = document.getElementById('toggle-games');
 let isExpanded = false;
 
-toggleGamesBtn.addEventListener('click', () {
+toggleGamesBtn.addEventListener('click', () => {
     isExpanded = !isExpanded;
     const activeContent = document.querySelector('.games-content.active');
     const activeGrid = activeContent.querySelector('.games-grid');
@@ -767,3 +767,4 @@ document.addEventListener('DOMContentLoaded', function() {
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
 });
+
