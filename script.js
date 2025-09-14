@@ -6,7 +6,8 @@ const gamesData = [
         description: 'Культовая головоломка от Valve с уникальным геймплеем и юмором. Одна из лучших игр в своём жанре с захватывающим сюжетом и запоминающимися персонажами.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png',
-        genres: ['puzzle', 'adventure']
+        genres: ['puzzle', 'adventure'],
+        status: 'completed'
     },
     {
         id: 'mouthwashing',
@@ -15,7 +16,8 @@ const gamesData = [
         description: 'Расслабляющий симулятор мойки под давлением. Невероятно затягивающий геймплей, который помогает снять стресс после тяжелого дня.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/50a36d2cac80b1dc1b56246ffab8b073.png',
-        genres: ['simulator']
+        genres: ['simulator'],
+        status: 'abandoned'
     },
     {
         id: 'minecraft',
@@ -24,7 +26,8 @@ const gamesData = [
         description: 'Легендарная песочница с безграничными возможностями для творчества. Игра, в которую можно играть бесконечно, каждый раз открывая что-то новое.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/53344d4d9596276b9b7f70158bf95779.webp',
-        genres: ['adventure', 'sandbox']
+        genres: ['adventure', 'sandbox'],
+        status: 'in-progress'
     },
     {
         id: 'lethal-company',
@@ -33,7 +36,8 @@ const gamesData = [
         description: 'Кооперативный хоррор про сбор лома на опасных планетах. Веселая и страшная игра для прохождения с друзьями.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/fd729ccc51bbb0d182ac464d2f34e4f2.webp',
-        genres: ['horror', 'coop']
+        genres: ['horror', 'coop'],
+        status: 'completed'
     },
     {
         id: 'hollow-knight',
@@ -42,7 +46,8 @@ const gamesData = [
         description: 'Изумительный метроидвания с красивым миром и сложными боями. Одна из лучших инди-игр всех времен с глубоким лором и атмосферой.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp',
-        genres: ['adventure', 'metroidvania']
+        genres: ['adventure', 'metroidvania'],
+        status: 'completed'
     },
     {
         id: 'content-warning',
@@ -51,7 +56,8 @@ const gamesData = [
         description: 'Страшные приключения с друзьями в поисках вирального контента. Веселая кооперативная игра с элементами хоррора.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/ec6fbf0d38ffc435686348723a08c839.png',
-        genres: ['horror', 'coop']
+        genres: ['horror', 'coop'],
+        status: 'abandoned'
     },
     {
         id: 'cs2',
@@ -60,7 +66,8 @@ const gamesData = [
         description: 'Легендарный тактический шутер с безупречным геймплеем. Competitive игра, в которой каждый матч уникален и непредсказуем.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/0662aa1719017e0efa5fa8daf0880c6e.png',
-        genres: ['shooter', 'fps']
+        genres: ['shooter', 'fps'],
+        status: 'in-progress'
     },
     {
         id: 'sally-face',
@@ -69,7 +76,8 @@ const gamesData = [
         description: 'Мрачная приключенческая игра с уникальным стилью и сюжетом. Захватывающая история с неожиданными поворотами и тайнами.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png',
-        genres: ['adventure', 'horror']
+        genres: ['adventure', 'horror'],
+        status: 'completed'
     },
     {
         id: 'gris',
@@ -78,7 +86,8 @@ const gamesData = [
         description: 'Визуально потрясающая платформер-притча о преодолении горя. Невероятно красивая и эмоциональная игра с минималистичным геймплеем.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/28c3c3e591be4d57567ec7830f7b3b46.webp',
-        genres: ['adventure', 'platformer']
+        genres: ['adventure', 'platformer'],
+        status: 'completed'
     },
     {
         id: 'batim',
@@ -87,7 +96,8 @@ const gamesData = [
         description: 'Уникальный хоррор в стиле старых мультфильмов с атмосферной историей и запоминающимися персонажами.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png',
-        genres: ['horror', 'adventure']
+        genres: ['horror', 'adventure'],
+        status: 'completed'
     },
     {
         id: 'batdr',
@@ -96,7 +106,99 @@ const gamesData = [
         description: 'Продолжение культового хоррора с улучшенной графикой, новыми механиками и захватывающим сюжетом.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png',
-        genres: ['horror', 'adventure']
+        genres: ['horror', 'adventure'],
+        status: 'completed'
+    },
+    // Новые игры
+    {
+        id: 'buckshot-roulette',
+        title: 'Buckshot Roulette',
+        rating: 4.5,
+        description: 'Напряженная игра в русскую рулетку с дробовиком.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/4b7dc6c4ae6d2e6a6d5c8b5a5d5c8b5a.png',
+        genres: ['horror', 'thriller'],
+        status: 'completed'
+    },
+    {
+        id: 'helltaker',
+        title: 'Helltaker',
+        rating: 4,
+        description: 'Головоломка про демонов и пацанский дух.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/5d8e4e7c5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['puzzle', 'adventure'],
+        status: 'completed'
+    },
+    {
+        id: 'the-forest',
+        title: 'The Forest',
+        rating: 4.5,
+        description: 'Выживание на острове с каннибалами.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/6c8d5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['horror', 'survival'],
+        status: 'in-progress'
+    },
+    {
+        id: 'outlast',
+        title: 'Outlast',
+        rating: 4.5,
+        description: 'Ужасы в психиатрической больнице.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/7d8e5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['horror', 'survival'],
+        status: 'completed'
+    },
+    {
+        id: 'little-nightmares',
+        title: 'Little Nightmares',
+        rating: 4.5,
+        description: 'Мрачная головоломка в стиле хоррор.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/8e9e5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['horror', 'puzzle'],
+        status: 'completed'
+    },
+    {
+        id: 'little-nightmares-2',
+        title: 'Little Nightmares 2',
+        rating: 4.5,
+        description: 'Продолжение мрачной головоломки в стиле хоррор.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/9f0f5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['horror', 'puzzle'],
+        status: 'completed'
+    },
+    {
+        id: 'creepy-tale',
+        title: 'Creepy Tale',
+        rating: 3.5,
+        description: 'Мрачная приключенческая игра в сказочном мире.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/a0a1e5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['adventure', 'puzzle'],
+        status: 'abandoned'
+    },
+    {
+        id: 'creepy-tale-2',
+        title: 'Creepy Tale 2',
+        rating: 3.5,
+        description: 'Продолжение мрачной приключенческой игры в сказочном мире.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/b1b2e5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['adventure', 'puzzle'],
+        status: 'abandoned'
+    },
+    {
+        id: 'framed',
+        title: 'Framed',
+        rating: 4,
+        description: 'Детективная головоломка с уникальным геймплеем.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/c2c3e5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
+        genres: ['puzzle', 'adventure'],
+        status: 'completed'
     }
 ];
 
@@ -108,7 +210,8 @@ const moviesData = [
         description: 'Визуально потрясающий анимационный сериал по вселенной League of Legends. Глубокий сюжет о сестрах Вай и Пайлтовере.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://images-s.kinorium.com/movie/poster/2754301/w1500_50222111.jpg',
-        genres: ['animation', 'fantasy']
+        genres: ['animation', 'fantasy'],
+        status: 'completed'
     },
     {
         id: 'indie-cross',
@@ -117,7 +220,89 @@ const moviesData = [
         description: 'Кроссовер независимых игр с уникальным стилем и захватывающим сюжетом. Удивительное сочетание разных вселенных и персонажей.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://i.redd.it/hskopjmudyxe1.png',
-        genres: ['animation', 'crossover']
+        genres: ['animation', 'crossover'],
+        status: 'completed'
+    },
+    // Новые фильмы
+    {
+        id: 'the-wild-robot',
+        title: 'The Wild Robot',
+        rating: 4.5,
+        description: 'История робота, оказавшегося на необитаемом острове.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/2854301/w1500_50222112.jpg',
+        genres: ['animation', 'adventure'],
+        status: 'completed'
+    },
+    {
+        id: 'nine',
+        title: 'Nine',
+        rating: 4,
+        description: 'Постапокалиптическая анимация о куклах-воинах.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/2954301/w1500_50222113.jpg',
+        genres: ['animation', 'fantasy'],
+        status: 'completed'
+    },
+    {
+        id: 'heroes-of-envell',
+        title: 'Heroes of Envell',
+        rating: 3.5,
+        description: 'Приключения героев в фэнтезийном мире.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/3054301/w1500_50222114.jpg',
+        genres: ['animation', 'fantasy'],
+        status: 'completed'
+    },
+    {
+        id: 'gravity-falls',
+        title: 'Gravity Falls',
+        rating: 5,
+        description: 'Культовый мультсериал о таинственных приключениях близнецов.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/3154301/w1500_50222115.jpg',
+        genres: ['animation', 'adventure'],
+        status: 'completed'
+    },
+    {
+        id: 'garfield',
+        title: 'Garfield',
+        rating: 3.5,
+        description: 'Приключения ленивого кота Гарфилда.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/3254301/w1500_50222116.jpg',
+        genres: ['animation', 'comedy'],
+        status: 'completed'
+    },
+    {
+        id: 'garfield-2',
+        title: 'Garfield 2',
+        rating: 3.5,
+        description: 'Продолжение приключений ленивого кота Гарфилда.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/3354301/w1500_50222117.jpg',
+        genres: ['animation', 'comedy'],
+        status: 'completed'
+    },
+    {
+        id: 'ice-age',
+        title: 'Ice Age',
+        rating: 4,
+        description: 'Приключения животных во времена ледникового периода.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/3454301/w1500_50222118.jpg',
+        genres: ['animation', 'adventure'],
+        status: 'completed'
+    },
+    {
+        id: 'shrek',
+        title: 'Shrek',
+        rating: 5,
+        description: 'Культовая история о зеленом огре и его приключениях.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/3554301/w1500_50222119.jpg',
+        genres: ['animation', 'fantasy'],
+        status: 'completed'
     }
 ];
 
@@ -235,8 +420,22 @@ const genreTranslations = {
     'platformer': 'Платформер',
     'animation': 'Анимация',
     'fantasy': 'Фэнтези',
-    'crossover': 'Кроссовер'
+    'crossover': 'Кроссовер',
+    'thriller': 'Триллер',
+    'survival': 'Выживание',
+    'comedy': 'Комедия'
 };
+
+// Функция для получения текста статуса
+function getStatusText(status) {
+    const statusMap = {
+        'completed': 'Пройдено',
+        'abandoned': 'Брошено', 
+        'in-progress': 'Проходим',
+        'questionable': 'Под вопросом'
+    };
+    return statusMap[status] || '';
+}
 
 // Render game/movie cards
 function renderCards(container, data, type) {
@@ -247,12 +446,24 @@ function renderCards(container, data, type) {
         card.className = 'game-card';
         card.setAttribute(`data-${type}`, item.id);
         
+        const statusClass = `status-${item.status || 'unknown'}`;
+        const statusText = getStatusText(item.status);
+        
         const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image"></div>`;
         
         const starsHtml = generateStars(item.rating);
         const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
-        card.innerHTML = `${imageHtml}<div class="game-info"><h3 class="game-title">${item.title}</h3><div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div><div class="game-genres">${genresHtml}</div><p class="game-description">${item.description}</p></div>`;
+        card.innerHTML = `
+            ${imageHtml}
+            <div class="game-info">
+                <h3 class="game-title">${item.title}</h3>
+                <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
+                <div class="game-genres">${genresHtml}</div>
+                <div class="game-status ${statusClass}">${statusText}</div>
+                <p class="game-description">${item.description}</p>
+            </div>
+        `;
         container.appendChild(card);
     });
     
@@ -277,12 +488,27 @@ function showModal(item) {
     const modalGameRating = document.getElementById('modalGameRating');
     const modalGameDescription = document.getElementById('modalGameDescription');
     const modalGameVideo = document.getElementById('modalGameVideo');
+    const modalGameImage = document.getElementById('modalGameImage');
+    const modalGameGenres = document.getElementById('modalGameGenres');
+    const modalGameStatus = document.getElementById('modalGameStatus');
     const gameModal = document.getElementById('gameModal');
     
     modalGameTitle.textContent = item.title;
     modalGameRating.innerHTML = `${generateStars(item.rating)}<span>${item.rating}/5</span>`;
     modalGameDescription.textContent = item.description;
     modalGameVideo.src = `https://www.youtube.com/embed/${item.videoId}`;
+    modalGameImage.src = item.image;
+    
+    // Добавим жанры в модальное окно
+    modalGameGenres.innerHTML = item.genres.map(genre => 
+        `<span class="game-genre">${genreTranslations[genre] || genre}</span>`
+    ).join('');
+    
+    // Добавим статус в модальное окно
+    const statusClass = `status-${item.status || 'unknown'}`;
+    const statusText = getStatusText(item.status);
+    modalGameStatus.innerHTML = `<span class="game-status ${statusClass}">${statusText}</span>`;
+    
     gameModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 }
@@ -354,6 +580,8 @@ setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
 // Separate filters for games and movies
 let currentGameFilters = ['all'];
 let currentMovieFilters = ['all'];
+let currentGameStatusFilters = ['all'];
+let currentMovieStatusFilters = ['all'];
 let currentSort = 'name';
 let currentTab = 'games';
 
@@ -361,11 +589,19 @@ let currentTab = 'games';
 function sortAndFilterData() {
     let data = currentTab === 'games' ? [...gamesData] : [...moviesData];
     const currentFilters = currentTab === 'games' ? currentGameFilters : currentMovieFilters;
+    const currentStatusFilters = currentTab === 'games' ? currentGameStatusFilters : currentMovieStatusFilters;
     
-    // Apply filter
+    // Apply genre filter
     if (!currentFilters.includes('all')) {
         data = data.filter(item => 
             item.genres.some(genre => currentFilters.includes(genre))
+        );
+    }
+    
+    // Apply status filter
+    if (!currentStatusFilters.includes('all')) {
+        data = data.filter(item => 
+            currentStatusFilters.includes(item.status)
         );
     }
     
@@ -382,6 +618,34 @@ function sortAndFilterData() {
         : document.querySelector('#movies-content .games-grid');
         
     renderCards(container, data, currentTab === 'games' ? 'game' : 'movie');
+    
+    // Центрируем карточки
+    centerLastRowCards(container);
+}
+
+// Функция для центрирования карточек в последнем ряду
+function centerLastRowCards(container) {
+    const cards = container.querySelectorAll('.game-card');
+    if (cards.length === 0) return;
+    
+    // Сбросим предыдущие стили
+    cards.forEach(card => {
+        card.style.marginLeft = '';
+        card.style.marginRight = '';
+    });
+    
+    // Получим количество карточек в ряду
+    const gridComputedStyle = window.getComputedStyle(container);
+    const gridColumnCount = gridComputedStyle.gridTemplateColumns.split(' ').length;
+    
+    // Если карточек меньше, чем столбцов в сетке
+    if (cards.length < gridColumnCount) {
+        const emptyCells = gridColumnCount - cards.length;
+        const lastCard = cards[cards.length - 1];
+        
+        // Центрируем, добавляя отступы слева
+        lastCard.style.gridColumn = `span ${emptyCells + 1}`;
+    }
 }
 
 // Initial render
@@ -413,7 +677,7 @@ filterOptions.forEach(option => {
                 if (this.checked) {
                     currentGameFilters = ['all'];
                     document.querySelectorAll('.games-filters input').forEach(opt => {
-                        if (opt !== this) opt.checked = false;
+                        if (opt !== this && opt.getAttribute('data-type') === 'games') opt.checked = false;
                     });
                 } else {
                     currentGameFilters = currentGameFilters.filter(f => f !== 'all');
@@ -422,7 +686,7 @@ filterOptions.forEach(option => {
                 // If a specific filter is checked, uncheck "all"
                 if (this.checked) {
                     currentGameFilters = currentGameFilters.filter(f => f !== 'all');
-                    document.querySelector('.games-filters input[data-filter="all"]').checked = false;
+                    document.querySelector('.games-filters input[data-filter="all"][data-type="games"]').checked = false;
                     currentGameFilters.push(filter);
                 } else {
                     currentGameFilters = currentGameFilters.filter(f => f !== filter);
@@ -434,7 +698,7 @@ filterOptions.forEach(option => {
                 if (this.checked) {
                     currentMovieFilters = ['all'];
                     document.querySelectorAll('.movies-filters input').forEach(opt => {
-                        if (opt !== this) opt.checked = false;
+                        if (opt !== this && opt.getAttribute('data-type') === 'movies') opt.checked = false;
                     });
                 } else {
                     currentMovieFilters = currentMovieFilters.filter(f => f !== 'all');
@@ -443,10 +707,36 @@ filterOptions.forEach(option => {
                 // If a specific filter is checked, uncheck "all"
                 if (this.checked) {
                     currentMovieFilters = currentMovieFilters.filter(f => f !== 'all');
-                    document.querySelector('.movies-filters input[data-filter="all"]').checked = false;
+                    document.querySelector('.movies-filters input[data-filter="all"][data-type="movies"]').checked = false;
                     currentMovieFilters.push(filter);
                 } else {
                     currentMovieFilters = currentMovieFilters.filter(f => f !== filter);
+                }
+            }
+        } else if (type === 'status') {
+            if (filter === 'all') {
+                // If "all" is checked, uncheck all others
+                if (this.checked) {
+                    currentGameStatusFilters = ['all'];
+                    currentMovieStatusFilters = ['all'];
+                    document.querySelectorAll('.status-filters input').forEach(opt => {
+                        if (opt !== this) opt.checked = false;
+                    });
+                } else {
+                    currentGameStatusFilters = currentGameStatusFilters.filter(f => f !== 'all');
+                    currentMovieStatusFilters = currentMovieStatusFilters.filter(f => f !== 'all');
+                }
+            } else {
+                // If a specific filter is checked, uncheck "all"
+                if (this.checked) {
+                    currentGameStatusFilters = currentGameStatusFilters.filter(f => f !== 'all');
+                    currentMovieStatusFilters = currentMovieStatusFilters.filter(f => f !== 'all');
+                    document.querySelector('.status-filters input[data-filter="all"]').checked = false;
+                    currentGameStatusFilters.push(filter);
+                    currentMovieStatusFilters.push(filter);
+                } else {
+                    currentGameStatusFilters = currentGameStatusFilters.filter(f => f !== filter);
+                    currentMovieStatusFilters = currentMovieStatusFilters.filter(f => f !== filter);
                 }
             }
         }
@@ -565,6 +855,13 @@ gamesTabs.forEach(tab => {
 window.addEventListener('resize', () => {
     setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
     setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
+    
+    // Перецентрируем карточки при изменении размера окна
+    const activeContent = document.querySelector('.games-content.active');
+    if (activeContent) {
+        const activeGrid = activeContent.querySelector('.games-grid');
+        centerLastRowCards(activeGrid);
+    }
 });
 
 // Easter egg - history section on image click
@@ -609,34 +906,44 @@ window.addEventListener('keydown', function(e) {
     }
 });
 
-// Fix for toggle button positioning
-function updateToggleButtonPosition() {
-    const activeContent = document.querySelector('.games-content.active');
-    const gamesGrid = activeContent.querySelector('.games-grid');
-    const toggleButton = document.getElementById('toggle-games');
+// Добавим фильтры по статусам
+function initStatusFilters() {
+    const filterContainer = document.querySelector('.filter-dropdown');
     
-    if (gamesGrid.classList.contains('expanded')) {
-        toggleButton.style.marginTop = '30px';
-    } else {
-        toggleButton.style.marginTop = '30px';
-    }
+    // Добавим разделитель
+    const divider = document.createElement('div');
+    divider.className = 'filter-divider';
+    filterContainer.appendChild(divider);
+    
+    // Добавим группу фильтров по статусам
+    const statusGroup = document.createElement('div');
+    statusGroup.className = 'filter-group status-filters';
+    statusGroup.innerHTML = `
+        <div class="filter-group-title">Статус</div>
+        <label class="filter-option"><input type="checkbox" data-filter="all" data-type="status" checked> Все</label>
+        <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="status"> Пройдено</label>
+        <label class="filter-option"><input type="checkbox" data-filter="abandoned" data-type="status"> Брошено</label>
+        <label class="filter-option"><input type="checkbox" data-filter="in-progress" data-type="status"> Проходим</label>
+        <label class="filter-option"><input type="checkbox" data-filter="questionable" data-type="status"> Под вопросом</label>
+    `;
+    
+    filterContainer.appendChild(statusGroup);
 }
 
-// Initial update
-updateToggleButtonPosition();
-
-// Исправление для корректной работы кнопки "Развернуть/Свернуть"
+// Инициализируем фильтры по статусам при загрузке
 document.addEventListener('DOMContentLoaded', function() {
-    // Перерисовка карточек при загрузке страницы
+    initStatusFilters();
+    
+    // Перерисуем карточки
     sortAndFilterData();
     
-    // Обновление позиции слайдеров
+    // Обновим позицию слайдеров
     setTimeout(() => {
         setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
     
-    // Установка галочки "Все" по умолчанию
+    // Установим галочку "Все" по умолчанию
     document.querySelectorAll('.filter-option input[data-filter="all"]').forEach(input => {
         input.checked = true;
     });
