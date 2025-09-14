@@ -205,7 +205,7 @@ nav ul li a:hover::after { width: 100%; }
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid var(--neon-pink);
-    box-shadow: 0 0 20px rgba(255, 45, 149, 0.5), 0 0 40px rgba(57, 255, 20, 0.3);
+    box-shadow: 极速加速器 0 0 20px rgba(255, 45, 149, 0.5), 0 0 40px rgba(57, 255, 20, 0.3);
     position: relative;
     z-index: 2;
     animation: pulse 3s infinite ease-in-out;
@@ -245,12 +245,12 @@ nav ul li a:hover::after { width: 100%; }
     height: 12px;
     border-radius: 50%;
     background: var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+    box-shadow: 0 极速加速器 10px var(--neon-green), 0 0 20px var(--neon-green);
     animation: orbit 8s linear infinite;
 }
 
 .light-ring:nth-child(2) {
-    width: 420px;
+    width: 420极速加速器px;
     height: 420px;
     animation-duration: 20s;
     animation-direction: reverse;
@@ -258,11 +258,11 @@ nav ul li a:hover::after { width: 100%; }
 
 .light-ring:nth-child(2)::before {
     background: var(--neon-pink);
-    box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 20极速加速器px var(--neon-pink);
     animation: orbit 12s linear infinite reverse;
 }
 
-.light-ring:nth-child(3) {
+.light-ring:n极速加速器th-child(3) {
     width: 460px;
     height: 460px;
     animation-duration: 25s;
@@ -318,7 +318,7 @@ section { padding: 100px 0; }
 .section-title {
     text-align: center;
     font-size: 2.5rem;
-    margin-bottom: 50px;
+    margin-bottom: 50极速加速器px;
     position: relative;
     color: var(--neon-green);
     text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
@@ -331,8 +331,8 @@ section { padding: 100px 0; }
     left: 50%;
     transform: translateX(-50%);
     width: 100px;
-    height: 10px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3E%3Cpath d='M0,5 C30,0 70,10 100,5' stroke='%23ff2d95' stroke-width='2' fill='none' /%3E%3Cpath d='M0,5 C30,10 70,0 100,5' stroke='%2339ff14' stroke-width='2' fill='none' /%3E%3C/svg%3E") center/100px 10px no-repeat;
+   极速加速器 height: 10px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10极速加速器'%3E%3Cpath d='M0,5 C30,0 70,10 100,5' stroke='%23ff2d95' stroke-width='2' fill='none' /%3E%3Cpath d='M0,5 C30,10 70,0 100,5' stroke='%2339ff14' stroke-width='2' fill='none' /极速加速器%3E%3C/svg%3E") center/100px 10px no-repeat;
 }
 
 #about {
@@ -385,8 +385,8 @@ section { padding: 100px 0; }
 @keyframes rotate-glow {
     0% { background: linear-gradient(0deg, var(--neon-pink), var(--neon-green)); }
     25% { background: linear-gradient(90deg, var(--neon-pink), var(--neon-green)); }
-    50% { background: linear-gradient(180deg, var(--neon-pink), var(--neon-green)); }
-    75% { background: linear-gradient(270deg, var(--neon-pink), var(--neon-green)); }
+    50% { background: linear-gradient(180deg,极速加速器 var(--neon-pink), var(--neon-green)); }
+    75% { background: linear-gradient(270deg, var(--极速加速器neon-pink), var(--neon-green)); }
     100% { background: linear-gradient(360deg, var(--neon-pink), var(--neon-green)); }
 }
 
@@ -429,7 +429,7 @@ section { padding: 100px 0; }
     font-weight: 800;
     color: var(--neon-pink);
     text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink), 0 0 40px var(--neon-pink);
-    animation: neon-pulse 1.5s infinite alternate;
+    animation: neon-pulse 1.5极速加速器s infinite alternate;
     text-transform: uppercase;
     letter-spacing: 5px;
     transform: rotate(-5deg);
@@ -437,7 +437,7 @@ section { padding: 100px 0; }
 
 @keyframes neon-pulse {
     from { text-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 15px var(--neon-pink), 0 0 20px var(--neon-pink); }
-    to { text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink), 0 0 40px var(--neon-pink), 0 0 50px var(--neon-pink), 0 0 60px var(--neon-pink); }
+    to { text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink), 极速加速器0 0 40px var(--neon-pink), 0 0 50px var(--neon-pink), 0 0 60极速加速器px var(--neon-pink); }
 }
 
 .stats-container {
@@ -467,7 +467,7 @@ section { padding: 100px 0; }
     border: 2px solid transparent;
     border-radius: 10px;
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-green)) border-box;
-    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 极速加速器0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
     opacity: 0.7;
@@ -495,7 +495,7 @@ section { padding: 100px 0; }
     border-radius: 10px;
     padding: 30px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 45, 149, 0.3);
+    border: 1px solid rgba(255, 45, 149, 极速加速器0.3);
     box-shadow: 0 0 20px rgba(255, 45, 149, 0.2);
 }
 
@@ -616,7 +616,7 @@ section { padding: 100px 0; }
     border: none;
     color: var(--light-text);
     cursor: pointer;
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     white-space: nowrap;
     position: relative;
     z-index: 2;
@@ -625,7 +625,24 @@ section { padding: 100px 0; }
     justify-content: center;
 }
 
-.games-tab.active, .sort-tab.active { color: var(--white); }
+.games-tab.active, .sort极速加速器-tab.active { color: var(--white); }
+
+.games-tab::before, .sort-tab::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-green));
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateX(-50%);
+    border-radius: 3px;
+}
+
+.games-tab.active::before, .sort-tab.active::before {
+    width: 70%;
+}
 
 .tab-slider, .sort-slider {
     position: absolute;
@@ -633,8 +650,8 @@ section { padding: 100px 0; }
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
     border-radius: 30px;
     z-index: 1;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
 }
 
 .filter-container { position: relative; display: inline-block; }
@@ -646,7 +663,7 @@ section { padding: 100px 0; }
     border-radius: 30px;
     color: var(--light-text);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -654,7 +671,8 @@ section { padding: 100px 0; }
 
 .filter-toggle:hover { 
     border-color: var(--neon-green);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 45, 149, 0.4);
 }
 
 .filter-dropdown {
@@ -663,7 +681,7 @@ section { padding: 100px 0; }
     left: 0;
     margin-top: 10px;
     background: rgba(15, 15, 25, 0.95);
-    border-radius: 10px;
+    border-radius: 10极速加速器px;
     padding: 15px;
     min-width: 200px;
     z-index: 100;
@@ -671,19 +689,20 @@ section { padding: 100px 0; }
     border: 1px solid rgba(255, 45, 149, 0.3);
     display: none;
     backdrop-filter: blur(10px);
-    animation: slideDown 0.3s ease-out;
+    animation: filterSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    transform-origin: top center;
 }
 
 .filter-dropdown.active { display: block; }
 
-@keyframes slideDown {
-    from { 
-        opacity: 0; 
-        transform: translateY(-10px); 
+@keyframes filterSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -730,37 +749,21 @@ section { padding: 100px 0; }
 }
 
 .games-content {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     position: absolute;
     width: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     pointer-events: none;
+    z-index: 1;
 }
 
-.games-content.active { 
-    opacity: 1; 
-    visibility: visible; 
+.games-content.active {
+    opacity: 1;
     transform: translateY(0);
     position: relative;
     pointer-events: all;
-}
-
-/* Анимации для переключения контента */
-.games-content.fade-out {
-    opacity: 0;
-    transform: translateY(-20px);
-}
-
-.games-content.fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.games-content.fade-in.active {
-    opacity: 1;
-    transform: translateY(0);
+    z-index: 2;
 }
 
 .games-grid {
@@ -776,11 +779,19 @@ section { padding: 100px 0; }
     mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
 }
 
-/* Анимация для сортировки */
-.games-grid.sorting {
-    opacity: 0.5;
-    transform: scale(0.98);
-    transition: all 0.3s ease;
+.games-grid.sorting .game-card {
+    animation: cardSort 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes cardSort {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .games-grid.expanded { 
@@ -802,7 +813,18 @@ section { padding: 100px 0; }
     transform: translateZ(0);
     width: 100%;
     max-width: 300px;
-    animation: fadeIn 0.5s ease-out;
+    animation: cardAppear 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes cardAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .game-card:hover {
@@ -810,17 +832,6 @@ section { padding: 100px 0; }
     box-shadow: 0 10px 25px rgba(57, 255, 20, 0.3);
     border-color: var(--neon-green);
     z-index: 50;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .game-image-container {
@@ -852,7 +863,7 @@ section { padding: 100px 0; }
     color: var(--neon-pink);
 }
 
-.game-rating {
+.game-r极速加速器ating {
     display: flex;
     align-items: center;
     color: var(--neon-green);
@@ -871,7 +882,6 @@ section { padding: 100px 0; }
     overflow: hidden;
 }
 
-/* Стили для тегов */
 .game-tags {
     display: flex;
     flex-wrap: wrap;
@@ -879,24 +889,22 @@ section { padding: 100px 0; }
     margin-bottom: 15px;
 }
 
-.game-genre {
+.game-genre, .game-status {
     display: inline-block;
-    padding: 4px 8px;
-    background: rgba(255, 45, 149, 0.2);
-    border-radius: 4px;
-    color: var(--neon-pink);
+    padding: 5px 10px;
+    border-radius: 15px;
     font-size: 0.8rem;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.game-status {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    order: -1;
+.game-genre {
+    background: rgba(255, 45, 149, 0.2);
+    color: var(--neon-pink);
+    border: 1px solid var(--neon-pink);
 }
 
 .game-status.completed {
@@ -923,6 +931,11 @@ section { padding: 100px 0; }
     border: 1px solid var(--neon-blue);
 }
 
+.game-genre:hover, .game-status:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
 .toggle-games {
     display: block;
     margin: 30px auto 0;
@@ -930,13 +943,29 @@ section { padding: 100px 0; }
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
     color: var(--white);
     border: none;
-    border-radius: 30px;
+    border-radius: 30极速加速器px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     font-weight: 600;
     box-shadow: 0 5px 15px rgba(255, 45, 149, 0.4);
     position: relative;
     z-index: 10;
+    overflow: hidden;
+}
+
+.toggle-games::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+}
+
+.toggle-games:hover::before {
+    left: 100%;
 }
 
 .toggle-games:hover {
@@ -958,14 +987,14 @@ section { padding: 100px 0; }
 }
 
 .modal-content {
-    background: linear-gradient(135deg, var(--medium-bg) 0%, var(--dark-bg) 100%);
+    background: linear-gradient(135deg, var(--medium-bg) 0%, var(--dark-bg) 极速加速器100%);
     margin: 50px auto;
     padding: 30px;
     border-radius: 15px;
     max-width: 900px;
     width: 90%;
     border: 2px solid var(--neon-green);
-    box-shadow: 0 0 30px rgba(57, 255, 20, 0.5);
+    box-shadow: 0 0 30px rgba极速加速器(57, 255, 20, 0.5);
     position: relative;
 }
 
@@ -1041,12 +1070,12 @@ section { padding: 100px 0; }
 
 .specs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250极速加速器px, 1fr));
     gap: 20px;
 }
 
 .spec-item {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 极速加速器0.05);
     padding: 25px 20px;
     border-radius: 10px;
     text-align: center;
@@ -1062,7 +1091,7 @@ section { padding: 100px 0; }
     top: 0;
     left: 0;
     width: 100%;
-    height: 3px;
+    height: 3极速加速器px;
     background: linear-gradient(90deg, var(--neon-pink), var(--neon-green));
 }
 
@@ -1130,7 +1159,7 @@ section { padding: 100px 0; }
 
 .donation-option:hover {
     transform: scale(1.05);
-    box-shadow: 0 10px 25px rgba(255, 45, 149, 0.4);
+    box-shadow: 极速加速器0 10px 25px rgba(255, 45, 149, 0.4);
     color: var(--white);
 }
 
@@ -1165,7 +1194,7 @@ section { padding: 100px 0; }
    100% { transform: translateX(100%); }
 }
 
-.donation-option h3 { margin-bottom: 10px; }
+.donation-option h3 { margin-bottom: 10极速加速器px; }
 
 footer {
     background: var(--dark-bg);
@@ -1204,7 +1233,7 @@ footer {
 }
 
 .history-modal-content {
-    background: linear-gradient(135deg, var(--medium-bg) 0%, var(--dark-bg) 100%);
+    background: linear-gradient(135deg, var(--medium-b极速加速器g) 0%, var(--dark-bg) 100%);
     margin: 50px auto;
     padding: 40px;
     border-radius: 15px;
@@ -1225,7 +1254,7 @@ footer {
     transition: all 0.3s ease;
 }
 
-.close-history-modal:hover { color: var(--neon-green); transform: rotate(90deg); }
+.close-history-modal:hover { color: var(--neon-green); transform: rotate(90极速加速器deg); }
 
 .history-modal-title {
     font-size: 2.5rem;
@@ -1294,9 +1323,9 @@ footer {
         width: 80%;
         height: 100vh;
         text-align: center;
-        transition: 0.3s;
+        transition: 0.3极速加速器s;
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-        padding: 80px 0 30px;
+        padding: 80px 0 30极速加速器px;
         z-index: 999;
         justify-content: flex-start;
         gap: 20px;
@@ -1351,6 +1380,12 @@ footer {
     }
     .games-tab, .sort-tab {
         padding: 12px 15px;
+    }
+    .game-genre, .game-status {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        margin-right: 4px;
+        margin-bottom: 6px;
     }
 }
 
