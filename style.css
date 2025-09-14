@@ -737,39 +737,34 @@ section { padding: 100px 0; }
 .game-card.watching { border-color: var(--playing-color); }
 
 /* Кастомные цвета при наведении для каждой карточки */
-.game-card:hover {
-    transform: translateY(-5px);
-    z-index: 50;
-}
-
 .game-card.completed:hover {
-    box-shadow: 0 10px 25px var(--completed-color);
-    border-color: var(--completed-color);
+    box-shadow: 0 10px 25px var(--custom-hover-color, var(--completed-color));
+    border-color: var(--custom-hover-color, var(--completed-color));
 }
 
 .game-card.playing:hover {
-    box-shadow: 0 10px 25px var(--playing-color);
-    border-color: var(--playing-color);
+    box-shadow: 0 10px 25px var(--custom-hover-color, var(--playing-color));
+    border-color: var(--custom-hover-color, var(--playing-color));
 }
 
 .game-card.dropped:hover {
-    box-shadow: 0 10px 25px var(--dropped-color);
-    border-color: var(--dropped-color);
+    box-shadow: 0 10px 25px var(--custom-hover-color, var(--dropped-color));
+    border-color: var(--custom-hover-color, var(--dropped-color));
 }
 
 .game-card.on-hold:hover {
-    box-shadow: 0 10px 25px var(--on-hold-color);
-    border-color: var(--on-hold-color);
+    box-shadow: 0 10px 25px var(--custom-hover-color, var(--on-hold-color));
+    border-color: var(--custom-hover-color, var(--on-hold-color));
 }
 
 .game-card.watched:hover {
-    box-shadow: 0 10px 25px var(--completed-color);
-    border-color: var(--completed-color);
+    box-shadow: 0 10px 25px var(--custom-hover-color, var(--completed-color));
+    border-color: var(--custom-hover-color, var(--completed-color));
 }
 
 .game-card.watching:hover {
-    box-shadow: 0 10px 25px var(--playing-color);
-    border-color: var(--playing-color);
+    box-shadow: 0 10px 25px var(--custom-hover-color, var(--playing-color));
+    border-color: var(--custom-hover-color, var(--playing-color));
 }
 
 .game-image-container {
