@@ -57,7 +57,7 @@
             <h2 class="section-title">Обо мне</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>Привет! Я Ksusha Sher - стример на Twitch, который специализируется на играи и общении с комьюнити. Я создаю уютное и welcoming сообщество, где каждый чувствует себя как дома.</p>
+                    <p>Привет! Я Ksusha Sher - стример на Twitch, который специализируется на играх и общении с комьюнити. Я создаю уютное и welcoming сообщество, где каждый чувствует себя как дома.</p>
                     <p>Мои стримы - это не только игровой контент, но и общение, шутки, и просто хорошее времяпрепровождение вместе с комьюнити.</p>
                     <p>Присоединяйся к нашему уютному сообществу и стань часть нашей цифровой семьи!</p>
                 </div>
@@ -134,68 +134,72 @@
         <div class="container">
             <h2 class="section-title">Игры и кино</h2>
             <div class="games-controls">
-                <div class="games-tabs">
-                    <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i> Игры</div>
-                    <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i> Кино</div>
-                    <div class="tab-slider"></div>
-                </div>
-                <div class="filter-container">
-                    <div class="filter-toggle" id="filter-toggle">
-                        <span>Фильтры</span>
-                        <i class="fas fa-chevron-down"></i>
+                <div class="controls-section">
+                    <div class="games-tabs">
+                        <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i></div>
+                        <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i></div>
+                        <div class="tab-slider"></div>
                     </div>
-                    <div class="filter-dropdown" id="filter-dropdown">
-                        <div class="filter-group games-filters">
-                            <div class="filter-group-title">Статус</div>
-                            <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="games" checked> Все</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="games"> Пройдено</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="playing" data-type="games"> Проходим</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="games"> Брошено</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="games"> Под вопросом</label>
-                            
-                            <div class="filter-divider"></div>
-                            
-                            <div class="filter-group-title">Жанры игр</div>
-                            <label class="filter-option"><input type="checkbox" data-filter="all" data-type="games" checked> Все</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="games"> Хоррор</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="adventure" data-type="games"> Приключения</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="shooter" data-type="games"> Шутер</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="simulator" data-type="games"> Симулятор</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="puzzle" data-type="games"> Головоломка</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="coop" data-type="games"> Кооператив</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="platformer" data-type="games"> Платформер</label>
+                    
+                    <div class="filter-container">
+                        <div class="filter-toggle" id="filter-toggle">
+                            <i class="fas fa-filter"></i>
                         </div>
-                        <div class="filter-group movies-filters" style="display:none">
-                            <div class="filter-group-title">Статус</div>
-                            <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="movies" checked> Все</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="watched" data-type="movies"> Посмотрено</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="watching" data-type="movies"> Смотрим</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="movies"> Бросили</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="movies"> Под вопросом</label>
-                            
-                            <div class="filter-divider"></div>
-                            
-                            <div class="filter-group-title">Жанры фильмов</div>
-                            <label class="filter-option"><input type="checkbox" data-filter="all" data-type="movies" checked> Все</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="animation" data-type="movies"> Анимация</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="fantasy" data-type="movies"> Фэнтези</label>
-                            <label class="filter-option"><input type="checkbox" data-filter="crossover" data-type="movies"> Кроссовер</label>
+                        <div class="filter-dropdown" id="filter-dropdown">
+                            <div class="filter-group games-filters">
+                                <div class="filter-group-title">Статус</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="games" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="games"> Пройдено</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="playing" data-type="games"> Проходим</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="games"> Брошено</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="games"> Под вопросом</label>
+                                
+                                <div class="filter-divider"></div>
+                                
+                                <div class="filter-group-title">Жанры игр</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="games" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="games"> Хоррор</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="adventure" data-type="games"> Приключения</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="shooter" data-type="games"> Шутер</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="simulator" data-type="games"> Симулятор</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="puzzle" data-type="games"> Головоломка</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="coop" data-type="games"> Кооператив</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="platformer" data-type="games"> Платформер</label>
+                            </div>
+                            <div class="filter-group movies-filters" style="display:none">
+                                <div class="filter-group-title">Статус</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="movies" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="watched" data-type="movies"> Посмотрено</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="watching" data-type="movies"> Смотрим</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="movies"> Бросили</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="movies"> Под вопросом</label>
+                                
+                                <div class="filter-divider"></div>
+                                
+                                <div class="filter-group-title">Жанры фильмов</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="movies" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="animation" data-type="movies"> Анимация</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="fantasy" data-type="movies"> Фэнтези</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="crossover" data-type="movies"> Кроссовер</label>
+                            </div>
                         </div>
                     </div>
+                    
+                    <div class="sort-tabs">
+                        <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i></div>
+                        <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i></div>
+                        <div class="sort-slider"></div>
+                    </div>
                 </div>
-                <div class="sort-tabs">
-                    <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i> По названию</div>
-                    <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i> По рейтингу</div>
-                    <div class="sort-slider"></div>
+                
+                <div class="legend-section">
+                    <div class="status-legend">
+                        <span class="legend-item"><span class="status-badge completed"></span> Пройдено/Посмотрено</span>
+                        <span class="legend-item"><span class="status-badge playing"></span> Проходим/Смотрим</span>
+                        <span class="legend-item"><span class="status-badge dropped"></span> Брошено/Бросили</span>
+                        <span class="legend-item"><span class="status-badge on-hold"></span> Под вопросом</span>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Легенда статусов -->
-            <div class="status-legend">
-                <span class="legend-item"><span class="status-badge completed"></span> Пройдено/Посмотрено</span>
-                <span class="legend-item"><span class="status-badge playing"></span> Проходим/Смотрим</span>
-                <span class="legend-item"><span class="status-badge dropped"></span> Брошено/Бросили</span>
-                <span class="legend-item"><span class="status-badge on-hold"></span> Под вопросом</span>
             </div>
             
             <div class="games-content-container">
