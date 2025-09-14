@@ -184,7 +184,7 @@ const gamesData = [
         id: 'creepy-tale-2',
         title: 'Creepy Tale 2',
         rating: 3.5,
-        description: 'Продолжение мрачной приключенческой игры в сказочном мире.',
+        description: 'Продолжение мрачной приключенческой игры в сказочном мира.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/b1b2e5e5e5e5c5e5c5e5c5e5c5e5c5e5c.png',
         genres: ['adventure', 'puzzle'],
@@ -455,18 +455,17 @@ function renderCards(container, data, type) {
         const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
         card.innerHTML = `
-        ${imageHtml}
-        <div class="game-info">
-            <h3 class="game-title">${item.title}</h3>
-            <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
-            <div class="game-tags">
-                <span class="game-status ${statusClass}">${statusText}</span>
-                ${genresHtml}
+            ${imageHtml}
+            <div class="game-info">
+                <h3 class="game-title">${item.title}</h3>
+                <div class="game-rating">${starsHtml}<span>${item.rating}/5</span></div>
+                <div class="game-tags">
+                    <span class="game-status ${statusClass}">${statusText}</span>
+                    ${genresHtml}
+                </div>
+                <p class="game-description">${item.description}</p>
             </div>
-            <p class="game-description">${item.description}</p>
-        </div>
-`;
-
+        `;
         container.appendChild(card);
     });
     
@@ -492,8 +491,7 @@ function showModal(item) {
     const modalGameDescription = document.getElementById('modalGameDescription');
     const modalGameVideo = document.getElementById('modalGameVideo');
     const modalGameImage = document.getElementById('modalGameImage');
-    const modalGameGenres = document.getElementById('modalGameGenres');
-    const modalGameStatus = document.getElementById('modalGameStatus');
+    const modalGameTags = document.getElementById('modalGameTags');
     const gameModal = document.getElementById('gameModal');
     
     modalGameTitle.textContent = item.title;
@@ -502,15 +500,15 @@ function showModal(item) {
     modalGameVideo.src = `https://www.youtube.com/embed/${item.videoId}`;
     modalGameImage.src = item.image;
     
-    // Добавим жанры в модальное окно
-    modalGameGenres.innerHTML = item.genres.map(genre => 
-        `<span class="game-genre">${genreTranslations[genre] || genre}</span>`
-    ).join('');
-    
-    // Добавим статус в модальное окно
+    // Добавим статус и жанры в модальное окно
     const statusClass = `status-${item.status || 'unknown'}`;
     const statusText = getStatusText(item.status);
-    modalGameStatus.innerHTML = `<span class="game-status ${statusClass}">${statusText}</span>`;
+    const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
+    
+    modalGameTags.innerHTML = `
+        <span class="game-status ${statusClass}">${statusText}</span>
+        ${genresHtml}
+    `;
     
     gameModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
@@ -635,6 +633,7 @@ function centerLastRowCards(container) {
     cards.forEach(card => {
         card.style.marginLeft = '';
         card.style.marginRight = '';
+        card.style.gridColumn = '';
     });
     
     // Получим количество карточек в ряду
@@ -643,11 +642,14 @@ function centerLastRowCards(container) {
     
     // Если карточек меньше, чем столбцов в сетке
     if (cards.length < gridColumnCount) {
-        const emptyCells = gridColumnCount - cards.length;
-        const lastCard = cards[cards.length - 1];
+        const emptyCells = gridColumnCount - (cards.length % gridColumnCount);
+        const lastRowStart = cards.length - (cards.length % gridColumnCount || gridColumnCount);
         
-        // Центрируем, добавляя отступы слева
-        lastCard.style.gridColumn = `span ${emptyCells + 1}`;
+        // Центрируем последний ряд
+        if (emptyCells < gridColumnCount) {
+            const firstCardInLastRow = cards[lastRowStart];
+            firstCardInLastRow.style.gridColumn = `${Math.floor(emptyCells/2) + 1} / span ${gridColumnCount - emptyCells + 1}`;
+        }
     }
 }
 
@@ -837,12 +839,7 @@ toggleGamesBtn.addEventListener('click', () => {
     activeGrid.classList.toggle('expanded', isExpanded);
     toggleGamesBtn.textContent = isExpanded ? 'Свернуть' : 'Развернуть';
     
-    // Плавная прокрутка к кнопке после раскрытия
-    if (isExpanded) {
-        setTimeout(() => {
-            toggleGamesBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 300);
-    }
+    // Убрана автоматическая прокрутка вниз
 });
 
 // Сброс состояния кнопки при переключении вкладок
@@ -909,34 +906,8 @@ window.addEventListener('keydown', function(e) {
     }
 });
 
-// Добавим фильтры по статусам
-function initStatusFilters() {
-    const filterContainer = document.querySelector('.filter-dropdown');
-    
-    // Добавим разделитель
-    const divider = document.createElement('div');
-    divider.className = 'filter-divider';
-    filterContainer.appendChild(divider);
-    
-    // Добавим группу фильтров по статусам
-    const statusGroup = document.createElement('div');
-    statusGroup.className = 'filter-group status-filters';
-    statusGroup.innerHTML = `
-        <div class="filter-group-title">Статус</div>
-        <label class="filter-option"><input type="checkbox" data-filter="all" data-type="status" checked> Все</label>
-        <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="status"> Пройдено</label>
-        <label class="filter-option"><input type="checkbox" data-filter="abandoned" data-type="status"> Брошено</label>
-        <label class="filter-option"><input type="checkbox" data-filter="in-progress" data-type="status"> Проходим</label>
-        <label class="filter-option"><input type="checkbox" data-filter="questionable" data-type="status"> Под вопросом</label>
-    `;
-    
-    filterContainer.appendChild(statusGroup);
-}
-
 // Инициализируем фильтры по статусам при загрузке
 document.addEventListener('DOMContentLoaded', function() {
-    initStatusFilters();
-    
     // Перерисуем карточки
     sortAndFilterData();
     
@@ -978,4 +949,3 @@ sortAndFilterData = function() {
     originalSortAndFilterData();
     setTimeout(fixFirstRowOverlap, 100);
 };
-
