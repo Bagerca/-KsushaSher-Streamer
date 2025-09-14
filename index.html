@@ -46,8 +46,8 @@
                 </div>
             </div>
             <div class="hero-buttons">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
-                <a href="https://t.me/pizdeckakoi_to" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
+                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
             </div>
         </div>
     </section>
@@ -100,31 +100,41 @@
     <section id="schedule">
         <div class="container">
             <h2 class="section-title">Расписание</h2>
-            <div class="schedule-container">
-                <div class="schedule-item">
+            <div class="schedule-cards">
+                <div class="schedule-card">
                     <div class="schedule-day">Понедельник</div>
-                    <div class="schedule-time">19:00 - 22:00</div>
-                    <div class="schedule-game">Valorant</div>
+                    <div class="schedule-info">
+                        <div class="schedule-time">19:00 - 22:00</div>
+                        <div class="schedule-game">Valorant</div>
+                    </div>
                 </div>
-                <div class="schedule-item">
+                <div class="schedule-card">
                     <div class="schedule-day">Вторник</div>
-                    <div class="schedule-time">19:00 - 22:00</div>
-                    <div class="schedule-game">Genshin Impact</div>
+                    <div class="schedule-info">
+                        <div class="schedule-time">19:00 - 22:00</div>
+                        <div class="schedule-game">Genshin Impact</div>
+                    </div>
                 </div>
-                <div class="schedule-item">
+                <div class="schedule-card">
                     <div class="schedule-day">Среда</div>
-                    <div class="schedule-time">19:00 - 22:00</div>
-                    <div class="schedule-game">League of Legends</div>
+                    <div class="schedule-info">
+                        <div class="schedule-time">19:00 - 22:00</div>
+                        <div class="schedule-game">League of Legends</div>
+                    </div>
                 </div>
-                <div class="schedule-item">
+                <div class="schedule-card">
                     <div class="schedule-day">Четверг</div>
-                    <div class="schedule-time">19:00 - 22:00</div>
-                    <div class="schedule-game">Мудсочетверг</div>
+                    <div class="schedule-info">
+                        <div class="schedule-time">19:00 - 22:00</div>
+                        <div class="schedule-game">Мудсочетверг</div>
+                    </div>
                 </div>
-                <div class="schedule-item">
+                <div class="schedule-card">
                     <div class="schedule-day">Пятница</div>
-                    <div class="schedule-time">20:00 - 23:00</div>
-                    <div class="schedule-game">Новые игры</div>
+                    <div class="schedule-info">
+                        <div class="schedule-time">20:00 - 23:00</div>
+                        <div class="schedule-game">Новые игры</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -135,8 +145,8 @@
             <h2 class="section-title">Игры и кино</h2>
             <div class="games-controls">
                 <div class="games-tabs">
-                    <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i></div>
-                    <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i></div>
+                    <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i> Игры</div>
+                    <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i> Кино</div>
                     <div class="tab-slider"></div>
                 </div>
                 <div class="filter-container">
@@ -146,6 +156,15 @@
                     </div>
                     <div class="filter-dropdown" id="filter-dropdown">
                         <div class="filter-group games-filters">
+                            <div class="filter-group-title">Статус</div>
+                            <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="games" checked> Все</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="games"> ✅ Пройдено</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="playing" data-type="games"> 🔴 Проходим</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="games"> ❌ Брошено</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="games"> ❓ Под вопросом</label>
+                            
+                            <div class="filter-divider"></div>
+                            
                             <div class="filter-group-title">Жанры игр</div>
                             <label class="filter-option"><input type="checkbox" data-filter="all" data-type="games" checked> Все</label>
                             <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="games"> Хоррор</label>
@@ -157,6 +176,15 @@
                             <label class="filter-option"><input type="checkbox" data-filter="platformer" data-type="games"> Платформер</label>
                         </div>
                         <div class="filter-group movies-filters" style="display:none">
+                            <div class="filter-group-title">Статус</div>
+                            <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="movies" checked> Все</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="watched" data-type="movies"> ✅ Посмотрено</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="watching" data-type="movies"> 🔴 Смотрим</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="movies"> ❌ Бросили</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="movies"> ❓ Под вопросом</label>
+                            
+                            <div class="filter-divider"></div>
+                            
                             <div class="filter-group-title">Жанры фильмов</div>
                             <label class="filter-option"><input type="checkbox" data-filter="all" data-type="movies" checked> Все</label>
                             <label class="filter-option"><input type="checkbox" data-filter="animation" data-type="movies"> Анимация</label>
@@ -166,11 +194,20 @@
                     </div>
                 </div>
                 <div class="sort-tabs">
-                    <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i></div>
-                    <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i></div>
+                    <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i> По названию</div>
+                    <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i> По рейтингу</div>
                     <div class="sort-slider"></div>
                 </div>
             </div>
+            
+            <!-- Легенда статусов -->
+            <div class="status-legend">
+                <span class="legend-item"><span class="status-badge completed"></span> Пройдено/Посмотрено</span>
+                <span class="legend-item"><span class="status-badge playing"></span> Проходим/Смотрим</span>
+                <span class="legend-item"><span class="status-badge dropped"></span> Брошено/Бросили</span>
+                <span class="legend-item"><span class="status-badge on-hold"></span> Под вопросом</span>
+            </div>
+            
             <div class="games-content-container">
                 <div class="games-content active" id="games-content">
                     <div class="games-grid"></div>
@@ -276,15 +313,15 @@
             <h2 class="section-title">Поддержать</h2>
             <p>Если тебе нравится мой контент, ты можешь поддержать меня финансово</p>
             <div class="donation-options">
-                <a href="https://www.donationalerts.com/r/ksusha__sher" class="donation-option">
+                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" rel="noopener noreferrer" class="donation-option">
                     <h3>DonationAlerts</h3>
                     <p>Прямые донаты</p>
                 </a>
-                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" class="donation-option">
+                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" rel="noopener noreferrer" class="donation-option">
                     <h3>MemeAlerts</h3>
                     <p>Альтернативные донаты</p>
                 </a>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" class="donation-option">
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
                     <h3>Twitch Подписка</h3>
                     <p>Подписка на канале</p>
                 </a>
@@ -299,11 +336,11 @@
     <footer>
         <div class="container">
             <div class="social-links">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a"><i class="fab fa-twitch"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="https://t.me/pizdeckakoi_to"><i class="fab fa-telegram"></i></a>
-                <a href="#"><i class="fab fa-discord"></i></a>
-                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitch"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
             </div>
             <p>&copy; 2025 Ksusha Sher. Все права защищены. Сайт создан BAGERca.</p>
         </div>
@@ -312,5 +349,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
