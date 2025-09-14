@@ -700,6 +700,9 @@ section { padding: 100px 0; }
     transition: all 0.5s ease;
     -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
     mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
+    /* Добавляем padding для пространства вокруг карточек */
+    padding: 20px;
+    margin: -20px; /* Компенсируем padding, чтобы не сдвигать layout */
 }
 
 /* Анимация для сортировки */
@@ -1281,3 +1284,4 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
