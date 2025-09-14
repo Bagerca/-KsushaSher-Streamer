@@ -488,27 +488,50 @@ section { padding: 100px 0; }
     border-bottom: 1px solid rgba(255, 45, 149, 0.3);
 }
 
-.schedule-container {
+/* Новые стили для расписания */
+.schedule-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.schedule-card {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
-    padding: 30px;
-    backdrop-filter: blur(10px);
+    padding: 20px;
+    text-align: center;
     border: 1px solid rgba(255, 45, 149, 0.3);
-    box-shadow: 0 0 20px rgba(255, 45, 149, 0.2);
+    transition: all 0.3s ease;
 }
 
-.schedule-item {
+.schedule-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border-color: var(--neon-green);
+}
+
+.schedule-day {
+    font-weight: 700;
+    color: var(--neon-pink);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(255, 45, 149, 0.5);
+}
+
+.schedule-info {
     display: flex;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: column;
+    gap: 10px;
 }
 
-.schedule-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.schedule-time {
+    color: var(--neon-green);
+    font-weight: 600;
+}
 
-.schedule-day { min-width: 150px; font-weight: 700; color: var(--neon-pink); }
-.schedule-time { color: var(--neon-green); min-width: 120px; }
-.schedule-game { color: var(--light-text); }
+.schedule-game {
+    color: var(--light-text);
+}
 
 #games { 
     background: rgba(10, 10, 20, 0.5); 
@@ -635,6 +658,13 @@ section { padding: 100px 0; }
     letter-spacing: 1px;
 }
 
+/* Разделитель в фильтрах */
+.filter-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 10px 0;
+}
+
 .sort-tab { padding: 12px 20px; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
 
 .games-content-container {
@@ -685,6 +715,7 @@ section { padding: 100px 0; }
     transition: all 0.5s ease;
     -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
     mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
+    justify-items: center;
 }
 
 /* Анимация для сортировки */
@@ -711,6 +742,8 @@ section { padding: 100px 0; }
     z-index: 5;
     margin-bottom: 20px;
     transform: translateZ(0);
+    width: 100%;
+    max-width: 300px;
 }
 
 .game-card:hover {
@@ -749,6 +782,53 @@ section { padding: 100px 0; }
     color: var(--neon-pink);
 }
 
+/* Новые стили для статусов */
+.game-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.status-completed {
+    background: rgba(57, 255, 20, 0.2);
+    color: var(--neon-green);
+    border: 1px solid var(--neon-green);
+}
+
+.status-playing {
+    background: rgba(255, 45, 149, 0.2);
+    color: var(--neon-pink);
+    border: 1px solid var(--neon-pink);
+}
+
+.status-dropped {
+    background: rgba(255, 100, 100, 0.2);
+    color: #ff6464;
+    border: 1px solid #ff6464;
+}
+
+.status-on-hold {
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+    border: 1px solid #ffd700;
+}
+
+.status-watched {
+    background: rgba(57, 255, 20, 0.2);
+    color: var(--neon-green);
+    border: 1px solid var(--neon-green);
+}
+
+.status-watching {
+    background: rgba(255, 45, 149, 0.2);
+    color: var(--neon-pink);
+    border: 1px solid var(--neon-pink);
+}
+
 .game-rating {
     display: flex;
     align-items: center;
@@ -778,6 +858,54 @@ section { padding: 100px 0; }
     font-size: 0.8rem;
     margin-right: 5px;
     margin-bottom: 5px;
+}
+
+/* Легенда статусов */
+.status-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 45, 149, 0.3);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--light-text);
+}
+
+.status-badge {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-badge.completed {
+    background: var(--neon-green);
+    box-shadow: 0 0 5px var(--neon-green);
+}
+
+.status-badge.playing {
+    background: var(--neon-pink);
+    box-shadow: 0 0 5px var(--neon-pink);
+}
+
+.status-badge.dropped {
+    background: #ff6464;
+    box-shadow: 0 0 5px #ff6464;
+}
+
+.status-badge.on-hold {
+    background: #ffd700;
+    box-shadow: 0 0 5px #ffd700;
 }
 
 .toggle-games {
@@ -1137,8 +1265,12 @@ footer {
     .light-ring { width: 240px; height: 240px; }
     .light-ring:nth-child(2) { width: 270px; height: 270px; }
     .light-ring:nth-child(3) { width: 300px; height: 300px; }
-    .schedule-item { flex-direction: column; }
-    .schedule-day, .schedule-time { margin-bottom: 5px; }
+    
+    /* Адаптивность для нового расписания */
+    .schedule-cards {
+        grid-template-columns: 1fr;
+    }
+    
     .games-grid { 
         max-height: none; 
         -webkit-mask-image: none;
@@ -1158,5 +1290,11 @@ footer {
     .history-grid {
         grid-template-columns: 1fr;
     }
+    
+    /* Адаптивность для легенды статусов */
+    .status-legend {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
 }
-
