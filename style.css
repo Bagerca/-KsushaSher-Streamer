@@ -634,12 +634,13 @@ section { padding: 100px 0; }
     border-radius: 30px;
     z-index: 1;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
 }
 
 .filter-container { position: relative; display: inline-block; }
 
 .filter-toggle {
-    padding: 12px 20px;
+    padding: 12px 15px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 45, 149, 0.3);
     border-radius: 30px;
@@ -648,10 +649,13 @@ section { padding: 100px 0; }
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
 }
 
-.filter-toggle:hover { border-color: var(--neon-green); }
+.filter-toggle:hover { 
+    border-color: var(--neon-green);
+    transform: scale(1.05);
+}
 
 .filter-dropdown {
     position: absolute;
@@ -667,13 +671,20 @@ section { padding: 100px 0; }
     border: 1px solid rgba(255, 45, 149, 0.3);
     display: none;
     backdrop-filter: blur(10px);
+    animation: slideDown 0.3s ease-out;
 }
 
-.filter-dropdown.active { display: block; animation: fadeIn 0.3s ease; }
+.filter-dropdown.active { display: block; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes slideDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
 .filter-option {
@@ -710,7 +721,7 @@ section { padding: 100px 0; }
     margin: 10px 0;
 }
 
-.sort-tab { padding: 12px 20px; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
+.sort-tab { padding: 12px 20px; display: flex; align-items: center; justify-content: center; }
 
 .games-content-container {
     position: relative;
@@ -724,7 +735,8 @@ section { padding: 100px 0; }
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
-    transition: all 0.5s ease;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
 }
 
 .games-content.active { 
@@ -732,6 +744,7 @@ section { padding: 100px 0; }
     visibility: visible; 
     transform: translateY(0);
     position: relative;
+    pointer-events: all;
 }
 
 /* Анимации для переключения контента */
@@ -789,6 +802,7 @@ section { padding: 100px 0; }
     transform: translateZ(0);
     width: 100%;
     max-width: 300px;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .game-card:hover {
@@ -796,6 +810,17 @@ section { padding: 100px 0; }
     box-shadow: 0 10px 25px rgba(57, 255, 20, 0.3);
     border-color: var(--neon-green);
     z-index: 50;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .game-image-container {
@@ -846,7 +871,14 @@ section { padding: 100px 0; }
     overflow: hidden;
 }
 
-/* Стили для русских тегов */
+/* Стили для тегов */
+.game-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
 .game-genre {
     display: inline-block;
     padding: 4px 8px;
@@ -863,29 +895,32 @@ section { padding: 100px 0; }
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.8rem;
-    margin-right: 5px;
-    margin-bottom: 5px;
     font-weight: bold;
+    order: -1;
 }
 
 .game-status.completed {
     background: rgba(57, 255, 20, 0.2);
     color: var(--neon-green);
+    border: 1px solid var(--neon-green);
 }
 
 .game-status.abandoned {
     background: rgba(255, 45, 149, 0.2);
     color: var(--neon-pink);
+    border: 1px solid var(--neon-pink);
 }
 
 .game-status.in-progress {
     background: rgba(255, 204, 0, 0.2);
     color: var(--neon-yellow);
+    border: 1px solid var(--neon-yellow);
 }
 
 .game-status.questionable {
     background: rgba(0, 162, 255, 0.2);
     color: var(--neon-blue);
+    border: 1px solid var(--neon-blue);
 }
 
 .toggle-games {
@@ -989,7 +1024,7 @@ section { padding: 100px 0; }
 
 .modal-game-rating i { margin-right: 5px; }
 
-.modal-game-genres, .modal-game-status {
+.modal-game-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -1314,6 +1349,9 @@ footer {
         flex-direction: column;
         align-items: center;
     }
+    .games-tab, .sort-tab {
+        padding: 12px 15px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1325,5 +1363,13 @@ footer {
     }
     .game-card {
         max-width: 100%;
+    }
+    .games-controls {
+        padding: 15px;
+    }
+    .filter-dropdown {
+        width: 100%;
+        left: 0;
+        right: 0;
     }
 }
