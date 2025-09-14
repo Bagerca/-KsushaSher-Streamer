@@ -663,15 +663,17 @@ section { padding: 100px 0; }
     width: 100%;
     opacity: 0;
     visibility: hidden;
-    transform: translateX(-100%) rotate(-5deg);
-    transition: all 0.6s ease;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+    filter: blur(10px);
 }
 
 .games-content.active { 
     opacity: 1; 
     visibility: visible; 
-    transform: translateX(0) rotate(0);
+    transform: translateY(0);
     position: relative;
+    filter: blur(0);
 }
 
 /* Анимации для переключения контента */
@@ -1284,5 +1286,6 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
 
 
