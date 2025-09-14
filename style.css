@@ -1,8 +1,6 @@
 :root {
     --neon-green: #39ff14;
     --neon-pink: #ff2d95;
-    --neon-blue: #00a2ff;
-    --neon-yellow: #ffcc00;
     --dark-bg: #070711;
     --medium-bg: #0f0f1b;
     --light-text: #ccc;
@@ -205,7 +203,7 @@ nav ul li a:hover::after { width: 100%; }
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid var(--neon-pink);
-    box-shadow: 极速加速器 0 0 20px rgba(255, 45, 149, 0.5), 0 0 40px rgba(57, 255, 20, 0.3);
+    box-shadow: 0 0 20px rgba(255, 45, 149, 0.5), 0 0 40px rgba(57, 255, 20, 0.3);
     position: relative;
     z-index: 2;
     animation: pulse 3s infinite ease-in-out;
@@ -245,12 +243,12 @@ nav ul li a:hover::after { width: 100%; }
     height: 12px;
     border-radius: 50%;
     background: var(--neon-green);
-    box-shadow: 0 极速加速器 10px var(--neon-green), 0 0 20px var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
     animation: orbit 8s linear infinite;
 }
 
 .light-ring:nth-child(2) {
-    width: 420极速加速器px;
+    width: 420px;
     height: 420px;
     animation-duration: 20s;
     animation-direction: reverse;
@@ -258,11 +256,11 @@ nav ul li a:hover::after { width: 100%; }
 
 .light-ring:nth-child(2)::before {
     background: var(--neon-pink);
-    box-shadow: 0 0 10px var(--neon-pink), 0 0 20极速加速器px var(--neon-pink);
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
     animation: orbit 12s linear infinite reverse;
 }
 
-.light-ring:n极速加速器th-child(3) {
+.light-ring:nth-child(3) {
     width: 460px;
     height: 460px;
     animation-duration: 25s;
@@ -318,7 +316,7 @@ section { padding: 100px 0; }
 .section-title {
     text-align: center;
     font-size: 2.5rem;
-    margin-bottom: 50极速加速器px;
+    margin-bottom: 50px;
     position: relative;
     color: var(--neon-green);
     text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
@@ -331,8 +329,8 @@ section { padding: 100px 0; }
     left: 50%;
     transform: translateX(-50%);
     width: 100px;
-   极速加速器 height: 10px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10极速加速器'%3E%3Cpath d='M0,5 C30,0 70,10 100,5' stroke='%23ff2d95' stroke-width='2' fill='none' /%3E%3Cpath d='M0,5 C30,10 70,0 100,5' stroke='%2339ff14' stroke-width='2' fill='none' /极速加速器%3E%3C/svg%3E") center/100px 10px no-repeat;
+    height: 10px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3E%3Cpath d='M0,5 C30,0 70,10 100,5' stroke='%23ff2d95' stroke-width='2' fill='none' /%3E%3Cpath d='M0,5 C30,10 70,0 100,5' stroke='%2339ff14' stroke-width='2' fill='none' /%3E%3C/svg%3E") center/100px 10px no-repeat;
 }
 
 #about {
@@ -385,8 +383,8 @@ section { padding: 100px 0; }
 @keyframes rotate-glow {
     0% { background: linear-gradient(0deg, var(--neon-pink), var(--neon-green)); }
     25% { background: linear-gradient(90deg, var(--neon-pink), var(--neon-green)); }
-    50% { background: linear-gradient(180deg,极速加速器 var(--neon-pink), var(--neon-green)); }
-    75% { background: linear-gradient(270deg, var(--极速加速器neon-pink), var(--neon-green)); }
+    50% { background: linear-gradient(180deg, var(--neon-pink), var(--neon-green)); }
+    75% { background: linear-gradient(270deg, var(--neon-pink), var(--neon-green)); }
     100% { background: linear-gradient(360deg, var(--neon-pink), var(--neon-green)); }
 }
 
@@ -429,7 +427,7 @@ section { padding: 100px 0; }
     font-weight: 800;
     color: var(--neon-pink);
     text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink), 0 0 40px var(--neon-pink);
-    animation: neon-pulse 1.5极速加速器s infinite alternate;
+    animation: neon-pulse 1.5s infinite alternate;
     text-transform: uppercase;
     letter-spacing: 5px;
     transform: rotate(-5deg);
@@ -437,7 +435,7 @@ section { padding: 100px 0; }
 
 @keyframes neon-pulse {
     from { text-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 15px var(--neon-pink), 0 0 20px var(--neon-pink); }
-    to { text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink), 极速加速器0 0 40px var(--neon-pink), 0 0 50px var(--neon-pink), 0 0 60极速加速器px var(--neon-pink); }
+    to { text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink), 0 0 40px var(--neon-pink), 0 0 50px var(--neon-pink), 0 0 60px var(--neon-pink); }
 }
 
 .stats-container {
@@ -467,7 +465,7 @@ section { padding: 100px 0; }
     border: 2px solid transparent;
     border-radius: 10px;
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-green)) border-box;
-    -webkit-mask: linear-gradient(#fff 0 极速加速器0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
     opacity: 0.7;
@@ -495,62 +493,22 @@ section { padding: 100px 0; }
     border-radius: 10px;
     padding: 30px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 45, 149, 极速加速器0.3);
+    border: 1px solid rgba(255, 45, 149, 0.3);
     box-shadow: 0 0 20px rgba(255, 45, 149, 0.2);
-}
-
-.schedule-header {
-    display: flex;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px 8px 0 0;
-    font-weight: bold;
-    border-bottom: 2px solid var(--neon-green);
-}
-
-.schedule-header > div {
-    flex: 1;
-    text-align: center;
 }
 
 .schedule-item {
     display: flex;
-    padding: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
 }
 
 .schedule-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
-.schedule-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.schedule-item > div {
-    flex: 1;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .schedule-day { min-width: 150px; font-weight: 700; color: var(--neon-pink); }
 .schedule-time { color: var(--neon-green); min-width: 120px; }
 .schedule-game { color: var(--light-text); }
-
-.schedule-status {
-    font-weight: bold;
-}
-
-.schedule-status.active {
-    color: var(--neon-green);
-    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
-}
-
-.schedule-status.cancelled {
-    color: var(--neon-pink);
-    text-shadow: 0 0 5px rgba(255, 45, 149, 0.5);
-}
 
 #games { 
     background: rgba(10, 10, 20, 0.5); 
@@ -558,33 +516,6 @@ section { padding: 100px 0; }
     overflow: visible;
     padding: 80px 0;
 }
-
-.status-legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-}
-
-.status-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-}
-
-.status-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.status-dot.completed { background-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
-.status-dot.abandoned { background-color: var(--neon-pink); box-shadow: 0 0 5px var(--neon-pink); }
-.status-dot.in-progress { background-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
-.status-dot.questionable { background-color: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); }
 
 .games-controls {
     display: flex;
@@ -616,7 +547,7 @@ section { padding: 100px 0; }
     border: none;
     color: var(--light-text);
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.4s ease;
     white-space: nowrap;
     position: relative;
     z-index: 2;
@@ -625,24 +556,7 @@ section { padding: 100px 0; }
     justify-content: center;
 }
 
-.games-tab.active, .sort极速加速器-tab.active { color: var(--white); }
-
-.games-tab::before, .sort-tab::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--neon-pink), var(--neon-green));
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    transform: translateX(-50%);
-    border-radius: 3px;
-}
-
-.games-tab.active::before, .sort-tab.active::before {
-    width: 70%;
-}
+.games-tab.active, .sort-tab.active { color: var(--white); }
 
 .tab-slider, .sort-slider {
     position: absolute;
@@ -650,30 +564,25 @@ section { padding: 100px 0; }
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
     border-radius: 30px;
     z-index: 1;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .filter-container { position: relative; display: inline-block; }
 
 .filter-toggle {
-    padding: 12px 15px;
+    padding: 12px 20px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 45, 149, 0.3);
     border-radius: 30px;
     color: var(--light-text);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 10px;
 }
 
-.filter-toggle:hover { 
-    border-color: var(--neon-green);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 45, 149, 0.4);
-}
+.filter-toggle:hover { border-color: var(--neon-green); }
 
 .filter-dropdown {
     position: absolute;
@@ -681,7 +590,7 @@ section { padding: 100px 0; }
     left: 0;
     margin-top: 10px;
     background: rgba(15, 15, 25, 0.95);
-    border-radius: 10极速加速器px;
+    border-radius: 10px;
     padding: 15px;
     min-width: 200px;
     z-index: 100;
@@ -689,21 +598,13 @@ section { padding: 100px 0; }
     border: 1px solid rgba(255, 45, 149, 0.3);
     display: none;
     backdrop-filter: blur(10px);
-    animation: filterSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-    transform-origin: top center;
 }
 
-.filter-dropdown.active { display: block; }
+.filter-dropdown.active { display: block; animation: fadeIn 0.3s ease; }
 
-@keyframes filterSlideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .filter-option {
@@ -734,13 +635,7 @@ section { padding: 100px 0; }
     letter-spacing: 1px;
 }
 
-.filter-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 10px 0;
-}
-
-.sort-tab { padding: 12px 20px; display: flex; align-items: center; justify-content: center; }
+.sort-tab { padding: 12px 20px; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
 
 .games-content-container {
     position: relative;
@@ -749,27 +644,40 @@ section { padding: 100px 0; }
 }
 
 .games-content {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     position: absolute;
     width: 100%;
-    pointer-events: none;
-    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
 }
 
-.games-content.active {
-    opacity: 1;
+.games-content.active { 
+    opacity: 1; 
+    visibility: visible; 
     transform: translateY(0);
     position: relative;
-    pointer-events: all;
-    z-index: 2;
+}
+
+/* Анимации для переключения контента */
+.games-content.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.games-content.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.games-content.fade-in.active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    justify-items: center;
     gap: 30px;
     position: relative;
     max-height: 800px;
@@ -779,19 +687,11 @@ section { padding: 100px 0; }
     mask-image: linear-gradient(to bottom, black 85%, transparent 98%);
 }
 
-.games-grid.sorting .game-card {
-    animation: cardSort 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-
-@keyframes cardSort {
-    0% {
-        opacity: 0.5;
-        transform: scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+/* Анимация для сортировки */
+.games-grid.sorting {
+    opacity: 0.5;
+    transform: scale(0.98);
+    transition: all 0.3s ease;
 }
 
 .games-grid.expanded { 
@@ -811,20 +711,6 @@ section { padding: 100px 0; }
     z-index: 5;
     margin-bottom: 20px;
     transform: translateZ(0);
-    width: 100%;
-    max-width: 300px;
-    animation: cardAppear 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-
-@keyframes cardAppear {
-    0% {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
 }
 
 .game-card:hover {
@@ -863,7 +749,7 @@ section { padding: 100px 0; }
     color: var(--neon-pink);
 }
 
-.game-r极速加速器ating {
+.game-rating {
     display: flex;
     align-items: center;
     color: var(--neon-green);
@@ -882,58 +768,16 @@ section { padding: 100px 0; }
     overflow: hidden;
 }
 
-.game-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 15px;
-}
-
-.game-genre, .game-status {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-right: 6px;
-    margin-bottom: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
+/* Стили для русских тегов */
 .game-genre {
+    display: inline-block;
+    padding: 4px 8px;
     background: rgba(255, 45, 149, 0.2);
+    border-radius: 4px;
     color: var(--neon-pink);
-    border: 1px solid var(--neon-pink);
-}
-
-.game-status.completed {
-    background: rgba(57, 255, 20, 0.2);
-    color: var(--neon-green);
-    border: 1px solid var(--neon-green);
-}
-
-.game-status.abandoned {
-    background: rgba(255, 45, 149, 0.2);
-    color: var(--neon-pink);
-    border: 1px solid var(--neon-pink);
-}
-
-.game-status.in-progress {
-    background: rgba(255, 204, 0, 0.2);
-    color: var(--neon-yellow);
-    border: 1px solid var(--neon-yellow);
-}
-
-.game-status.questionable {
-    background: rgba(0, 162, 255, 0.2);
-    color: var(--neon-blue);
-    border: 1px solid var(--neon-blue);
-}
-
-.game-genre:hover, .game-status:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-size: 0.8rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 .toggle-games {
@@ -943,29 +787,13 @@ section { padding: 100px 0; }
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
     color: var(--white);
     border: none;
-    border-radius: 30极速加速器px;
+    border-radius: 30px;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.3s ease;
     font-weight: 600;
     box-shadow: 0 5px 15px rgba(255, 45, 149, 0.4);
     position: relative;
     z-index: 10;
-    overflow: hidden;
-}
-
-.toggle-games::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: all 0.6s ease;
-}
-
-.toggle-games:hover::before {
-    left: 100%;
 }
 
 .toggle-games:hover {
@@ -987,14 +815,14 @@ section { padding: 100px 0; }
 }
 
 .modal-content {
-    background: linear-gradient(135deg, var(--medium-bg) 0%, var(--dark-bg) 极速加速器100%);
+    background: linear-gradient(135deg, var(--medium-bg) 0%, var(--dark-bg) 100%);
     margin: 50px auto;
     padding: 30px;
     border-radius: 15px;
     max-width: 900px;
     width: 90%;
     border: 2px solid var(--neon-green);
-    box-shadow: 0 0 30px rgba极速加速器(57, 255, 20, 0.5);
+    box-shadow: 0 0 30px rgba(57, 255, 20, 0.5);
     position: relative;
 }
 
@@ -1010,42 +838,15 @@ section { padding: 100px 0; }
 
 .close-modal:hover { color: var(--neon-green); transform: rotate(90deg); }
 
-.modal-layout {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-.modal-left {
-    flex: 1;
-    min-width: 250px;
-}
-
-.modal-right {
-    flex: 2;
-    min-width: 300px;
-}
-
-.modal-cover {
-    width: 100%;
-    max-width: 250px;
-    border-radius: 10px;
-    border: 2px solid var(--neon-pink);
-    box-shadow: 0 0 15px rgba(255, 45, 149, 0.5);
-    margin-bottom: 20px;
-}
-
-.modal-game-info {
-    margin-top: 20px;
-}
-
 .modal-game-title {
     font-size: 2rem;
     color: var(--neon-pink);
     margin-bottom: 15px;
+    text-align: center;
 }
 
 .modal-game-rating {
+    text-align: center;
     margin-bottom: 20px;
     color: var(--neon-green);
     font-size: 1.2rem;
@@ -1053,29 +854,18 @@ section { padding: 100px 0; }
 
 .modal-game-rating i { margin-right: 5px; }
 
-.modal-game-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 15px;
-}
-
-.modal-game-description { 
-    margin-bottom: 25px; 
-    line-height: 1.6; 
-    color: var(--light-text);
-}
+.modal-game-description { margin-bottom: 25px; line-height: 1.6; }
 
 #specs { background: rgba(15, 15, 25, 0.5); }
 
 .specs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250极速加速器px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
 }
 
 .spec-item {
-    background: rgba(255, 255, 255, 极速加速器0.05);
+    background: rgba(255, 255, 255, 0.05);
     padding: 25px 20px;
     border-radius: 10px;
     text-align: center;
@@ -1091,7 +881,7 @@ section { padding: 100px 0; }
     top: 0;
     left: 0;
     width: 100%;
-    height: 3极速加速器px;
+    height: 3px;
     background: linear-gradient(90deg, var(--neon-pink), var(--neon-green));
 }
 
@@ -1159,7 +949,7 @@ section { padding: 100px 0; }
 
 .donation-option:hover {
     transform: scale(1.05);
-    box-shadow: 极速加速器0 10px 25px rgba(255, 45, 149, 0.4);
+    box-shadow: 0 10px 25px rgba(255, 45, 149, 0.4);
     color: var(--white);
 }
 
@@ -1194,7 +984,7 @@ section { padding: 100px 0; }
    100% { transform: translateX(100%); }
 }
 
-.donation-option h3 { margin-bottom: 10极速加速器px; }
+.donation-option h3 { margin-bottom: 10px; }
 
 footer {
     background: var(--dark-bg);
@@ -1233,7 +1023,7 @@ footer {
 }
 
 .history-modal-content {
-    background: linear-gradient(135deg, var(--medium-b极速加速器g) 0%, var(--dark-bg) 100%);
+    background: linear-gradient(135deg, var(--medium-bg) 0%, var(--dark-bg) 100%);
     margin: 50px auto;
     padding: 40px;
     border-radius: 15px;
@@ -1254,7 +1044,7 @@ footer {
     transition: all 0.3s ease;
 }
 
-.close-history-modal:hover { color: var(--neon-green); transform: rotate(90极速加速器deg); }
+.close-history-modal:hover { color: var(--neon-green); transform: rotate(90deg); }
 
 .history-modal-title {
     font-size: 2.5rem;
@@ -1323,9 +1113,9 @@ footer {
         width: 80%;
         height: 100vh;
         text-align: center;
-        transition: 0.3极速加速器s;
+        transition: 0.3s;
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-        padding: 80px 0 30极速加速器px;
+        padding: 80px 0 30px;
         z-index: 999;
         justify-content: flex-start;
         gap: 20px;
@@ -1347,8 +1137,8 @@ footer {
     .light-ring { width: 240px; height: 240px; }
     .light-ring:nth-child(2) { width: 270px; height: 270px; }
     .light-ring:nth-child(3) { width: 300px; height: 300px; }
-    .schedule-header, .schedule-item { flex-direction: column; gap: 10px; }
-    .schedule-header > div, .schedule-item > div { text-align: left; justify-content: flex-start; }
+    .schedule-item { flex-direction: column; }
+    .schedule-day, .schedule-time { margin-bottom: 5px; }
     .games-grid { 
         max-height: none; 
         -webkit-mask-image: none;
@@ -1368,43 +1158,5 @@ footer {
     .history-grid {
         grid-template-columns: 1fr;
     }
-    .modal-layout {
-        flex-direction: column;
-    }
-    .modal-cover {
-        margin: 0 auto;
-    }
-    .status-legend {
-        flex-direction: column;
-        align-items: center;
-    }
-    .games-tab, .sort-tab {
-        padding: 12px 15px;
-    }
-    .game-genre, .game-status {
-        font-size: 0.7rem;
-        padding: 4px 8px;
-        margin-right: 4px;
-        margin-bottom: 6px;
-    }
 }
 
-@media (max-width: 480px) {
-    .hero-title { font-size: 2rem; }
-    .hero-content p { font-size: 1.1rem; }
-    .section-title { font-size: 2rem; }
-    .games-grid {
-        grid-template-columns: 1fr;
-    }
-    .game-card {
-        max-width: 100%;
-    }
-    .games-controls {
-        padding: 15px;
-    }
-    .filter-dropdown {
-        width: 100%;
-        left: 0;
-        right: 0;
-    }
-}
