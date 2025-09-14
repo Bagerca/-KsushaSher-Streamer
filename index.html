@@ -46,8 +46,8 @@
                 </div>
             </div>
             <div class="hero-buttons">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
-                <a href="https://t.me/pizdeckakoi_to" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
+                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
             </div>
         </div>
     </section>
@@ -146,14 +146,13 @@
             <h2 class="section-title">Игры и кино</h2>
             <div class="games-controls">
                 <div class="games-tabs">
-                    <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i> Игры</div>
-                    <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i> Кино</div>
+                    <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i></div>
+                    <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i></div>
                     <div class="tab-slider"></div>
                 </div>
                 <div class="filter-container">
                     <div class="filter-toggle" id="filter-toggle">
-                        <span>Фильтры</span>
-                        <i class="fas fa-chevron-down"></i>
+                        <i class="fas fa-filter"></i>
                     </div>
                     <div class="filter-dropdown" id="filter-dropdown">
                         <div class="filter-group games-filters">
@@ -174,16 +173,24 @@
                             <label class="filter-option"><input type="checkbox" data-filter="fantasy" data-type="movies"> Фэнтези</label>
                             <label class="filter-option"><input type="checkbox" data-filter="crossover" data-type="movies"> Кроссовер</label>
                         </div>
+                        <div class="filter-divider"></div>
+                        <div class="filter-group status-filters">
+                            <div class="filter-group-title">Статус прохождения</div>
+                            <label class="filter-option"><input type="checkbox" data-filter="all" data-type="status" checked> Все</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="status"> Пройдено</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="abandoned" data-type="status"> Брошено</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="in-progress" data-type="status"> Проходим</label>
+                            <label class="filter-option"><input type="checkbox" data-filter="questionable" data-type="status"> Под вопросом</label>
+                        </div>
                     </div>
                 </div>
                 <div class="sort-tabs">
-                    <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i> По имени</div>
-                    <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i> По рейтингу</div>
+                    <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i></div>
+                    <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i></div>
                     <div class="sort-slider"></div>
                 </div>
             </div>
             
-            <!-- Легенда статусов -->
             <div class="status-legend">
                 <div class="status-item">
                     <span class="status-dot completed"></span>
@@ -231,8 +238,7 @@
                             <i class="far fa-star"></i>
                             <span>4/5</span>
                         </div>
-                        <div class="modal-game-genres" id="modalGameGenres"></div>
-                        <div class="modal-game-status" id="modalGameStatus"></div>
+                        <div class="modal-game-tags" id="modalGameTags"></div>
                         <p class="modal-game-description" id="modalGameDescription">Описание игры...</p>
                     </div>
                 </div>
@@ -319,15 +325,15 @@
             <h2 class="section-title">Поддержать</h2>
             <p>Если тебе нравится мой контент, ты можешь поддержать меня финансово</p>
             <div class="donation-options">
-                <a href="https://www.donationalerts.com/r/ksusha__sher" class="donation-option">
+                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" rel="noopener noreferrer" class="donation-option">
                     <h3>DonationAlerts</h3>
                     <p>Прямые донаты</p>
                 </a>
-                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" class="donation-option">
+                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" rel="noopener noreferrer" class="donation-option">
                     <h3>MemeAlerts</h3>
                     <p>Альтернативные донаты</p>
                 </a>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" class="donation-option">
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
                     <h3>Twitch Подписка</h3>
                     <p>Подписка на канале</p>
                 </a>
@@ -355,4 +361,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
