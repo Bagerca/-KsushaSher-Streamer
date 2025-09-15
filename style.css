@@ -952,7 +952,7 @@ section { padding: 100px 0; }
     margin-bottom: 15px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    -webkit-box-orject: vertical;
     overflow: hidden;
 }
 
