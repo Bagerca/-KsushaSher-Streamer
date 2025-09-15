@@ -480,33 +480,170 @@ section { padding: 100px 0; }
 
 .stat-label { color: var(--light-text); font-size: 1.1rem; }
 
+/* Стили для нового расписания в виде списка */
+.schedule-subtitle {
+    text-align: center;
+    color: var(--light-text);
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+}
+
+.neon-text {
+    color: var(--neon-green);
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+    font-weight: 600;
+}
+
+.schedule-list {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 45, 149, 0.2);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.schedule-item {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr auto;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 15px;
+    background: rgba(15, 15, 25, 0.5);
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.schedule-item:last-child {
+    margin-bottom: 0;
+}
+
+.schedule-item:hover {
+    border-color: var(--neon-green);
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.schedule-item.highlighted {
+    background: linear-gradient(135deg, rgba(255, 45, 149, 0.1) 0%, rgba(57, 255, 20, 0.1) 100%);
+    border-color: var(--neon-green);
+}
+
+.schedule-day-wrapper {
+    padding-right: 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.schedule-day {
+    color: var(--neon-pink);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.schedule-time {
+    color: var(--neon-green);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.schedule-content {
+    padding: 0 25px;
+}
+
+.schedule-game {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.schedule-desc {
+    color: var(--light-text);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.schedule-status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid transparent;
+}
+
+.schedule-status.active {
+    background: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+    animation: pulse-status 2s infinite;
+}
+
+@keyframes pulse-status {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.schedule-footer {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 45, 149, 0.3);
+}
+
+.schedule-footer p {
+    color: var(--light-text);
+    margin: 0;
+}
+
+.neon-link {
+    color: var(--neon-green);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.neon-link:hover {
+    text-shadow: 0 0 10px var(--neon-green);
+    text-decoration: underline;
+}
+
+/* Адаптивность для расписания */
+@media (max-width: 768px) {
+    .schedule-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .schedule-day-wrapper {
+        padding-right: 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 15px;
+    }
+    
+    .schedule-content {
+        padding: 0;
+        order: 3;
+    }
+    
+    .schedule-status {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        order: 2;
+    }
+    
+    .schedule-item:hover {
+        transform: translateY(-3px);
+    }
+}
+
 #schedule {
     background: rgba(15, 15, 25, 0.5);
     border-top: 1px solid rgba(57, 255, 20, 0.3);
     border-bottom: 1px solid rgba(255, 45, 149, 0.3);
 }
-
-.schedule-container {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 30px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 45, 149, 0.3);
-    box-shadow: 0 0 20px rgba(255, 45, 149, 0.2);
-}
-
-.schedule-item {
-    display: flex;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.schedule-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-.schedule-day { min-width: 150px; font-weight: 700; color: var(--neon-pink); }
-.schedule-time { color: var(--neon-green); min-width: 120px; }
-.schedule-game { color: var(--light-text); }
 #games { 
     background: rgba(10, 10, 20, 0.5); 
     position: relative;
@@ -1236,10 +1373,6 @@ footer {
     .light-ring:nth-child(2) { width: 270px; height: 270px; }
     .light-ring:nth-child(3) { width: 300px; height: 300px; }
     
-    /* Адаптивность для расписания */
-    .schedule-item { flex-direction: column; }
-    .schedule-day, .schedule-time { margin-bottom: 5px; }
-    
     /* Адаптивность для игр */
     .games-controls {
         flex-direction: column;
@@ -1278,5 +1411,19 @@ footer {
     }
     .history-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .specs-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .donation-options {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .donation-option {
+        width: 100%;
+        max-width: 300px;
     }
 }
