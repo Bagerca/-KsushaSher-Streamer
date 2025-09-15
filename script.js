@@ -115,10 +115,10 @@ const gamesData = [
         rating: 4.5,
         description: 'Продолжение культового хоррора с улучшенной графикой, новыми механиками и захватывающим сюжетом.',
         videoId: 'dQw4w9WgXcQ',
-        image: 'https://cdn2.steamgriddb.com/grid/fc423c11f06856a5507d3b91e393ddb4.jpg',
+        image: 'https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png',
         genres: ['horror', 'adventure'],
         status: 'playing',
-        customColor: '#0c1725'
+        customColor: '#9b5319'
     }
 ];
 
@@ -767,6 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
 });
+
 
 
 
