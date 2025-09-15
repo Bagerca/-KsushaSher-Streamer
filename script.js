@@ -766,9 +766,43 @@ document.addEventListener('DOMContentLoaded', function() {
         setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
+    
 });
+// Автоматическое выделение текущего дня в расписании
+function highlightCurrentDay() {
+    const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+    const today = new Date().getDay(); // 0-6 (воскресенье=0)
+    
+    // Преобразуем в порядок дней на сайте (пн-пт)
+    let scheduleIndex;
+    if (today >= 1 && today <= 5) { // Пн-Пт
+        scheduleIndex = today - 1;
+    } else {
+        // Если выходной, ничего не выделяем или выделяем понедельник
+        scheduleIndex = -1;
+    }
+    
+    const scheduleItems = document.querySelectorAll('.schedule-item');
+    
+    // Убираем все активные статусы
+    scheduleItems.forEach(item => {
+        const status = item.querySelector('.schedule-status');
+        if (status) {
+            status.classList.remove('active');
+        }
+    });
+    
+    // Добавляем активный статус текущему дню
+    if (scheduleIndex >= 0 && scheduleIndex < scheduleItems.length) {
+        const currentStatus = scheduleItems[scheduleIndex].querySelector('.schedule-status');
+        if (currentStatus) {
+            currentStatus.classList.add('active');
+        }
+    }
+}
 
+// Вызываем при загрузке и каждый день в 00:00
+document.addEventListener('DOMContentLoaded', highlightCurrentDay);
 
-
-
-
+// Обновляем статус каждый день (опционально)
+setInterval(highlightCurrentDay, 3600000); // Проверяем каждый час
