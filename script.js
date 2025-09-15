@@ -8,7 +8,7 @@ const gamesData = [
         image: 'https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png',
         genres: ['puzzle', 'adventure'],
         status: 'completed',
-        customColor: '#60bad6'
+        customColor: '#39ff14'
     },
     {
         id: 'mouthwashing',
@@ -19,7 +19,7 @@ const gamesData = [
         image: 'https://cdn2.steamgriddb.com/grid/50a36d2cac80b1dc1b56246ffab8b073.png',
         genres: ['simulator'],
         status: 'playing',
-        customColor: '#930d0c'
+        customColor: '#ff2d95'
     },
     {
         id: 'minecraft',
@@ -30,7 +30,7 @@ const gamesData = [
         image: 'https://cdn2.steamgriddb.com/grid/53344d4d9596276b9b7f70158bf95779.webp',
         genres: ['adventure', 'sandbox'],
         status: 'on-hold',
-        customColor: '#8390a1'
+        customColor: '#ffd700'
     },
     {
         id: 'lethal-company',
@@ -115,10 +115,10 @@ const gamesData = [
         rating: 4.5,
         description: 'Продолжение культового хоррора с улучшенной графикой, новыми механиками и захватывающим сюжетом.',
         videoId: 'dQw4w9WgXcQ',
-        image: 'https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png',
+        image: 'https://cdn2.steamgriddb.com/grid/fc423c11f06856a5507d3b91e393ddb4.jpg',
         genres: ['horror', 'adventure'],
         status: 'playing',
-        customColor: '#9b5319'
+        customColor: '#0c1725'
     }
 ];
 
@@ -383,7 +383,6 @@ window.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && gameModal.style.display === 'block') {
         gameModal.style.display = 'none';
         document.body.style.overflow = 'auto';
-        document.getElementById('modalGameVideo').src = '';
     }
 });
 
@@ -698,6 +697,35 @@ toggleGamesBtn.addEventListener('click', () => {
     }
 });
 
+// Автоматическое выделение текущего дня в расписании
+function highlightCurrentDay() {
+    const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+    const today = new Date().getDay(); // 0-6 (воскресенье=0)
+    
+    // Находим все элементы расписания
+    const scheduleItems = document.querySelectorAll('.schedule-item');
+    
+    // Убираем все активные статусы
+    scheduleItems.forEach(item => {
+        const status = item.querySelector('.schedule-status');
+        if (status) {
+            status.classList.remove('active');
+        }
+    });
+    
+    // Если сегодня выходной (0 или 6), ничего не выделяем
+    if (today === 0 || today === 6) return;
+    
+    // Добавляем активный статус текущему дню (1-5 = пн-пт)
+    const scheduleIndex = today - 1; // Преобразуем 1-5 в 0-4
+    if (scheduleIndex < scheduleItems.length) {
+        const currentStatus = scheduleItems[scheduleIndex].querySelector('.schedule-status');
+        if (currentStatus) {
+            currentStatus.classList.add('active');
+        }
+    }
+}
+
 // Easter egg - history section on image click
 const heroImage = document.getElementById('hero-image-click');
 let clickCount = 0;
@@ -758,6 +786,9 @@ document.addEventListener('DOMContentLoaded', function() {
         input.checked = true;
     });
     
+    // Автоматическое выделение текущего дня
+    highlightCurrentDay();
+    
     // Initial render
     sortAndFilterData();
     
@@ -767,42 +798,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
     
+    // Обновляем статус каждый час на случай, если пользователь оставит страницу открытой
+    setInterval(highlightCurrentDay, 3600000);
 });
-// Автоматическое выделение текущего дня в расписании
-function highlightCurrentDay() {
-    const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
-    const today = new Date().getDay(); // 0-6 (воскресенье=0)
-    
-    // Преобразуем в порядок дней на сайте (пн-пт)
-    let scheduleIndex;
-    if (today >= 1 && today <= 5) { // Пн-Пт
-        scheduleIndex = today - 1;
-    } else {
-        // Если выходной, ничего не выделяем или выделяем понедельник
-        scheduleIndex = -1;
-    }
-    
-    const scheduleItems = document.querySelectorAll('.schedule-item');
-    
-    // Убираем все активные статусы
-    scheduleItems.forEach(item => {
-        const status = item.querySelector('.schedule-status');
-        if (status) {
-            status.classList.remove('active');
-        }
-    });
-    
-    // Добавляем активный статус текущему дню
-    if (scheduleIndex >= 0 && scheduleIndex < scheduleItems.length) {
-        const currentStatus = scheduleItems[scheduleIndex].querySelector('.schedule-status');
-        if (currentStatus) {
-            currentStatus.classList.add('active');
-        }
-    }
-}
-
-// Вызываем при загрузке и каждый день в 00:00
-document.addEventListener('DOMContentLoaded', highlightCurrentDay);
-
-// Обновляем статус каждый день (опционально)
-setInterval(highlightCurrentDay, 3600000); // Проверяем каждый час
