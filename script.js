@@ -8,7 +8,7 @@ const gamesData = [
         image: 'https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png',
         genres: ['puzzle', 'adventure'],
         status: 'completed',
-        customColor: '#39ff14'
+        customColor: '#60bad6'
     },
     {
         id: 'mouthwashing',
@@ -19,7 +19,7 @@ const gamesData = [
         image: 'https://cdn2.steamgriddb.com/grid/50a36d2cac80b1dc1b56246ffab8b073.png',
         genres: ['simulator'],
         status: 'playing',
-        customColor: '#ff2d95'
+        customColor: '#930d0c'
     },
     {
         id: 'minecraft',
@@ -30,7 +30,7 @@ const gamesData = [
         image: 'https://cdn2.steamgriddb.com/grid/53344d4d9596276b9b7f70158bf95779.webp',
         genres: ['adventure', 'sandbox'],
         status: 'on-hold',
-        customColor: '#ffd700'
+        customColor: '#8390a1'
     },
     {
         id: 'lethal-company',
@@ -767,6 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
 });
+
 
 
 
