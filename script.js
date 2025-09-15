@@ -80,7 +80,7 @@ const gamesData = [
         id: 'sally-face',
         title: 'Sally Face',
         rating: 4.5,
-        description: 'Мрачная приключенческая игра с уникальным стилью и сюжетом. Захватывающая история с неожиданными поворотами и тайнами.',
+        description: 'Мрачная приключенческая игра с уникальным стиль и сюжетом. Захватывающая история с неожиданными поворотами и тайнами.',
         videoId: 'dQw4w9WgXcQ',
         image: 'https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png',
         genres: ['adventure', 'horror'],
@@ -168,6 +168,10 @@ const moviesData = [
         customColor: '#ff2d95'
     }
 ];
+
+// Состояние анимаций
+let isFiltering = false;
+let isSorting = false;
 
 // Mobile menu toggle
 const mobileMenu = document.getElementById('mobile-menu');
@@ -295,11 +299,12 @@ function renderCards(container, data, type) {
         card.className = 'game-card';
         card.setAttribute(`data-${type}`, item.id);
         
-        // Добавляем класс статуса для цветной рамки
+        // Добавляем классы для анимаций
+        card.classList.add('filter-match');
+        
         if (type === 'game') {
             card.classList.add(item.status);
         } else {
-            // Для фильмов используем соответствующие статусы
             if (item.status === 'watched') {
                 card.classList.add('watched');
             } else if (item.status === 'watching') {
@@ -309,7 +314,6 @@ function renderCards(container, data, type) {
             }
         }
         
-        // Устанавливаем кастомный цвет для hover-эффекта
         card.style.setProperty('--custom-hover-color', item.customColor);
         
         const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image"></div>`;
@@ -317,7 +321,6 @@ function renderCards(container, data, type) {
         const starsHtml = generateStars(item.rating);
         const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
-        // Не отображаем теги статусов, но оставляем данные для фильтрации
         card.innerHTML = `
             ${imageHtml}
             <div class="game-info">
@@ -331,6 +334,14 @@ function renderCards(container, data, type) {
     });
     
     attachCardListeners(type);
+    
+    // Убираем класс анимации после появления
+    setTimeout(() => {
+        const cards = container.querySelectorAll('.game-card');
+        cards.forEach(card => {
+            card.classList.remove('filter-match');
+        });
+    }, 800);
 }
 
 // Attach event listeners to game/movie cards
@@ -421,10 +432,6 @@ function setTabSliderPosition(tabElement, sliderElement) {
     }
 }
 
-// Initialize tab sliders and render games
-setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
-setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
-
 // Separate filters for games and movies
 let currentGameFilters = ['all'];
 let currentGameStatusFilters = ['status-all'];
@@ -435,35 +442,52 @@ let currentTab = 'games';
 
 // Sort and filter games
 function sortAndFilterData() {
+    if (isFiltering || isSorting) return;
+    
     let data = currentTab === 'games' ? [...gamesData] : [...moviesData];
     const currentFilters = currentTab === 'games' ? currentGameFilters : currentMovieFilters;
     const currentStatusFilters = currentTab === 'games' ? currentGameStatusFilters : currentMovieStatusFilters;
     
-    // Apply status filter
-    if (!currentStatusFilters.includes('status-all')) {
-        data = data.filter(item => currentStatusFilters.includes(item.status));
-    }
+    // Добавляем анимацию фильтрации
+    const activeGrid = document.querySelector('.games-content.active .games-grid');
+    activeGrid.classList.add('filtering');
     
-    // Apply genre filter
-    if (!currentFilters.includes('all')) {
-        data = data.filter(item => 
-            item.genres.some(genre => currentFilters.includes(genre))
-        );
-    }
+    isFiltering = true;
     
-    // Apply sorting
-    if (currentSort === 'name') {
-        data.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (currentSort === 'rating') {
-        data.sort((a, b) => b.rating - a.rating);
-    }
-    
-    // Render filtered and sorted data
-    const container = currentTab === 'games' 
-        ? document.querySelector('#games-content .games-grid') 
-        : document.querySelector('#movies-content .games-grid');
+    setTimeout(() => {
+        // Apply status filter
+        if (!currentStatusFilters.includes('status-all')) {
+            data = data.filter(item => currentStatusFilters.includes(item.status));
+        }
         
-    renderCards(container, data, currentTab === 'games' ? 'game' : 'movie');
+        // Apply genre filter
+        if (!currentFilters.includes('all')) {
+            data = data.filter(item => 
+                item.genres.some(genre => currentFilters.includes(genre))
+            );
+        }
+        
+        // Apply sorting
+        if (currentSort === 'name') {
+            data.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (currentSort === 'rating') {
+            data.sort((a, b) => b.rating - a.rating);
+        }
+        
+        // Render filtered and sorted data
+        const container = currentTab === 'games' 
+            ? document.querySelector('#games-content .games-grid') 
+            : document.querySelector('#movies-content .games-grid');
+            
+        renderCards(container, data, currentTab === 'games' ? 'game' : 'movie');
+        
+        // Убираем класс фильтрации после завершения
+        setTimeout(() => {
+            activeGrid.classList.remove('filtering');
+            isFiltering = false;
+        }, 300);
+        
+    }, 400);
 }
 
 // Initial render
@@ -599,6 +623,8 @@ filterOptions.forEach(option => {
 // Sort tab click handler with animation
 sortTabs.forEach(tab => {
     tab.addEventListener('click', function() {
+        if (isSorting) return;
+        
         const sort = this.getAttribute('data-sort');
         
         // Update active sort
@@ -608,17 +634,19 @@ sortTabs.forEach(tab => {
         // Update sort slider position
         setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
         
-        // Add animation class
+        // Добавляем анимацию сортировки
         const activeContent = document.querySelector('.games-content.active');
         const activeGrid = activeContent.querySelector('.games-grid');
         activeGrid.classList.add('sorting');
         
+        isSorting = true;
         currentSort = sort;
         
         setTimeout(() => {
             sortAndFilterData();
             setTimeout(() => {
                 activeGrid.classList.remove('sorting');
+                isSorting = false;
             }, 300);
         }, 300);
     });
@@ -768,5 +796,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
-
-
+// Initialize tab sliders and render games
+setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
+setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
