@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": "the-witcher-3",
+    "title": "The Witcher 3",
+    "rating": 5,
+    "description": "Эпичная RPG с богатым сюжетом и открытым миром",
+    "image": "https://cdn2.steamgriddb.com/grid/def456.png",
+    "genres": [
+      "rpg",
+      "fantasy",
+      "open-world"
+    ],
+    "status": "completed",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#39ff14"
+  },
+  {
+    "id": "tect1",
+    "title": "Tect1",
+    "rating": 5,
+    "description": "Эпичная RPG с богатым сюжетом и открытым миром",
+    "image": "https://cdn2.steamgriddb.com/grid/def456.png",
+    "genres": [
+      "rpg",
+      "fantasy",
+      "open-world"
+    ],
+    "status": "completed",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#39ff14"
+  },
+  {
+    "id": "tect2",
+    "title": "Tect2",
+    "rating": 5,
+    "description": "Эпичная RPG с богатым сюжетом и открытым миром",
+    "image": "https://cdn2.steamgriddb.com/grid/def456.png",
+    "genres": [
+      "rpg",
+      "fantasy",
+      "open-world"
+    ],
+    "status": "completed",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#39ff14"
+  }
+]
