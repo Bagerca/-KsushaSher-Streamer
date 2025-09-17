@@ -1,16 +1,16 @@
 [
   {
     "id": "cyberpunk",
-    "title": "Cyberpunk",
-    "rating": 4.5,
+    "title": "Тест 5",
+    "rating": 1,
     "description": "RPG",
     "image": "https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png",
     "genres": [
       "rpg"
     ],
-    "status": "playing",
+    "status": "dropped",
     "videoId": "dQw4w9WgXcQ",
-    "customColor": "#ff2d95"
+    "customColor": "#79c5ce"
   },
   {
     "id": "тест-3",
@@ -40,5 +40,18 @@
     "status": "completed",
     "videoId": "dQw4w9WgXcQ",
     "customColor": "#39ff14"
+  },
+  {
+    "id": "тест-6",
+    "title": "Тест 6",
+    "rating": 2.5,
+    "description": "пвпквпавк",
+    "image": "https://cdn2.steamgriddb.com/grid/28c3c3e591be4d57567ec7830f7b3b46.webp",
+    "genres": [
+      "shooter"
+    ],
+    "status": "dropped",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#ff6464"
   }
 ]
