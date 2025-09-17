@@ -48,12 +48,18 @@ const moviesData = [
     }
 ];
 
+// ==================== ПЕРЕМЕННЫЕ СОСТОЯНИЯ ====================
+let gamesLoaded = false;
+let moviesLoaded = false;
+let currentGamesData = [];
+let currentMoviesData = [];
+
 // ==================== ЗАГРУЗКА ДАННЫХ ====================
 
 // Загрузка статистики
 async function loadStats() {
     try {
-        const response = await fetch('stats.json');
+        const response = await fetch('stats.json?' + new Date().getTime());
         const stats = await response.json();
         updateStats(stats);
     } catch (error) {
@@ -64,7 +70,7 @@ async function loadStats() {
 // Загрузка расписания
 async function loadSchedule() {
     try {
-        const response = await fetch('schedule.json');
+        const response = await fetch('schedule.json?' + new Date().getTime());
         const data = await response.json();
         renderSchedule(data.schedule);
     } catch (error) {
@@ -74,31 +80,65 @@ async function loadSchedule() {
 
 // Загрузка игр
 async function loadGames() {
+    const container = document.querySelector('#games-content .games-grid');
+    if (!container) return;
+    
+    // Показываем индикатор загрузки
+    container.innerHTML = '<div class="loading-state">🔄 Загрузка игр...</div>';
+    
     try {
-        const response = await fetch('games.json');
+        const response = await fetch('games.json?' + new Date().getTime());
+        if (!response.ok) throw new Error('Ошибка загрузки');
+        
         const games = await response.json();
+        currentGamesData = games;
+        
         if (Array.isArray(games) && games.length > 0) {
-            renderCards(document.querySelector('#games-content .games-grid'), games, 'game');
+            renderCards(container, games, 'game');
+            gamesLoaded = true;
         } else {
-            renderCards(document.querySelector('#games-content .games-grid'), gamesData, 'game');
+            container.innerHTML = '<div class="empty-state">🎮 Игр пока нет</div>';
         }
     } catch (error) {
-        renderCards(document.querySelector('#games-content .games-grid'), gamesData, 'game');
+        console.error('Ошибка загрузки игр:', error);
+        // Если уже есть загруженные данные, не показываем заглушки
+        if (currentGamesData.length > 0) {
+            renderCards(container, currentGamesData, 'game');
+        } else {
+            container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки игр</div>';
+        }
     }
 }
 
 // Загрузка фильмов
 async function loadMovies() {
+    const container = document.querySelector('#movies-content .games-grid');
+    if (!container) return;
+    
+    // Показываем индикатор загрузки
+    container.innerHTML = '<div class="loading-state">🔄 Загрузка фильмов...</div>';
+    
     try {
-        const response = await fetch('movies.json');
+        const response = await fetch('movies.json?' + new Date().getTime());
+        if (!response.ok) throw new Error('Ошибка загрузки');
+        
         const movies = await response.json();
+        currentMoviesData = movies;
+        
         if (Array.isArray(movies) && movies.length > 0) {
-            renderCards(document.querySelector('#movies-content .games-grid'), movies, 'movie');
+            renderCards(container, movies, 'movie');
+            moviesLoaded = true;
         } else {
-            renderCards(document.querySelector('#movies-content .games-grid'), moviesData, 'movie');
+            container.innerHTML = '<div class="empty-state">🎬 Фильмов пока нет</div>';
         }
     } catch (error) {
-        renderCards(document.querySelector('#movies-content .games-grid'), moviesData, 'movie');
+        console.error('Ошибка загрузки фильмов:', error);
+        // Если уже есть загруженные данные, не показываем заглушки
+        if (currentMoviesData.length > 0) {
+            renderCards(container, currentMoviesData, 'movie');
+        } else {
+            container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки фильмов</div>';
+        }
     }
 }
 
@@ -126,7 +166,7 @@ function renderSchedule(scheduleData) {
         scheduleList.innerHTML = `
             <div class="schedule-item">
                 <div class="schedule-content">
-                    <div class="schedule-game">Расписание загружается...</div>
+                    <div class="schedule-game">📅 Расписание загружается...</div>
                     <div class="schedule-desc">Данные будут доступны скоро</div>
                 </div>
             </div>
@@ -165,25 +205,27 @@ function renderSchedule(scheduleData) {
 const mobileMenu = document.getElementById('mobile-menu');
 const navMenu = document.getElementById('nav-menu');
 
-mobileMenu.addEventListener('click', function(e) {
-    e.stopPropagation();
-    mobileMenu.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
-
-document.addEventListener('click', function(e) {
-    if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !mobileMenu.contains(e.target)) {
-        mobileMenu.classList.remove('active');
-        navMenu.classList.remove('active');
-    }
-});
-
-document.querySelectorAll('#nav-menu a').forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        navMenu.classList.remove('active');
+if (mobileMenu && navMenu) {
+    mobileMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+        mobileMenu.classList.toggle('active');
+        navMenu.classList.toggle('active');
     });
-});
+
+    document.addEventListener('click', function(e) {
+        if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.remove('active');
+            navMenu.classList.remove('active');
+        }
+    });
+
+    document.querySelectorAll('#nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+}
 
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -204,19 +246,21 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Header scroll behavior
 let lastScrollTop = 0;
 const header = document.querySelector('header');
-const headerHeight = header.offsetHeight;
+const headerHeight = header ? header.offsetHeight : 0;
 
-window.addEventListener('scroll', function() {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
-        document.body.classList.add('scrolled-down');
-        document.body.classList.remove('scrolled-up');
-    } else {
-        document.body.classList.remove('scrolled-down');
-        document.body.classList.add('scrolled-up');
-    }
-    lastScrollTop = scrollTop;
-});
+if (header) {
+    window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
+            document.body.classList.add('scrolled-down');
+            document.body.classList.remove('scrolled-up');
+        } else {
+            document.body.classList.remove('scrolled-down');
+            document.body.classList.add('scrolled-up');
+        }
+        lastScrollTop = scrollTop;
+    });
+}
 
 // Simple animation for stats counting
 function animateValue(element, start, end, duration) {
@@ -234,10 +278,9 @@ function animateValue(element, start, end, duration) {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            loadStats(); // Загружаем статистику когда секция видна
+            loadStats();
             const statNumbers = document.querySelectorAll('.stat-number');
             if (statNumbers.length > 0 && statNumbers[0].textContent === '0') {
-                // Если цифры еще не загружены, запускаем анимацию
                 statNumbers.forEach((el, index) => {
                     const endValue = parseInt(el.getAttribute('data-value') || el.textContent);
                     animateValue(el, 0, endValue, 2000);
@@ -291,7 +334,6 @@ function renderCards(container, data, type) {
         card.className = 'game-card';
         card.setAttribute(`data-${type}`, item.id);
         
-        // Добавляем класс статуса для цветной рамки
         if (type === 'game') {
             card.classList.add(item.status);
         } else {
@@ -300,10 +342,9 @@ function renderCards(container, data, type) {
             else card.classList.add(item.status);
         }
         
-        // Устанавливаем кастомный цвет для hover-эффекта
         card.style.setProperty('--custom-hover-color', item.customColor || '#39ff14');
         
-        const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image"></div>`;
+        const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image" loading="lazy"></div>`;
         
         const starsHtml = generateStars(item.rating);
         const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
@@ -320,16 +361,16 @@ function renderCards(container, data, type) {
         container.appendChild(card);
     });
     
-    attachCardListeners(type);
+    attachCardListeners(type, data);
 }
 
 // Attach event listeners to game/movie cards
-function attachCardListeners(type) {
+function attachCardListeners(type, data) {
     const cards = document.querySelectorAll(`[data-${type}]`);
     cards.forEach(card => {
         card.addEventListener('click', () => {
             const itemId = card.getAttribute(`data-${type}`);
-            const item = (type === 'game' ? gamesData : moviesData).find(i => i.id === itemId);
+            const item = data.find(i => i.id === itemId);
             if (item) showModal(item);
         });
     });
@@ -361,14 +402,16 @@ if (closeModal && gameModal) {
     closeModal.addEventListener('click', () => {
         gameModal.style.display = 'none';
         document.body.style.overflow = 'auto';
-        document.getElementById('modalGameVideo').src = '';
+        const modalGameVideo = document.getElementById('modalGameVideo');
+        if (modalGameVideo) modalGameVideo.src = '';
     });
 
     window.addEventListener('click', function(e) {
         if (e.target === gameModal) {
             gameModal.style.display = 'none';
             document.body.style.overflow = 'auto';
-            document.getElementById('modalGameVideo').src = '';
+            const modalGameVideo = document.getElementById('modalGameVideo');
+            if (modalGameVideo) modalGameVideo.src = '';
         }
     });
 
@@ -376,6 +419,8 @@ if (closeModal && gameModal) {
         if (e.key === 'Escape' && gameModal.style.display === 'block') {
             gameModal.style.display = 'none';
             document.body.style.overflow = 'auto';
+            const modalGameVideo = document.getElementById('modalGameVideo');
+            if (modalGameVideo) modalGameVideo.src = '';
         }
     });
 }
@@ -430,7 +475,7 @@ let currentTab = 'games';
 
 // Sort and filter games
 function sortAndFilterData() {
-    let data = currentTab === 'games' ? [...gamesData] : [...moviesData];
+    let data = currentTab === 'games' ? [...currentGamesData] : [...currentMoviesData];
     const currentFilters = currentTab === 'games' ? currentGameFilters : currentMovieFilters;
     const currentStatusFilters = currentTab === 'games' ? currentGameStatusFilters : currentMovieStatusFilters;
     
@@ -484,10 +529,8 @@ if (filterOptions.length > 0) {
             const filter = this.getAttribute('data-filter');
             const type = this.getAttribute('data-type');
             
-            // Check if it's a status filter
             const isStatusFilter = ['status-all', 'completed', 'playing', 'dropped', 'on-hold', 'watched', 'watching'].includes(filter);
             
-            // Update active filters based on type
             if (type === 'games') {
                 if (isStatusFilter) {
                     if (filter === 'status-all') {
@@ -564,7 +607,7 @@ if (sortTabs.length > 0 && sortSlider) {
 // Games tabs with animation
 if (gamesTabs.length > 0 && tabSlider && gamesContent && moviesContent) {
     gamesTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', async () => {
             gamesTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             
@@ -577,26 +620,38 @@ if (gamesTabs.length > 0 && tabSlider && gamesContent && moviesContent) {
             
             currentTab = tab.dataset.tab;
             
-            setTimeout(() => {
+            setTimeout(async () => {
                 if (currentTab === 'movies') {
                     document.querySelector('.games-filters').style.display = 'none';
                     document.querySelector('.movies-filters').style.display = 'block';
                     gamesContent.classList.remove('active');
                     moviesContent.classList.add('fade-in');
+                    
+                    if (!moviesLoaded) {
+                        await loadMovies();
+                    } else {
+                        sortAndFilterData();
+                    }
+                    
                     setTimeout(() => {
                         moviesContent.classList.remove('fade-in');
                         moviesContent.classList.add('active');
-                        sortAndFilterData();
                     }, 300);
                 } else {
                     document.querySelector('.movies-filters').style.display = 'none';
                     document.querySelector('.games-filters').style.display = 'block';
                     moviesContent.classList.remove('active');
                     gamesContent.classList.add('fade-in');
+                    
+                    if (!gamesLoaded) {
+                        await loadGames();
+                    } else {
+                        sortAndFilterData();
+                    }
+                    
                     setTimeout(() => {
                         gamesContent.classList.remove('fade-in');
                         gamesContent.classList.add('active');
-                        sortAndFilterData();
                     }, 300);
                 }
                 
@@ -720,7 +775,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadStats();
     loadSchedule();
     loadGames();
-    loadMovies();
     
     // Наблюдатель для статистики
     const statsSection = document.getElementById('stats');
@@ -748,3 +802,30 @@ document.addEventListener('DOMContentLoaded', function() {
         loadSchedule();
     }, 300000); // Каждые 5 минут
 });
+
+// Добавляем стили для состояний загрузки
+const style = document.createElement('style');
+style.textContent = `
+    .loading-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--neon-green);
+        font-size: 1.2rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--light-text);
+        font-size: 1.1rem;
+    }
+    
+    .game-image {
+        transition: transform 0.3s ease;
+    }
+    
+    .game-image:hover {
+        transform: scale(1.05);
+    }
+`;
+document.head.appendChild(style);
