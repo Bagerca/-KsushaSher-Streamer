@@ -1,161 +1,145 @@
-// Глобальные переменные для данных
-let gamesData = [];
-let moviesData = [];
-let scheduleData = { schedule: [] };
+const gamesData = [
+    {
+        id: 'portal2',
+        title: 'Portal 2',
+        rating: 5,
+        description: 'Культовая головоломка от Valve с уникальным геймплеем и юмором. Одна из лучших игр в своём жанре с захватывающим сюжетом и запоминающимися персонажами.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png',
+        genres: ['puzzle', 'adventure'],
+        status: 'completed',
+        customColor: '#39ff14'
+    },
+    {
+        id: 'mouthwashing',
+        title: 'Mouthwashing',
+        rating: 4,
+        description: 'Расслабляющий симулятор мойки под давлением. Невероятно затягивающий геймплей, который помогает снять стресс после тяжелого дня.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://cdn2.steamgriddb.com/grid/50a36d2cac80b1dc1b56246ffab8b073.png',
+        genres: ['simulator'],
+        status: 'playing',
+        customColor: '#ff2d95'
+    }
+];
 
-// Словарь для перевода жанров
-const genreTranslations = {
-    'puzzle': 'Головоломка',
-    'adventure': 'Приключения',
-    'simulator': 'Симулятор',
-    'horror': 'Хоррор',
-    'coop': 'Кооператив',
-    'sandbox': 'Песочница',
-    'metroidvania': 'Метроидвания',
-    'fps': 'Шутер',
-    'shooter': 'Шутер',
-    'platformer': 'Платформер',
-    'animation': 'Анимация',
-    'fantasy': 'Фэнтези',
-    'crossover': 'Кроссовер',
-    'rpg': 'RPG',
-    'cyberpunk': 'Киберпанк',
-    'open-world': 'Открытый мир',
-    'fantasy': 'Фэнтези',
-    'sci-fi': 'Научная фантастика',
-    'action': 'Экшен'
-};
+const moviesData = [
+    {
+        id: 'arcane',
+        title: 'Arcane',
+        rating: 5,
+        description: 'Визуально потрясающий анимационный сериал по вселенной League of Legends. Глубокий сюжет о сестрах Вай и Пайлтовере.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images-s.kinorium.com/movie/poster/2754301/w1500_50222111.jpg',
+        genres: ['animation', 'fantasy'],
+        status: 'watched',
+        customColor: '#39ff14'
+    },
+    {
+        id: 'spider-verse',
+        title: 'Spider-Man: Into the Spider-Verse',
+        rating: 5,
+        description: 'Инновационный анимационный фильм о множественных вселенных Человека-паука. Визуальный шедевр с захватывающей историей.',
+        videoId: 'dQw4w9WgXcQ',
+        image: 'https://images.kinorium.com/movie/poster/2288844/w1500_43025325.jpg',
+        genres: ['animation', 'fantasy'],
+        status: 'watched',
+        customColor: '#39ff14'
+    }
+];
 
-// Загрузка данных с сервера
-async function loadData() {
+// ==================== ЗАГРУЗКА ДАННЫХ ====================
+
+// Загрузка статистики
+async function loadStats() {
     try {
-        console.log('🔄 Загрузка данных...');
-        
-        const [gamesResponse, moviesResponse, scheduleResponse] = await Promise.all([
-            fetch('games.json'),
-            fetch('movies.json'), 
-            fetch('schedule.json')
-        ]);
-        
-        if (gamesResponse.ok) {
-            gamesData = await gamesResponse.json();
-            console.log(`✅ Загружено ${gamesData.length} игр`);
-        } else {
-            console.warn('❌ Файл games.json не найден, используем пустой массив');
-            gamesData = [];
-        }
-        
-        if (moviesResponse.ok) {
-            moviesData = await moviesResponse.json();
-            console.log(`✅ Загружено ${moviesData.length} фильмов`);
-        } else {
-            console.warn('❌ Файл movies.json не найден, используем пустой массив');
-            moviesData = [];
-        }
-        
-        if (scheduleResponse.ok) {
-            scheduleData = await scheduleResponse.json();
-            console.log(`✅ Загружено расписание: ${scheduleData.schedule?.length || 0} дней`);
-        } else {
-            console.warn('❌ Файл schedule.json не найден, используем пустое расписание');
-            scheduleData = { schedule: [] };
-        }
-        
-        initPage();
-        
+        const response = await fetch('stats.json');
+        const stats = await response.json();
+        updateStats(stats);
     } catch (error) {
-        console.error('❌ Ошибка загрузки данных:', error);
-        // Fallback к старым данным если файлы не найдены
-        await loadFallbackData();
+        console.log('Статистика будет загружена позже');
     }
 }
 
-// Функция-запас на случай если файлы еще не созданы
-async function loadFallbackData() {
+// Загрузка расписания
+async function loadSchedule() {
     try {
-        console.log('🔄 Загрузка fallback данных...');
-        
-        // Временные данные для инициализации
-        gamesData = [
-            {
-                id: 'portal2',
-                title: 'Portal 2',
-                rating: 5,
-                description: 'Культовая головоломка от Valve с уникальным геймплеем и юмором. Одна из лучших игр в своём жанре с захватывающим сюжетом и запоминающимися персонажами.',
-                videoId: 'dQw4w9WgXcQ',
-                image: 'https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png',
-                genres: ['puzzle', 'adventure'],
-                status: 'completed',
-                customColor: '#39ff14'
-            }
-        ];
-        
-        moviesData = [
-            {
-                id: 'arcane',
-                title: 'Arcane',
-                rating: 5,
-                description: 'Визуально потрясающий анимационный сериал по вселенной League of Legends. Глубокий сюжет о сестрах Вай и Пайлтовере.',
-                videoId: 'dQw4w9WgXcQ',
-                image: 'https://images-s.kinorium.com/movie/poster/2754301/w1500_50222111.jpg',
-                genres: ['animation', 'fantasy'],
-                status: 'watched',
-                customColor: '#39ff14'
-            }
-        ];
-        
-        scheduleData = {
-            schedule: [
-                {
-                    day: "Понедельник",
-                    time: "16:00 - 19:00+",
-                    game: "Dead Island 2", 
-                    description: "Режем зомби в солнечном Калифорнийском аду"
-                },
-                {
-                    day: "Вторник",
-                    time: "16:00 - 19:00+",
-                    game: "Genshin Impact",
-                    description: "Исследуем Тейват и выполняем ежедневные задания"
-                }
-            ]
-        };
-        
-        initPage();
-        
+        const response = await fetch('schedule.json');
+        const data = await response.json();
+        renderSchedule(data.schedule);
     } catch (error) {
-        console.error('❌ Ошибка fallback данных:', error);
+        console.log('Расписание будет загружено позже');
     }
 }
 
-// Инициализация страницы
-function initPage() {
-    console.log('🚀 Инициализация страницы...');
-    renderSchedule();
-    renderCards(document.querySelector('#games-content .games-grid'), gamesData, 'game');
-    renderCards(document.querySelector('#movies-content .games-grid'), moviesData, 'movie');
-    highlightCurrentDay();
-    setupEventListeners();
+// Загрузка игр
+async function loadGames() {
+    try {
+        const response = await fetch('games.json');
+        const games = await response.json();
+        if (Array.isArray(games) && games.length > 0) {
+            renderCards(document.querySelector('#games-content .games-grid'), games, 'game');
+        } else {
+            renderCards(document.querySelector('#games-content .games-grid'), gamesData, 'game');
+        }
+    } catch (error) {
+        renderCards(document.querySelector('#games-content .games-grid'), gamesData, 'game');
+    }
 }
 
-// Рендер расписания из JSON
-function renderSchedule() {
-    if (!scheduleData.schedule || scheduleData.schedule.length === 0) {
-        console.warn('📅 Нет данных для расписания');
-        return;
+// Загрузка фильмов
+async function loadMovies() {
+    try {
+        const response = await fetch('movies.json');
+        const movies = await response.json();
+        if (Array.isArray(movies) && movies.length > 0) {
+            renderCards(document.querySelector('#movies-content .games-grid'), movies, 'movie');
+        } else {
+            renderCards(document.querySelector('#movies-content .games-grid'), moviesData, 'movie');
+        }
+    } catch (error) {
+        renderCards(document.querySelector('#movies-content .games-grid'), moviesData, 'movie');
     }
-    
-    const scheduleList = document.querySelector('.schedule-list');
-    if (!scheduleList) {
-        console.error('❌ Не найден элемент .schedule-list');
-        return;
+}
+
+// ==================== ОБНОВЛЕНИЕ СТАТИСТИКИ ====================
+
+function updateStats(stats) {
+    const statNumbers = document.querySelectorAll('.stat-number');
+    if (statNumbers.length >= 4) {
+        animateValue(statNumbers[0], 0, stats.followers || 5200, 2000);
+        animateValue(statNumbers[1], 0, stats.streams || 150, 2000);
+        animateValue(statNumbers[2], 0, stats.hours || 250, 2000);
+        animateValue(statNumbers[3], 0, stats.years || 3, 2000);
     }
+}
+
+// ==================== РЕНДЕР РАСПИСАНИЯ ====================
+
+function renderSchedule(scheduleData) {
+    const scheduleList = document.getElementById('schedule-list');
+    if (!scheduleList) return;
     
     scheduleList.innerHTML = '';
     
-    scheduleData.schedule.forEach(item => {
+    if (!scheduleData || scheduleData.length === 0) {
+        scheduleList.innerHTML = `
+            <div class="schedule-item">
+                <div class="schedule-content">
+                    <div class="schedule-game">Расписание загружается...</div>
+                    <div class="schedule-desc">Данные будут доступны скоро</div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    scheduleData.forEach(item => {
         const scheduleItem = document.createElement('div');
-        scheduleItem.className = `schedule-item ${item.highlighted ? 'highlighted' : ''}`;
+        scheduleItem.className = 'schedule-item';
+        if (item.highlighted) {
+            scheduleItem.classList.add('highlighted');
+        }
         
         scheduleItem.innerHTML = `
             <div class="schedule-day-wrapper">
@@ -172,10 +156,99 @@ function renderSchedule() {
         scheduleList.appendChild(scheduleItem);
     });
     
-    console.log(`📅 Отрисовано ${scheduleData.schedule.length} дней расписания`);
+    highlightCurrentDay();
 }
 
-// Генерация звезд рейтинга
+// ==================== ОСНОВНЫЕ ФУНКЦИИ ====================
+
+// Mobile menu toggle
+const mobileMenu = document.getElementById('mobile-menu');
+const navMenu = document.getElementById('nav-menu');
+
+mobileMenu.addEventListener('click', function(e) {
+    e.stopPropagation();
+    mobileMenu.classList.toggle('active');
+    navMenu.classList.toggle('active');
+});
+
+document.addEventListener('click', function(e) {
+    if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !mobileMenu.contains(e.target)) {
+        mobileMenu.classList.remove('active');
+        navMenu.classList.remove('active');
+    }
+});
+
+document.querySelectorAll('#nav-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        navMenu.classList.remove('active');
+    });
+});
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// Header scroll behavior
+let lastScrollTop = 0;
+const header = document.querySelector('header');
+const headerHeight = header.offsetHeight;
+
+window.addEventListener('scroll', function() {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
+        document.body.classList.add('scrolled-down');
+        document.body.classList.remove('scrolled-up');
+    } else {
+        document.body.classList.remove('scrolled-down');
+        document.body.classList.add('scrolled-up');
+    }
+    lastScrollTop = scrollTop;
+});
+
+// Simple animation for stats counting
+function animateValue(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        element.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Activate animation when stats section is in view
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            loadStats(); // Загружаем статистику когда секция видна
+            const statNumbers = document.querySelectorAll('.stat-number');
+            if (statNumbers.length > 0 && statNumbers[0].textContent === '0') {
+                // Если цифры еще не загружены, запускаем анимацию
+                statNumbers.forEach((el, index) => {
+                    const endValue = parseInt(el.getAttribute('data-value') || el.textContent);
+                    animateValue(el, 0, endValue, 2000);
+                });
+            }
+            observer.disconnect();
+        }
+    });
+}, { threshold: 0.5 });
+
+// Generate stars for rating
 function generateStars(rating) {
     let starsHtml = '';
     const fullStars = Math.floor(rating);
@@ -190,25 +263,28 @@ function generateStars(rating) {
     return starsHtml;
 }
 
-// Рендер карточек игр/фильмов
+// Словарь для перевода жанров
+const genreTranslations = {
+    'puzzle': 'Головоломка',
+    'adventure': 'Приключения',
+    'simulator': 'Симулятор',
+    'horror': 'Хоррор',
+    'coop': 'Кооператив',
+    'sandbox': 'Песочница',
+    'metroidvania': 'Метроидвания',
+    'fps': 'Шутер',
+    'shooter': 'Шутер',
+    'platformer': 'Платформер',
+    'animation': 'Анимация',
+    'fantasy': 'Фэнтези',
+    'crossover': 'Кроссовер'
+};
+
+// Render game/movie cards
 function renderCards(container, data, type) {
-    if (!container) {
-        console.error(`❌ Контейнер для ${type} не найден`);
-        return;
-    }
+    if (!container) return;
     
     container.innerHTML = '';
-    
-    if (!data || data.length === 0) {
-        container.innerHTML = `
-            <div class="no-content-message">
-                <i class="fas fa-inbox"></i>
-                <p>Пока нет ${type === 'game' ? 'игр' : 'фильмов'}</p>
-                <small>Добавь контент через Telegram бота</small>
-            </div>
-        `;
-        return;
-    }
     
     data.forEach(item => {
         const card = document.createElement('div');
@@ -224,14 +300,13 @@ function renderCards(container, data, type) {
             else card.classList.add(item.status);
         }
         
+        // Устанавливаем кастомный цвет для hover-эффекта
         card.style.setProperty('--custom-hover-color', item.customColor || '#39ff14');
         
-        const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image" onerror="this.src='https://via.placeholder.com/300x400/333/fff?text=Изображение+не+загружено'"></div>`;
+        const imageHtml = `<div class="game-image-container"><img src="${item.image}" alt="${item.title}" class="game-image"></div>`;
         
         const starsHtml = generateStars(item.rating);
-        const genresHtml = item.genres.map(genre => 
-            `<span class="game-genre">${genreTranslations[genre] || genre}</span>`
-        ).join('');
+        const genresHtml = item.genres.map(genre => `<span class="game-genre">${genreTranslations[genre] || genre}</span>`).join('');
         
         card.innerHTML = `
             ${imageHtml}
@@ -242,15 +317,13 @@ function renderCards(container, data, type) {
                 <p class="game-description">${item.description}</p>
             </div>
         `;
-        
         container.appendChild(card);
     });
     
     attachCardListeners(type);
-    console.log(`🎮 Отрисовано ${data.length} ${type === 'game' ? 'игр' : 'фильмов'}`);
 }
 
-// Прикрепление обработчиков к карточкам
+// Attach event listeners to game/movie cards
 function attachCardListeners(type) {
     const cards = document.querySelectorAll(`[data-${type}]`);
     cards.forEach(card => {
@@ -262,13 +335,15 @@ function attachCardListeners(type) {
     });
 }
 
-// Показать модальное окно с деталями
+// Show modal with item details
 function showModal(item) {
     const modalGameTitle = document.getElementById('modalGameTitle');
     const modalGameRating = document.getElementById('modalGameRating');
     const modalGameDescription = document.getElementById('modalGameDescription');
     const modalGameVideo = document.getElementById('modalGameVideo');
     const gameModal = document.getElementById('gameModal');
+    
+    if (!modalGameTitle || !modalGameRating || !modalGameDescription || !modalGameVideo || !gameModal) return;
     
     modalGameTitle.textContent = item.title;
     modalGameRating.innerHTML = `${generateStars(item.rating)}<span>${item.rating}/5</span>`;
@@ -278,154 +353,216 @@ function showModal(item) {
     document.body.style.overflow = 'hidden';
 }
 
-// Закрыть модальное окно
-function setupModalClose() {
-    const closeModal = document.querySelector('.close-modal');
-    const gameModal = document.getElementById('gameModal');
-    
-    if (closeModal && gameModal) {
-        closeModal.addEventListener('click', () => {
+// Close modal
+const closeModal = document.querySelector('.close-modal');
+const gameModal = document.getElementById('gameModal');
+
+if (closeModal && gameModal) {
+    closeModal.addEventListener('click', () => {
+        gameModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('modalGameVideo').src = '';
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === gameModal) {
             gameModal.style.display = 'none';
             document.body.style.overflow = 'auto';
             document.getElementById('modalGameVideo').src = '';
-        });
-        
-        window.addEventListener('click', function(e) {
-            if (e.target === gameModal) {
-                gameModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                document.getElementById('modalGameVideo').src = '';
-            }
-        });
-        
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && gameModal.style.display === 'block') {
-                gameModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-    }
-}
-
-// Автоматическое выделение текущего дня в расписании
-function highlightCurrentDay() {
-    const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
-    const today = new Date().getDay(); // 0-6 (воскресенье=0)
-    
-    // Находим все элементы расписания
-    const scheduleItems = document.querySelectorAll('.schedule-item');
-    
-    // Убираем все активные статусы
-    scheduleItems.forEach(item => {
-        const status = item.querySelector('.schedule-status');
-        if (status) {
-            status.classList.remove('active');
         }
     });
-    
-    // Если сегодня выходной (0 или 6), ничего не выделяем
-    if (today === 0 || today === 6) return;
-    
-    // Добавляем активный статус текущему дню (1-5 = пн-пт)
-    const scheduleIndex = today - 1; // Преобразуем 1-5 в 0-4
-    if (scheduleIndex < scheduleItems.length) {
-        const currentStatus = scheduleItems[scheduleIndex].querySelector('.schedule-status');
-        if (currentStatus) {
-            currentStatus.classList.add('active');
+
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && gameModal.style.display === 'block') {
+            gameModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
-    }
-}
-
-// Настройка всех обработчиков событий
-function setupEventListeners() {
-    setupModalClose();
-    setupMobileMenu();
-    setupSmoothScrolling();
-    setupGamesTabs();
-    setupFilterToggle();
-    setupSortTabs();
-    setupToggleGames();
-    setupCardNumberCopy();
-    setupEasterEgg();
-    setupExternalLinks();
-}
-
-// Mobile menu toggle
-function setupMobileMenu() {
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navMenu = document.getElementById('nav-menu');
-    
-    if (mobileMenu && navMenu) {
-        mobileMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-            mobileMenu.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !mobileMenu.contains(e.target)) {
-                mobileMenu.classList.remove('active');
-                navMenu.classList.remove('active');
-            }
-        });
-        
-        document.querySelectorAll('#nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-    }
-}
-
-// Smooth scrolling for anchor links
-function setupSmoothScrolling() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-        });
     });
 }
 
-// Header scroll behavior
-function setupHeaderScroll() {
-    let lastScrollTop = 0;
-    const header = document.querySelector('header');
-    const headerHeight = header?.offsetHeight || 0;
-    
-    if (header) {
-        window.addEventListener('scroll', function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
-                document.body.classList.add('scrolled-down');
-                document.body.classList.remove('scrolled-up');
-            } else {
-                document.body.classList.remove('scrolled-down');
-                document.body.classList.add('scrolled-up');
+// Copy card number function
+function copyCardNumber() {
+    const cardNumber = '4276 1805 5058 1960';
+    navigator.clipboard.writeText(cardNumber.replace(/\s/g, ''))
+        .then(() => {
+            const tooltip = document.getElementById('copy-tooltip');
+            if (tooltip) {
+                tooltip.textContent = 'Скопировано!';
+                setTimeout(() => tooltip.textContent = 'Нажмите чтобы скопировать', 2000);
             }
-            lastScrollTop = scrollTop;
-        });
-    }
+        })
+        .catch(err => console.error('Ошибка при копировании: ', err));
+}
+
+const cardNumberElement = document.getElementById('card-number');
+if (cardNumberElement) {
+    cardNumberElement.addEventListener('click', copyCardNumber);
 }
 
 // Games/Movies tabs functionality
-function setupGamesTabs() {
-    const gamesTabs = document.querySelectorAll('.games-tab');
-    const gamesContent = document.getElementById('games-content');
-    const moviesContent = document.getElementById('movies-content');
-    const tabSlider = document.querySelector('.tab-slider');
+const gamesTabs = document.querySelectorAll('.games-tab');
+const gamesContent = document.getElementById('games-content');
+const moviesContent = document.getElementById('movies-content');
+const tabSlider = document.querySelector('.tab-slider');
+const filterToggle = document.getElementById('filter-toggle');
+const filterDropdown = document.getElementById('filter-dropdown');
+const filterOptions = document.querySelectorAll('.filter-option input');
+const sortTabs = document.querySelectorAll('.sort-tab');
+const sortSlider = document.querySelector('.sort-slider');
+
+// Set initial tab slider position
+function setTabSliderPosition(tabElement, sliderElement) {
+    if (!tabElement || !sliderElement) return;
+    const activeTab = tabElement.querySelector('.active');
+    if (activeTab) {
+        sliderElement.style.width = `${activeTab.offsetWidth}px`;
+        sliderElement.style.left = `${activeTab.offsetLeft}px`;
+    }
+}
+
+// Separate filters for games and movies
+let currentGameFilters = ['all'];
+let currentGameStatusFilters = ['status-all'];
+let currentMovieFilters = ['all'];
+let currentMovieStatusFilters = ['status-all'];
+let currentSort = 'name';
+let currentTab = 'games';
+
+// Sort and filter games
+function sortAndFilterData() {
+    let data = currentTab === 'games' ? [...gamesData] : [...moviesData];
+    const currentFilters = currentTab === 'games' ? currentGameFilters : currentMovieFilters;
+    const currentStatusFilters = currentTab === 'games' ? currentGameStatusFilters : currentMovieStatusFilters;
     
-    if (!gamesTabs.length || !tabSlider) return;
+    // Apply status filter
+    if (!currentStatusFilters.includes('status-all')) {
+        data = data.filter(item => currentStatusFilters.includes(item.status));
+    }
     
+    // Apply genre filter
+    if (!currentFilters.includes('all')) {
+        data = data.filter(item => 
+            item.genres.some(genre => currentFilters.includes(genre))
+        );
+    }
+    
+    // Apply sorting
+    if (currentSort === 'name') {
+        data.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (currentSort === 'rating') {
+        data.sort((a, b) => b.rating - a.rating);
+    }
+    
+    // Render filtered and sorted data
+    const container = currentTab === 'games' 
+        ? document.querySelector('#games-content .games-grid') 
+        : document.querySelector('#movies-content .games-grid');
+        
+    if (container) {
+        renderCards(container, data, currentTab === 'games' ? 'game' : 'movie');
+    }
+}
+
+// Toggle filter dropdown
+if (filterToggle && filterDropdown) {
+    filterToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        filterDropdown.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!filterToggle.contains(e.target) && !filterDropdown.contains(e.target)) {
+            filterDropdown.classList.remove('active');
+        }
+    });
+}
+
+// Filter option click handler
+if (filterOptions.length > 0) {
+    filterOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            const filter = this.getAttribute('data-filter');
+            const type = this.getAttribute('data-type');
+            
+            // Check if it's a status filter
+            const isStatusFilter = ['status-all', 'completed', 'playing', 'dropped', 'on-hold', 'watched', 'watching'].includes(filter);
+            
+            // Update active filters based on type
+            if (type === 'games') {
+                if (isStatusFilter) {
+                    if (filter === 'status-all') {
+                        if (this.checked) {
+                            currentGameStatusFilters = ['status-all'];
+                            document.querySelectorAll('.games-filters input[data-type="games"]').forEach(opt => {
+                                if (opt.getAttribute('data-filter') !== 'status-all' && 
+                                    ['status-all', 'completed', 'playing', 'dropped', 'on-hold'].includes(opt.getAttribute('data-filter'))) {
+                                    opt.checked = false;
+                                }
+                            });
+                        }
+                    } else {
+                        if (this.checked) {
+                            currentGameStatusFilters = currentGameStatusFilters.filter(f => f !== 'status-all');
+                            document.querySelector('.games-filters input[data-filter="status-all"]').checked = false;
+                            currentGameStatusFilters.push(filter);
+                        }
+                    }
+                } else {
+                    if (filter === 'all') {
+                        if (this.checked) {
+                            currentGameFilters = ['all'];
+                            document.querySelectorAll('.games-filters input[data-type="games"]').forEach(opt => {
+                                if (opt !== this && !['status-all', 'completed', 'playing', 'dropped', 'on-hold'].includes(opt.getAttribute('data-filter'))) {
+                                    opt.checked = false;
+                                }
+                            });
+                        }
+                    } else {
+                        if (this.checked) {
+                            currentGameFilters = currentGameFilters.filter(f => f !== 'all');
+                            document.querySelector('.games-filters input[data-filter="all"]').checked = false;
+                            currentGameFilters.push(filter);
+                        }
+                    }
+                }
+            }
+            
+            sortAndFilterData();
+        });
+    });
+}
+
+// Sort tab click handler with animation
+if (sortTabs.length > 0 && sortSlider) {
+    sortTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const sort = this.getAttribute('data-sort');
+            
+            sortTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
+            
+            const activeContent = document.querySelector('.games-content.active');
+            if (activeContent) {
+                const activeGrid = activeContent.querySelector('.games-grid');
+                activeGrid.classList.add('sorting');
+                
+                currentSort = sort;
+                
+                setTimeout(() => {
+                    sortAndFilterData();
+                    setTimeout(() => {
+                        activeGrid.classList.remove('sorting');
+                    }, 300);
+                }, 300);
+            }
+        });
+    });
+}
+
+// Games tabs with animation
+if (gamesTabs.length > 0 && tabSlider && gamesContent && moviesContent) {
     gamesTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             gamesTabs.forEach(t => t.classList.remove('active'));
@@ -438,26 +575,28 @@ function setupGamesTabs() {
                 previousContent.classList.add('fade-out');
             }
             
-            const currentTab = tab.dataset.tab;
+            currentTab = tab.dataset.tab;
             
             setTimeout(() => {
                 if (currentTab === 'movies') {
-                    document.querySelector('.games-filters')?.style.setProperty('display', 'none', 'important');
-                    document.querySelector('.movies-filters')?.style.setProperty('display', 'block', 'important');
-                    gamesContent?.classList.remove('active');
-                    moviesContent?.classList.add('fade-in');
+                    document.querySelector('.games-filters').style.display = 'none';
+                    document.querySelector('.movies-filters').style.display = 'block';
+                    gamesContent.classList.remove('active');
+                    moviesContent.classList.add('fade-in');
                     setTimeout(() => {
-                        moviesContent?.classList.remove('fade-in');
-                        moviesContent?.classList.add('active');
+                        moviesContent.classList.remove('fade-in');
+                        moviesContent.classList.add('active');
+                        sortAndFilterData();
                     }, 300);
                 } else {
-                    document.querySelector('.movies-filters')?.style.setProperty('display', 'none', 'important');
-                    document.querySelector('.games-filters')?.style.setProperty('display', 'block', 'important');
-                    moviesContent?.classList.remove('active');
-                    gamesContent?.classList.add('fade-in');
+                    document.querySelector('.movies-filters').style.display = 'none';
+                    document.querySelector('.games-filters').style.display = 'block';
+                    moviesContent.classList.remove('active');
+                    gamesContent.classList.add('fade-in');
                     setTimeout(() => {
-                        gamesContent?.classList.remove('fade-in');
-                        gamesContent?.classList.add('active');
+                        gamesContent.classList.remove('fade-in');
+                        gamesContent.classList.add('active');
+                        sortAndFilterData();
                     }, 300);
                 }
                 
@@ -470,242 +609,142 @@ function setupGamesTabs() {
     });
 }
 
-// Filter toggle
-function setupFilterToggle() {
-    const filterToggle = document.getElementById('filter-toggle');
-    const filterDropdown = document.getElementById('filter-dropdown');
-    
-    if (filterToggle && filterDropdown) {
-        filterToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            filterDropdown.classList.toggle('active');
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (!filterToggle.contains(e.target) && !filterDropdown.contains(e.target)) {
-                filterDropdown.classList.remove('active');
-            }
-        });
-    }
-}
-
-// Sort tabs
-function setupSortTabs() {
-    const sortTabs = document.querySelectorAll('.sort-tab');
-    const sortSlider = document.querySelector('.sort-slider');
-    
-    if (sortTabs.length && sortSlider) {
-        sortTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                sortTabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
-            });
-        });
-    }
-}
-
 // Toggle games grid
-function setupToggleGames() {
-    const toggleGamesBtn = document.getElementById('toggle-games');
-    
-    if (toggleGamesBtn) {
-        let isExpanded = false;
-        
-        toggleGamesBtn.addEventListener('click', () => {
-            isExpanded = !isExpanded;
-            const activeContent = document.querySelector('.games-content.active');
-            const activeGrid = activeContent?.querySelector('.games-grid');
-            
-            if (activeGrid) {
-                if (isExpanded) {
-                    activeGrid.style.maxHeight = 'none';
-                    activeGrid.style.webkitMaskImage = 'none';
-                    activeGrid.style.maskImage = 'none';
-                    toggleGamesBtn.textContent = 'Свернуть';
-                } else {
-                    activeGrid.style.maxHeight = '800px';
-                    activeGrid.style.webkitMaskImage = 'linear-gradient(to bottom, black 85%, transparent 98%)';
-                    activeGrid.style.maskImage = 'linear-gradient(to bottom, black 85%, transparent 98%)';
-                    toggleGamesBtn.textContent = 'Развернуть';
-                    
-                    document.getElementById('games')?.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
-    }
-}
+const toggleGamesBtn = document.getElementById('toggle-games');
+let isExpanded = false;
 
-// Copy card number function
-function setupCardNumberCopy() {
-    const cardNumber = document.getElementById('card-number');
-    
-    if (cardNumber) {
-        cardNumber.addEventListener('click', function() {
-            const cardNumberText = '4276 1805 5058 1960';
-            navigator.clipboard.writeText(cardNumberText.replace(/\s/g, ''))
-                .then(() => {
-                    const tooltip = document.getElementById('copy-tooltip');
-                    if (tooltip) {
-                        tooltip.textContent = 'Скопировано!';
-                        setTimeout(() => {
-                            tooltip.textContent = 'Нажмите чтобы скопировать';
-                        }, 2000);
-                    }
-                })
-                .catch(err => console.error('Ошибка при копировании: ', err));
-        });
-    }
-}
-
-// Easter egg - history section on image click
-function setupEasterEgg() {
-    const heroImage = document.getElementById('hero-image-click');
-    const historyModal = document.getElementById('historyModal');
-    const closeHistoryModal = document.querySelector('.close-history-modal');
-    
-    if (heroImage && historyModal && closeHistoryModal) {
-        let clickCount = 0;
-        
-        heroImage.addEventListener('click', () => {
-            clickCount++;
-            heroImage.classList.add('clicked');
+if (toggleGamesBtn) {
+    toggleGamesBtn.addEventListener('click', () => {
+        isExpanded = !isExpanded;
+        const activeContent = document.querySelector('.games-content.active');
+        if (activeContent) {
+            const activeGrid = activeContent.querySelector('.games-grid');
             
-            setTimeout(() => {
-                heroImage.classList.remove('clicked');
-            }, 300);
-            
-            if (clickCount >= 14) {
-                historyModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-                clickCount = 0;
+            if (isExpanded) {
+                activeGrid.style.maxHeight = 'none';
+                activeGrid.style.webkitMaskImage = 'none';
+                activeGrid.style.maskImage = 'none';
+                toggleGamesBtn.textContent = 'Свернуть';
+            } else {
+                activeGrid.style.maxHeight = '800px';
+                activeGrid.style.webkitMaskImage = 'linear-gradient(to bottom, black 85%, transparent 98%)';
+                activeGrid.style.maskImage = 'linear-gradient(to bottom, black 85%, transparent 98%)';
+                toggleGamesBtn.textContent = 'Развернуть';
+                
+                document.getElementById('games').scrollIntoView({ behavior: 'smooth' });
             }
-        });
-        
-        closeHistoryModal.addEventListener('click', () => {
-            historyModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        window.addEventListener('click', function(e) {
-            if (e.target === historyModal) {
-                historyModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-        
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && historyModal.style.display === 'block') {
-                historyModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-    }
-}
-
-// Make sure all external links open in new tab
-function setupExternalLinks() {
-    document.querySelectorAll('a[href^="http"]').forEach(link => {
-        if (!link.href.includes(window.location.hostname)) {
-            link.setAttribute('target', '_blank');
-            link.setAttribute('rel', 'noopener noreferrer');
         }
     });
 }
 
-// Установка позиции слайдера табов
-function setTabSliderPosition(tabElement, sliderElement) {
-    const activeTab = tabElement?.querySelector('.active');
-    if (activeTab && sliderElement) {
-        sliderElement.style.width = `${activeTab.offsetWidth}px`;
-        sliderElement.style.left = `${activeTab.offsetLeft}px`;
+// Автоматическое выделение текущего дня в расписании
+function highlightCurrentDay() {
+    const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+    const today = new Date().getDay();
+    
+    const scheduleItems = document.querySelectorAll('.schedule-item');
+    scheduleItems.forEach(item => {
+        const status = item.querySelector('.schedule-status');
+        if (status) {
+            status.classList.remove('active');
+        }
+    });
+    
+    if (today === 0 || today === 6) return;
+    
+    const scheduleIndex = today - 1;
+    if (scheduleIndex < scheduleItems.length) {
+        const currentStatus = scheduleItems[scheduleIndex].querySelector('.schedule-status');
+        if (currentStatus) {
+            currentStatus.classList.add('active');
+        }
     }
 }
 
-// Simple animation for stats counting
-function animateValue(element, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        element.innerHTML = Math.floor(progress * (end - start) + start);
-        if (progress < 1) window.requestAnimationFrame(step);
-    };
-    window.requestAnimationFrame(step);
+// Easter egg - history section on image click
+const heroImage = document.getElementById('hero-image-click');
+let clickCount = 0;
+const historyModal = document.getElementById('historyModal');
+const closeHistoryModal = document.querySelector('.close-history-modal');
+
+if (heroImage) {
+    heroImage.addEventListener('click', () => {
+        clickCount++;
+        heroImage.classList.add('clicked');
+        
+        setTimeout(() => {
+            heroImage.classList.remove('clicked');
+        }, 300);
+        
+        if (clickCount >= 14 && historyModal) {
+            historyModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            clickCount = 0;
+        }
+    });
 }
 
-// Activate animation when stats section is in view
-function setupStatsAnimation() {
+if (closeHistoryModal && historyModal) {
+    closeHistoryModal.addEventListener('click', () => {
+        historyModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === historyModal) {
+            historyModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && historyModal.style.display === 'block') {
+            historyModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
+
+// Make sure all external links open in new tab
+document.querySelectorAll('a[href^="http"]').forEach(link => {
+    if (!link.href.includes(window.location.hostname)) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+    }
+});
+
+// ==================== ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ ====================
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Загружаем все данные
+    loadStats();
+    loadSchedule();
+    loadGames();
+    loadMovies();
+    
+    // Наблюдатель для статистики
     const statsSection = document.getElementById('stats');
     if (statsSection) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = document.querySelectorAll('.stat-number');
-                    statNumbers.forEach((el, index) => {
-                        const endValue = parseInt(el.textContent);
-                        animateValue(el, 0, endValue, 2000);
-                    });
-                    observer.disconnect();
-                }
-            });
-        }, { threshold: 0.5 });
-
         observer.observe(statsSection);
     }
-}
-
-// Initialize the page
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 DOM загружен, начинаем инициализацию...');
     
-    // Загружаем данные
-    loadData();
-    
-    // Настраиваем обработчики
-    setupEventListeners();
-    setupHeaderScroll();
-    setupStatsAnimation();
+    // Устанавливаем начальные фильтры
+    document.querySelectorAll('.filter-option input[data-filter="all"]').forEach(input => {
+        input.checked = true;
+    });
+    document.querySelectorAll('.filter-option input[data-filter="status-all"]').forEach(input => {
+        input.checked = true;
+    });
     
     // Обновляем слайдеры
     setTimeout(() => {
-        setTabSliderPosition(document.querySelector('.games-tabs'), document.querySelector('.tab-slider'));
-        setTabSliderPosition(document.querySelector('.sort-tabs'), document.querySelector('.sort-slider'));
+        setTabSliderPosition(document.querySelector('.games-tabs'), tabSlider);
+        setTabSliderPosition(document.querySelector('.sort-tabs'), sortSlider);
     }, 100);
     
-    // Обновляем статус каждый час
-    setInterval(highlightCurrentDay, 3600000);
-    
-    console.log('✅ Скрипт инициализирован');
+    // Периодическое обновление данных
+    setInterval(() => {
+        loadStats();
+        loadSchedule();
+    }, 300000); // Каждые 5 минут
 });
-
-// Стили для сообщения об отсутствии контента
-const noContentStyles = `
-    .no-content-message {
-        text-align: center;
-        padding: 40px 20px;
-        color: var(--light-text);
-        grid-column: 1 / -1;
-    }
-    
-    .no-content-message i {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        color: var(--neon-pink);
-    }
-    
-    .no-content-message p {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-    
-    .no-content-message small {
-        font-size: 0.9rem;
-        opacity: 0.8;
-    }
-`;
-
-// Добавляем стили в документ
-const styleSheet = document.createElement('style');
-styleSheet.textContent = noContentStyles;
-document.head.appendChild(styleSheet);
