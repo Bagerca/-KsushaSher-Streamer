@@ -43,5 +43,19 @@
     "status": "completed",
     "videoId": "dQw4w9WgXcQ",
     "customColor": "#39ff14"
+  },
+  {
+    "id": "cyberpunk-2077",
+    "title": "Cyberpunk 2077",
+    "rating": 4.5,
+    "description": "Футуристический RPG",
+    "image": "https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png",
+    "genres": [
+      "rpg",
+      "cyberpunk"
+    ],
+    "status": "playing",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#ff2d95"
   }
 ]
