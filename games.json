@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "cyberpunk",
+    "title": "Cyberpunk",
+    "rating": 4.5,
+    "description": "RPG",
+    "image": "https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png",
+    "genres": [
+      "rpg"
+    ],
+    "status": "playing",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#ff2d95"
+  }
+]
