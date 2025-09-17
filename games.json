@@ -11,5 +11,20 @@
     "status": "playing",
     "videoId": "dQw4w9WgXcQ",
     "customColor": "#ff2d95"
+  },
+  {
+    "id": "тест-3",
+    "title": "Тест 3",
+    "rating": 4.5,
+    "description": "Ляляляляляляляляля",
+    "image": "https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp",
+    "genres": [
+      "coop",
+      "horror",
+      "platformer"
+    ],
+    "status": "on-hold",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#ffd700"
   }
 ]
