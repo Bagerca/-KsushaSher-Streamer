@@ -26,5 +26,19 @@
     "status": "on-hold",
     "videoId": "dQw4w9WgXcQ",
     "customColor": "#ffd700"
+  },
+  {
+    "id": "чикатило",
+    "title": "Чикатило",
+    "rating": 1,
+    "description": "Лабубу",
+    "image": "https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png",
+    "genres": [
+      "coop",
+      "shooter"
+    ],
+    "status": "completed",
+    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#39ff14"
   }
 ]
