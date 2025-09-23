@@ -9,9 +9,16 @@ export class StatsManager {
     }
 
     async init() {
+        if (!this.container) {
+            console.error('Stats container not found:', this.container);
+            return;
+        }
+
         await this.loadStats();
         this.render();
         this.startAutoUpdate();
+        
+        console.log('📈 StatsManager initialized successfully');
     }
 
     async loadStats() {
@@ -27,11 +34,14 @@ export class StatsManager {
     updateLocalStats() {
         if (!this.statsData) return;
 
-        if (!this.statsData.lastStream) {
-            this.statsData.lastStream = new Date().toISOString();
+        // Обновление времени последнего посещения
+        if (!this.statsData.lastVisit) {
+            this.statsData.lastVisit = new Date().toISOString();
         }
 
+        // Инкремент счетчика посещений
         this.statsData.totalVisits = (this.statsData.totalVisits || 0) + 1;
+        
         this.saveStats();
     }
 
@@ -42,6 +52,7 @@ export class StatsManager {
             totalViews: 0,
             totalVisits: 1,
             lastStream: new Date().toISOString(),
+            lastVisit: new Date().toISOString(),
             streamDuration: 0
         };
     }
@@ -81,6 +92,7 @@ export class StatsManager {
     createStreamInfo() {
         const lastStream = Time.formatDate(this.statsData.lastStream);
         const duration = Time.formatDuration(this.statsData.streamDuration);
+        const lastVisit = Time.formatDate(this.statsData.lastVisit);
         
         return `
             <div class="stat-item stream-info">
@@ -88,6 +100,7 @@ export class StatsManager {
                 <div class="stat-content">
                     <div class="stat-value">${lastStream}</div>
                     <div class="stat-label">Последний стрим (${duration})</div>
+                    <div class="stat-sublabel">Последнее посещение: ${lastVisit}</div>
                 </div>
             </div>
         `;
@@ -139,6 +152,10 @@ export class StatsManager {
         this.statsData = { ...this.statsData, ...newStats };
         this.render();
         this.saveStats();
+    }
+
+    refresh() {
+        this.loadStats().then(() => this.render());
     }
 
     destroy() {
