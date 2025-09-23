@@ -1,3 +1,11 @@
 {
-  "schedule": []
+  "schedule": [
+    {
+      "day": "Понедельник",
+      "time": "16:00 - 19:00+",
+      "game": "Dead Island 2",
+      "description": "",
+      "highlighted": false
+    }
+  ]
 }
