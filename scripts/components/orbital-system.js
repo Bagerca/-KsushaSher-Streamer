@@ -8,35 +8,62 @@ export class OrbitalSystem {
         this.angles = [];
         this.isAnimating = false;
         this.animationId = null;
+        this.radius = 0;
+        this.center = { x: 0, y: 0 };
     }
 
     init(satellitesData) {
-        if (!this.container || !satellitesData) return;
+        if (!this.container) {
+            console.error('Orbital container not found:', this.container);
+            return;
+        }
+
+        if (!satellitesData || satellitesData.length === 0) {
+            console.log('No satellites data provided');
+            return;
+        }
 
         this.satellites = satellitesData;
         this.angles = new Array(satellitesData.length).fill(0);
+        this.calculateOrbit();
         this.render();
         this.startAnimation();
+
+        console.log('🛰️ OrbitalSystem initialized with', satellitesData.length, 'satellites');
+    }
+
+    calculateOrbit() {
+        const containerRect = this.container.getBoundingClientRect();
+        this.center = {
+            x: containerRect.width / 2,
+            y: containerRect.height / 2
+        };
+        this.radius = Math.min(this.center.x, this.center.y) - 50;
     }
 
     render() {
-        this.container.innerHTML = '';
+        if (!this.container) return;
+
+        DOM.setHTML(this.container, '');
         
         this.satellites.forEach((satellite, index) => {
             const satelliteEl = this.createSatelliteElement(satellite, index);
             this.container.appendChild(satelliteEl);
         });
+
+        this.updateSatellitesPosition();
     }
 
     createSatelliteElement(satellite, index) {
         const satelliteEl = DOM.createElement('div', {
             className: 'satellite',
-            'data-index': index
+            'data-index': index,
+            'data-name': satellite.name
         });
 
         const iconEl = DOM.createElement('div', {
             className: 'satellite-icon',
-            innerHTML: satellite.icon
+            innerHTML: satellite.icon || '⭐'
         });
 
         const tooltipEl = DOM.createElement('div', {
@@ -73,16 +100,13 @@ export class OrbitalSystem {
 
     updateSatellitesPosition() {
         const satellites = this.container.querySelectorAll('.satellite');
-        const centerX = this.container.offsetWidth / 2;
-        const centerY = this.container.offsetHeight / 2;
-        const radius = Math.min(centerX, centerY) - 30;
-
+        
         satellites.forEach((satellite, index) => {
             const speed = this.satellites[index]?.speed || ORBITAL_CONFIG.baseSpeed;
             this.angles[index] += speed;
             
-            const x = centerX + radius * Math.cos(this.angles[index]) - 15;
-            const y = centerY + radius * Math.sin(this.angles[index]) - 15;
+            const x = this.center.x + this.radius * Math.cos(this.angles[index]) - 20;
+            const y = this.center.y + this.radius * Math.sin(this.angles[index]) - 20;
 
             satellite.style.transform = `translate(${x}px, ${y}px)`;
         });
@@ -102,8 +126,15 @@ export class OrbitalSystem {
         }
     }
 
+    onResize() {
+        this.calculateOrbit();
+        this.updateSatellitesPosition();
+    }
+
     destroy() {
         this.stopAnimation();
-        this.container.innerHTML = '';
+        if (this.container) {
+            DOM.setHTML(this.container, '');
+        }
     }
 }
