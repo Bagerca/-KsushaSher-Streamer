@@ -1,5 +1,5 @@
-import { DOM, Api } from '../utils/helpers.js';
-import { STATS_CONFIG } from '../utils/constants.js';
+import { DOM, Api, Time, NumberUtils } from '../utils/helpers.js';
+import { STATS_CONFIG, MESSAGES } from '../utils/constants.js';
 
 export class StatsManager {
     constructor(containerId) {
@@ -27,14 +27,11 @@ export class StatsManager {
     updateLocalStats() {
         if (!this.statsData) return;
 
-        // Обновление времени последнего стрима
         if (!this.statsData.lastStream) {
             this.statsData.lastStream = new Date().toISOString();
         }
 
-        // Инкремент счетчика посещений
         this.statsData.totalVisits = (this.statsData.totalVisits || 0) + 1;
-        
         this.saveStats();
     }
 
@@ -52,7 +49,7 @@ export class StatsManager {
     render() {
         if (!this.container || !this.statsData) return;
 
-        this.container.innerHTML = this.createStatsHTML();
+        DOM.setHTML(this.container, this.createStatsHTML());
         this.animateCounters();
     }
 
@@ -82,8 +79,8 @@ export class StatsManager {
     }
 
     createStreamInfo() {
-        const lastStream = this.formatDate(this.statsData.lastStream);
-        const duration = this.formatDuration(this.statsData.streamDuration);
+        const lastStream = Time.formatDate(this.statsData.lastStream);
+        const duration = Time.formatDuration(this.statsData.streamDuration);
         
         return `
             <div class="stat-item stream-info">
@@ -101,36 +98,21 @@ export class StatsManager {
         
         counters.forEach(counter => {
             const target = parseInt(counter.getAttribute('data-value'));
-            const duration = 2000;
-            const step = target / (duration / 16);
+            const step = target / (STATS_CONFIG.animationDuration / 16);
             let current = 0;
 
             const updateCounter = () => {
                 current += step;
                 if (current >= target) {
-                    counter.textContent = this.formatNumber(target);
+                    counter.textContent = NumberUtils.formatNumber(target);
                 } else {
-                    counter.textContent = this.formatNumber(Math.floor(current));
+                    counter.textContent = NumberUtils.formatNumber(Math.floor(current));
                     requestAnimationFrame(updateCounter);
                 }
             };
 
             updateCounter();
         });
-    }
-
-    formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    }
-
-    formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('ru-RU');
-    }
-
-    formatDuration(minutes) {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return hours > 0 ? `${hours}ч ${mins}м` : `${mins}м`;
     }
 
     startAutoUpdate() {
