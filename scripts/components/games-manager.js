@@ -1,5 +1,5 @@
-import { DOM, Api, Storage } from '../utils/helpers.js';
-import { MESSAGES, CSS_CLASSES } from '../utils/constants.js';
+import { DOM, Api, Time, NumberUtils } from '../utils/helpers.js';
+import { MESSAGES, CSS_CLASSES, GAMES_CONFIG } from '../utils/constants.js';
 
 export class GamesManager {
     constructor(containerId) {
@@ -9,7 +9,11 @@ export class GamesManager {
         this.currentCategory = 'games';
         this.filteredItems = [];
         this.searchTerm = '';
+        this.currentFilter = 'all';
+        this.sortBy = 'title';
+        this.sortOrder = 'asc';
         this.isLoading = false;
+        this.currentPage = 1;
     }
 
     async init() {
@@ -42,7 +46,13 @@ export class GamesManager {
 
     setLoading(loading) {
         this.isLoading = loading;
-        DOM.toggleClass(this.container, CSS_CLASSES.loading, loading);
+        if (this.container) {
+            if (loading) {
+                DOM.addClass(this.container, CSS_CLASSES.loading);
+            } else {
+                DOM.removeClass(this.container, CSS_CLASSES.loading);
+            }
+        }
     }
 
     setupEventListeners() {
@@ -69,12 +79,21 @@ export class GamesManager {
                 this.applyFilter(e.target.dataset.filter);
             });
         });
+
+        // Сортировка
+        const sortSelect = DOM.getElement('#sort-select');
+        if (sortSelect) {
+            DOM.on(sortSelect, 'change', (e) => {
+                this.applySort(e.target.value);
+            });
+        }
     }
 
     switchCategory(category) {
         if (this.currentCategory === category) return;
 
         this.currentCategory = category;
+        this.currentPage = 1;
         this.filterItems();
         this.render();
 
@@ -82,31 +101,66 @@ export class GamesManager {
         const buttons = DOM.getElements('[data-category]');
         buttons.forEach(btn => DOM.removeClass(btn, CSS_CLASSES.active));
         const activeBtn = DOM.getElement(`[data-category="${category}"]`);
-        DOM.addClass(activeBtn, CSS_CLASSES.active);
+        if (activeBtn) {
+            DOM.addClass(activeBtn, CSS_CLASSES.active);
+        }
     }
 
     handleSearch(term) {
         this.searchTerm = term.toLowerCase().trim();
+        this.currentPage = 1;
         this.filterItems();
         this.render();
     }
 
     applyFilter(filterType) {
-        console.log('Applying filter:', filterType);
+        this.currentFilter = filterType;
+        this.currentPage = 1;
+        this.filterItems();
+        this.render();
+    }
+
+    applySort(sortType) {
+        const [field, order] = sortType.split('_');
+        this.sortBy = field;
+        this.sortOrder = order;
         this.filterItems();
         this.render();
     }
 
     filterItems() {
-        const items = this.currentCategory === 'games' ? this.games : this.movies;
+        let items = this.currentCategory === 'games' ? [...this.games] : [...this.movies];
         
-        this.filteredItems = items.filter(item => {
-            const matchesSearch = !this.searchTerm || 
+        // Поиск
+        if (this.searchTerm) {
+            items = items.filter(item => 
                 item.title.toLowerCase().includes(this.searchTerm) ||
-                (item.description && item.description.toLowerCase().includes(this.searchTerm));
-            
-            return matchesSearch;
+                (item.description && item.description.toLowerCase().includes(this.searchTerm)) ||
+                (item.genre && item.genre.toLowerCase().includes(this.searchTerm))
+            );
+        }
+
+        // Фильтрация
+        if (this.currentFilter !== 'all') {
+            items = items.filter(item => item.genre === this.currentFilter);
+        }
+
+        // Сортировка
+        items.sort((a, b) => {
+            let aValue = a[this.sortBy];
+            let bValue = b[this.sortBy];
+
+            if (this.sortBy === 'rating') {
+                aValue = parseFloat(aValue) || 0;
+                bValue = parseFloat(bValue) || 0;
+            }
+
+            if (aValue < bValue) return this.sortOrder === 'asc' ? -1 : 1;
+            if (aValue > bValue) return this.sortOrder === 'asc' ? 1 : -1;
+            return 0;
         });
+
+        this.filteredItems = items;
     }
 
     render() {
@@ -144,17 +198,31 @@ export class GamesManager {
     }
 
     createItemsHTML() {
-        const itemsHTML = this.filteredItems.map((item, index) => `
+        const startIndex = (this.currentPage - 1) * GAMES_CONFIG.itemsPerPage;
+        const paginatedItems = this.filteredItems.slice(startIndex, startIndex + GAMES_CONFIG.itemsPerPage);
+
+        const itemsHTML = paginatedItems.map((item, index) => `
             <div class="item-card" data-id="${item.id}">
                 <div class="item-image">
-                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}
+                    ${item.image ? `<img src="${item.image}" alt="${item.title}" loading="lazy">` : 
+                      '<div class="item-image-placeholder">🎮</div>'}
                 </div>
                 <div class="item-content">
                     <h3 class="item-title">${item.title}</h3>
                     ${item.description ? `<p class="item-description">${item.description}</p>` : ''}
-                    ${item.genre ? `<span class="item-genre">${item.genre}</span>` : ''}
-                    ${item.platform ? `<span class="item-platform">${item.platform}</span>` : ''}
-                    ${item.rating ? `<div class="item-rating">⭐ ${item.rating}</div>` : ''}
+                    
+                    <div class="item-meta">
+                        ${item.genre ? `<span class="item-genre">${item.genre}</span>` : ''}
+                        ${item.platform ? `<span class="item-platform">${item.platform}</span>` : ''}
+                        ${item.rating ? `<div class="item-rating">⭐ ${item.rating}/10</div>` : ''}
+                        ${item.duration ? `<div class="item-duration">⏱ ${Time.formatDuration(item.duration)}</div>` : ''}
+                    </div>
+                    
+                    ${item.tags ? `
+                        <div class="item-tags">
+                            ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
                 </div>
             </div>
         `).join('');
@@ -163,48 +231,56 @@ export class GamesManager {
             <div class="items-grid">
                 ${itemsHTML}
             </div>
+            ${this.createPaginationHTML()}
         `;
     }
 
-    addGame(gameData) {
-        this.games.push({
-            id: Date.now(),
-            ...gameData
-        });
-        this.filterItems();
-        this.render();
-        this.saveGames();
+    createPaginationHTML() {
+        const totalPages = Math.ceil(this.filteredItems.length / GAMES_CONFIG.itemsPerPage);
+        if (totalPages <= 1) return '';
+
+        return `
+            <div class="pagination">
+                <button class="pagination-btn ${this.currentPage === 1 ? 'disabled' : ''}" 
+                        onclick="gamesManager.previousPage()" ${this.currentPage === 1 ? 'disabled' : ''}>
+                    ← Назад
+                </button>
+                
+                <span class="pagination-info">
+                    Страница ${this.currentPage} из ${totalPages}
+                </span>
+                
+                <button class="pagination-btn ${this.currentPage === totalPages ? 'disabled' : ''}" 
+                        onclick="gamesManager.nextPage()" ${this.currentPage === totalPages ? 'disabled' : ''}>
+                    Вперед →
+                </button>
+            </div>
+        `;
     }
 
-    addMovie(movieData) {
-        this.movies.push({
-            id: Date.now(),
-            ...movieData
-        });
-        this.filterItems();
-        this.render();
-        this.saveMovies();
-    }
-
-    async saveGames() {
-        try {
-            await Api.saveData('/data/games.json', this.games);
-        } catch (error) {
-            console.error('Error saving games:', error);
+    nextPage() {
+        const totalPages = Math.ceil(this.filteredItems.length / GAMES_CONFIG.itemsPerPage);
+        if (this.currentPage < totalPages) {
+            this.currentPage++;
+            this.render();
         }
     }
 
-    async saveMovies() {
-        try {
-            await Api.saveData('/data/movies.json', this.movies);
-        } catch (error) {
-            console.error('Error saving movies:', error);
+    previousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.render();
         }
     }
 
     getItemById(id) {
         const items = this.currentCategory === 'games' ? this.games : this.movies;
         return items.find(item => item.id === id);
+    }
+
+    async refresh() {
+        await this.loadData();
+        this.render();
     }
 
     destroy() {
@@ -214,3 +290,11 @@ export class GamesManager {
         }
     }
 }
+
+// Глобальный экземпляр для пагинации
+window.gamesManager = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.gamesManager = new GamesManager('#games-container');
+    window.gamesManager.init();
+});
