@@ -1,18 +1,3 @@
 {
-  "schedule": [
-    {
-      "day": "Понедельник",
-      "time": "16:00 - 19:00+",
-      "game": "Неизвестно",
-      "description": "¯\\_(ツ)_/¯",
-      "highlighted": false
-    },
-    {
-      "day": "Вторник",
-      "time": "16:00 - 19:00+",
-      "game": "Хуи пинаем",
-      "description": "Тест",
-      "highlighted": false
-    }
-  ]
+  "schedule": []
 }
