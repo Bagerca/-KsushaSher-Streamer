@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ksusha Sher - Стример на Twitch</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/animations.css">
 </head>
 <body>
     <header>
@@ -87,7 +89,7 @@
         <div class="container">
             <h2 class="section-title">Расписание стримов</h2>
             <div class="schedule-list" id="schedule-list">
-                <!-- Расписание загружается из schedule.json -->
+                <!-- Расписание загружается динамически -->
             </div>
         </div>
     </section>
@@ -102,7 +104,7 @@
                 <button class="filter-btn" data-filter="dropped">Брошено</button>
             </div>
             <div class="games-grid" id="games-grid">
-                <!-- Игры загружаются из games.json -->
+                <!-- Игры загружаются динамически -->
             </div>
         </div>
     </section>
@@ -166,6 +168,14 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Подключаем скрипты в правильном порядке -->
+    <script src="scripts/utils/constants.js"></script>
+    <script src="scripts/utils/helpers.js"></script>
+    <script src="scripts/core/loader.js"></script>
+    <script src="scripts/core/ui.js"></script>
+    <script src="scripts/core/schedule.js"></script>
+    <script src="scripts/components/stats.js"></script>
+    <script src="scripts/components/games-manager.js"></script>
+    <script src="scripts/main.js"></script>
 </body>
 </html>
