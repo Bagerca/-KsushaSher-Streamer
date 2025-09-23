@@ -199,10 +199,9 @@ nav ul li a:hover::after { width: 100%; }
     position: relative; 
     display: inline-block;
     cursor: pointer;
-    perspective: 1000px;
 }
 
-.hero-image-container img.main-photo {
+.hero-image-container img {
     width: 300px;
     height: 300px;
     border-radius: 50%;
@@ -215,7 +214,7 @@ nav ul li a:hover::after { width: 100%; }
     transition: all 0.3s ease;
 }
 
-.hero-image-container.clicked img.main-photo {
+.hero-image-container.clicked img {
     transform: scale(1.1);
     box-shadow: 0 0 30px var(--neon-green), 0 0 60px var(--neon-pink);
 }
@@ -285,144 +284,6 @@ nav ul li a:hover::after { width: 100%; }
 @keyframes orbit {
     0% { transform: translateX(-50%) rotate(0deg) translateY(-190px) rotate(0deg); }
    100% { transform: translateX(-50%) rotate(360deg) translateY(-190px) rotate(-360deg); }
-}
-
-/* Система планет */
-.orbit-system {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 500px;
-    height: 500px;
-}
-
-.planet {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    top: 50%;
-    left: 50%;
-    transform-style: preserve-3d;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    box-shadow: 0 0 15px currentColor;
-    border: 3px solid;
-    transition: all 0.3s ease;
-}
-
-.planet:hover {
-    transform: scale(1.3) !important;
-    z-index: 10;
-    box-shadow: 0 0 25px currentColor;
-}
-
-/* Модератор - зеленый, ближняя орбита */
-.planet-moderator {
-    border-color: var(--neon-green);
-    animation: orbit-close 8s linear infinite;
-    z-index: 3;
-}
-
-/* Рандомный участник 1 - розовый, средняя орбита */
-.planet-pink {
-    border-color: var(--neon-pink);
-    animation: orbit-medium 12s linear infinite;
-    z-index: 2;
-}
-
-/* Рандомный участник 2 - белый, дальняя орбита */
-.planet-white {
-    border-color: var(--white);
-    animation: orbit-far 16s linear infinite;
-    z-index: 1;
-}
-
-/* 3D орбиты с разной глубиной */
-@keyframes orbit-close {
-    0% {
-        transform: 
-            translate(-50%, -50%) 
-            rotateY(0deg) 
-            translateZ(20px) 
-            rotate(0deg) 
-            translateX(120px) 
-            rotate(0deg);
-    }
-    100% {
-        transform: 
-            translate(-50%, -50%) 
-            rotateY(360deg) 
-            translateZ(20px) 
-            rotate(360deg) 
-            translateX(120px) 
-            rotate(-360deg);
-    }
-}
-
-@keyframes orbit-medium {
-    0% {
-        transform: 
-            translate(-50%, -50%) 
-            rotateY(0deg) 
-            translateZ(-10px) 
-            rotate(0deg) 
-            translateX(180px) 
-            rotate(0deg);
-    }
-    100% {
-        transform: 
-            translate(-50%, -50%) 
-            rotateY(360deg) 
-            translateZ(-10px) 
-            rotate(360deg) 
-            translateX(180px) 
-            rotate(-360deg);
-    }
-}
-
-@keyframes orbit-far {
-    0% {
-        transform: 
-            translate(-50%, -50%) 
-            rotateY(0deg) 
-            translateZ(30px) 
-            rotate(0deg) 
-            translateX(240px) 
-            rotate(0deg);
-    }
-    100% {
-        transform: 
-            translate(-50%, -50%) 
-            rotateY(360deg) 
-            translateZ(30px) 
-            rotate(360deg) 
-            translateX(240px) 
-            rotate(-360deg);
-    }
-}
-
-/* Свечение для фото */
-.planet::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.3;
-    filter: blur(10px);
-    z-index: -1;
-    animation: pulse-glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes pulse-glow {
-    0% { opacity: 0.2; transform: scale(0.95); }
-    100% { opacity: 0.4; transform: scale(1.05); }
 }
 
 .hero-buttons {
@@ -1475,7 +1336,6 @@ footer {
     line-height: 1.5;
 }
 
-/* Адаптивность для планет */
 @media (max-width: 768px) {
     header { top: 0; }
     .menu-toggle { display: flex; }
@@ -1508,36 +1368,10 @@ footer {
     .stats-container { flex-direction: column; align-items: center; }
     .stat-item { margin-bottom: 20px; }
     .hero-buttons { flex-direction: column; align-items: center; }
-    .hero-image-container img.main-photo { width: 200px; height: 200px; }
+    .hero-image-container img { width: 200px; height: 200px; }
     .light-ring { width: 240px; height: 240px; }
     .light-ring:nth-child(2) { width: 270px; height: 270px; }
     .light-ring:nth-child(3) { width: 300px; height: 300px; }
-    
-    /* Адаптивность для планет */
-    .orbit-system {
-        width: 300px;
-        height: 300px;
-    }
-    
-    .planet {
-        width: 40px;
-        height: 40px;
-    }
-    
-    @keyframes orbit-close {
-        0% { transform: translate(-50%, -50%) rotateY(0deg) translateZ(10px) rotate(0deg) translateX(80px) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotateY(360deg) translateZ(10px) rotate(360deg) translateX(80px) rotate(-360deg); }
-    }
-    
-    @keyframes orbit-medium {
-        0% { transform: translate(-50%, -50%) rotateY(0deg) translateZ(-5px) rotate(0deg) translateX(120px) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotateY(360deg) translateZ(-5px) rotate(360deg) translateX(120px) rotate(-360deg); }
-    }
-    
-    @keyframes orbit-far {
-        0% { transform: translate(-50%, -50%) rotateY(0deg) translateZ(15px) rotate(0deg) translateX(160px) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotateY(360deg) translateZ(15px) rotate(360deg) translateX(160px) rotate(-360deg); }
-    }
     
     /* Адаптивность для игр */
     .games-controls {
