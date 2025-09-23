@@ -8,6 +8,7 @@ export class AppInitializer {
             this.initializeGames();
             this.initializeStats();
             this.initializeOrbital();
+            this.setupGlobalHandlers();
         });
     }
 
@@ -30,29 +31,35 @@ export class AppInitializer {
     static initializeOrbital() {
         const orbitalContainer = document.getElementById('orbital-container');
         if (orbitalContainer) {
-            // Загружаем данные для орбитальной системы
             fetch('/data/satellites.json')
                 .then(response => response.json())
                 .then(data => {
                     window.orbitalSystem = new OrbitalSystem('#orbital-container');
                     window.orbitalSystem.init(data);
+                })
+                .catch(error => {
+                    console.log('Orbital system data not found, skipping initialization');
                 });
         }
     }
 
-    // Методы для пагинации (вместо inline onclick)
-    static nextPage() {
-        if (window.gamesManager) {
-            window.gamesManager.nextPage();
-        }
-    }
-
-    static previousPage() {
-        if (window.gamesManager) {
-            window.gamesManager.previousPage();
-        }
+    static setupGlobalHandlers() {
+        // Глобальные обработчики для пагинации
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('pagination-next')) {
+                e.preventDefault();
+                if (window.gamesManager) {
+                    window.gamesManager.nextPage();
+                }
+            } else if (e.target.classList.contains('pagination-prev')) {
+                e.preventDefault();
+                if (window.gamesManager) {
+                    window.gamesManager.previousPage();
+                }
+            }
+        });
     }
 }
 
-// Делаем методы глобально доступными для HTML
-window.AppInitializer = AppInitializer;
+// Автоматическая инициализация
+AppInitializer.init();
