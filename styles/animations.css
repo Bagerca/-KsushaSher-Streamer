@@ -1,85 +1,18 @@
-/* Анимации появления */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Анимации для статистики */
+@keyframes countUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.stat-number.animating {
+    animation: countUp 0.5s ease-out;
 }
 
 /* Анимации для карточек */
-.item-card {
-    animation: fadeIn 0.6s ease forwards;
-}
-
-.item-card:nth-child(odd) {
-    animation: slideInLeft 0.6s ease forwards;
-}
-
-.item-card:nth-child(even) {
-    animation: slideInRight 0.6s ease forwards;
-}
-
-/* Задержки для последовательного появления */
-.item-card:nth-child(1) { animation-delay: 0.1s; }
-.item-card:nth-child(2) { animation-delay: 0.2s; }
-.item-card:nth-child(3) { animation-delay: 0.3s; }
-.item-card:nth-child(4) { animation-delay: 0.4s; }
-.item-card:nth-child(5) { animation-delay: 0.5s; }
-.item-card:nth-child(6) { animation-delay: 0.6s; }
-
-/* Анимации для статистики */
-.stat-item {
-    animation: scaleIn 0.5s ease forwards;
-}
-
-.stat-item:nth-child(1) { animation-delay: 0.1s; }
-.stat-item:nth-child(2) { animation-delay: 0.2s; }
-.stat-item:nth-child(3) { animation-delay: 0.3s; }
-.stat-item:nth-child(4) { animation-delay: 0.4s; }
-.stat-item:nth-child(5) { animation-delay: 0.5s; }
-
-/* Анимация счетчиков */
-@keyframes countUp {
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -87,188 +20,82 @@
     }
 }
 
-.stat-value {
-    animation: countUp 0.8s ease forwards;
+.game-card {
+    animation: fadeInUp 0.6s ease-out;
 }
 
-/* Анимация спутников */
-@keyframes orbit {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.schedule-item {
+    animation: fadeInUp 0.6s ease-out;
 }
 
-.satellite {
-    animation: orbit 20s linear infinite;
-}
-
-.satellite:nth-child(1) { animation-duration: 25s; }
-.satellite:nth-child(2) { animation-duration: 30s; }
-.satellite:nth-child(3) { animation-duration: 35s; }
-.satellite:nth-child(4) { animation-duration: 40s; }
-.satellite:nth-child(5) { animation-duration: 45s; }
-
-/* Анимация ховера */
+/* Анимации для кнопок */
 @keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
-.item-card:hover {
-    animation: pulse 0.5s ease;
+.cta-button:hover {
+    animation: pulse 1s infinite;
 }
 
-/* Анимация загрузки */
-@keyframes shimmer {
-    0% {
-        background-position: -468px 0;
-    }
-    100% {
-        background-position: 468px 0;
-    }
+/* Анимации для загрузки */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.loading-shimmer {
-    animation: shimmer 1.5s infinite linear;
-    background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
-    background-size: 800px 104px;
-}
-
-/* Анимация переключения страниц */
-@keyframes pageSlide {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.items-grid {
-    animation: pageSlide 0.4s ease forwards;
-}
-
-/* Анимация фильтров */
-@keyframes filterSlide {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.filter-btn.active {
-    animation: filterSlide 0.3s ease;
-}
-
-/* Анимация уведомлений */
-@keyframes notificationSlide {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.notification {
-    animation: notificationSlide 0.3s ease forwards;
-}
-
-/* Анимация модальных окон */
-@keyframes modalScale {
-    from {
-        opacity: 0;
-        transform: scale(0.7);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.modal-content {
-    animation: modalScale 0.3s ease forwards;
-}
-
-/* Плавные переходы */
-* {
-    transition: color var(--transition-fast), 
-                background-color var(--transition-fast), 
-                border-color var(--transition-fast);
-}
-
-/* Анимация для кнопок */
-.btn {
-    position: relative;
-    overflow: hidden;
-}
-
-.btn::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
     border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
+    border-top-color: var(--neon-green);
+    animation: spin 1s ease-in-out infinite;
 }
 
-.btn:hover::after {
-    width: 100px;
-    height: 100px;
-}
-
-/* Анимация появления текста */
-@keyframes typewriter {
-    from {
-        width: 0;
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 20px;
     }
-    to {
-        width: 100%;
+    
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
     }
-}
-
-.typewriter {
-    overflow: hidden;
-    border-right: 2px solid var(--primary-color);
-    white-space: nowrap;
-    animation: typewriter 3s steps(40) forwards;
-}
-
-/* Анимация параллакса */
-.parallax {
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-/* Медиа-запросы для анимаций */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+    
+    nav ul li {
+        margin-left: 0;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .about-content {
+        flex-direction: column;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .games-filter {
+        flex-wrap: wrap;
+    }
+    
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .schedule-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
     }
 }
