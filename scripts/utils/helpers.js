@@ -59,16 +59,6 @@ export class DOM {
     static setHTML(element, html) {
         element.innerHTML = html;
     }
-
-    // Получить данные атрибута
-    static getData(element, key) {
-        return element.dataset[key];
-    }
-
-    // Установить данные атрибута
-    static setData(element, key, value) {
-        element.dataset[key] = value;
-    }
 }
 
 // Утилиты для работы с API
@@ -101,59 +91,21 @@ export class Api {
             throw error;
         }
     }
-
-    // Отправить POST запрос
-    static async postData(url, data) {
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await response.json();
-        } catch (error) {
-            console.error('POST error:', error);
-            throw error;
-        }
-    }
-
-    // Проверить статус соединения
-    static async checkConnection() {
-        try {
-            const response = await fetch('/api/health', { method: 'HEAD' });
-            return response.ok;
-        } catch {
-            return false;
-        }
-    }
 }
 
 // Утилиты для работы со временем
 export class Time {
     // Форматировать дату
-    static formatDate(date, options = {}) {
-        const defaultOptions = { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        };
-        return new Date(date).toLocaleDateString('ru-RU', { ...defaultOptions, ...options });
+    static formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('ru-RU');
     }
 
     // Форматировать время
-    static formatTime(date) {
-        return new Date(date).toLocaleTimeString('ru-RU', { 
+    static formatTime(dateString) {
+        return new Date(dateString).toLocaleTimeString('ru-RU', { 
             hour: '2-digit', 
             minute: '2-digit' 
         });
-    }
-
-    // Получить разницу во времени
-    static getTimeDiff(start, end) {
-        const diff = new Date(end) - new Date(start);
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        return { hours, minutes };
     }
 
     // Форматировать длительность
@@ -161,11 +113,6 @@ export class Time {
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
         return hours > 0 ? `${hours}ч ${mins}м` : `${mins}м`;
-    }
-
-    // Создать задержку
-    static delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
 
@@ -175,101 +122,7 @@ export class NumberUtils {
     static formatNumber(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
-
-    // Ограничить число в диапазоне
-    static clamp(value, min, max) {
-        return Math.min(Math.max(value, min), max);
-    }
-
-    // Случайное число в диапазоне
-    static random(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    // Интерполяция
-    static lerp(start, end, factor) {
-        return start + (end - start) * factor;
-    }
 }
 
-// Утилиты для работы с localStorage
-export class Storage {
-    // Получить данные
-    static get(key, defaultValue = null) {
-        try {
-            const item = localStorage.getItem(key);
-            return item ? JSON.parse(item) : defaultValue;
-        } catch {
-            return defaultValue;
-        }
-    }
-
-    // Сохранить данные
-    static set(key, value) {
-        try {
-            localStorage.setItem(key, JSON.stringify(value));
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
-    // Удалить данные
-    static remove(key) {
-        try {
-            localStorage.removeItem(key);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
-    // Очистить все данные
-    static clear() {
-        try {
-            localStorage.clear();
-            return true;
-        } catch {
-            return false;
-        }
-    }
-}
-
-// Утилиты для валидации
-export class Validator {
-    // Проверить email
-    static isEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    // Проверить URL
-    static isURL(url) {
-        try {
-            new URL(url);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
-    // Проверить пустую строку
-    static isEmpty(str) {
-        return !str || str.trim().length === 0;
-    }
-
-    // Проверить число
-    static isNumber(value) {
-        return !isNaN(parseFloat(value)) && isFinite(value);
-    }
-}
-
-// Главная утилита для экспорта всех классов
-export default {
-    DOM,
-    Api,
-    Time,
-    NumberUtils,
-    Storage,
-    Validator
-};
+// Главная утилита для экспорта
+export default { DOM, Api, Time, NumberUtils };
