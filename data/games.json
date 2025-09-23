@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "The Witcher 3",
+    "genre": "RPG",
+    "platform": "PC/PS/Xbox",
+    "rating": 9.8,
+    "description": "Захватывающая RPG с открытым миром",
+    "image": "/assets/images/witcher3.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Cyberpunk 2077",
+    "genre": "RPG",
+    "platform": "PC/PS/Xbox",
+    "rating": 8.5,
+    "description": "Футуристический экшен-RPG",
+    "image": "/assets/images/cyberpunk.jpg"
+  }
+]
