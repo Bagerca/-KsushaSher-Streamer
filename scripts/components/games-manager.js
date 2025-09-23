@@ -17,9 +17,16 @@ export class GamesManager {
     }
 
     async init() {
+        if (!this.container) {
+            console.error('Games container not found:', this.container);
+            return;
+        }
+
         await this.loadData();
         this.render();
         this.setupEventListeners();
+        
+        console.log('🎮 GamesManager initialized successfully');
     }
 
     async loadData() {
@@ -35,8 +42,10 @@ export class GamesManager {
             this.movies = moviesData || [];
             this.filterItems();
 
+            console.log(`📊 Loaded: ${this.games.length} games, ${this.movies.length} movies`);
+
         } catch (error) {
-            console.error('Error loading data:', error);
+            console.error('Error loading games/movies data:', error);
             this.games = [];
             this.movies = [];
         }
@@ -87,6 +96,17 @@ export class GamesManager {
                 this.applySort(e.target.value);
             });
         }
+
+        // Обработчики для пагинации (делегирование событий)
+        DOM.on(this.container, 'click', (e) => {
+            if (e.target.classList.contains('pagination-next')) {
+                e.preventDefault();
+                this.nextPage();
+            } else if (e.target.classList.contains('pagination-prev')) {
+                e.preventDefault();
+                this.previousPage();
+            }
+        });
     }
 
     switchCategory(category) {
@@ -140,7 +160,7 @@ export class GamesManager {
             );
         }
 
-        // Фильтрация
+        // Фильтрация по жанру
         if (this.currentFilter !== 'all') {
             items = items.filter(item => item.genre === this.currentFilter);
         }
@@ -201,11 +221,13 @@ export class GamesManager {
         const startIndex = (this.currentPage - 1) * GAMES_CONFIG.itemsPerPage;
         const paginatedItems = this.filteredItems.slice(startIndex, startIndex + GAMES_CONFIG.itemsPerPage);
 
-        const itemsHTML = paginatedItems.map((item, index) => `
+        const itemsHTML = paginatedItems.map((item) => `
             <div class="item-card" data-id="${item.id}">
                 <div class="item-image">
-                    ${item.image ? `<img src="${item.image}" alt="${item.title}" loading="lazy">` : 
-                      '<div class="item-image-placeholder">🎮</div>'}
+                    ${item.image ? 
+                        `<img src="${item.image}" alt="${item.title}" loading="lazy">` : 
+                        '<div class="item-image-placeholder">🎮</div>'
+                    }
                 </div>
                 <div class="item-content">
                     <h3 class="item-title">${item.title}</h3>
@@ -218,7 +240,7 @@ export class GamesManager {
                         ${item.duration ? `<div class="item-duration">⏱ ${Time.formatDuration(item.duration)}</div>` : ''}
                     </div>
                     
-                    ${item.tags ? `
+                    ${item.tags && item.tags.length > 0 ? `
                         <div class="item-tags">
                             ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                         </div>
@@ -241,8 +263,8 @@ export class GamesManager {
 
         return `
             <div class="pagination">
-                <button class="pagination-btn ${this.currentPage === 1 ? 'disabled' : ''}" 
-                        onclick="gamesManager.previousPage()" ${this.currentPage === 1 ? 'disabled' : ''}>
+                <button class="pagination-btn pagination-prev ${this.currentPage === 1 ? 'disabled' : ''}" 
+                    ${this.currentPage === 1 ? 'disabled' : ''}>
                     ← Назад
                 </button>
                 
@@ -250,8 +272,8 @@ export class GamesManager {
                     Страница ${this.currentPage} из ${totalPages}
                 </span>
                 
-                <button class="pagination-btn ${this.currentPage === totalPages ? 'disabled' : ''}" 
-                        onclick="gamesManager.nextPage()" ${this.currentPage === totalPages ? 'disabled' : ''}>
+                <button class="pagination-btn pagination-next ${this.currentPage === totalPages ? 'disabled' : ''}" 
+                    ${this.currentPage === totalPages ? 'disabled' : ''}>
                     Вперед →
                 </button>
             </div>
@@ -290,11 +312,3 @@ export class GamesManager {
         }
     }
 }
-
-// Глобальный экземпляр для пагинации
-window.gamesManager = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-    window.gamesManager = new GamesManager('#games-container');
-    window.gamesManager.init();
-});
