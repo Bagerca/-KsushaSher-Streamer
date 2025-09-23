@@ -1,22 +1,30 @@
 {
   "schedule": [
     {
+      "id": 1,
       "day": "Понедельник",
       "time": "19:00-22:00",
-      "game": "The Witcher 3",
-      "status": "planned"
+      "game": "The Witcher 3: Wild Hunt",
+      "status": "planned",
+      "description": "Продолжаем эпическое приключение Геральта"
     },
     {
+      "id": 2,
       "day": "Среда",
-      "time": "20:00-23:00", 
+      "time": "20:00-23:00",
       "game": "Cyberpunk 2077",
-      "status": "confirmed"
+      "status": "confirmed",
+      "description": "Исследуем Найт-Сити"
     },
     {
+      "id": 3,
       "day": "Пятница",
       "time": "18:00-21:00",
-      "game": "Фильм: Интерстеллар",
-      "status": "planned"
+      "game": "Киновечер: Интерстеллар",
+      "status": "planned",
+      "description": "Смотрим и обсуждаем научную фантастику"
     }
-  ]
+  ],
+  "timezone": "Europe/Moscow",
+  "updated": "2024-01-20T10:00:00.000Z"
 }
