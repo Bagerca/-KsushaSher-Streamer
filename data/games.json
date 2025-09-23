@@ -1,20 +1,35 @@
 [
   {
     "id": 1,
-    "title": "The Witcher 3",
+    "title": "The Witcher 3: Wild Hunt",
     "genre": "RPG",
-    "platform": "PC/PS/Xbox",
+    "platform": "PC/PS4/PS5/Xbox",
     "rating": 9.8,
-    "description": "Захватывающая RPG с открытым миром",
-    "image": "/assets/images/witcher3.jpg"
+    "description": "Захватывающая RPG с открытым миром и глубоким сюжетом",
+    "image": "/assets/images/games/witcher3.jpg",
+    "tags": ["RPG", "Открытый мир", "Сюжетная"],
+    "duration": 120
   },
   {
     "id": 2,
     "title": "Cyberpunk 2077",
     "genre": "RPG",
-    "platform": "PC/PS/Xbox",
+    "platform": "PC/PS5/Xbox",
     "rating": 8.5,
-    "description": "Футуристический экшен-RPG",
-    "image": "/assets/images/cyberpunk.jpg"
+    "description": "Футуристический экшен-RPG в мире будущего",
+    "image": "/assets/images/games/cyberpunk.jpg",
+    "tags": ["RPG", "Футуристика", "Экшен"],
+    "duration": 90
+  },
+  {
+    "id": 3,
+    "title": "Red Dead Redemption 2",
+    "genre": "Action",
+    "platform": "PC/PS4/PS5/Xbox",
+    "rating": 9.7,
+    "description": "Эпическая история о диком западе",
+    "image": "/assets/images/games/rdr2.jpg",
+    "tags": ["Экшен", "Открытый мир", "Вестерн"],
+    "duration": 150
   }
 ]
