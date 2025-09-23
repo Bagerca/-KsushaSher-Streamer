@@ -1,321 +1,155 @@
-/* Основные стили для визуального оформления */
-.header {
-    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-    color: white;
-    padding: 1rem 0;
-    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+:root {
+    --neon-green: #39ff14;
+    --neon-pink: #ff2d95;
+    --dark-bg: #070711;
+    --medium-bg: #0f0f1b;
+    --light-text: #ccc;
+    --white: #ffffff;
 }
 
-.navbar {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: var(--dark-bg);
+    color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Header */
+header {
+    background: rgba(7, 7, 17, 0.9);
+    padding: 15px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--neon-green);
+}
+
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.nav-brand h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin: 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+.logo {
+    font-size: 2rem;
+    font-weight: 800;
 }
 
-.nav-links {
+.logo-ksusha {
+    color: var(--neon-green);
+}
+
+.logo-sher {
+    color: var(--neon-pink);
+}
+
+nav ul {
     display: flex;
     list-style: none;
-    gap: 2rem;
-    margin: 0;
-    padding: 0;
 }
 
-.nav-link {
-    color: white;
+nav ul li {
+    margin-left: 30px;
+}
+
+nav ul li a {
+    color: var(--white);
     text-decoration: none;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    transition: color 0.3s;
 }
 
-.nav-link:hover, .nav-link.active {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+nav ul li a:hover {
+    color: var(--neon-green);
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 4rem 0;
+    padding: 150px 0 100px;
     text-align: center;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--medium-bg) 100%);
 }
 
 .hero-title {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    font-size: 4rem;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, var(--neon-green), var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-.hero-description {
+.hero-content p {
     font-size: 1.3rem;
-    margin-bottom: 2rem;
-    opacity: 0.9;
+    margin-bottom: 30px;
+    color: var(--light-text);
 }
 
-.hero-actions {
+.hero-image {
+    margin: 40px 0;
+}
+
+.hero-image img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255, 45, 149, 0.5);
+}
+
+.hero-buttons {
     display: flex;
-    gap: 1rem;
     justify-content: center;
-    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cta-button {
+    padding: 12px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.cta-button.twitch {
+    background: linear-gradient(45deg, #6441a5, var(--neon-pink));
+    color: white;
+}
+
+.cta-button.telegram {
+    background: linear-gradient(45deg, #0088cc, var(--neon-green));
+    color: white;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Sections */
-.section {
-    padding: 4rem 0;
+section {
+    padding: 100px 0;
 }
 
-.section-header {
+.section-title {
     text-align: center;
-    margin-bottom: 3rem;
-}
-
-.section-header h2 {
     font-size: 2.5rem;
-    color: #2d3436;
-    margin-bottom: 1rem;
-}
-
-.section-header p {
-    font-size: 1.2rem;
-    color: #636e72;
-}
-
-.bg-light {
-    background: #f8f9fa;
-}
-
-/* Cards улучшенные */
-.item-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    border: none;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.item-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-.item-image {
-    height: 200px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.item-image-placeholder {
-    font-size: 4rem;
-    color: white;
-}
-
-.item-content {
-    padding: 1.5rem;
-}
-
-.item-title {
-    color: #2d3436;
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.item-description {
-    color: #636e72;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-}
-
-/* Статистика улучшенная */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-}
-
-.stat-item {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    text-align: center;
-    transition: transform 0.3s ease;
-}
-
-.stat-item:hover {
-    transform: translateY(-5px);
-}
-
-.stat-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.stat-value {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #6c5ce7;
-    margin-bottom: 0.5rem;
-}
-
-.stat-label {
-    color: #636e72;
-    font-size: 1.1rem;
-}
-
-/* Орбитальная система */
-.orbital-container {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    border-radius: 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-.satellite {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-}
-
-.satellite-icon {
-    width: 100%;
-    height: 100%;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-}
-
-.satellite:hover .satellite-icon {
-    transform: scale(1.2);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
-
-/* Кнопки */
-.btn {
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-weight: 600;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-    color: white;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
-}
-
-.btn-secondary {
-    background: white;
-    color: #6c5ce7;
-    border: 2px solid #6c5ce7;
-}
-
-.btn-secondary:hover {
-    background: #6c5ce7;
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* Футер */
-.footer {
-    background: #2d3436;
-    color: white;
-    padding: 3rem 0 1rem;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.footer-section h3, .footer-section h4 {
-    color: white;
-    margin-bottom: 1rem;
-}
-
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-section li {
-    margin-bottom: 0.5rem;
-}
-
-.footer-section a {
-    color: #b2bec3;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-section a:hover {
-    color: white;
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #4a5255;
-    color: #b2bec3;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .nav-links {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .hero-title {
-        font-size: 2rem;
-    }
-    
-    .hero-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .section {
-        padding: 2rem 0;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
+    margin-bottom: 50px;
+    color: var(--neon-green);
 }
