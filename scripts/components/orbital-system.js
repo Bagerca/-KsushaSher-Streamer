@@ -1,4 +1,5 @@
-import { DOM } from '../utils/helpers.js';
+import { DOM, NumberUtils } from '../utils/helpers.js';
+import { ORBITAL_CONFIG } from '../utils/constants.js';
 
 export class OrbitalSystem {
     constructor(containerId) {
@@ -77,7 +78,7 @@ export class OrbitalSystem {
         const radius = Math.min(centerX, centerY) - 30;
 
         satellites.forEach((satellite, index) => {
-            const speed = this.satellites[index]?.speed || 0.002;
+            const speed = this.satellites[index]?.speed || ORBITAL_CONFIG.baseSpeed;
             this.angles[index] += speed;
             
             const x = centerX + radius * Math.cos(this.angles[index]) - 15;
