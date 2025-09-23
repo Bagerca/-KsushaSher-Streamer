@@ -827,3 +827,5 @@ style.textContent = `
     .game-image:hover {
         transform: scale(1.05);
     }
+`;
+document.head.appendChild(style);
