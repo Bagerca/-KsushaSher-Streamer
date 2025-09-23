@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Twitch",
+    "icon": "🎮",
+    "speed": 0.002,
+    "url": "https://twitch.tv/ksushasher",
+    "color": "#9146FF"
+  },
+  {
+    "id": 2,
+    "name": "YouTube",
+    "icon": "📺",
+    "speed": 0.0018,
+    "url": "https://youtube.com/ksushasher",
+    "color": "#FF0000"
+  },
+  {
+    "id": 3,
+    "name": "Telegram",
+    "icon": "✈️",
+    "speed": 0.0022,
+    "url": "https://t.me/ksushasher",
+    "color": "#0088CC"
+  },
+  {
+    "id": 4,
+    "name": "Discord",
+    "icon": "💬",
+    "speed": 0.0019,
+    "url": "https://discord.gg/ksushasher",
+    "color": "#5865F2"
+  },
+  {
+    "id": 5,
+    "name": "Twitter",
+    "icon": "🐦",
+    "speed": 0.0021,
+    "url": "https://twitter.com/ksushasher",
+    "color": "#1DA1F2"
+  }
+]
