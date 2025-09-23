@@ -4,15 +4,29 @@
     "title": "Интерстеллар",
     "genre": "Фантастика",
     "rating": 9.0,
-    "description": "Эпическое космическое путешествие",
-    "image": "/assets/images/interstellar.jpg"
+    "description": "Эпическое космическое путешествие через червоточину",
+    "image": "/assets/images/movies/interstellar.jpg",
+    "tags": ["Фантастика", "Космос", "Драма"],
+    "duration": 169
   },
   {
     "id": 2,
     "title": "Начало",
     "genre": "Триллер",
     "rating": 8.8,
-    "description": "Захватывающий фильм о снах",
-    "image": "/assets/images/inception.jpg"
+    "description": "Захватывающий фильм о проникновении в сны",
+    "image": "/assets/images/movies/inception.jpg",
+    "tags": ["Триллер", "Фантастика", "Детектив"],
+    "duration": 148
+  },
+  {
+    "id": 3,
+    "title": "Побег из Шоушенка",
+    "genre": "Драма",
+    "rating": 9.3,
+    "description": "История о надежде и свободе",
+    "image": "/assets/images/movies/shawshank.jpg",
+    "tags": ["Драма", "Тюрьма", "Побег"],
+    "duration": 142
   }
 ]
