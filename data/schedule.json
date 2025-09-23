@@ -1,0 +1,22 @@
+{
+  "schedule": [
+    {
+      "day": "Понедельник",
+      "time": "19:00-22:00",
+      "game": "The Witcher 3",
+      "status": "planned"
+    },
+    {
+      "day": "Среда",
+      "time": "20:00-23:00", 
+      "game": "Cyberpunk 2077",
+      "status": "confirmed"
+    },
+    {
+      "day": "Пятница",
+      "time": "18:00-21:00",
+      "game": "Фильм: Интерстеллар",
+      "status": "planned"
+    }
+  ]
+}
