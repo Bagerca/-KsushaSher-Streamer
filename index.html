@@ -42,32 +42,7 @@
                     <div class="light-ring"></div>
                     <div class="light-ring"></div>
                     <div class="light-ring"></div>
-                    
-                    <!-- Главное фото -->
-                    <img src="https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0" 
-                         alt="Ksusha Sher" 
-                         class="main-photo">
-                    
-                    <!-- Система планет -->
-                    <div class="orbit-system">
-                        <!-- Модератор (всегда зеленый) -->
-                        <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/84980248-3fb6-488d-bde4-9283f7b040fa-profile_image-70x70.png" 
-                             alt="Модератор" 
-                             class="planet planet-moderator"
-                             style="animation-delay: 0s;">
-                        
-                        <!-- Рандомный участник 1 (розовый) -->
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
-                             alt="Участник" 
-                             class="planet planet-pink"
-                             style="animation-delay: -4s;">
-                        
-                        <!-- Рандомный участник 2 (белый) -->
-                        <img src="https://images.unsplash.com/photo-1623582854588-d60de57fa33f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
-                             alt="Участник" 
-                             class="planet planet-white"
-                             style="animation-delay: -8s;">
-                    </div>
+                    <img src="https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0" alt="Ksusha Sher">
                 </div>
             </div>
             <div class="hero-buttons">
@@ -88,7 +63,7 @@
                 </div>
                 <div class="about-image">
                     <div class="video-container">
-                        <iframe id="about-video" src="https://www.youtube.com/embed/LYtMQlY8Qlk" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/LYtMQlY8Qlk" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -351,102 +326,5 @@
     </footer>
 
     <script src="script.js"></script>
-    <script>
-        // Функция для получения случайных фото комьюнити
-        function getRandomCommunityPhotos() {
-            const photos = [
-                'https://static-cdn.jtvnw.net/jtv_user_pictures/13143416-1259-4795-8517-975764570435-profile_image-70x70.png',
-                'https://static-cdn.jtvnw.net/jtv_user_pictures/ae066e0d-dda7-421a-a9d0-d3d77f623cfd-profile_image-70x70.png',
-                'blob:https://web.telegram.org/c4e4221e-7f4a-48a0-aa6c-5be4bae49eec',
-                'https://static-cdn.jtvnw.net/jtv_user_pictures/bca2b1f8-6531-46d4-badc-92c27f7cbdef-profile_image-70x70.png'
-               
-            ];
-            
-            // Перемешиваем массив и берем 2 случайных фото
-            const shuffled = [...photos].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 2);
-        }
-
-        // Обновляем рандомные фото при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            const randomPhotos = getRandomCommunityPhotos();
-            const pinkPlanet = document.querySelector('.planet-pink');
-            const whitePlanet = document.querySelector('.planet-white');
-            
-            if (pinkPlanet && randomPhotos[0]) {
-                pinkPlanet.src = randomPhotos[0];
-            }
-            if (whitePlanet && randomPhotos[1]) {
-                whitePlanet.src = randomPhotos[1];
-            }
-            
-            // Меняем фото каждые 30 секунд
-            setInterval(() => {
-                const newPhotos = getRandomCommunityPhotos();
-                if (pinkPlanet && newPhotos[0]) {
-                    pinkPlanet.style.opacity = '0';
-                    setTimeout(() => {
-                        pinkPlanet.src = newPhotos[0];
-                        pinkPlanet.style.opacity = '1';
-                    }, 300);
-                }
-                if (whitePlanet && newPhotos[1]) {
-                    whitePlanet.style.opacity = '0';
-                    setTimeout(() => {
-                        whitePlanet.src = newPhotos[1];
-                        whitePlanet.style.opacity = '1';
-                    }, 600);
-                }
-            }, 30000);
-
-            // Easter egg - history section on image click
-            const heroImage = document.getElementById('hero-image-click');
-            let clickCount = 0;
-            const historyModal = document.getElementById('historyModal');
-            const closeHistoryModal = document.querySelector('.close-history-modal');
-
-            if (heroImage) {
-                heroImage.addEventListener('click', () => {
-                    clickCount++;
-                    heroImage.classList.add('clicked');
-                    
-                    setTimeout(() => {
-                        heroImage.classList.remove('clicked');
-                    }, 300);
-                    
-                    if (clickCount >= 14 && historyModal) {
-                        historyModal.style.display = 'block';
-                        document.body.style.overflow = 'hidden';
-                        clickCount = 0;
-                    }
-                });
-            }
-
-            if (closeHistoryModal && historyModal) {
-                closeHistoryModal.addEventListener('click', () => {
-                    historyModal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                });
-
-                window.addEventListener('click', function(e) {
-                    if (e.target === historyModal) {
-                        historyModal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                    }
-                });
-
-                window.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape' && historyModal.style.display === 'block') {
-                        historyModal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>
-
-
-
-
