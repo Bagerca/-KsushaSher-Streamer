@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ваш-сайт.ru/sitemap.xml
+
+# Блокировка служебных папок
+Disallow: /admin/
+Disallow: /api/
+Disallow: /bot/
+Disallow: /data/
