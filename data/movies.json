@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Интерстеллар",
+    "genre": "Фантастика",
+    "rating": 9.0,
+    "description": "Эпическое космическое путешествие",
+    "image": "/assets/images/interstellar.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Начало",
+    "genre": "Триллер",
+    "rating": 8.8,
+    "description": "Захватывающий фильм о снах",
+    "image": "/assets/images/inception.jpg"
+  }
+]
