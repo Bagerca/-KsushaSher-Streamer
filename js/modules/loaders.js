@@ -31,17 +31,25 @@ export function initializeLoaders() {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     loadStats();
+                    
+                    // Animate cards when they become visible
                     const statNumbers = document.querySelectorAll('.stat-number');
                     if (statNumbers.length > 0 && statNumbers[0].textContent === '0') {
-                        statNumbers.forEach((el, index) => {
-                            const endValue = parseInt(el.getAttribute('data-value') || el.textContent);
-                            animateValue(el, 0, endValue, 2000);
-                        });
+                        setTimeout(() => {
+                            statNumbers.forEach((el, index) => {
+                                const card = el.closest('.stat-card');
+                                const endValue = parseInt(card.getAttribute('data-value') || el.textContent);
+                                animateModernValue(el, 0, endValue, 2000);
+                            });
+                        }, 500);
                     }
                     observer.disconnect();
                 }
             });
-        }, { threshold: 0.5 });
+        }, { 
+            threshold: 0.3,
+            rootMargin: '0px 0px -50px 0px'
+        });
         
         observer.observe(statsSection);
     }
@@ -173,6 +181,13 @@ export async function loadStats() {
         updateStats(stats);
     } catch (error) {
         console.log('Статистика будет загружена позже');
+        // Use default values if stats file is not available
+        updateStats({
+            followers: 5200,
+            streams: 150,
+            hours: 250,
+            years: 3
+        });
     }
 }
 
@@ -187,28 +202,90 @@ export async function loadSchedule() {
         renderers.renderSchedule(data.schedule);
     } catch (error) {
         console.log('Расписание будет загружено позже');
+        // Show default schedule message
+        const scheduleList = document.getElementById('schedule-list');
+        if (scheduleList) {
+            scheduleList.innerHTML = `
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="schedule-game">📅 Расписание временно недоступно</div>
+                        <div class="schedule-desc">Обновляем данные...</div>
+                    </div>
+                </div>
+            `;
+        }
     }
 }
 
-// Update statistics display
+// Update statistics display with modern cards
 function updateStats(stats) {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    if (statNumbers.length >= 4) {
-        animateValue(statNumbers[0], 0, stats.followers || 5200, 2000);
-        animateValue(statNumbers[1], 0, stats.streams || 150, 2000);
-        animateValue(statNumbers[2], 0, stats.hours || 250, 2000);
-        animateValue(statNumbers[3], 0, stats.years || 3, 2000);
-    }
+    const statCards = document.querySelectorAll('.stat-card');
+    
+    // Stats values in correct order
+    const values = [
+        stats.followers || 5200,
+        stats.streams || 150, 
+        stats.hours || 250,
+        stats.years || 3
+    ];
+    
+    statCards.forEach((card, index) => {
+        const value = values[index];
+        const numberElement = card.querySelector('.stat-number');
+        
+        // Add data attribute for animation
+        card.setAttribute('data-value', value);
+        
+        // Delay for sequential animation
+        setTimeout(() => {
+            animateModernValue(numberElement, 0, value, 1800);
+            numberElement.classList.add('animating');
+            
+            setTimeout(() => {
+                numberElement.classList.remove('animating');
+            }, 600);
+        }, index * 400); // Increased delay for better visual effect
+    });
 }
 
-// Animate counting numbers
+// Enhanced number animation with formatting
+function animateModernValue(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const value = Math.floor(easeOutQuart * (end - start) + start);
+        
+        // Format large numbers
+        element.textContent = formatNumber(value);
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Format numbers with spaces for thousands
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+// Also update the existing animateValue function for consistency (if used elsewhere)
 function animateValue(element, start, end, duration) {
     let startTimestamp = null;
     const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        element.innerHTML = Math.floor(progress * (end - start) + start);
+        const value = Math.floor(progress * (end - start) + start);
+        element.textContent = formatNumber(value);
         if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
 }
+
+// Export the new animation function for use in other modules
+export { animateModernValue, formatNumber };
