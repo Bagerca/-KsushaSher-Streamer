@@ -6,6 +6,8 @@ export function initializeApp() {
     initModals();
     initHeroImageEasterEgg();
     initCardCopy();
+    
+    console.log('🎨 UI initialized successfully');
 }
 
 // Mobile menu functionality
@@ -205,7 +207,10 @@ export function showModal(item) {
     const modalGameVideo = document.getElementById('modalGameVideo');
     const gameModal = document.getElementById('gameModal');
     
-    if (!modalGameTitle || !modalGameRating || !modalGameDescription || !modalGameVideo || !gameModal) return;
+    if (!modalGameTitle || !modalGameRating || !modalGameDescription || !modalGameVideo || !gameModal) {
+        console.error('Modal elements not found');
+        return;
+    }
     
     modalGameTitle.textContent = item.title;
     modalGameRating.innerHTML = `${generateStars(item.rating)}<span>${item.rating}/5</span>`;
@@ -228,4 +233,38 @@ export function generateStars(rating) {
     for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
     
     return starsHtml;
+}
+
+// Utility function to check if element exists in DOM
+export function elementExists(selector) {
+    return document.querySelector(selector) !== null;
+}
+
+// Utility function to wait for element to appear
+export function waitForElement(selector, timeout = 5000) {
+    return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        
+        function checkElement() {
+            const element = document.querySelector(selector);
+            if (element) {
+                resolve(element);
+            } else if (Date.now() - startTime >= timeout) {
+                reject(new Error(`Element ${selector} not found within ${timeout}ms`));
+            } else {
+                setTimeout(checkElement, 100);
+            }
+        }
+        
+        checkElement();
+    });
+}
+
+// Initialize all UI components when DOM is ready
+export function initUIWhenReady() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+        setTimeout(initializeApp, 100);
+    }
 }
