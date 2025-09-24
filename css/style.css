@@ -434,8 +434,6 @@ section {
     flex-wrap: wrap;
     position: relative;
     z-index: 1;
-    filter: blur(2px) grayscale(80%);
-    opacity: 0.5;
 }
 
 .stat-item {
