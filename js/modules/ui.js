@@ -1,525 +1,535 @@
-// UI interactions and animations
-export function initializeApp() {
-    initMobileMenu();
-    initSmoothScroll();
-    initHeaderScroll();
-    initModals();
-    initHeroImageEasterEgg();
-    initCardCopy();
-    
-    console.log('🎨 UI initialized successfully');
+// Data loading functionality with Radar Chart support
+import { renderSchedule } from './renderers.js';
+
+// State variables
+export let gamesLoaded = false;
+export let moviesLoaded = false;
+export let currentGamesData = [];
+export let currentMoviesData = [];
+
+// Chart.js instance
+let radarChartInstance = null;
+
+// Load Chart.js dynamically
+function loadChartJS() {
+    return new Promise((resolve, reject) => {
+        if (window.Chart) {
+            resolve();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        script.onload = () => {
+            console.log('📊 Chart.js loaded successfully');
+            resolve();
+        };
+        script.onerror = () => {
+            console.error('❌ Failed to load Chart.js');
+            reject(new Error('Failed to load Chart.js'));
+        };
+        document.head.appendChild(script);
+    });
 }
 
-// Mobile menu functionality
-function initMobileMenu() {
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navMenu = document.getElementById('nav-menu');
-
-    if (mobileMenu && navMenu) {
-        mobileMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-            mobileMenu.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !mobileMenu.contains(e.target)) {
-                mobileMenu.classList.remove('active');
-                navMenu.classList.remove('active');
-            }
-        });
-
-        document.querySelectorAll('#nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-                navMenu.classList.remove('active');
+export function initializeLoaders() {
+    // Wait a bit more for DOM to be fully ready
+    setTimeout(() => {
+        // Load initial data
+        loadStats();
+        loadSchedule();
+        loadGames();
+        
+        console.log('📊 Loaders initialized');
+    }, 200);
+    
+    // Set up periodic updates
+    setInterval(() => {
+        loadStats();
+        loadSchedule();
+    }, 300000); // Every 5 minutes
+    
+    // Set up intersection observer for radar chart
+    const statsSection = document.getElementById('stats');
+    if (statsSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    console.log('🎯 Stats section is visible, loading radar chart...');
+                    loadStats();
+                    observer.disconnect();
+                }
             });
+        }, { 
+            threshold: 0.3,
+            rootMargin: '0px 0px -50px 0px'
         });
+        
+        observer.observe(statsSection);
     }
 }
 
-// Smooth scrolling for anchor links
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-}
-
-// Header scroll behavior
-function initHeaderScroll() {
-    let lastScrollTop = 0;
-    const header = document.querySelector('header');
-    const headerHeight = header ? header.offsetHeight : 0;
-
-    if (header) {
-        window.addEventListener('scroll', function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
-                document.body.classList.add('scrolled-down');
-                document.body.classList.remove('scrolled-up');
-            } else {
-                document.body.classList.remove('scrolled-down');
-                document.body.classList.add('scrolled-up');
-            }
-            lastScrollTop = scrollTop;
-        });
-    }
-}
-
-// Modal windows functionality
-function initModals() {
-    initGameModal();
-    initHistoryModal();
-}
-
-function initGameModal() {
-    const closeModal = document.querySelector('.close-modal');
-    const gameModal = document.getElementById('gameModal');
-
-    if (closeModal && gameModal) {
-        closeModal.addEventListener('click', () => {
-            closeGameModal();
-        });
-
-        window.addEventListener('click', function(e) {
-            if (e.target === gameModal) {
-                closeGameModal();
-            }
-        });
-
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && gameModal.style.display === 'block') {
-                closeGameModal();
-            }
-        });
-    }
-}
-
-function closeGameModal() {
-    const gameModal = document.getElementById('gameModal');
-    const modalGameVideo = document.getElementById('modalGameVideo');
-    
-    if (gameModal) gameModal.style.display = 'none';
-    if (modalGameVideo) modalGameVideo.src = '';
-    document.body.style.overflow = 'auto';
-}
-
-function initHistoryModal() {
-    const closeHistoryModal = document.querySelector('.close-history-modal');
-    const historyModal = document.getElementById('historyModal');
-
-    if (closeHistoryModal && historyModal) {
-        closeHistoryModal.addEventListener('click', () => {
-            closeHistoryModalFunc();
-        });
-
-        window.addEventListener('click', function(e) {
-            if (e.target === historyModal) {
-                closeHistoryModalFunc();
-            }
-        });
-
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && historyModal.style.display === 'block') {
-                closeHistoryModalFunc();
-            }
-        });
-    }
-}
-
-function closeHistoryModalFunc() {
-    const historyModal = document.getElementById('historyModal');
-    if (historyModal) historyModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-// Hero image easter egg - ТОЛЬКО для главного фото
-function initHeroImageEasterEgg() {
-    const mainPhotoContainer = document.querySelector('.main-photo-container');
-    const mainPhoto = document.querySelector('.main-photo');
-    let clickCount = 0;
-    const historyModal = document.getElementById('historyModal');
-
-    if (mainPhoto) {
-        mainPhoto.addEventListener('click', (e) => {
-            e.stopPropagation(); // Останавливаем всплытие
-            clickCount++;
-            
-            // Подсвечиваем ТОЛЬКО главное фото
-            mainPhotoContainer.classList.add('clicked');
-            
-            setTimeout(() => {
-                mainPhotoContainer.classList.remove('clicked');
-            }, 300);
-            
-            if (clickCount >= 14 && historyModal) {
-                historyModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-                clickCount = 0;
-                
-                // Добавляем анимацию появления модального окна
-                setTimeout(() => {
-                    historyModal.classList.add('show');
-                }, 50);
-            }
-        });
-    }
-
-    // Отдельные обработчики для планет
-    const planets = document.querySelectorAll('.planet-img');
-    planets.forEach((planet, index) => {
-        planet.addEventListener('click', (e) => {
-            e.stopPropagation(); // Останавливаем всплытие к главному фото
-            
-            // Анимация клика на планету
-            planet.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                planet.style.transform = 'scale(1)';
-            }, 300);
-            
-            // Можно добавить разную логику для каждой планеты
-            console.log(`Клик по планете ${index + 1}`);
-            
-            // Пример: открыть модальное окно для каждой планеты
-            // showPlanetModal(index);
-        });
-    });
-
-    // Обработчик для закрытия модального окна истории при клике вне его
-    if (historyModal) {
-        historyModal.addEventListener('click', (e) => {
-            if (e.target === historyModal) {
-                closeHistoryModalFunc();
-            }
-        });
-    }
-}
-
-// Card number copy functionality
-function initCardCopy() {
-    const cardNumberElement = document.getElementById('card-number');
-    if (cardNumberElement) {
-        cardNumberElement.addEventListener('click', copyCardNumber);
-    }
-}
-
-function copyCardNumber() {
-    const cardNumber = '4276 1805 5058 1960';
-    navigator.clipboard.writeText(cardNumber.replace(/\s/g, ''))
-        .then(() => {
-            const tooltip = document.getElementById('copy-tooltip');
-            if (tooltip) {
-                const originalText = tooltip.textContent;
-                tooltip.textContent = 'Скопировано!';
-                tooltip.style.color = '#39ff14';
-                
-                setTimeout(() => {
-                    tooltip.textContent = originalText;
-                    tooltip.style.color = '';
-                }, 2000);
-            }
-            
-            // Визуальная обратная связь
-            const cardElement = document.getElementById('card-number');
-            if (cardElement) {
-                cardElement.style.background = 'rgba(57, 255, 20, 0.2)';
-                setTimeout(() => {
-                    cardElement.style.background = '';
-                }, 500);
-            }
-        })
-        .catch(err => {
-            console.error('Ошибка при копировании: ', err);
-            const tooltip = document.getElementById('copy-tooltip');
-            if (tooltip) {
-                tooltip.textContent = 'Ошибка копирования';
-                tooltip.style.color = '#ff6464';
-                setTimeout(() => {
-                    tooltip.textContent = 'Нажмите чтобы скопировать';
-                    tooltip.style.color = '';
-                }, 2000);
-            }
-        });
-}
-
-// Utility function to set tab slider position
-export function setTabSliderPosition(tabElement, sliderElement) {
-    if (!tabElement || !sliderElement) return;
-    const activeTab = tabElement.querySelector('.active');
-    if (activeTab) {
-        sliderElement.style.width = `${activeTab.offsetWidth}px`;
-        sliderElement.style.left = `${activeTab.offsetLeft}px`;
-    }
-}
-
-// Show modal with item details
-export function showModal(item) {
-    const modalGameTitle = document.getElementById('modalGameTitle');
-    const modalGameRating = document.getElementById('modalGameRating');
-    const modalGameDescription = document.getElementById('modalGameDescription');
-    const modalGameVideo = document.getElementById('modalGameVideo');
-    const gameModal = document.getElementById('gameModal');
-    
-    if (!modalGameTitle || !modalGameRating || !modalGameDescription || !modalGameVideo || !gameModal) {
-        console.error('Modal elements not found');
+// Load games with container verification
+export async function loadGames() {
+    // Verify container exists with retry mechanism
+    const container = await ensureContainerExists('#games-content .games-grid', 'games');
+    if (!container) {
+        console.error('❌ Games container not found after retries');
         return;
     }
     
-    modalGameTitle.textContent = item.title;
-    modalGameRating.innerHTML = `${generateStars(item.rating)}<span>${item.rating}/5</span>`;
-    modalGameDescription.textContent = item.description;
-    modalGameVideo.src = `https://www.youtube.com/embed/${item.videoId}?autoplay=1&mute=1`;
-    gameModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    // Show loading indicator
+    container.innerHTML = '<div class="loading-state">🔄 Загрузка игр...</div>';
     
-    // Добавляем анимацию появления
-    setTimeout(() => {
-        gameModal.classList.add('show');
-    }, 50);
-}
-
-// Generate stars for rating
-export function generateStars(rating) {
-    let starsHtml = '';
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    
-    for (let i = 0; i < fullStars; i++) {
-        starsHtml += '<i class="fas fa-star"></i>';
-    }
-    if (hasHalfStar) {
-        starsHtml += '<i class="fas fa-star-half-alt"></i>';
-    }
-    
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    for (let i = 0; i < emptyStars; i++) {
-        starsHtml += '<i class="far fa-star"></i>';
-    }
-    
-    return starsHtml;
-}
-
-// Utility function to check if element exists in DOM
-export function elementExists(selector) {
-    return document.querySelector(selector) !== null;
-}
-
-// Utility function to wait for element to appear
-export function waitForElement(selector, timeout = 5000) {
-    return new Promise((resolve, reject) => {
-        const startTime = Date.now();
+    try {
+        const response = await fetch('data/games.json?' + new Date().getTime());
+        if (!response.ok) throw new Error('Ошибка загрузки');
         
-        function checkElement() {
-            const element = document.querySelector(selector);
-            if (element) {
-                resolve(element);
-            } else if (Date.now() - startTime >= timeout) {
-                reject(new Error(`Element ${selector} not found within ${timeout}ms`));
+        const games = await response.json();
+        currentGamesData = games;
+        
+        if (Array.isArray(games) && games.length > 0) {
+            gamesLoaded = true;
+            
+            // Use renderers to display games
+            const renderers = await import('./renderers.js');
+            renderers.renderCards(container, games, 'game');
+            
+            console.log('🎮 Games loaded successfully:', games.length);
+            return games;
+        } else {
+            container.innerHTML = '<div class="empty-state">🎮 Игр пока нет</div>';
+            return [];
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки игр:', error);
+        if (currentGamesData.length > 0) {
+            const renderers = await import('./renderers.js');
+            renderers.renderCards(container, currentGamesData, 'game');
+            return currentGamesData;
+        } else {
+            container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки игр</div>';
+            return [];
+        }
+    }
+}
+
+// Load movies with container verification
+export async function loadMovies() {
+    // Verify container exists with retry mechanism
+    const container = await ensureContainerExists('#movies-content .games-grid', 'movies');
+    if (!container) {
+        console.error('❌ Movies container not found after retries');
+        return;
+    }
+    
+    // Show loading indicator
+    container.innerHTML = '<div class="loading-state">🔄 Загрузка фильмов...</div>';
+    
+    try {
+        const response = await fetch('data/movies.json?' + new Date().getTime());
+        if (!response.ok) throw new Error('Ошибка загрузки');
+        
+        const movies = await response.json();
+        currentMoviesData = movies;
+        
+        if (Array.isArray(movies) && movies.length > 0) {
+            moviesLoaded = true;
+            
+            // Use renderers to display movies
+            const renderers = await import('./renderers.js');
+            renderers.renderCards(container, movies, 'movie');
+            
+            console.log('🎬 Movies loaded successfully:', movies.length);
+            return movies;
+        } else {
+            container.innerHTML = '<div class="empty-state">🎬 Фильмов пока нет</div>';
+            return [];
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки фильмов:', error);
+        if (currentMoviesData.length > 0) {
+            const renderers = await import('./renderers.js');
+            renderers.renderCards(container, currentMoviesData, 'movie');
+            return currentMoviesData;
+        } else {
+            container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки фильмов</div>';
+            return [];
+        }
+    }
+}
+
+// Helper function to ensure container exists with retries
+async function ensureContainerExists(selector, type) {
+    return new Promise((resolve) => {
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        function checkContainer() {
+            attempts++;
+            const container = document.querySelector(selector);
+            
+            if (container) {
+                console.log(`✅ ${type} container found after ${attempts} attempts`);
+                resolve(container);
+                return;
+            }
+            
+            if (attempts < maxAttempts) {
+                setTimeout(checkContainer, 100); // Retry every 100ms
             } else {
-                setTimeout(checkElement, 100);
+                console.error(`❌ ${type} container not found after ${maxAttempts} attempts`);
+                resolve(null);
             }
         }
         
-        checkElement();
+        checkContainer();
     });
 }
 
-// Добавляем CSS для анимации модальных окон
-function addModalAnimations() {
-    const style = document.createElement('style');
-    style.textContent = `
-        .modal.show .modal-content {
-            animation: modalSlideIn 0.3s ease-out;
-        }
+// Load statistics with Radar Chart
+export async function loadStats() {
+    try {
+        // Wait for Chart.js to load
+        await loadChartJS();
         
-        .history-modal.show .history-modal-content {
-            animation: modalSlideIn 0.3s ease-out;
-        }
+        const response = await fetch('data/stats.json?' + new Date().getTime());
+        const stats = await response.json();
         
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .planet {
-            transition: transform 0.3s ease;
-        }
-        
-        .planet-img {
-            transition: all 0.3s ease;
-        }
-    `;
-    document.head.appendChild(style);
+        console.log('📈 Stats data loaded:', stats);
+        createRadarChart(stats);
+    } catch (error) {
+        console.log('📊 Using default stats data');
+        createRadarChart({
+            followers: 5200,
+            streams: 150,
+            hours: 250,
+            years: 3
+        });
+    }
 }
 
-// Enhanced planet interactions
-function initPlanetInteractions() {
-    const planets = document.querySelectorAll('.planet');
+// Create beautiful radar chart - ИСПРАВЛЕННАЯ ВЕРСИЯ
+function createRadarChart(stats) {
+    const ctx = document.getElementById('radarChart');
+    if (!ctx) {
+        console.error('❌ Canvas element for radar chart not found');
+        return;
+    }
     
-    planets.forEach((planet, index) => {
-        // Hover effects
-        planet.addEventListener('mouseenter', () => {
-            planet.style.zIndex = '6'; // Поднимаем планету выше при hover
-            planet.style.transform = 'scale(1.1)';
-        });
-        
-        planet.addEventListener('mouseleave', () => {
-            planet.style.zIndex = '5'; // Возвращаем обратно
-            planet.style.transform = 'scale(1)';
-        });
-        
-        // Click effects with different behaviors for each planet
-        planet.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            // Пульсация при клике
-            planet.style.animation = 'planetPulse 0.5s ease-in-out';
-            setTimeout(() => {
-                planet.style.animation = '';
-            }, 500);
-            
-            // Разное поведение для каждой планеты
-            handlePlanetClick(index);
-        });
-    });
+    // Destroy previous chart instance if exists
+    if (radarChartInstance) {
+        radarChartInstance.destroy();
+        console.log('🗑️ Previous radar chart destroyed');
+    }
     
-    // Добавляем CSS анимацию для пульсации планет
-    const pulseStyle = document.createElement('style');
-    pulseStyle.textContent = `
-        @keyframes planetPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+    // Normalize data for radar chart (convert to scale 0-100)
+    const maxValues = {
+        followers: 10000,
+        streams: 500,
+        hours: 1000,
+        years: 10
+    };
+    
+    const normalizedData = {
+        followers: Math.min((stats.followers / maxValues.followers) * 100, 100),
+        streams: Math.min((stats.streams / maxValues.streams) * 100, 100),
+        hours: Math.min((stats.hours / maxValues.hours) * 100, 100),
+        years: Math.min((stats.years / maxValues.years) * 100, 100)
+    };
+    
+    console.log('📊 Normalized data:', normalizedData);
+    
+    // УБИРАЕМ ВТОРОЙ DATASET (который создавал второй круг)
+    const chartData = {
+        labels: ['Подписчики', 'Кол-во стримов', 'Часы контента', 'Года в стриминге'],
+        datasets: [{
+            label: 'Текущие показатели',
+            data: [
+                Math.round(normalizedData.followers),
+                Math.round(normalizedData.streams), 
+                Math.round(normalizedData.hours),
+                Math.round(normalizedData.years)
+            ],
+            backgroundColor: 'rgba(57, 255, 20, 0.2)',
+            borderColor: '#39ff14',
+            borderWidth: 3,
+            pointBackgroundColor: '#39ff14',
+            pointBorderColor: '#070711',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 10,
+            pointHoverBackgroundColor: '#ff2d95',
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 3
+        }]
+        // УБРАЛ ВТОРОЙ DATASET С ЦЕЛЕВЫМИ ПОКАЗАТЕЛЯМИ
+    };
+    
+    const config = {
+        type: 'radar',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                r: {
+                    angleLines: {
+                        color: 'rgba(255, 255, 255, 0.15)',
+                        lineWidth: 1
+                    },
+                    grid: {
+                        color: 'rgba(255, 45, 149, 0.2)',
+                        circular: true
+                    },
+                    pointLabels: {
+                        color: '#ccc',
+                        font: {
+                            size: 14,
+                            weight: '600',
+                            family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+                        },
+                        callback: function(value, index) {
+                            const labels = ['Подписчики', 'Стримы', 'Часы', 'Опыт'];
+                            return labels[index];
+                        }
+                    },
+                    ticks: {
+                        display: false,
+                        backdropColor: 'transparent',
+                        maxTicksLimit: 5
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 100,
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(7, 7, 17, 0.9)',
+                    titleColor: '#39ff14',
+                    bodyColor: '#ccc',
+                    borderColor: '#ff2d95',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.dataset.label || '';
+                            const index = context.dataIndex;
+                            const actualValues = [stats.followers, stats.streams, stats.hours, stats.years];
+                            const maxValuesArr = [maxValues.followers, maxValues.streams, maxValues.hours, maxValues.years];
+                            const labels = ['Подписчики', 'Стримы', 'Часы контента', 'Года в стриминге'];
+                            
+                            return [
+                                `${labels[index]}: ${actualValues[index].toLocaleString()}`,
+                                `Прогресс: ${Math.round(context.parsed.r)}% от цели`,
+                                `Цель: ${maxValuesArr[index].toLocaleString()}`
+                            ];
+                        }
+                    }
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0.1,
+                    fill: true
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeOutQuart',
+                onProgress: function(animation) {
+                    // Add glow effect during animation
+                    if (animation.currentStep <= animation.numSteps) {
+                        const progress = animation.currentStep / animation.numSteps;
+                        ctx.style.filter = `drop-shadow(0 0 ${10 + progress * 10}px rgba(57, 255, 20, ${0.3 + progress * 0.3}))`;
+                    }
+                },
+                onComplete: function() {
+                    // Final glow effect
+                    ctx.style.filter = 'drop-shadow(0 0 15px rgba(57, 255, 20, 0.4))';
+                    console.log('🎉 Radar chart animation completed');
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                intersect: false
+            },
+            hover: {
+                animationDuration: 300
+            }
         }
-    `;
-    document.head.appendChild(pulseStyle);
+    };
+    
+    try {
+        // Create new chart
+        radarChartInstance = new Chart(ctx, config);
+        console.log('✅ Radar chart created successfully');
+        
+        // Create custom legend
+        createLegend(stats, maxValues);
+        
+        // Add resize observer for responsive behavior
+        const resizeObserver = new ResizeObserver(entries => {
+            entries.forEach(entry => {
+                if (radarChartInstance) {
+                    radarChartInstance.resize();
+                    console.log('📏 Radar chart resized');
+                }
+            });
+        });
+        
+        resizeObserver.observe(ctx.parentElement);
+        
+    } catch (error) {
+        console.error('❌ Error creating radar chart:', error);
+    }
 }
 
-// Обработка кликов по планетам
-function handlePlanetClick(planetIndex) {
-    const messages = [
-        "Розовая планета активирована! 🌸",
-        "Красная планета в действии! 🔥", 
-        "Голубая планета запущена! 💙"
+// Create custom legend
+function createLegend(stats, maxValues) {
+    const legendContainer = document.getElementById('radarLegend');
+    if (!legendContainer) {
+        console.error('❌ Legend container not found');
+        return;
+    }
+    
+    const legendItems = [
+        { 
+            label: 'Подписчиков', 
+            value: stats.followers, 
+            max: maxValues.followers, 
+            color: '#39ff14',
+            icon: '👥'
+        },
+        { 
+            label: 'Стримов', 
+            value: stats.streams, 
+            max: maxValues.streams, 
+            color: '#ff2d95',
+            icon: '📡'
+        },
+        { 
+            label: 'Часов контента', 
+            value: stats.hours, 
+            max: maxValues.hours, 
+            color: '#64B5F6',
+            icon: '⏰'
+        },
+        { 
+            label: 'Лет в стриминге', 
+            value: stats.years, 
+            max: maxValues.years, 
+            color: '#FFD700',
+            icon: '⭐'
+        }
     ];
     
-    // Создаем временное уведомление
-    showNotification(messages[planetIndex]);
+    const progressPercentages = legendItems.map(item => Math.round((item.value / item.max) * 100));
     
-    // Можно добавить разную логику для каждой планеты
-    switch(planetIndex) {
-        case 0:
-            // Логика для первой планеты
-            break;
-        case 1:
-            // Логика для второй планеты
-            break;
-        case 2:
-            // Логика для третьей планеты
-            break;
+    legendContainer.innerHTML = legendItems.map((item, index) => `
+        <div class="legend-item" data-progress="${progressPercentages[index]}">
+            <span class="legend-color" style="color: ${item.color}"></span>
+            <span class="legend-icon">${item.icon}</span>
+            <span class="legend-text">
+                ${item.label}: 
+                <strong>${item.value.toLocaleString()}</strong> 
+                <span class="legend-progress">(${progressPercentages[index]}%)</span>
+            </span>
+        </div>
+    `).join('');
+    
+    console.log('📋 Legend created with', legendItems.length, 'items');
+}
+
+// Load schedule
+export async function loadSchedule() {
+    try {
+        const response = await fetch('data/schedule.json?' + new Date().getTime());
+        const data = await response.json();
+        
+        // Use renderers to display schedule
+        const renderers = await import('./renderers.js');
+        renderers.renderSchedule(data.schedule);
+        
+        console.log('📅 Schedule loaded successfully');
+    } catch (error) {
+        console.log('⏰ Schedule will be loaded later');
+        const scheduleList = document.getElementById('schedule-list');
+        if (scheduleList) {
+            scheduleList.innerHTML = `
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="schedule-game">📅 Расписание временно недоступно</div>
+                        <div class="schedule-desc">Обновляем данные...</div>
+                    </div>
+                </div>
+            `;
+        }
     }
 }
 
-// Вспомогательная функция для показа уведомлений
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: rgba(255, 45, 149, 0.9);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        z-index: 10000;
-        animation: slideInRight 0.3s ease-out;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        border-left: 4px solid #39ff14;
-    `;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease-in';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 300);
-    }, 2000);
-    
-    // Добавляем CSS анимации для уведомлений
-    if (!document.querySelector('#notification-styles')) {
-        const style = document.createElement('style');
-        style.id = 'notification-styles';
-        style.textContent = `
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            @keyframes slideOutRight {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+// Utility function to format numbers
+export function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+// Export chart instance for external access if needed
+export function getRadarChartInstance() {
+    return radarChartInstance;
+}
+
+// Function to update radar chart with new data
+export function updateRadarChart(newStats) {
+    if (radarChartInstance) {
+        // Update the data
+        const maxValues = {
+            followers: 10000,
+            streams: 500,
+            hours: 1000,
+            years: 10
+        };
+        
+        const normalizedData = {
+            followers: Math.min((newStats.followers / maxValues.followers) * 100, 100),
+            streams: Math.min((newStats.streams / maxValues.streams) * 100, 100),
+            hours: Math.min((newStats.hours / maxValues.hours) * 100, 100),
+            years: Math.min((newStats.years / maxValues.years) * 100, 100)
+        };
+        
+        radarChartInstance.data.datasets[0].data = [
+            Math.round(normalizedData.followers),
+            Math.round(normalizedData.streams),
+            Math.round(normalizedData.hours),
+            Math.round(normalizedData.years)
+        ];
+        
+        radarChartInstance.update('active');
+        createLegend(newStats, maxValues);
+        
+        console.log('🔄 Radar chart updated with new data');
     }
 }
 
-// Initialize all UI components when DOM is ready
-export function initUIWhenReady() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeApp();
-            addModalAnimations();
-            initPlanetInteractions();
-        });
-    } else {
+// Function to fix radar chart display issues
+export function fixRadarChart() {
+    if (radarChartInstance) {
+        // Force chart resize and redraw
+        radarChartInstance.resize();
+        radarChartInstance.update();
+        console.log('🔧 Radar chart fixed');
+    }
+}
+
+// Initialize chart fixes on window resize
+window.addEventListener('resize', function() {
+    if (radarChartInstance) {
         setTimeout(() => {
-            initializeApp();
-            addModalAnimations();
-            initPlanetInteractions();
+            radarChartInstance.resize();
         }, 100);
     }
-}
-
-// Export for external use
-export default {
-    initializeApp,
-    setTabSliderPosition,
-    showModal,
-    generateStars,
-    elementExists,
-    waitForElement,
-    initUIWhenReady
-};
+});
