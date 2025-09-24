@@ -1,0 +1,116 @@
+/* Основные переменные и глобальные стили */
+:root {
+    --neon-green: #39ff14;
+    --neon-pink: #ff2d95;
+    --dark-bg: #070711;
+    --medium-bg: #0f0f1b;
+    --light-text: #ccc;
+    --white: #ffffff;
+    --completed-color: #39ff14;
+    --playing-color: #ff2d95;
+    --dropped-color: #ff6464;
+    --on-hold-color: #ffd700;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--medium-bg) 100%);
+    color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Импорт компонентов */
+@import url('components/header.css');
+@import url('components/hero.css');
+@import url('components/sections.css');
+@import url('components/modals.css');
+
+/* Анимации */
+@keyframes neon-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 0 0 5px var(--neon-pink), 0 0 8px var(--neon-pink), 0 0 12px var(--neon-pink), 0 0 15px var(--neon-pink), 0 0 25px var(--neon-pink), 0 0 30px var(--neon-pink);
+    }
+    20%, 24%, 55% { text-shadow: none; }
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes rotate-ring {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+   100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes orbit {
+    0% { transform: translateX(-50%) rotate(0deg) translateY(-190px) rotate(0deg); }
+   100% { transform: translateX(-50%) rotate(360deg) translateY(-190px) rotate(-360deg); }
+}
+
+@keyframes rotate-glow {
+    0% { background: linear-gradient(0deg, var(--neon-pink), var(--neon-green)); }
+    25% { background: linear-gradient(90deg, var(--neon-pink), var(--neon-green)); }
+    50% { background: linear-gradient(180deg, var(--neon-pink), var(--neon-green)); }
+    75% { background: linear-gradient(270deg, var(--neon-pink), var(--neon-green)); }
+    100% { background: linear-gradient(360deg, var(--neon-pink), var(--neon-green)); }
+}
+
+@keyframes neon-pulse {
+    from { text-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 15px var(--neon-pink), 0 0 20px var(--neon-pink); }
+    to { text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink), 0 0 40px var(--neon-pink), 0 0 50px var(--neon-pink), 0 0 60px var(--neon-pink); }
+}
+
+@keyframes pulse-status {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shine-over {
+    0% { transform: translateX(-100%); }
+   100% { transform: translateX(100%); }
+}
+
+/* Scroll behavior */
+body.scrolled-down header { top: -100px; }
+body.scrolled-up header { top: 0; }
+
+/* Loading states */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--neon-green);
+    font-size: 1.2rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--light-text);
+    font-size: 1.1rem;
+}
