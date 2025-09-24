@@ -1,30 +1,24 @@
 {
   "schedule": [
     {
-      "id": 1,
       "day": "Понедельник",
-      "time": "19:00-22:00",
-      "game": "The Witcher 3: Wild Hunt",
-      "status": "planned",
-      "description": "Продолжаем эпическое приключение Геральта"
+      "time": "16:00 - 19:00+",
+      "game": "Dead Island 2"
     },
     {
-      "id": 2,
+      "day": "Вторник",
+      "time": "16:00 - 19:00+", 
+      "game": "Hollow Knight: Silksong"
+    },
+    {
       "day": "Среда",
-      "time": "20:00-23:00",
-      "game": "Cyberpunk 2077",
-      "status": "confirmed",
-      "description": "Исследуем Найт-Сити"
+      "time": "16:00 - 19:00+",
+      "game": "Dead Island 2"
     },
     {
-      "id": 3,
-      "day": "Пятница",
-      "time": "18:00-21:00",
-      "game": "Киновечер: Интерстеллар",
-      "status": "planned",
-      "description": "Смотрим и обсуждаем научную фантастику"
+      "day": "Четверг",
+      "time": "16:00 - 19:00+",
+      "game": "Случайная игра"
     }
-  ],
-  "timezone": "Europe/Moscow",
-  "updated": "2024-01-20T10:00:00.000Z"
+  ]
 }
