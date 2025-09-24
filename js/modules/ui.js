@@ -144,25 +144,63 @@ function closeHistoryModalFunc() {
     document.body.style.overflow = 'auto';
 }
 
-// Hero image easter egg
+// Hero image easter egg - ТОЛЬКО для главного фото
 function initHeroImageEasterEgg() {
-    const heroImage = document.getElementById('hero-image-click');
+    const mainPhotoContainer = document.querySelector('.main-photo-container');
+    const mainPhoto = document.querySelector('.main-photo');
     let clickCount = 0;
     const historyModal = document.getElementById('historyModal');
 
-    if (heroImage) {
-        heroImage.addEventListener('click', () => {
+    if (mainPhoto) {
+        mainPhoto.addEventListener('click', (e) => {
+            e.stopPropagation(); // Останавливаем всплытие
             clickCount++;
-            heroImage.classList.add('clicked');
+            
+            // Подсвечиваем ТОЛЬКО главное фото
+            mainPhotoContainer.classList.add('clicked');
             
             setTimeout(() => {
-                heroImage.classList.remove('clicked');
+                mainPhotoContainer.classList.remove('clicked');
             }, 300);
             
             if (clickCount >= 14 && historyModal) {
                 historyModal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
                 clickCount = 0;
+                
+                // Добавляем анимацию появления модального окна
+                setTimeout(() => {
+                    historyModal.classList.add('show');
+                }, 50);
+            }
+        });
+    }
+
+    // Отдельные обработчики для планет
+    const planets = document.querySelectorAll('.planet-img');
+    planets.forEach((planet, index) => {
+        planet.addEventListener('click', (e) => {
+            e.stopPropagation(); // Останавливаем всплытие к главному фото
+            
+            // Анимация клика на планету
+            planet.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                planet.style.transform = 'scale(1)';
+            }, 300);
+            
+            // Можно добавить разную логику для каждой планеты
+            console.log(`Клик по планете ${index + 1}`);
+            
+            // Пример: открыть модальное окно для каждой планеты
+            // showPlanetModal(index);
+        });
+    });
+
+    // Обработчик для закрытия модального окна истории при клике вне его
+    if (historyModal) {
+        historyModal.addEventListener('click', (e) => {
+            if (e.target === historyModal) {
+                closeHistoryModalFunc();
             }
         });
     }
@@ -182,11 +220,37 @@ function copyCardNumber() {
         .then(() => {
             const tooltip = document.getElementById('copy-tooltip');
             if (tooltip) {
+                const originalText = tooltip.textContent;
                 tooltip.textContent = 'Скопировано!';
-                setTimeout(() => tooltip.textContent = 'Нажмите чтобы скопировать', 2000);
+                tooltip.style.color = '#39ff14';
+                
+                setTimeout(() => {
+                    tooltip.textContent = originalText;
+                    tooltip.style.color = '';
+                }, 2000);
+            }
+            
+            // Визуальная обратная связь
+            const cardElement = document.getElementById('card-number');
+            if (cardElement) {
+                cardElement.style.background = 'rgba(57, 255, 20, 0.2)';
+                setTimeout(() => {
+                    cardElement.style.background = '';
+                }, 500);
             }
         })
-        .catch(err => console.error('Ошибка при копировании: ', err));
+        .catch(err => {
+            console.error('Ошибка при копировании: ', err);
+            const tooltip = document.getElementById('copy-tooltip');
+            if (tooltip) {
+                tooltip.textContent = 'Ошибка копирования';
+                tooltip.style.color = '#ff6464';
+                setTimeout(() => {
+                    tooltip.textContent = 'Нажмите чтобы скопировать';
+                    tooltip.style.color = '';
+                }, 2000);
+            }
+        });
 }
 
 // Utility function to set tab slider position
@@ -215,9 +279,14 @@ export function showModal(item) {
     modalGameTitle.textContent = item.title;
     modalGameRating.innerHTML = `${generateStars(item.rating)}<span>${item.rating}/5</span>`;
     modalGameDescription.textContent = item.description;
-    modalGameVideo.src = `https://www.youtube.com/embed/${item.videoId}`;
+    modalGameVideo.src = `https://www.youtube.com/embed/${item.videoId}?autoplay=1&mute=1`;
     gameModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
+    
+    // Добавляем анимацию появления
+    setTimeout(() => {
+        gameModal.classList.add('show');
+    }, 50);
 }
 
 // Generate stars for rating
@@ -226,11 +295,17 @@ export function generateStars(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     
-    for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fas fa-star"></i>';
-    if (hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+    for (let i = 0; i < fullStars; i++) {
+        starsHtml += '<i class="fas fa-star"></i>';
+    }
+    if (hasHalfStar) {
+        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+    }
     
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="far fa-star"></i>';
+    for (let i = 0; i < emptyStars; i++) {
+        starsHtml += '<i class="far fa-star"></i>';
+    }
     
     return starsHtml;
 }
@@ -260,11 +335,191 @@ export function waitForElement(selector, timeout = 5000) {
     });
 }
 
+// Добавляем CSS для анимации модальных окон
+function addModalAnimations() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .modal.show .modal-content {
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        .history-modal.show .history-modal-content {
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .planet {
+            transition: transform 0.3s ease;
+        }
+        
+        .planet-img {
+            transition: all 0.3s ease;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Enhanced planet interactions
+function initPlanetInteractions() {
+    const planets = document.querySelectorAll('.planet');
+    
+    planets.forEach((planet, index) => {
+        // Hover effects
+        planet.addEventListener('mouseenter', () => {
+            planet.style.zIndex = '6'; // Поднимаем планету выше при hover
+            planet.style.transform = 'scale(1.1)';
+        });
+        
+        planet.addEventListener('mouseleave', () => {
+            planet.style.zIndex = '5'; // Возвращаем обратно
+            planet.style.transform = 'scale(1)';
+        });
+        
+        // Click effects with different behaviors for each planet
+        planet.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Пульсация при клике
+            planet.style.animation = 'planetPulse 0.5s ease-in-out';
+            setTimeout(() => {
+                planet.style.animation = '';
+            }, 500);
+            
+            // Разное поведение для каждой планеты
+            handlePlanetClick(index);
+        });
+    });
+    
+    // Добавляем CSS анимацию для пульсации планет
+    const pulseStyle = document.createElement('style');
+    pulseStyle.textContent = `
+        @keyframes planetPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(pulseStyle);
+}
+
+// Обработка кликов по планетам
+function handlePlanetClick(planetIndex) {
+    const messages = [
+        "Розовая планета активирована! 🌸",
+        "Красная планета в действии! 🔥", 
+        "Голубая планета запущена! 💙"
+    ];
+    
+    // Создаем временное уведомление
+    showNotification(messages[planetIndex]);
+    
+    // Можно добавить разную логику для каждой планеты
+    switch(planetIndex) {
+        case 0:
+            // Логика для первой планеты
+            break;
+        case 1:
+            // Логика для второй планеты
+            break;
+        case 2:
+            // Логика для третьей планеты
+            break;
+    }
+}
+
+// Вспомогательная функция для показа уведомлений
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: rgba(255, 45, 149, 0.9);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        z-index: 10000;
+        animation: slideInRight 0.3s ease-out;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        border-left: 4px solid #39ff14;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-in';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 2000);
+    
+    // Добавляем CSS анимации для уведомлений
+    if (!document.querySelector('#notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
 // Initialize all UI components when DOM is ready
 export function initUIWhenReady() {
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+            addModalAnimations();
+            initPlanetInteractions();
+        });
     } else {
-        setTimeout(initializeApp, 100);
+        setTimeout(() => {
+            initializeApp();
+            addModalAnimations();
+            initPlanetInteractions();
+        }, 100);
     }
 }
+
+// Export for external use
+export default {
+    initializeApp,
+    setTabSliderPosition,
+    showModal,
+    generateStars,
+    elementExists,
+    waitForElement,
+    initUIWhenReady
+};
