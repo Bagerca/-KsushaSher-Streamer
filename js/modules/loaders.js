@@ -11,7 +11,9 @@ export function initializeLoaders() {
     // Load initial data
     loadStats();
     loadSchedule();
-    loadGames();
+    setTimeout(() => {
+        loadGames();
+    }, 100);
     
     // Set up periodic updates
     setInterval(() => {
