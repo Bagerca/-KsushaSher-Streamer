@@ -171,10 +171,7 @@ nav ul li a:hover::after {
 
 .hero-content {
     position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    z-index: 20;
 }
 
 .hero-title {
@@ -187,6 +184,8 @@ nav ul li a:hover::after {
     color: transparent;
     animation: gradient-shift 4s ease infinite;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 15;
 }
 
 @keyframes gradient-shift {
@@ -201,6 +200,8 @@ nav ul li a:hover::after {
     max-width: 700px;
     margin: 0 auto 30px;
     color: var(--light-text);
+    position: relative;
+    z-index: 15;
 }
 
 .hero-image {
@@ -244,7 +245,7 @@ nav ul li a:hover::after {
     box-shadow: 0 0 30px var(--neon-green), 0 0 60px var(--neon-pink);
 }
 
-/* Планеты */
+/* Планеты - исправленные стили */
 .planet {
     position: absolute;
     top: 50%;
@@ -253,7 +254,7 @@ nav ul li a:hover::after {
     height: 80px;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    z-index: 5;
+    z-index: 3; /* Под текстом и кнопками */
     pointer-events: none;
 }
 
@@ -266,57 +267,51 @@ nav ul li a:hover::after {
     z-index: 2;
     pointer-events: auto;
     cursor: pointer;
-    transition: all 0.3s ease;
+    border: 2px solid transparent; /* Убрал белое свечение */
 }
 
+/* Убрал увеличение при нажатии */
 .planet-img:hover {
-    transform: scale(1.1);
+    transform: none;
 }
 
 .planet-frame {
     position: absolute;
-    top: -6px;
-    left: -6px;
-    right: -6px;
-    bottom: -6px;
+    top: 0; /* Убрал пробел - рамка вплотную к фото */
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: 50%;
     border: 3px solid;
     z-index: 3;
     pointer-events: none;
-    animation: frame-glow 2s ease-in-out infinite alternate;
 }
 
-@keyframes frame-glow {
-    from {
-        box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-    }
-    to {
-        box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
-    }
-}
-
-/* Цвета рамок */
+/* Новые цвета рамок */
 .pink-frame { 
     border-color: #ff2d95; 
+    box-shadow: 0 0 10px #ff2d95; /* Только неоновое свечение */
 }
-.red-frame { 
-    border-color: #ff6464; 
+.green-frame { 
+    border-color: #39ff14; 
+    box-shadow: 0 0 10px #39ff14;
 }
-.blue-frame { 
-    border-color: #64b5f6; 
+.white-frame { 
+    border-color: #ffffff; 
+    box-shadow: 0 0 10px #ffffff;
 }
 
-/* Увеличенные орбиты */
+/* Орбиты - третья планета на второй орбите но с смещением */
 .pink-orbit {
     animation: orbit-planet-1 15s linear infinite;
 }
 
-.red-orbit {
+.green-orbit {
     animation: orbit-planet-2 20s linear infinite;
 }
 
-.blue-orbit {
-    animation: orbit-planet-3 25s linear infinite;
+.white-orbit {
+    animation: orbit-planet-3 25s linear infinite; /* Третья на второй орбите */
 }
 
 @keyframes orbit-planet-1 {
@@ -339,10 +334,10 @@ nav ul li a:hover::after {
 
 @keyframes orbit-planet-3 {
     0% { 
-        transform: translate(-50%, -50%) rotate(0deg) translateX(380px) rotate(0deg); 
+        transform: translate(-50%, -50%) rotate(180deg) translateX(300px) rotate(-180deg); /* Начинаем с противоположной стороны */
     }
     100% { 
-        transform: translate(-50%, -50%) rotate(360deg) translateX(380px) rotate(-360deg); 
+        transform: translate(-50%, -50%) rotate(540deg) translateX(300px) rotate(-540deg); 
     }
 }
 
@@ -351,6 +346,8 @@ nav ul li a:hover::after {
     justify-content: center;
     gap: 20px;
     margin-top: 20px;
+    position: relative;
+    z-index: 15; /* Кнопки выше планет */
 }
 
 .cta-button {
@@ -1532,10 +1529,6 @@ body.scrolled-up header { top: 0; }
     
     .planet-frame {
         border-width: 2px;
-        top: -4px;
-        left: -4px;
-        right: -4px;
-        bottom: -4px;
     }
     
     @keyframes orbit-planet-1 {
@@ -1558,10 +1551,10 @@ body.scrolled-up header { top: 0; }
     
     @keyframes orbit-planet-3 {
         0% { 
-            transform: translate(-50%, -50%) rotate(0deg) translateX(240px) rotate(0deg); 
+            transform: translate(-50%, -50%) rotate(180deg) translateX(190px) rotate(-180deg); 
         }
         100% { 
-            transform: translate(-50%, -50%) rotate(360deg) translateX(240px) rotate(-360deg); 
+            transform: translate(-50%, -50%) rotate(540deg) translateX(190px) rotate(-540deg); 
         }
     }
     
