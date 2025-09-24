@@ -588,7 +588,6 @@ section {
 .schedule-footer {
     text-align: center;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 45, 149, 0.3);
 }
 
 .schedule-footer p {
