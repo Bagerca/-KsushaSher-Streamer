@@ -12,10 +12,27 @@ let currentSort = 'name';
 let currentTab = 'games';
 
 export function initializeFilters() {
-    initTabSwitching();
-    initFilterDropdown();
-    initSortTabs();
-    initGridToggle();
+    // Wait for DOM to be fully ready
+    setTimeout(() => {
+        initTabSwitching();
+        initFilterDropdown();
+        initSortTabs();
+        initGridToggle();
+        
+        // Set initial filters state
+        document.querySelectorAll('.filter-option input[data-filter="all"]').forEach(input => {
+            input.checked = true;
+        });
+        document.querySelectorAll('.filter-option input[data-filter="status-all"]').forEach(input => {
+            input.checked = true;
+        });
+        
+        // Update sliders position
+        setTabSliderPosition(document.querySelector('.games-tabs'), document.querySelector('.tab-slider'));
+        setTabSliderPosition(document.querySelector('.sort-tabs'), document.querySelector('.sort-slider'));
+        
+        console.log('🎛️ Filters initialized');
+    }, 300);
 }
 
 // Initialize tab switching between games and movies
