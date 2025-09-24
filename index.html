@@ -71,55 +71,16 @@
     </section>
 
     <section id="stats">
-        <div class="container">
-            <h2 class="section-title">Статистика</h2>
-            <div class="modern-stats">
-                <div class="stat-card" data-value="5200">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Подписчиков</div>
-                    </div>
-                    <div class="stat-wave"></div>
-                </div>
-                
-                <div class="stat-card" data-value="150">
-                    <div class="stat-icon">
-                        <i class="fas fa-broadcast-tower"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Стримов</div>
-                    </div>
-                    <div class="stat-wave"></div>
-                </div>
-                
-                <div class="stat-card" data-value="250">
-                    <div class="stat-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Часов контента</div>
-                    </div>
-                    <div class="stat-wave"></div>
-                </div>
-                
-                <div class="stat-card" data-value="3">
-                    <div class="stat-icon">
-                        <i class="fas fa-calendar-star"></i>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Года в стриминге</div>
-                    </div>
-                    <div class="stat-wave"></div>
-                </div>
-            </div>
+    <div class="container">
+        <h2 class="section-title">Статистика канала</h2>
+        <div class="radar-chart-container">
+            <canvas id="radarChart"></canvas>
         </div>
-    </section>
+        <div class="radar-legend" id="radarLegend">
+            <!-- Легенда будет создана здесь через JavaScript -->
+        </div>
+    </div>
+</section>
 
     <section id="schedule">
         <div class="container">
