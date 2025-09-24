@@ -1,13 +1,6 @@
 {
-  "followers": 12500,
-  "subscribers": 850,
-  "totalViews": 250000,
-  "totalVisits": 1542,
-  "lastStream": "2024-01-15T20:00:00.000Z",
-  "lastVisit": "2024-01-20T14:30:00.000Z",
-  "streamDuration": 180,
-  "currentStreak": 5,
-  "longestStreak": 12,
-  "averageViewers": 120,
-  "peakViewers": 450
+  "followers": 5200,
+  "streams": 150,
+  "hours": 250,
+  "years": 3
 }
