@@ -10,6 +10,9 @@ export let currentMoviesData = [];
 // Chart.js instance
 let radarChartInstance = null;
 
+// Base URL for data files
+const DATA_BASE_URL = './data/';
+
 // Load Chart.js dynamically
 function loadChartJS() {
     return new Promise((resolve, reject) => {
@@ -82,8 +85,8 @@ export async function loadGames() {
     container.innerHTML = '<div class="loading-state">🔄 Загрузка игр...</div>';
     
     try {
-        const response = await fetch('data/games.json?' + new Date().getTime());
-        if (!response.ok) throw new Error('Ошибка загрузки');
+        const response = await fetch(`${DATA_BASE_URL}games.json?t=${new Date().getTime()}`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const games = await response.json();
         currentGamesData = games;
@@ -102,7 +105,22 @@ export async function loadGames() {
             return [];
         }
     } catch (error) {
-        console.error('Ошибка загрузки игр:', error);
+        console.error('❌ Ошибка загрузки игр:', error);
+        
+        // Try alternative path
+        try {
+            const altResponse = await fetch('data/games.json?t=' + new Date().getTime());
+            if (altResponse.ok) {
+                const games = await altResponse.json();
+                currentGamesData = games;
+                const renderers = await import('./renderers.js');
+                renderers.renderCards(container, games, 'game');
+                return games;
+            }
+        } catch (altError) {
+            console.error('❌ Альтернативный путь тоже не сработал:', altError);
+        }
+        
         if (currentGamesData.length > 0) {
             const renderers = await import('./renderers.js');
             renderers.renderCards(container, currentGamesData, 'game');
@@ -127,8 +145,8 @@ export async function loadMovies() {
     container.innerHTML = '<div class="loading-state">🔄 Загрузка фильмов...</div>';
     
     try {
-        const response = await fetch('data/movies.json?' + new Date().getTime());
-        if (!response.ok) throw new Error('Ошибка загрузки');
+        const response = await fetch(`${DATA_BASE_URL}movies.json?t=${new Date().getTime()}`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const movies = await response.json();
         currentMoviesData = movies;
@@ -147,7 +165,22 @@ export async function loadMovies() {
             return [];
         }
     } catch (error) {
-        console.error('Ошибка загрузки фильмов:', error);
+        console.error('❌ Ошибка загрузки фильмов:', error);
+        
+        // Try alternative path
+        try {
+            const altResponse = await fetch('data/movies.json?t=' + new Date().getTime());
+            if (altResponse.ok) {
+                const movies = await altResponse.json();
+                currentMoviesData = movies;
+                const renderers = await import('./renderers.js');
+                renderers.renderCards(container, movies, 'movie');
+                return movies;
+            }
+        } catch (altError) {
+            console.error('❌ Альтернативный путь тоже не сработал:', altError);
+        }
+        
         if (currentMoviesData.length > 0) {
             const renderers = await import('./renderers.js');
             renderers.renderCards(container, currentMoviesData, 'movie');
@@ -155,6 +188,79 @@ export async function loadMovies() {
         } else {
             container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки фильмов</div>';
             return [];
+        }
+    }
+}
+
+// Load statistics with Radar Chart
+export async function loadStats() {
+    try {
+        // Wait for Chart.js to load
+        await loadChartJS();
+        
+        let stats;
+        try {
+            const response = await fetch(`${DATA_BASE_URL}stats.json?t=${new Date().getTime()}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            stats = await response.json();
+            console.log('📈 Stats data loaded:', stats);
+        } catch (error) {
+            console.log('❌ Ошибка загрузки stats.json, пробуем альтернативный путь...');
+            const altResponse = await fetch('data/stats.json?t=' + new Date().getTime());
+            if (altResponse.ok) {
+                stats = await altResponse.json();
+            } else {
+                throw new Error('Оба пути не сработали');
+            }
+        }
+        
+        createNewRadarChart(stats);
+    } catch (error) {
+        console.log('📊 Using default stats data');
+        createNewRadarChart({
+            followers: 5200,
+            streams: 150,
+            hours: 250,
+            years: 3
+        });
+    }
+}
+
+// Load schedule
+export async function loadSchedule() {
+    try {
+        let data;
+        try {
+            const response = await fetch(`${DATA_BASE_URL}schedule.json?t=${new Date().getTime()}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            data = await response.json();
+        } catch (error) {
+            console.log('❌ Ошибка загрузки schedule.json, пробуем альтернативный путь...');
+            const altResponse = await fetch('data/schedule.json?t=' + new Date().getTime());
+            if (altResponse.ok) {
+                data = await altResponse.json();
+            } else {
+                throw new Error('Оба пути не сработали');
+            }
+        }
+        
+        // Use renderers to display schedule
+        const renderers = await import('./renderers.js');
+        renderers.renderSchedule(data.schedule || data);
+        
+        console.log('📅 Schedule loaded successfully');
+    } catch (error) {
+        console.error('⏰ Schedule loading error:', error);
+        const scheduleList = document.getElementById('schedule-list');
+        if (scheduleList) {
+            scheduleList.innerHTML = `
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="schedule-game">📅 Расписание временно недоступно</div>
+                        <div class="schedule-desc">Обновляем данные... ${error.message}</div>
+                    </div>
+                </div>
+            `;
         }
     }
 }
@@ -187,31 +293,8 @@ async function ensureContainerExists(selector, type) {
     });
 }
 
-// Load statistics with Radar Chart
-export async function loadStats() {
-    try {
-        // Wait for Chart.js to load
-        await loadChartJS();
-        
-        const response = await fetch('data/stats.json?' + new Date().getTime());
-        const stats = await response.json();
-        
-        console.log('📈 Stats data loaded:', stats);
-        createRadarChart(stats);
-    } catch (error) {
-        console.log('📊 Using default stats data');
-        createRadarChart({
-            followers: 5200,
-            streams: 150,
-            hours: 250,
-            years: 3
-        });
-    }
-}
-
-// Create beautiful radar chart - ИСПРАВЛЕННАЯ ВЕРСИЯ
-// Create simple radar chart - УПРОЩЕННАЯ ВЕРСИЯ БЕЗ ВТОРОГО КРУГА
-function createRadarChart(stats) {
+// NEW RADAR CHART - COMPLETELY REBUILT
+function createNewRadarChart(stats) {
     const ctx = document.getElementById('radarChart');
     if (!ctx) {
         console.error('❌ Canvas element for radar chart not found');
@@ -239,58 +322,60 @@ function createRadarChart(stats) {
         years: Math.min((stats.years / maxValues.years) * 100, 100)
     };
     
-    console.log('📊 Normalized data:', normalizedData);
+    console.log('📊 Creating new radar chart with data:', normalizedData);
     
-    // ПРОСТАЯ КОНФИГУРАЦИЯ - ТОЛЬКО ОДИН DATASET
-    const chartData = {
-        labels: ['Подписчики', 'Стримы', 'Часы', 'Опыт'],
-        datasets: [{
-            label: 'Показатели канала',
-            data: [
-                Math.round(normalizedData.followers),
-                Math.round(normalizedData.streams), 
-                Math.round(normalizedData.hours),
-                Math.round(normalizedData.years)
-            ],
-            backgroundColor: 'rgba(57, 255, 20, 0.2)',
-            borderColor: '#39ff14',
-            borderWidth: 2,
-            pointBackgroundColor: '#39ff14',
-            pointBorderColor: '#ffffff',
-            pointBorderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6
-        }]
-    };
-    
+    // SIMPLE RADAR CHART CONFIGURATION - ONLY ONE DATASET
     const config = {
         type: 'radar',
-        data: chartData,
+        data: {
+            labels: ['Подписчики', 'Кол-во стримов', 'Часы контента', 'Опыт в годах'],
+            datasets: [{
+                label: 'Прогресс %',
+                data: [
+                    Math.round(normalizedData.followers),
+                    Math.round(normalizedData.streams),
+                    Math.round(normalizedData.hours),
+                    Math.round(normalizedData.years)
+                ],
+                backgroundColor: 'rgba(57, 255, 20, 0.2)',
+                borderColor: '#39ff14',
+                borderWidth: 3,
+                pointBackgroundColor: '#39ff14',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
         options: {
             responsive: true,
             maintainAspectRatio: true,
             scales: {
                 r: {
+                    beginAtZero: true,
+                    max: 100,
+                    min: 0,
+                    ticks: {
+                        display: false,
+                        stepSize: 20
+                    },
                     angleLines: {
-                        color: 'rgba(255, 255, 255, 0.1)',
+                        color: 'rgba(255, 255, 255, 0.2)',
                         lineWidth: 1
                     },
                     grid: {
-                        color: 'rgba(255, 45, 149, 0.1)'
+                        color: 'rgba(255, 45, 149, 0.2)',
+                        circular: true
                     },
                     pointLabels: {
                         color: '#ffffff',
                         font: {
                             size: 12,
-                            weight: 'bold'
-                        }
-                    },
-                    ticks: {
-                        display: false,
-                        backdropColor: 'transparent'
-                    },
-                    suggestedMin: 0,
-                    suggestedMax: 100
+                            weight: 'bold',
+                            family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+                        },
+                        padding: 15
+                    }
                 }
             },
             plugins: {
@@ -298,60 +383,62 @@ function createRadarChart(stats) {
                     display: false
                 },
                 tooltip: {
-                    enabled: true,
+                    backgroundColor: 'rgba(15, 15, 25, 0.9)',
+                    titleColor: '#39ff14',
+                    bodyColor: '#ffffff',
+                    borderColor: '#ff2d95',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: false,
                     callbacks: {
+                        title: function(tooltipItems) {
+                            return tooltipItems[0].label;
+                        },
                         label: function(context) {
-                            return `${context.dataset.label}: ${context.parsed.r}%`;
+                            const index = context.dataIndex;
+                            const actualValues = [stats.followers, stats.streams, stats.hours, stats.years];
+                            const labels = ['Подписчики', 'Стримы', 'Часы контента', 'Года в стриминге'];
+                            return `${labels[index]}: ${actualValues[index]} (${context.parsed.r}%)`;
                         }
                     }
                 }
             },
             elements: {
                 line: {
-                    tension: 0.1
+                    tension: 0.1,
+                    fill: true
                 }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeOutQuart'
+            },
+            interaction: {
+                mode: 'nearest',
+                intersect: false
             }
         }
     };
     
     try {
         radarChartInstance = new Chart(ctx, config);
-        console.log('✅ Radar chart created successfully - ONE CIRCLE ONLY');
+        console.log('✅ New radar chart created successfully - SINGLE CIRCLE');
         
-        createLegend(stats, maxValues);
+        // Add glow effect to canvas
+        ctx.style.filter = 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.3))';
         
-    } catch (error) {
-        console.error('❌ Error creating radar chart:', error);
-    }
-}
-    
-    try {
-        // Create new chart
-        radarChartInstance = new Chart(ctx, config);
-        console.log('✅ Radar chart created successfully');
-        
-        // Create custom legend
-        createLegend(stats, maxValues);
-        
-        // Add resize observer for responsive behavior
-        const resizeObserver = new ResizeObserver(entries => {
-            entries.forEach(entry => {
-                if (radarChartInstance) {
-                    radarChartInstance.resize();
-                    console.log('📏 Radar chart resized');
-                }
-            });
-        });
-        
-        resizeObserver.observe(ctx.parentElement);
+        createNewLegend(stats, maxValues);
         
     } catch (error) {
-        console.error('❌ Error creating radar chart:', error);
+        console.error('❌ Error creating new radar chart:', error);
+        
+        // Fallback to simple bar chart if radar fails
+        createFallbackBarChart(stats, maxValues);
     }
 }
 
-// Create custom legend
-function createLegend(stats, maxValues) {
+// NEW LEGEND CREATION
+function createNewLegend(stats, maxValues) {
     const legendContainer = document.getElementById('radarLegend');
     if (!legendContainer) {
         console.error('❌ Legend container not found');
@@ -360,77 +447,238 @@ function createLegend(stats, maxValues) {
     
     const legendItems = [
         { 
-            label: 'Подписчиков', 
+            label: 'Подписчики', 
             value: stats.followers, 
             max: maxValues.followers, 
             color: '#39ff14',
-            icon: '👥'
+            icon: '👥',
+            emoji: '📈'
         },
         { 
-            label: 'Стримов', 
+            label: 'Стримы', 
             value: stats.streams, 
             max: maxValues.streams, 
             color: '#ff2d95',
-            icon: '📡'
+            icon: '📡',
+            emoji: '🎮'
         },
         { 
-            label: 'Часов контента', 
+            label: 'Часы контента', 
             value: stats.hours, 
             max: maxValues.hours, 
-            color: '#64B5F6',
-            icon: '⏰'
+            color: '#64b5f6',
+            icon: '⏰',
+            emoji: '⏱️'
         },
         { 
-            label: 'Лет в стриминге', 
+            label: 'Опыт', 
             value: stats.years, 
             max: maxValues.years, 
-            color: '#FFD700',
-            icon: '⭐'
+            color: '#ffd700',
+            icon: '⭐',
+            emoji: '🎯'
         }
     ];
     
     const progressPercentages = legendItems.map(item => Math.round((item.value / item.max) * 100));
     
-    legendContainer.innerHTML = legendItems.map((item, index) => `
-        <div class="legend-item" data-progress="${progressPercentages[index]}">
-            <span class="legend-color" style="color: ${item.color}"></span>
-            <span class="legend-icon">${item.icon}</span>
-            <span class="legend-text">
-                ${item.label}: 
-                <strong>${item.value.toLocaleString()}</strong> 
-                <span class="legend-progress">(${progressPercentages[index]}%)</span>
-            </span>
-        </div>
-    `).join('');
+    legendContainer.innerHTML = legendItems.map((item, index) => {
+        const percentage = progressPercentages[index];
+        const progressBarWidth = Math.max(10, percentage); // Minimum 10% width for visibility
+        
+        return `
+            <div class="legend-item" data-progress="${percentage}">
+                <div class="legend-header">
+                    <span class="legend-emoji">${item.emoji}</span>
+                    <span class="legend-label">${item.label}</span>
+                    <span class="legend-percentage">${percentage}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progressBarWidth}%; background: ${item.color};"></div>
+                </div>
+                <div class="legend-values">
+                    <span class="legend-current">${item.value.toLocaleString()}</span>
+                    <span class="legend-separator">/</span>
+                    <span class="legend-max">${item.max.toLocaleString()}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
     
-    console.log('📋 Legend created with', legendItems.length, 'items');
+    // Add CSS for new legend
+    addLegendStyles();
+    
+    console.log('📋 New legend created with progress bars');
 }
 
-// Load schedule
-export async function loadSchedule() {
-    try {
-        const response = await fetch('data/schedule.json?' + new Date().getTime());
-        const data = await response.json();
-        
-        // Use renderers to display schedule
-        const renderers = await import('./renderers.js');
-        renderers.renderSchedule(data.schedule);
-        
-        console.log('📅 Schedule loaded successfully');
-    } catch (error) {
-        console.log('⏰ Schedule will be loaded later');
-        const scheduleList = document.getElementById('schedule-list');
-        if (scheduleList) {
-            scheduleList.innerHTML = `
-                <div class="schedule-item">
-                    <div class="schedule-content">
-                        <div class="schedule-game">📅 Расписание временно недоступно</div>
-                        <div class="schedule-desc">Обновляем данные...</div>
-                    </div>
-                </div>
-            `;
+// FALLBACK BAR CHART if radar fails
+function createFallbackBarChart(stats, maxValues) {
+    const ctx = document.getElementById('radarChart');
+    if (!ctx) return;
+    
+    const percentages = {
+        followers: Math.round((stats.followers / maxValues.followers) * 100),
+        streams: Math.round((stats.streams / maxValues.streams) * 100),
+        hours: Math.round((stats.hours / maxValues.hours) * 100),
+        years: Math.round((stats.years / maxValues.years) * 100)
+    };
+    
+    const config = {
+        type: 'bar',
+        data: {
+            labels: ['Подписчики', 'Стримы', 'Часы', 'Опыт'],
+            datasets: [{
+                label: 'Прогресс (%)',
+                data: [
+                    percentages.followers,
+                    percentages.streams,
+                    percentages.hours,
+                    percentages.years
+                ],
+                backgroundColor: [
+                    'rgba(57, 255, 20, 0.8)',
+                    'rgba(255, 45, 149, 0.8)',
+                    'rgba(64, 181, 246, 0.8)',
+                    'rgba(255, 215, 0, 0.8)'
+                ],
+                borderColor: [
+                    '#39ff14',
+                    '#ff2d95',
+                    '#64b5f6',
+                    '#ffd700'
+                ],
+                borderWidth: 2,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Статистика канала',
+                    color: '#ffffff',
+                    font: {
+                        size: 16
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        color: '#ffffff',
+                        stepSize: 20
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#ffffff'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
         }
-    }
+    };
+    
+    radarChartInstance = new Chart(ctx, config);
+    console.log('📊 Fallback bar chart created');
+}
+
+// ADD STYLES FOR NEW LEGEND
+function addLegendStyles() {
+    if (document.getElementById('legend-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'legend-styles';
+    style.textContent = `
+        .legend-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .legend-emoji {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+        
+        .legend-label {
+            flex: 1;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .legend-percentage {
+            font-weight: bold;
+            color: #39ff14;
+            min-width: 40px;
+            text-align: right;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 5px currentColor;
+        }
+        
+        .legend-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #cccccc;
+        }
+        
+        .legend-current {
+            color: #39ff14;
+            font-weight: 600;
+        }
+        
+        .legend-max {
+            color: #ff2d95;
+        }
+        
+        .legend-separator {
+            margin: 0 5px;
+            color: #666;
+        }
+        
+        .legend-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .legend-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+    `;
+    
+    document.head.appendChild(style);
 }
 
 // Utility function to format numbers
@@ -443,53 +691,35 @@ export function getRadarChartInstance() {
     return radarChartInstance;
 }
 
-// Function to update radar chart with new data
-export function updateRadarChart(newStats) {
+// Force refresh radar chart
+export function refreshRadarChart() {
     if (radarChartInstance) {
-        // Update the data
-        const maxValues = {
-            followers: 10000,
-            streams: 500,
-            hours: 1000,
-            years: 10
-        };
-        
-        const normalizedData = {
-            followers: Math.min((newStats.followers / maxValues.followers) * 100, 100),
-            streams: Math.min((newStats.streams / maxValues.streams) * 100, 100),
-            hours: Math.min((newStats.hours / maxValues.hours) * 100, 100),
-            years: Math.min((newStats.years / maxValues.years) * 100, 100)
-        };
-        
-        radarChartInstance.data.datasets[0].data = [
-            Math.round(normalizedData.followers),
-            Math.round(normalizedData.streams),
-            Math.round(normalizedData.hours),
-            Math.round(normalizedData.years)
-        ];
-        
-        radarChartInstance.update('active');
-        createLegend(newStats, maxValues);
-        
-        console.log('🔄 Radar chart updated with new data');
-    }
-}
-
-// Function to fix radar chart display issues
-export function fixRadarChart() {
-    if (radarChartInstance) {
-        // Force chart resize and redraw
-        radarChartInstance.resize();
         radarChartInstance.update();
-        console.log('🔧 Radar chart fixed');
+        console.log('🔄 Radar chart refreshed');
     }
 }
 
-// Initialize chart fixes on window resize
-window.addEventListener('resize', function() {
-    if (radarChartInstance) {
-        setTimeout(() => {
-            radarChartInstance.resize();
-        }, 100);
+// Debug function to check data paths
+export async function debugDataPaths() {
+    console.log('🔍 Debugging data paths...');
+    
+    const paths = [
+        './data/games.json',
+        './data/movies.json', 
+        './data/stats.json',
+        './data/schedule.json'
+    ];
+    
+    for (const path of paths) {
+        try {
+            const response = await fetch(path);
+            console.log(`${path}: ${response.ok ? '✅ OK' : '❌ Failed'}`);
+            if (response.ok) {
+                const data = await response.json();
+                console.log(`   Data:`, data);
+            }
+        } catch (error) {
+            console.log(`${path}: ❌ Error - ${error.message}`);
+        }
     }
-});
+}
