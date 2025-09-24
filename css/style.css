@@ -211,20 +211,26 @@ nav ul li a:hover::after {
 .hero-image-container {
     position: relative;
     display: inline-block;
-    cursor: pointer;
+    cursor: default;
 }
 
-.hero-image-container img {
+/* Главное фото */
+.main-photo-container {
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+}
+
+.main-photo-container img {
     width: 300px;
     height: 300px;
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid var(--neon-pink);
     box-shadow: 0 0 20px rgba(255, 45, 149, 0.5), 0 0 40px rgba(57, 255, 20, 0.3);
-    position: relative;
-    z-index: 2;
     animation: pulse 3s infinite ease-in-out;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 @keyframes pulse {
@@ -232,21 +238,23 @@ nav ul li a:hover::after {
     50% { transform: scale(1.05); }
 }
 
-.hero-image-container.clicked img {
+/* Клик только на главное фото */
+.main-photo-container.clicked img {
     transform: scale(1.1);
     box-shadow: 0 0 30px var(--neon-green), 0 0 60px var(--neon-pink);
 }
 
-/* Стили для планет в hero секции */
+/* Планеты */
 .planet {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1;
+    z-index: 5;
+    pointer-events: none;
 }
 
 .planet-img {
@@ -256,34 +264,49 @@ nav ul li a:hover::after {
     object-fit: cover;
     position: relative;
     z-index: 2;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.planet-img:hover {
+    transform: scale(1.1);
 }
 
 .planet-frame {
     position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
     border-radius: 50%;
     border: 3px solid;
     z-index: 3;
+    pointer-events: none;
+    animation: frame-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes frame-glow {
+    from {
+        box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+    }
+    to {
+        box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    }
 }
 
 /* Цвета рамок */
 .pink-frame { 
     border-color: #ff2d95; 
-    box-shadow: 0 0 10px #ff2d95, 0 0 20px #ff2d95; 
 }
 .red-frame { 
     border-color: #ff6464; 
-    box-shadow: 0 0 10px #ff6464, 0 0 20px #ff6464; 
 }
 .blue-frame { 
     border-color: #64b5f6; 
-    box-shadow: 0 0 10px #64b5f6, 0 0 20px #64b5f6; 
 }
 
-/* Орбиты и анимации */
+/* Увеличенные орбиты */
 .pink-orbit {
     animation: orbit-planet-1 15s linear infinite;
 }
@@ -298,28 +321,28 @@ nav ul li a:hover::after {
 
 @keyframes orbit-planet-1 {
     0% { 
-        transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg); 
+        transform: translate(-50%, -50%) rotate(0deg) translateX(220px) rotate(0deg); 
     }
     100% { 
-        transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg); 
+        transform: translate(-50%, -50%) rotate(360deg) translateX(220px) rotate(-360deg); 
     }
 }
 
 @keyframes orbit-planet-2 {
     0% { 
-        transform: translate(-50%, -50%) rotate(0deg) translateX(180px) rotate(0deg); 
+        transform: translate(-50%, -50%) rotate(0deg) translateX(300px) rotate(0deg); 
     }
     100% { 
-        transform: translate(-50%, -50%) rotate(360deg) translateX(180px) rotate(-360deg); 
+        transform: translate(-50%, -50%) rotate(360deg) translateX(300px) rotate(-360deg); 
     }
 }
 
 @keyframes orbit-planet-3 {
     0% { 
-        transform: translate(-50%, -50%) rotate(0deg) translateX(240px) rotate(0deg); 
+        transform: translate(-50%, -50%) rotate(0deg) translateX(380px) rotate(0deg); 
     }
     100% { 
-        transform: translate(-50%, -50%) rotate(360deg) translateX(240px) rotate(-360deg); 
+        transform: translate(-50%, -50%) rotate(360deg) translateX(380px) rotate(-360deg); 
     }
 }
 
@@ -1495,46 +1518,50 @@ body.scrolled-up header { top: 0; }
     .about-content { flex-direction: column; }
     .about-text { padding-right: 0; margin-bottom: 30px; }
     .hero-buttons { flex-direction: column; align-items: center; }
-    .hero-image-container img { width: 200px; height: 200px; }
     
-    /* Адаптивность для планет */
+    /* Адаптивность для главного фото и планет */
+    .main-photo-container img {
+        width: 200px;
+        height: 200px;
+    }
+    
     .planet { 
-        width: 40px; 
-        height: 40px; 
+        width: 60px; 
+        height: 60px; 
     }
     
     .planet-frame {
         border-width: 2px;
-        top: -3px;
-        left: -3px;
-        right: -3px;
-        bottom: -3px;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
     }
     
     @keyframes orbit-planet-1 {
         0% { 
-            transform: translate(-50%, -50%) rotate(0deg) translateX(80px) rotate(0deg); 
+            transform: translate(-50%, -50%) rotate(0deg) translateX(140px) rotate(0deg); 
         }
         100% { 
-            transform: translate(-50%, -50%) rotate(360deg) translateX(80px) rotate(-360deg); 
+            transform: translate(-50%, -50%) rotate(360deg) translateX(140px) rotate(-360deg); 
         }
     }
     
     @keyframes orbit-planet-2 {
         0% { 
-            transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg); 
+            transform: translate(-50%, -50%) rotate(0deg) translateX(190px) rotate(0deg); 
         }
         100% { 
-            transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg); 
+            transform: translate(-50%, -50%) rotate(360deg) translateX(190px) rotate(-360deg); 
         }
     }
     
     @keyframes orbit-planet-3 {
         0% { 
-            transform: translate(-50%, -50%) rotate(0deg) translateX(160px) rotate(0deg); 
+            transform: translate(-50%, -50%) rotate(0deg) translateX(240px) rotate(0deg); 
         }
         100% { 
-            transform: translate(-50%, -50%) rotate(360deg) translateX(160px) rotate(-360deg); 
+            transform: translate(-50%, -50%) rotate(360deg) translateX(240px) rotate(-360deg); 
         }
     }
     
@@ -1708,172 +1735,5 @@ body.scrolled-up header { top: 0; }
     .radar-chart-container::after {
         width: 200px;
         height: 200px;
-    }
-}
-/* Главное фото */
-.main-photo-container {
-    position: relative;
-    z-index: 10;
-    display: inline-block;
-}
-
-.main-photo-container img {
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid var(--neon-pink);
-    box-shadow: 0 0 20px rgba(255, 45, 149, 0.5), 0 0 40px rgba(57, 255, 20, 0.3);
-    animation: pulse 3s infinite ease-in-out;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-/* Клик только на главное фото */
-.main-photo-container.clicked img {
-    transform: scale(1.1);
-    box-shadow: 0 0 30px var(--neon-green), 0 0 60px var(--neon-pink);
-}
-
-/* Планеты */
-.planet {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    pointer-events: none;
-}
-
-.planet-img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    position: relative;
-    z-index: 2;
-    pointer-events: auto;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.planet-img:hover {
-    transform: scale(1.1);
-}
-
-.planet-frame {
-    position: absolute;
-    top: -6px;
-    left: -6px;
-    right: -6px;
-    bottom: -6px;
-    border-radius: 50%;
-    border: 3px solid;
-    z-index: 3;
-    pointer-events: none;
-}
-
-/* Цвета рамок */
-.pink-frame { 
-    border-color: #ff2d95; 
-    box-shadow: 0 0 15px #ff2d95, 0 0 30px #ff2d95; 
-}
-.red-frame { 
-    border-color: #ff6464; 
-    box-shadow: 0 0 15px #ff6464, 0 0 30px #ff6464; 
-}
-.blue-frame { 
-    border-color: #64b5f6; 
-    box-shadow: 0 0 15px #64b5f6, 0 0 30px #64b5f6; 
-}
-
-/* Увеличенные орбиты */
-.pink-orbit {
-    animation: orbit-planet-1 15s linear infinite;
-}
-
-.red-orbit {
-    animation: orbit-planet-2 20s linear infinite;
-}
-
-.blue-orbit {
-    animation: orbit-planet-3 25s linear infinite;
-}
-
-@keyframes orbit-planet-1 {
-    0% { 
-        transform: translate(-50%, -50%) rotate(0deg) translateX(220px) rotate(0deg); 
-    }
-    100% { 
-        transform: translate(-50%, -50%) rotate(360deg) translateX(220px) rotate(-360deg); 
-    }
-}
-
-@keyframes orbit-planet-2 {
-    0% { 
-        transform: translate(-50%, -50%) rotate(0deg) translateX(300px) rotate(0deg); 
-    }
-    100% { 
-        transform: translate(-50%, -50%) rotate(360deg) translateX(300px) rotate(-360deg); 
-    }
-}
-
-@keyframes orbit-planet-3 {
-    0% { 
-        transform: translate(-50%, -50%) rotate(0deg) translateX(380px) rotate(0deg); 
-    }
-    100% { 
-        transform: translate(-50%, -50%) rotate(360deg) translateX(380px) rotate(-360deg); 
-    }
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 768px) {
-    .main-photo-container img {
-        width: 200px;
-        height: 200px;
-    }
-    
-    .planet { 
-        width: 60px; 
-        height: 60px; 
-    }
-    
-    .planet-frame {
-        border-width: 2px;
-        top: -4px;
-        left: -4px;
-        right: -4px;
-        bottom: -4px;
-    }
-    
-    @keyframes orbit-planet-1 {
-        0% { 
-            transform: translate(-50%, -50%) rotate(0deg) translateX(140px) rotate(0deg); 
-        }
-        100% { 
-            transform: translate(-50%, -50%) rotate(360deg) translateX(140px) rotate(-360deg); 
-        }
-    }
-    
-    @keyframes orbit-planet-2 {
-        0% { 
-            transform: translate(-50%, -50%) rotate(0deg) translateX(190px) rotate(0deg); 
-        }
-        100% { 
-            transform: translate(-50%, -50%) rotate(360deg) translateX(190px) rotate(-360deg); 
-        }
-    }
-    
-    @keyframes orbit-planet-3 {
-        0% { 
-            transform: translate(-50%, -50%) rotate(0deg) translateX(240px) rotate(0deg); 
-        }
-        100% { 
-            transform: translate(-50%, -50%) rotate(360deg) translateX(240px) rotate(-360deg); 
-        }
     }
 }
