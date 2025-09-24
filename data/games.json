@@ -1,35 +1,23 @@
 [
   {
-    "id": 1,
-    "title": "The Witcher 3: Wild Hunt",
-    "genre": "RPG",
-    "platform": "PC/PS4/PS5/Xbox",
-    "rating": 9.8,
-    "description": "Захватывающая RPG с открытым миром и глубоким сюжетом",
-    "image": "/assets/images/games/witcher3.jpg",
-    "tags": ["RPG", "Открытый мир", "Сюжетная"],
-    "duration": 120
+    "id": "portal2",
+    "title": "Portal 2",
+    "description": "Культовая головоломка от Valve с уникальным геймплеем и юмором.",
+    "image": "https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png",
+    "status": "completed"
   },
   {
-    "id": 2,
+    "id": "mouthwashing",
+    "title": "Mouthwashing", 
+    "description": "Расслабляющий симулятор мойки под давлением.",
+    "image": "https://cdn2.steamgriddb.com/grid/50a36d2cac80b1dc1b56246ffab8b073.png",
+    "status": "playing"
+  },
+  {
+    "id": "cyberpunk",
     "title": "Cyberpunk 2077",
-    "genre": "RPG",
-    "platform": "PC/PS5/Xbox",
-    "rating": 8.5,
-    "description": "Футуристический экшен-RPG в мире будущего",
-    "image": "/assets/images/games/cyberpunk.jpg",
-    "tags": ["RPG", "Футуристика", "Экшен"],
-    "duration": 90
-  },
-  {
-    "id": 3,
-    "title": "Red Dead Redemption 2",
-    "genre": "Action",
-    "platform": "PC/PS4/PS5/Xbox",
-    "rating": 9.7,
-    "description": "Эпическая история о диком западе",
-    "image": "/assets/images/games/rdr2.jpg",
-    "tags": ["Экшен", "Открытый мир", "Вестерн"],
-    "duration": 150
+    "description": "Футуристическая RPG в открытом мире.",
+    "image": "https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png", 
+    "status": "dropped"
   }
 ]
