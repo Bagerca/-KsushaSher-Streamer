@@ -422,178 +422,131 @@ section {
     border: none;
 }
 
-/* Modern Stats Section */
+/* Radar Chart Styles */
 #stats {
     background: rgba(10, 10, 20, 0.5);
     position: relative;
 }
 
-.modern-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-top: 50px;
+.radar-chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px 0;
+    position: relative;
+    min-height: 500px;
 }
 
-.stat-card {
-    background: linear-gradient(135deg, rgba(15, 15, 25, 0.9) 0%, rgba(7, 7, 17, 0.95) 100%);
-    border: 1px solid rgba(255, 45, 149, 0.2);
-    border-radius: 20px;
-    padding: 30px 25px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    backdrop-filter: blur(15px);
-    min-height: 140px;
+#radarChart {
+    max-width: 500px;
+    max-height: 500px;
+    z-index: 2;
+    filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.3));
+}
+
+.radar-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-top: 40px;
+    background: rgba(15, 15, 25, 0.8);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 45, 149, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.legend-item {
     display: flex;
     align-items: center;
-    gap: 20px;
-    cursor: pointer;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.08), transparent);
-    transition: left 0.8s ease;
-}
-
-.stat-card:hover::before {
-    left: 100%;
-}
-
-.stat-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: var(--neon-green);
-    box-shadow: 
-        0 20px 40px rgba(57, 255, 20, 0.15),
-        0 0 0 1px rgba(57, 255, 20, 0.1);
-}
-
-.stat-icon {
-    font-size: 2.8rem;
-    color: var(--neon-pink);
-    text-shadow: 0 0 20px rgba(255, 45, 149, 0.6);
-    transition: all 0.4s ease;
-    min-width: 60px;
-    text-align: center;
-}
-
-.stat-card:hover .stat-icon {
-    color: var(--neon-green);
-    transform: scale(1.15) rotate(5deg);
-    text-shadow: 0 0 25px rgba(57, 255, 20, 0.8);
-}
-
-.stat-content {
-    flex: 1;
-}
-
-.stat-number {
-    font-size: 2.4rem;
-    font-weight: 800;
-    background: linear-gradient(45deg, var(--neon-green), var(--neon-pink));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 5px;
-    line-height: 1;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    color: var(--light-text);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 8px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
     transition: all 0.3s ease;
 }
 
-.stat-card:hover .stat-number {
-    background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
+.legend-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
 }
 
-.stat-label {
-    color: var(--light-text);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+.legend-color {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 8px currentColor;
+    transition: all 0.3s ease;
 }
 
-.stat-wave {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, var(--neon-pink), var(--neon-green), var(--neon-pink));
-    background-size: 200% 100%;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 1.2s ease;
-    animation: waveShift 3s infinite linear;
+.legend-item:hover .legend-color {
+    transform: scale(1.2);
 }
 
-@keyframes waveShift {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
+.legend-item strong {
+    color: var(--neon-green);
+    margin-left: 5px;
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
 }
 
-.stat-card:hover .stat-wave {
-    transform: scaleX(1);
-}
-
-/* Анимация появления карточек */
-.stat-card {
-    animation: cardAppear 0.8s ease-out forwards;
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-}
-
-@keyframes cardAppear {
+/* Анимация появления диаграммы */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8) rotate(-10deg);
+    }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: scale(1) rotate(0deg);
     }
 }
 
-.stat-card:nth-child(1) { animation-delay: 0.1s; }
-.stat-card:nth-child(2) { animation-delay: 0.2s; }
-.stat-card:nth-child(3) { animation-delay: 0.3s; }
-.stat-card:nth-child(4) { animation-delay: 0.4s; }
-
-/* Анимация счетчика */
-@keyframes countUp {
-    from { 
-        transform: translateY(20px) scale(0.8); 
-        opacity: 0; 
+@keyframes glowPulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.3));
     }
-    to { 
-        transform: translateY(0) scale(1); 
-        opacity: 1; 
+    50% {
+        filter: drop-shadow(0 0 20px rgba(57, 255, 20, 0.6));
     }
 }
 
-.stat-number.animating {
-    animation: countUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.radar-chart-container canvas {
+    animation: fadeInScale 1.2s ease-out, glowPulse 3s ease-in-out infinite;
 }
 
-/* Pulse effect on hover */
-.stat-card::after {
+/* Декоративные элементы для радара */
+.radar-chart-container::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 0;
-    height: 0;
+    width: 300px;
+    height: 300px;
     background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%);
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    transition: all 0.6s ease;
+    z-index: 1;
+    animation: pulse 4s ease-in-out infinite;
 }
 
-.stat-card:hover::after {
-    width: 200px;
-    height: 200px;
+.radar-chart-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    border: 2px solid rgba(255, 45, 149, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    animation: rotate-ring 20s linear infinite;
 }
 
 /* Schedule Section */
@@ -1523,34 +1476,38 @@ body.scrolled-up header { top: 0; }
     .light-ring:nth-child(2) { width: 270px; height: 270px; }
     .light-ring:nth-child(3) { width: 300px; height: 300px; }
     
-    /* Modern Stats Mobile */
-    .modern-stats {
-        grid-template-columns: 1fr;
-        gap: 20px;
+    /* Radar Chart Mobile */
+    .radar-chart-container {
+        margin: 30px 0;
+        min-height: 300px;
+    }
+    
+    #radarChart {
+        max-width: 300px;
+        max-height: 300px;
+    }
+    
+    .radar-legend {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
         margin-top: 30px;
     }
     
-    .stat-card {
-        padding: 25px 20px;
-        min-height: 120px;
-        gap: 15px;
-    }
-    
-    .stat-icon {
-        font-size: 2.2rem;
-        min-width: 50px;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-    }
-    
-    .stat-label {
+    .legend-item {
         font-size: 0.9rem;
+        padding: 6px 12px;
     }
     
-    .stat-card:hover {
-        transform: translateY(-4px) scale(1.01);
+    .radar-chart-container::before {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .radar-chart-container::after {
+        width: 250px;
+        height: 250px;
     }
     
     /* Адаптивность для игр */
@@ -1662,26 +1619,32 @@ body.scrolled-up header { top: 0; }
 }
 
 @media (max-width: 480px) {
-    .modern-stats {
-        gap: 15px;
+    .radar-chart-container {
+        min-height: 250px;
     }
     
-    .stat-card {
-        padding: 20px 15px;
-        min-height: 100px;
-        gap: 12px;
+    #radarChart {
+        max-width: 250px;
+        max-height: 250px;
     }
     
-    .stat-icon {
-        font-size: 1.8rem;
-        min-width: 40px;
+    .radar-legend {
+        padding: 15px;
+        gap: 10px;
     }
     
-    .stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .stat-label {
+    .legend-item {
         font-size: 0.85rem;
+        padding: 5px 10px;
+    }
+    
+    .radar-chart-container::before {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .radar-chart-container::after {
+        width: 200px;
+        height: 200px;
     }
 }
