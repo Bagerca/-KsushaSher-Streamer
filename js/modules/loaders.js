@@ -210,6 +210,7 @@ export async function loadStats() {
 }
 
 // Create beautiful radar chart - ИСПРАВЛЕННАЯ ВЕРСИЯ
+// Create simple radar chart - УПРОЩЕННАЯ ВЕРСИЯ БЕЗ ВТОРОГО КРУГА
 function createRadarChart(stats) {
     const ctx = document.getElementById('radarChart');
     if (!ctx) {
@@ -240,11 +241,11 @@ function createRadarChart(stats) {
     
     console.log('📊 Normalized data:', normalizedData);
     
-    // УБИРАЕМ ВТОРОЙ DATASET (который создавал второй круг)
+    // ПРОСТАЯ КОНФИГУРАЦИЯ - ТОЛЬКО ОДИН DATASET
     const chartData = {
-        labels: ['Подписчики', 'Кол-во стримов', 'Часы контента', 'Года в стриминге'],
+        labels: ['Подписчики', 'Стримы', 'Часы', 'Опыт'],
         datasets: [{
-            label: 'Текущие показатели',
+            label: 'Показатели канала',
             data: [
                 Math.round(normalizedData.followers),
                 Math.round(normalizedData.streams), 
@@ -253,17 +254,13 @@ function createRadarChart(stats) {
             ],
             backgroundColor: 'rgba(57, 255, 20, 0.2)',
             borderColor: '#39ff14',
-            borderWidth: 3,
+            borderWidth: 2,
             pointBackgroundColor: '#39ff14',
-            pointBorderColor: '#070711',
+            pointBorderColor: '#ffffff',
             pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 10,
-            pointHoverBackgroundColor: '#ff2d95',
-            pointHoverBorderColor: '#ffffff',
-            pointHoverBorderWidth: 3
+            pointRadius: 4,
+            pointHoverRadius: 6
         }]
-        // УБРАЛ ВТОРОЙ DATASET С ЦЕЛЕВЫМИ ПОКАЗАТЕЛЯМИ
     };
     
     const config = {
@@ -275,33 +272,25 @@ function createRadarChart(stats) {
             scales: {
                 r: {
                     angleLines: {
-                        color: 'rgba(255, 255, 255, 0.15)',
+                        color: 'rgba(255, 255, 255, 0.1)',
                         lineWidth: 1
                     },
                     grid: {
-                        color: 'rgba(255, 45, 149, 0.2)',
-                        circular: true
+                        color: 'rgba(255, 45, 149, 0.1)'
                     },
                     pointLabels: {
-                        color: '#ccc',
+                        color: '#ffffff',
                         font: {
-                            size: 14,
-                            weight: '600',
-                            family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-                        },
-                        callback: function(value, index) {
-                            const labels = ['Подписчики', 'Стримы', 'Часы', 'Опыт'];
-                            return labels[index];
+                            size: 12,
+                            weight: 'bold'
                         }
                     },
                     ticks: {
                         display: false,
-                        backdropColor: 'transparent',
-                        maxTicksLimit: 5
+                        backdropColor: 'transparent'
                     },
                     suggestedMin: 0,
-                    suggestedMax: 100,
-                    beginAtZero: true
+                    suggestedMax: 100
                 }
             },
             plugins: {
@@ -309,61 +298,32 @@ function createRadarChart(stats) {
                     display: false
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(7, 7, 17, 0.9)',
-                    titleColor: '#39ff14',
-                    bodyColor: '#ccc',
-                    borderColor: '#ff2d95',
-                    borderWidth: 1,
-                    cornerRadius: 8,
-                    displayColors: false,
+                    enabled: true,
                     callbacks: {
                         label: function(context) {
-                            const label = context.dataset.label || '';
-                            const index = context.dataIndex;
-                            const actualValues = [stats.followers, stats.streams, stats.hours, stats.years];
-                            const maxValuesArr = [maxValues.followers, maxValues.streams, maxValues.hours, maxValues.years];
-                            const labels = ['Подписчики', 'Стримы', 'Часы контента', 'Года в стриминге'];
-                            
-                            return [
-                                `${labels[index]}: ${actualValues[index].toLocaleString()}`,
-                                `Прогресс: ${Math.round(context.parsed.r)}% от цели`,
-                                `Цель: ${maxValuesArr[index].toLocaleString()}`
-                            ];
+                            return `${context.dataset.label}: ${context.parsed.r}%`;
                         }
                     }
                 }
             },
             elements: {
                 line: {
-                    tension: 0.1,
-                    fill: true
+                    tension: 0.1
                 }
-            },
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart',
-                onProgress: function(animation) {
-                    // Add glow effect during animation
-                    if (animation.currentStep <= animation.numSteps) {
-                        const progress = animation.currentStep / animation.numSteps;
-                        ctx.style.filter = `drop-shadow(0 0 ${10 + progress * 10}px rgba(57, 255, 20, ${0.3 + progress * 0.3}))`;
-                    }
-                },
-                onComplete: function() {
-                    // Final glow effect
-                    ctx.style.filter = 'drop-shadow(0 0 15px rgba(57, 255, 20, 0.4))';
-                    console.log('🎉 Radar chart animation completed');
-                }
-            },
-            interaction: {
-                mode: 'nearest',
-                intersect: false
-            },
-            hover: {
-                animationDuration: 300
             }
         }
     };
+    
+    try {
+        radarChartInstance = new Chart(ctx, config);
+        console.log('✅ Radar chart created successfully - ONE CIRCLE ONLY');
+        
+        createLegend(stats, maxValues);
+        
+    } catch (error) {
+        console.error('❌ Error creating radar chart:', error);
+    }
+}
     
     try {
         // Create new chart
