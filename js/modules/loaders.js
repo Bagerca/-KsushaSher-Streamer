@@ -209,7 +209,7 @@ export async function loadStats() {
     }
 }
 
-// Create beautiful radar chart
+// Create beautiful radar chart - ИСПРАВЛЕННАЯ ВЕРСИЯ
 function createRadarChart(stats) {
     const ctx = document.getElementById('radarChart');
     if (!ctx) {
@@ -240,6 +240,7 @@ function createRadarChart(stats) {
     
     console.log('📊 Normalized data:', normalizedData);
     
+    // УБИРАЕМ ВТОРОЙ DATASET (который создавал второй круг)
     const chartData = {
         labels: ['Подписчики', 'Кол-во стримов', 'Часы контента', 'Года в стриминге'],
         datasets: [{
@@ -261,18 +262,8 @@ function createRadarChart(stats) {
             pointHoverBackgroundColor: '#ff2d95',
             pointHoverBorderColor: '#ffffff',
             pointHoverBorderWidth: 3
-        }, {
-            label: 'Целевые показатели',
-            data: [80, 80, 80, 80], // Target line at 80%
-            backgroundColor: 'rgba(255, 45, 149, 0.1)',
-            borderColor: 'rgba(255, 45, 149, 0.6)',
-            borderWidth: 2,
-            borderDash: [5, 5],
-            pointBackgroundColor: 'transparent',
-            pointBorderColor: 'transparent',
-            pointRadius: 0,
-            fill: false
         }]
+        // УБРАЛ ВТОРОЙ DATASET С ЦЕЛЕВЫМИ ПОКАЗАТЕЛЯМИ
     };
     
     const config = {
@@ -333,14 +324,11 @@ function createRadarChart(stats) {
                             const maxValuesArr = [maxValues.followers, maxValues.streams, maxValues.hours, maxValues.years];
                             const labels = ['Подписчики', 'Стримы', 'Часы контента', 'Года в стриминге'];
                             
-                            if (context.datasetIndex === 0) {
-                                return [
-                                    `${labels[index]}: ${actualValues[index].toLocaleString()}`,
-                                    `Прогресс: ${Math.round(context.parsed.r)}% от цели`,
-                                    `Цель: ${maxValuesArr[index].toLocaleString()}`
-                                ];
-                            }
-                            return `Целевой уровень: ${context.parsed.r}%`;
+                            return [
+                                `${labels[index]}: ${actualValues[index].toLocaleString()}`,
+                                `Прогресс: ${Math.round(context.parsed.r)}% от цели`,
+                                `Цель: ${maxValuesArr[index].toLocaleString()}`
+                            ];
                         }
                     }
                 }
@@ -526,3 +514,22 @@ export function updateRadarChart(newStats) {
         console.log('🔄 Radar chart updated with new data');
     }
 }
+
+// Function to fix radar chart display issues
+export function fixRadarChart() {
+    if (radarChartInstance) {
+        // Force chart resize and redraw
+        radarChartInstance.resize();
+        radarChartInstance.update();
+        console.log('🔧 Radar chart fixed');
+    }
+}
+
+// Initialize chart fixes on window resize
+window.addEventListener('resize', function() {
+    if (radarChartInstance) {
+        setTimeout(() => {
+            radarChartInstance.resize();
+        }, 100);
+    }
+});
