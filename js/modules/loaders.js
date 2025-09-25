@@ -192,7 +192,7 @@ export async function loadMovies() {
     }
 }
 
-// Load statistics with Radar Chart
+// Load statistics with NEW Radar Chart
 export async function loadStats() {
     try {
         // Wait for Chart.js to load
@@ -219,9 +219,12 @@ export async function loadStats() {
         console.log('📊 Using default stats data');
         createNewRadarChart({
             followers: 5200,
-            streams: 150,
-            hours: 250,
-            years: 3
+            streams: 154,
+            hours: 1000,
+            years: 3,
+            chatActivity: 280,
+            loyalty: 95,
+            gamesVariety: 25
         });
     }
 }
@@ -293,7 +296,7 @@ async function ensureContainerExists(selector, type) {
     });
 }
 
-// NEW RADAR CHART - COMPLETELY REBUILT
+// NEW RADAR CHART - COMPLETELY REBUILT FOR SPIDER WEB STYLE
 function createNewRadarChart(stats) {
     const ctx = document.getElementById('radarChart');
     if (!ctx) {
@@ -311,40 +314,67 @@ function createNewRadarChart(stats) {
     const maxValues = {
         followers: 10000,
         streams: 500,
-        hours: 1000,
-        years: 10
+        hours: 2000,
+        years: 10,
+        chatActivity: 500,
+        loyalty: 100,
+        gamesVariety: 50
     };
     
     const normalizedData = {
         followers: Math.min((stats.followers / maxValues.followers) * 100, 100),
         streams: Math.min((stats.streams / maxValues.streams) * 100, 100),
         hours: Math.min((stats.hours / maxValues.hours) * 100, 100),
-        years: Math.min((stats.years / maxValues.years) * 100, 100)
+        years: Math.min((stats.years / maxValues.years) * 100, 100),
+        chatActivity: Math.min((stats.chatActivity / maxValues.chatActivity) * 100, 100),
+        loyalty: Math.min((stats.loyalty / maxValues.loyalty) * 100, 100),
+        gamesVariety: Math.min((stats.gamesVariety / maxValues.gamesVariety) * 100, 100)
     };
     
-    console.log('📊 Creating new radar chart with data:', normalizedData);
+    console.log('📊 Creating new spider web radar chart with data:', normalizedData);
     
-    // SIMPLE RADAR CHART CONFIGURATION - ONLY ONE DATASET
+    // NEW SPIDER WEB RADAR CHART CONFIGURATION
     const config = {
         type: 'radar',
         data: {
-            labels: ['Подписчики', 'Кол-во стримов', 'Часы контента', 'Опыт в годах'],
+            labels: [
+                'Рост аудитории', 
+                'Активность стримов', 
+                'Объем контента', 
+                'Вовлеченность чата',
+                'Лояльность', 
+                'Разнообразие игр'
+            ],
             datasets: [{
-                label: 'Прогресс %',
+                label: 'Текущие показатели',
                 data: [
                     Math.round(normalizedData.followers),
                     Math.round(normalizedData.streams),
                     Math.round(normalizedData.hours),
-                    Math.round(normalizedData.years)
+                    Math.round(normalizedData.chatActivity),
+                    Math.round(normalizedData.loyalty),
+                    Math.round(normalizedData.gamesVariety)
                 ],
-                backgroundColor: 'rgba(57, 255, 20, 0.2)',
+                backgroundColor: 'rgba(57, 255, 20, 0.1)',
                 borderColor: '#39ff14',
                 borderWidth: 3,
                 pointBackgroundColor: '#39ff14',
                 pointBorderColor: '#ffffff',
                 pointBorderWidth: 2,
-                pointRadius: 5,
-                pointHoverRadius: 8
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: '#ff2d95',
+                pointHoverBorderColor: '#ffffff'
+            }, {
+                label: 'Целевые показатели',
+                data: [100, 100, 100, 100, 100, 100],
+                backgroundColor: 'rgba(255, 45, 149, 0.05)',
+                borderColor: '#ff2d95',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                pointBackgroundColor: 'transparent',
+                pointBorderColor: 'transparent',
+                pointRadius: 0
             }]
         },
         options: {
@@ -360,21 +390,23 @@ function createNewRadarChart(stats) {
                         stepSize: 20
                     },
                     angleLines: {
-                        color: 'rgba(255, 255, 255, 0.2)',
+                        color: 'rgba(255, 255, 255, 0.15)',
                         lineWidth: 1
                     },
                     grid: {
-                        color: 'rgba(255, 45, 149, 0.2)',
-                        circular: true
+                        color: 'rgba(255, 45, 149, 0.1)',
+                        circular: true,
+                        lineWidth: 1
                     },
                     pointLabels: {
                         color: '#ffffff',
                         font: {
-                            size: 12,
-                            weight: 'bold',
+                            size: 11,
+                            weight: '600',
                             family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
                         },
-                        padding: 15
+                        padding: 15,
+                        backdropColor: 'rgba(7, 7, 17, 0.8)'
                     }
                 }
             },
@@ -383,34 +415,35 @@ function createNewRadarChart(stats) {
                     display: false
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(15, 15, 25, 0.9)',
+                    backgroundColor: 'rgba(15, 15, 25, 0.95)',
                     titleColor: '#39ff14',
                     bodyColor: '#ffffff',
                     borderColor: '#ff2d95',
                     borderWidth: 1,
                     cornerRadius: 8,
-                    displayColors: false,
+                    displayColors: true,
                     callbacks: {
-                        title: function(tooltipItems) {
-                            return tooltipItems[0].label;
-                        },
                         label: function(context) {
-                            const index = context.dataIndex;
-                            const actualValues = [stats.followers, stats.streams, stats.hours, stats.years];
-                            const labels = ['Подписчики', 'Стримы', 'Часы контента', 'Года в стриминге'];
-                            return `${labels[index]}: ${actualValues[index]} (${context.parsed.r}%)`;
+                            const labels = [
+                                `Подписчики: ${stats.followers.toLocaleString()} (+12%)`,
+                                `Стримы: ${stats.streams} (3.2/нед)`,
+                                `Контент: ${stats.hours}+ часов`,
+                                `Чат: ${stats.chatActivity} сообщ/час`,
+                                `Лояльность: ${stats.loyalty}%`,
+                                `Игры: ${stats.gamesVariety}+ проектов`
+                            ];
+                            return labels[context.dataIndex];
                         }
                     }
                 }
             },
             elements: {
                 line: {
-                    tension: 0.1,
-                    fill: true
+                    tension: 0.1
                 }
             },
             animation: {
-                duration: 1500,
+                duration: 2000,
                 easing: 'easeOutQuart'
             },
             interaction: {
@@ -422,12 +455,13 @@ function createNewRadarChart(stats) {
     
     try {
         radarChartInstance = new Chart(ctx, config);
-        console.log('✅ New radar chart created successfully - SINGLE CIRCLE');
+        console.log('✅ New spider web radar chart created successfully');
         
         // Add glow effect to canvas
-        ctx.style.filter = 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.3))';
+        ctx.style.filter = 'drop-shadow(0 0 15px rgba(57, 255, 20, 0.4))';
         
-        createNewLegend(stats, maxValues);
+        // Update center stats
+        updateCenterStats(stats);
         
     } catch (error) {
         console.error('❌ Error creating new radar chart:', error);
@@ -437,78 +471,46 @@ function createNewRadarChart(stats) {
     }
 }
 
-// NEW LEGEND CREATION
-function createNewLegend(stats, maxValues) {
-    const legendContainer = document.getElementById('radarLegend');
-    if (!legendContainer) {
-        console.error('❌ Legend container not found');
-        return;
+// Update center statistics display
+function updateCenterStats(stats) {
+    const centerValue = document.querySelector('.center-value');
+    const centerLabel = document.querySelector('.center-label');
+    
+    if (centerValue && centerLabel) {
+        centerValue.textContent = `${stats.years}+`;
+        centerLabel.textContent = 'года опыта';
     }
+}
+
+// Update stats cards with actual data
+function updateStatsCards(stats) {
+    const statCards = document.querySelectorAll('.stat-card');
     
-    const legendItems = [
-        { 
-            label: 'Подписчики', 
-            value: stats.followers, 
-            max: maxValues.followers, 
-            color: '#39ff14',
-            icon: '👥',
-            emoji: '📈'
-        },
-        { 
-            label: 'Стримы', 
-            value: stats.streams, 
-            max: maxValues.streams, 
-            color: '#ff2d95',
-            icon: '📡',
-            emoji: '🎮'
-        },
-        { 
-            label: 'Часы контента', 
-            value: stats.hours, 
-            max: maxValues.hours, 
-            color: '#64b5f6',
-            icon: '⏰',
-            emoji: '⏱️'
-        },
-        { 
-            label: 'Опыт', 
-            value: stats.years, 
-            max: maxValues.years, 
-            color: '#ffd700',
-            icon: '⭐',
-            emoji: '🎯'
-        }
-    ];
-    
-    const progressPercentages = legendItems.map(item => Math.round((item.value / item.max) * 100));
-    
-    legendContainer.innerHTML = legendItems.map((item, index) => {
-        const percentage = progressPercentages[index];
-        const progressBarWidth = Math.max(10, percentage); // Minimum 10% width for visibility
+    if (statCards.length === 6) {
+        // Followers card
+        statCards[0].querySelector('h3').textContent = `${(stats.followers / 1000).toFixed(1)}K+`;
+        statCards[0].querySelector('p').textContent = 'Подписчиков на Twitch';
         
-        return `
-            <div class="legend-item" data-progress="${percentage}">
-                <div class="legend-header">
-                    <span class="legend-emoji">${item.emoji}</span>
-                    <span class="legend-label">${item.label}</span>
-                    <span class="legend-percentage">${percentage}%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${progressBarWidth}%; background: ${item.color};"></div>
-                </div>
-                <div class="legend-values">
-                    <span class="legend-current">${item.value.toLocaleString()}</span>
-                    <span class="legend-separator">/</span>
-                    <span class="legend-max">${item.max.toLocaleString()}</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    // Add CSS for new legend
-    addLegendStyles();
-    
-    console.log('📋 New legend created with progress bars');
+        // Streams card
+        statCards[1].querySelector('h3').textContent = stats.streams.toLocaleString();
+        statCards[1].querySelector('p').textContent = 'Проведенных стримов';
+        
+        // Hours card
+        statCards[2].querySelector('h3').textContent = `${stats.hours.toLocaleString()}+`;
+        statCards[2].querySelector('p').textContent = 'Часов контента';
+        
+        // Chat activity card
+        statCards[3].querySelector('h3').textContent = `${stats.chatActivity}/ч`;
+        statCards[3].querySelector('p').textContent = 'Активность в чате';
+        
+        // Loyalty card
+        statCards[4].querySelector('h3').textContent = `${stats.loyalty}%`;
+        statCards[4].querySelector('p').textContent = 'Лояльность аудитории';
+        
+        // Games variety card
+        statCards[5].querySelector('h3').textContent = `${stats.gamesVariety}+`;
+        statCards[5].querySelector('p').textContent = 'Разных игр показано';
+    }
 }
 
 // FALLBACK BAR CHART if radar fails
@@ -520,32 +522,40 @@ function createFallbackBarChart(stats, maxValues) {
         followers: Math.round((stats.followers / maxValues.followers) * 100),
         streams: Math.round((stats.streams / maxValues.streams) * 100),
         hours: Math.round((stats.hours / maxValues.hours) * 100),
-        years: Math.round((stats.years / maxValues.years) * 100)
+        chatActivity: Math.round((stats.chatActivity / maxValues.chatActivity) * 100),
+        loyalty: Math.round((stats.loyalty / maxValues.loyalty) * 100),
+        gamesVariety: Math.round((stats.gamesVariety / maxValues.gamesVariety) * 100)
     };
     
     const config = {
         type: 'bar',
         data: {
-            labels: ['Подписчики', 'Стримы', 'Часы', 'Опыт'],
+            labels: ['Подписчики', 'Стримы', 'Часы', 'Чат', 'Лояльность', 'Игры'],
             datasets: [{
                 label: 'Прогресс (%)',
                 data: [
                     percentages.followers,
                     percentages.streams,
                     percentages.hours,
-                    percentages.years
+                    percentages.chatActivity,
+                    percentages.loyalty,
+                    percentages.gamesVariety
                 ],
                 backgroundColor: [
                     'rgba(57, 255, 20, 0.8)',
                     'rgba(255, 45, 149, 0.8)',
                     'rgba(64, 181, 246, 0.8)',
-                    'rgba(255, 215, 0, 0.8)'
+                    'rgba(255, 215, 0, 0.8)',
+                    'rgba(156, 39, 176, 0.8)',
+                    'rgba(33, 150, 243, 0.8)'
                 ],
                 borderColor: [
                     '#39ff14',
                     '#ff2d95',
                     '#64b5f6',
-                    '#ffd700'
+                    '#ffd700',
+                    '#9c27b0',
+                    '#2196f3'
                 ],
                 borderWidth: 2,
                 borderRadius: 5
@@ -594,91 +604,52 @@ function createFallbackBarChart(stats, maxValues) {
     console.log('📊 Fallback bar chart created');
 }
 
-// ADD STYLES FOR NEW LEGEND
-function addLegendStyles() {
-    if (document.getElementById('legend-styles')) return;
+// Add animation to stats cards
+function animateStatsCards() {
+    const statCards = document.querySelectorAll('.stat-card');
     
-    const style = document.createElement('style');
-    style.id = 'legend-styles';
-    style.textContent = `
-        .legend-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
+    statCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
         
-        .legend-emoji {
-            font-size: 1.2rem;
-            margin-right: 8px;
-        }
-        
-        .legend-label {
-            flex: 1;
-            font-weight: 600;
-            color: #ffffff;
-        }
-        
-        .legend-percentage {
-            font-weight: bold;
-            color: #39ff14;
-            min-width: 40px;
-            text-align: right;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 5px currentColor;
-        }
-        
-        .legend-values {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: #cccccc;
-        }
-        
-        .legend-current {
-            color: #39ff14;
-            font-weight: 600;
-        }
-        
-        .legend-max {
-            color: #ff2d95;
-        }
-        
-        .legend-separator {
-            margin: 0 5px;
-            color: #666;
-        }
-        
-        .legend-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 3px solid;
-            margin-bottom: 10px;
-            transition: transform 0.3s ease;
-        }
-        
-        .legend-item:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-    `;
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+}
+
+// Initialize stats section animations
+function initStatsAnimations() {
+    const statsSection = document.getElementById('stats');
+    if (!statsSection) return;
     
-    document.head.appendChild(style);
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateStatsCards();
+                observer.disconnect();
+            }
+        });
+    }, { threshold: 0.3 });
+    
+    observer.observe(statsSection);
+}
+
+// Enhanced error handling with retry mechanism
+async function loadDataWithRetry(url, maxRetries = 3) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            const response = await fetch(`${url}?t=${new Date().getTime()}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.warn(`Attempt ${attempt} failed for ${url}:`, error);
+            if (attempt === maxRetries) throw error;
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+        }
+    }
 }
 
 // Utility function to format numbers
@@ -698,6 +669,13 @@ export function refreshRadarChart() {
         console.log('🔄 Radar chart refreshed');
     }
 }
+
+// Initialize stats animations when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        initStatsAnimations();
+    }, 1000);
+});
 
 // Debug function to check data paths
 export async function debugDataPaths() {
@@ -720,6 +698,19 @@ export async function debugDataPaths() {
             }
         } catch (error) {
             console.log(`${path}: ❌ Error - ${error.message}`);
+        }
+    }
+}
+
+// Performance monitoring
+export function monitorPerformance() {
+    if ('performance' in window) {
+        const navigationTiming = performance.getEntriesByType('navigation')[0];
+        if (navigationTiming) {
+            console.log('🚀 Page load performance:', {
+                'DOM Content Loaded': `${navigationTiming.domContentLoadedEventEnd - navigationTiming.navigationStart}ms`,
+                'Full Load': `${navigationTiming.loadEventEnd - navigationTiming.navigationStart}ms`
+            });
         }
     }
 }
