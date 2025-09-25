@@ -1,6 +1,27 @@
 {
-  "followers": 100,
+  "followers": 5200,
   "streams": 154,
   "hours": 1000,
-  "years": 1
+  "years": 3,
+  "chatActivity": 280,
+  "loyalty": 95,
+  "gamesVariety": 25,
+  "metrics": {
+    "growthRate": 12,
+    "streamsPerWeek": 3.2,
+    "hoursPerYear": 250,
+    "engagementLevel": "high",
+    "contentDiversity": "excellent"
+  },
+  "timeline": {
+    "firstStream": "2022-01-15",
+    "totalMonths": 36,
+    "consistentStreaming": true
+  },
+  "community": {
+    "avgViewers": 85,
+    "peakViewers": 250,
+    "subscribers": 120,
+    "chatMessagesTotal": 42000
+  }
 }
