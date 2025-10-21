@@ -68,68 +68,6 @@ const subscribersData = {
     }
 };
 
-// Создание улучшенных частиц по краям экрана
-function createEdgeParticles() {
-    const particleCount = 40;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        // Случайный размер
-        const size = 2 + Math.random() * 6;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        // Случайный цвет
-        const colors = ['#39ff14', '#ff2d95', '#ffffff', '#ffd700', '#64b5f6'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.background = color;
-        
-        // Случайная позиция по краям
-        const side = Math.floor(Math.random() * 4);
-        let left, top;
-        
-        switch(side) {
-            case 0: // верх
-                left = Math.random() * 100;
-                top = 0;
-                break;
-            case 1: // право
-                left = 100;
-                top = Math.random() * 100;
-                break;
-            case 2: // низ
-                left = Math.random() * 100;
-                top = 100;
-                break;
-            case 3: // лево
-                left = 0;
-                top = Math.random() * 100;
-                break;
-        }
-        
-        particle.style.left = `${left}vw`;
-        particle.style.top = `${top}vh`;
-        
-        // Выбор типа анимации
-        if (Math.random() > 0.5) {
-            particle.classList.add('particle-orbital');
-            // Случайные параметры орбиты
-            const duration = 15 + Math.random() * 25;
-            const delay = Math.random() * 5;
-            particle.style.animation = `particleMove ${duration}s linear ${delay}s infinite`;
-        } else {
-            particle.classList.add('particle-floating');
-            // Плавающая анимация
-            const duration = 10 + Math.random() * 20;
-            const delay = Math.random() * 3;
-            particle.style.animation = `particleFloat ${duration}s ease-in-out ${delay}s infinite`;
-        }
-        
-        document.body.appendChild(particle);
-    }
-}
 
 // Показ информации о подписчике
 function showSubscriberInfo(userId) {
@@ -170,18 +108,10 @@ function initInteractivity() {
     });
 }
 
-// Инициализация голографического интерфейса
+
 export function initHologramInterface() {
-    createEdgeParticles();
     initInteractivity();
     
-    // Обновляем частицы каждые 15 секунд
-    setInterval(() => {
-        document.querySelectorAll('.particle').forEach(particle => {
-            particle.remove();
-        });
-        createEdgeParticles();
-    }, 15000);
 }
 
 // Автоматическая инициализация при загрузке DOM
