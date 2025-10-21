@@ -1,8 +1,8 @@
 // Main application entry point
-import { initializeApp } from './ui.js';
-import { initializeLoaders } from './loaders.js';
-import { initializeFilters } from './filters.js';
-import { initHologramInterface } from './hologram.js';
+import { initializeApp } from './js/modules/ui.js';
+import { initializeLoaders } from './js/modules/loaders.js';
+import { initializeFilters } from './js/modules/filters.js';
+import { initHologramInterface } from './js/modules/hologram.js';
 
 // Wait for complete page load
 function init() {
