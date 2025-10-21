@@ -3,397 +3,859 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Permissions-Policy" content="autoplay=(), clipboard-write=()">
-    <title>Ksusha Sher - Стример на Twitch</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <title>Ksusha Sher - Голографический Интерфейс</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-green: #39ff14;
+            --neon-pink: #ff2d95;
+            --dark-bg: #070711;
+            --medium-bg: #0f0f1b;
+            --white: #ffffff;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--medium-bg) 100%);
+            color: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 5vh; /* Добавляем отступ сверху */
+        }
+
+        /* Панель информации о подписчике */
+        .subscriber-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 15, 25, 0.95);
+            border: 2px solid var(--neon-green);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 300px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .subscriber-info.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .subscriber-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+        }
+
+        .subscriber-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--neon-pink);
+            margin-right: 15px;
+        }
+
+        .subscriber-name {
+            font-size: 1.3rem;
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+
+        .subscriber-role {
+            font-size: 0.9rem;
+            color: var(--neon-pink);
+            margin-top: 2px;
+        }
+
+        .subscriber-details {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .subscriber-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 45, 149, 0.3);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: var(--neon-green);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        /* Голографический контейнер */
+        .hologram-container {
+            perspective: 1000px;
+            position: relative;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -30px; /* Поднимаем галактику выше */
+        }
+
+        /* Основное голографическое фото */
+        .hologram-main {
+            width: 250px;
+            height: 250px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: hologramFloat 6s ease-in-out infinite;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .hologram-main img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--neon-pink);
+            box-shadow: 
+                0 0 30px var(--neon-pink),
+                inset 0 0 20px rgba(255, 45, 149, 0.3);
+            filter: brightness(1.1) contrast(1.1);
+            transition: all 0.3s ease;
+        }
+
+        .hologram-main:hover img {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 40px var(--neon-pink),
+                0 0 60px var(--neon-green),
+                inset 0 0 30px rgba(255, 45, 149, 0.4);
+        }
+
+        /* Голографические слои с импульсами */
+        .hologram-layer {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid;
+            animation: layerRotate 10s linear infinite;
+            pointer-events: none;
+        }
+
+        .layer-1 {
+            width: 300px;
+            height: 300px;
+            border-color: var(--neon-green);
+            opacity: 0.6;
+            animation-duration: 15s;
+            animation-direction: reverse;
+        }
+
+        .layer-2 {
+            width: 350px;
+            height: 350px;
+            border-color: var(--neon-pink);
+            opacity: 0.4;
+            animation-duration: 12s;
+        }
+
+        .layer-3 {
+            width: 400px;
+            height: 400px;
+            border-color: var(--neon-green);
+            opacity: 0.3;
+            animation-duration: 18s;
+            animation-direction: reverse;
+        }
+
+        /* Импульсы на слоях */
+        .layer-pulse {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            filter: blur(5px);
+            animation: pulseTravel 3s linear infinite;
+            opacity: 0;
+        }
+
+        .layer-1 .layer-pulse {
+            animation-duration: 4s;
+            background: var(--neon-green);
+        }
+
+        .layer-2 .layer-pulse {
+            animation-duration: 3s;
+            background: var(--neon-pink);
+        }
+
+        .layer-3 .layer-pulse {
+            animation-duration: 5s;
+            background: var(--neon-green);
+        }
+
+        /* Точки данных (маленькие фото) */
+        .data-node {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: var(--dark-bg);
+            border: 2px solid;
+            border-radius: 50%;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .data-node img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .node-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: var(--neon-green);
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px var(--neon-green);
+            font-weight: 600;
+        }
+
+        /* Позиционирование точек данных в 3D пространстве */
+        .node-1 {
+            top: 50px;
+            left: 50px;
+            border-color: var(--neon-pink);
+            transform: translateZ(20px);
+        }
+
+        .node-2 {
+            top: 50px;
+            right: 50px;
+            border-color: var(--neon-green);
+            transform: translateZ(-15px);
+        }
+
+        .node-3 {
+            bottom: 50px;
+            left: 50px;
+            border-color: var(--neon-pink);
+            transform: translateZ(10px);
+        }
+
+        .node-4 {
+            bottom: 50px;
+            right: 50px;
+            border-color: var(--neon-green);
+            transform: translateZ(-20px);
+        }
+
+        .node-5 {
+            top: 50%;
+            left: 20px;
+            border-color: var(--neon-pink);
+            transform: translateZ(25px) translateY(-50%);
+        }
+
+        .node-6 {
+            top: 50%;
+            right: 20px;
+            border-color: var(--neon-green);
+            transform: translateZ(-10px) translateY(-50%);
+        }
+
+        /* Эффекты при наведении */
+        .data-node:hover {
+            transform: translateZ(50px) scale(1.3);
+            box-shadow: 0 0 30px currentColor;
+            z-index: 20;
+        }
+
+        .data-node:hover img {
+            transform: scale(1.1);
+        }
+
+        .data-node:hover .node-label {
+            opacity: 1;
+            bottom: -30px;
+        }
+
+        /* Анимации */
+        @keyframes hologramFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotateX(5deg) rotateY(0deg); 
+            }
+            25% { 
+                transform: translateY(-10px) rotateX(8deg) rotateY(5deg); 
+            }
+            50% { 
+                transform: translateY(-5px) rotateX(5deg) rotateY(10deg); 
+            }
+            75% { 
+                transform: translateY(-15px) rotateX(10deg) rotateY(5deg); 
+            }
+        }
+
+        @keyframes layerRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulseTravel {
+            0% {
+                transform: rotate(0deg) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(360deg) translateX(0px);
+                opacity: 0;
+            }
+        }
+
+        /* Дополнительные эффекты */
+        .hologram-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%);
+            animation: glowPulse 4s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* Улучшенные частицы по краям экрана */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+        }
+
+        .particle-orbital {
+            animation: orbitalParticle 20s linear infinite;
+        }
+
+        .particle-floating {
+            animation: floatingParticle 15s ease-in-out infinite;
+        }
+
+        /* Контент */
+        .hero-content {
+            position: absolute;
+            bottom: 80px; /* Опускаем заголовок немного ниже */
+            text-align: center;
+            z-index: 15;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: titleShine 3s ease-in-out infinite;
+        }
+
+        @keyframes titleShine {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(45deg); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 45, 149, 0.4);
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(57, 255, 20, 0.6);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding-top: 10vh;
+            }
+            
+            .hologram-container {
+                margin-top: 0;
+                transform: scale(0.8);
+            }
+            
+            .hero-content {
+                bottom: 60px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .subscriber-info {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">
-                <span class="logo-ksusha">Ksusha</span>
-                <span class="logo-sher">Sher</span>
+    <!-- Панель информации о подписчике -->
+    <div class="subscriber-info" id="subscriberInfo">
+        <div class="subscriber-header">
+            <img src="" alt="Аватар" class="subscriber-avatar" id="subscriberAvatar">
+            <div>
+                <div class="subscriber-name" id="subscriberName">Имя подписчика</div>
+                <div class="subscriber-role" id="subscriberRole">Роль</div>
             </div>
-            <div class="menu-toggle" id="mobile-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <nav>
-                <ul id="nav-menu">
-                    <li><a href="#about">Обо мне</a></li>
-                    <li><a href="#stats">Статистика</a></li>
-                    <li><a href="#schedule">Расписание</a></li>
-                    <li><a href="#games">Игры</a></li>
-                    <li><a href="#specs">Железо</a></li>
-                    <li><a href="#donation">Поддержать</a></li>
-                </ul>
-            </nav>
         </div>
-    </header>
+        <div class="subscriber-details" id="subscriberDetails">
+            Описание подписчика и его вклад в комьюнити...
+        </div>
+        <div class="subscriber-stats">
+            <div class="stat">
+                <div class="stat-value" id="statMonths">12+</div>
+                <div class="stat-label">месяцев</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="statMessages">1.2K</div>
+                <div class="stat-label">сообщений</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="statStreams">45</div>
+                <div class="stat-label">стримов</div>
+            </div>
+        </div>
+    </div>
 
-    <section class="hero">
-        <div class="container hero-content">
+    <section class="hero-section">
+        <!-- Голографический интерфейс -->
+        <div class="hologram-container">
+            <!-- Голографическое свечение -->
+            <div class="hologram-glow"></div>
+            
+            <!-- Голографические слои с импульсами -->
+            <div class="hologram-layer layer-1">
+                <div class="layer-pulse"></div>
+            </div>
+            <div class="hologram-layer layer-2">
+                <div class="layer-pulse"></div>
+            </div>
+            <div class="hologram-layer layer-3">
+                <div class="layer-pulse"></div>
+            </div>
+            
+            <!-- Основное фото -->
+            <div class="hologram-main" id="mainPhoto">
+                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Ksusha Sher">
+            </div>
+            
+            <!-- Точки данных с именами подписчиков -->
+            <div class="data-node node-1" data-user="alexey">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Алексей">
+                <div class="node-label">Алексей</div>
+            </div>
+            
+            <div class="data-node node-2" data-user="maria">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Мария">
+                <div class="node-label">Мария</div>
+            </div>
+            
+            <div class="data-node node-3" data-user="dmitry">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Дмитрий">
+                <div class="node-label">Дмитрий</div>
+            </div>
+            
+            <div class="data-node node-4" data-user="olga">
+                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Ольга">
+                <div class="node-label">Ольга</div>
+            </div>
+            
+            <div class="data-node node-5" data-user="ivan">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Иван">
+                <div class="node-label">Иван</div>
+            </div>
+            
+            <div class="data-node node-6" data-user="sergey">
+                <img src="https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Сергей">
+                <div class="node-label">Сергей</div>
+            </div>
+        </div>
+
+        <!-- Текстовый контент -->
+        <div class="hero-content">
             <h1 class="hero-title">Ksusha Sher</h1>
-            <p>Профессиональный стример на Twitch с любовью к играм и комьюнити</p>
-            <div class="hero-image">
-                <div class="hero-image-container" id="hero-image-click">
-                    <!-- Основное изображение -->
-                    <div class="main-photo-container">
-                        <img src="https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0" alt="Ksusha Sher" class="main-photo">
-                    </div>
-                    
-                    <!-- Планета 1 - розовая рамка (ближняя орбита) -->
-                    <div class="planet planet-1 pink-orbit">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Фото 1" class="planet-img">
-                        <div class="planet-frame pink-frame"></div>
-                    </div>
-                    
-                    <!-- Планета 2 - зеленая рамка (средняя орбита) -->
-                    <div class="planet planet-2 green-orbit">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Фото 2" class="planet-img">
-                        <div class="planet-frame green-frame"></div>
-                    </div>
-                    
-                    <!-- Планета 3 - белая рамка (тоже средняя орбита, но напротив) -->
-                    <div class="planet planet-3 white-orbit">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Фото 3" class="planet-img">
-                        <div class="planet-frame white-frame"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-buttons">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
-            </div>
+            <p class="hero-subtitle">Профессиональный стример • Создатель контента • Геймер</p>
+            <a href="#" class="cta-button">Присоединиться к комьюнити</a>
         </div>
     </section>
 
-    <section id="about">
-        <div class="container">
-            <h2 class="section-title">Обо мне</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>Привет! Я Ksusha Sher - стример на Twitch, который специализируется на играх и общении с комьюнити. Я создаю уютное и welcoming сообщество, где каждый чувствует себя как дома.</p>
-                    <p>Мои стримы - это не только игровой контент, но и общение, шутки, и просто хорошее времяпрепровождение вместе с комьюнити.</p>
-                    <p>Присоединяйся к нашему уютному сообществу и стань часть нашей цифровой семьи!</p>
-                </div>
-                <div class="about-image">
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/LYtMQlY8Qlk" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script>
+        // Данные о подписчиках
+        const subscribersData = {
+            alexey: {
+                name: "Алексей",
+                role: "Главный модератор",
+                avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Помогает поддерживать порядок в чате с самого первого дня. Всегда справедлив и внимателен к комьюнити. Организует ивенты и конкурсы.",
+                stats: {
+                    months: "24+",
+                    messages: "8.7K",
+                    streams: "156"
+                }
+            },
+            maria: {
+                name: "Мария", 
+                role: "Легенда комьюнити",
+                avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "С нами с первых трансляций. Всегда поддерживает теплую атмосферу и помогает новичкам освоиться. Настоящая душа нашего сообщества.",
+                stats: {
+                    months: "32+",
+                    messages: "12.4K", 
+                    streams: "210"
+                }
+            },
+            dmitry: {
+                name: "Дмитрий",
+                role: "Технический специалист",
+                avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Помогал с настройкой оборудования и делился профессиональными советами по стримингу. Всегда готов помочь с техническими вопросами.",
+                stats: {
+                    months: "18+",
+                    messages: "3.2K",
+                    streams: "89"
+                }
+            },
+            olga: {
+                name: "Ольга",
+                role: "Талантливый художник", 
+                avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Создала уникальный стиль для канала и продолжает радовать нас потрясающими работами. Её арты стали визитной карточкой сообщества.",
+                stats: {
+                    months: "14+",
+                    messages: "2.1K",
+                    streams: "67"
+                }
+            },
+            ivan: {
+                name: "Иван",
+                role: "Активный саппорт",
+                avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Постоянно поддерживает канал и помогает развиваться. Его донаты и конструктивные предложения помогают делать контент лучше.",
+                stats: {
+                    months: "21+",
+                    messages: "5.6K",
+                    streams: "134"
+                }
+            },
+            sergey: {
+                name: "Сергей",
+                role: "Ветеран сообщества",
+                avatar: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Присоединился одним из первых и с тех пор не пропустил почти ни одного стрима. Его опыт и мудрость помогают сообществу расти.",
+                stats: {
+                    months: "36+",
+                    messages: "15.8K",
+                    streams: "245"
+                }
+            }
+        };
 
-    <section id="stats">
-        <div class="container">
-            <h2 class="section-title">Статистика канала</h2>
-            <p class="stats-subtitle">Динамика развития и ключевые показатели</p>
+        // Создание улучшенных частиц по краям экрана
+        function createEdgeParticles() {
+            const particleCount = 40;
             
-            <div class="radar-chart-container">
-                <canvas id="radarChart"></canvas>
-                <div class="radar-center">
-                    <div class="center-stats">
-                        <span class="center-value">3+</span>
-                        <span class="center-label">года опыта</span>
-                    </div>
-                </div>
-            </div>
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Случайный размер
+                const size = 2 + Math.random() * 6;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Случайный цвет
+                const colors = ['#39ff14', '#ff2d95', '#ffffff', '#ffd700', '#64b5f6'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = color;
+                
+                // Случайная позиция по краям
+                const side = Math.floor(Math.random() * 4);
+                let left, top;
+                
+                switch(side) {
+                    case 0: // верх
+                        left = Math.random() * 100;
+                        top = 0;
+                        break;
+                    case 1: // право
+                        left = 100;
+                        top = Math.random() * 100;
+                        break;
+                    case 2: // низ
+                        left = Math.random() * 100;
+                        top = 100;
+                        break;
+                    case 3: // лево
+                        left = 0;
+                        top = Math.random() * 100;
+                        break;
+                }
+                
+                particle.style.left = `${left}vw`;
+                particle.style.top = `${top}vh`;
+                
+                // Выбор типа анимации
+                if (Math.random() > 0.5) {
+                    particle.classList.add('particle-orbital');
+                    // Случайные параметры орбиты
+                    const duration = 15 + Math.random() * 25;
+                    const delay = Math.random() * 5;
+                    particle.style.animation = `orbitalParticle ${duration}s linear ${delay}s infinite`;
+                    addOrbitalKeyframes(particle, left, top, duration);
+                } else {
+                    particle.classList.add('particle-floating');
+                    // Плавающая анимация
+                    const duration = 10 + Math.random() * 20;
+                    const delay = Math.random() * 3;
+                    particle.style.animation = `floatingParticle ${duration}s ease-in-out ${delay}s infinite`;
+                    addFloatingKeyframes(particle, left, top, duration);
+                }
+                
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Добавление keyframes для орбитальных частиц
+        function addOrbitalKeyframes(particle, startLeft, startTop, duration) {
+            const style = document.createElement('style');
+            const animationName = `orbitalParticle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
             
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-content">
-                        <h3>5.2K+</h3>
-                        <p>Подписчиков на Twitch</p>
-                        <div class="stat-trend positive">+12% за месяц</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">📡</div>
-                    <div class="stat-content">
-                        <h3>154</h3>
-                        <p>Проведенных стримов</p>
-                        <div class="stat-trend positive">3.2 в неделю</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">⏰</div>
-                    <div class="stat-content">
-                        <h3>1,000+</h3>
-                        <p>Часов контента</p>
-                        <div class="stat-trend positive">250ч/год</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">💬</div>
-                    <div class="stat-content">
-                        <h3>280/ч</h3>
-                        <p>Активность в чате</p>
-                        <div class="stat-trend positive">Высокая вовлеченность</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-content">
-                        <h3>95%</h3>
-                        <p>Лояльность аудитории</p>
-                        <div class="stat-trend positive">Стабильный рост</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">🎮</div>
-                    <div class="stat-content">
-                        <h3>25+</h3>
-                        <p>Разных игр показано</p>
-                        <div class="stat-trend positive">Разнообразие контента</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="schedule">
-        <div class="container">
-            <h2 class="section-title">Расписание стримов</h2>
-            <p class="schedule-subtitle">🕓 Начало в <span class="neon-text">16:00 по МСК</span>, длительность 3+ часа</p>
+            // Создаем эллиптическую орбиту вокруг центра экрана
+            const radiusX = 30 + Math.random() * 20;
+            const radiusY = 20 + Math.random() * 15;
             
-            <div class="schedule-list" id="schedule-list">
-                <div class="schedule-item">
-                    <div class="schedule-content">
-                        <div class="schedule-game">Загрузка расписания...</div>
-                        <div class="schedule-desc">Данные загружаются</div>
-                    </div>
-                </div>
-            </div>
+            style.textContent = `
+                @keyframes ${animationName} {
+                    0% {
+                        transform: translate(0, 0);
+                        opacity: 0;
+                    }
+                    10% {
+                        opacity: 1;
+                    }
+                    25% {
+                        transform: translate(${radiusX}vw, ${-radiusY}vh);
+                    }
+                    50% {
+                        transform: translate(0, ${-radiusY * 2}vh);
+                        opacity: 0.8;
+                    }
+                    75% {
+                        transform: translate(${-radiusX}vw, ${-radiusY}vh);
+                    }
+                    90% {
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(0, 0);
+                        opacity: 0;
+                    }
+                }
+            `;
             
-            <div class="schedule-footer">
-                <p>✨ Расписание может меняться! Актуальные анонсы в <a href="https://t.me/pizdeckakoi_to" target="_blank" class="neon-link">Телеграм-канале</a></p>
-            </div>
-        </div>
-    </section>
+            document.head.appendChild(style);
+            particle.style.animationName = animationName;
+        }
 
-    <section id="games">
-        <div class="container">
-            <h2 class="section-title">Игры и кино</h2>
-            <div class="games-controls">
-                <div class="controls-section">
-                    <div class="games-tabs">
-                        <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i></div>
-                        <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i></div>
-                        <div class="tab-slider"></div>
-                    </div>
-                    
-                    <div class="filter-container">
-                        <div class="filter-toggle" id="filter-toggle">
-                            <i class="fas fa-filter"></i>
-                        </div>
-                        <div class="filter-dropdown" id="filter-dropdown">
-                            <div class="filter-group games-filters">
-                                <div class="filter-group-title">Статус</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="games" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="games"> Пройдено</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="playing" data-type="games"> Проходим</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="games"> Брошено</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="games"> Под вопросом</label>
-                                
-                                <div class="filter-divider"></div>
-                                
-                                <div class="filter-group-title">Жанры игр</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="games" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="games"> Хоррор</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="adventure" data-type="games"> Приключения</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="shooter" data-type="games"> Шутер</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="simulator" data-type="games"> Симулятор</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="puzzle" data-type="games"> Головоломка</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="coop" data-type="games"> Кооператив</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="platformer" data-type="games"> Платформер</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="rpg" data-type="games"> RPG</label>
-                            </div>
-                            <div class="filter-group movies-filters" style="display:none">
-                                <div class="filter-group-title">Статус</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="movies" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="watched" data-type="movies"> Посмотрено</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="watching" data-type="movies"> Смотрим</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="movies"> Бросили</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="movies"> Под вопросом</label>
-                                
-                                <div class="filter-divider"></div>
-                                
-                                <div class="filter-group-title">Жанры фильмов</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="movies" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="animation" data-type="movies"> Анимация</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="fantasy" data-type="movies"> Фэнтези</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="crossover" data-type="movies"> Кроссовер</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="movies"> Хоррор</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="family" data-type="movies"> Семейный</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="sort-tabs">
-                        <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i></div>
-                        <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i></div>
-                        <div class="sort-slider"></div>
-                    </div>
-                </div>
+        // Добавление keyframes для плавающих частиц
+        function addFloatingKeyframes(particle, startLeft, startTop, duration) {
+            const style = document.createElement('style');
+            const animationName = `floatingParticle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Случайные точки для плавающего движения
+            const points = [];
+            const pointCount = 4 + Math.floor(Math.random() * 3);
+            
+            for (let i = 0; i < pointCount; i++) {
+                points.push({
+                    x: Math.random() * 100,
+                    y: Math.random() * 100
+                });
+            }
+            
+            let keyframes = `@keyframes ${animationName} {`;
+            const step = 100 / (points.length - 1);
+            
+            points.forEach((point, index) => {
+                const percentage = index * step;
+                keyframes += `
+                    ${percentage}% {
+                        left: ${point.x}vw;
+                        top: ${point.y}vh;
+                        opacity: ${index === 0 || index === points.length - 1 ? 0 : 0.7};
+                    }
+                `;
+            });
+            
+            keyframes += `}`;
+            
+            style.textContent = keyframes;
+            document.head.appendChild(style);
+            particle.style.animationName = animationName;
+        }
+
+        // Показ информации о подписчике
+        function showSubscriberInfo(userId) {
+            const userData = subscribersData[userId];
+            if (!userData) return;
+            
+            const infoPanel = document.getElementById('subscriberInfo');
+            document.getElementById('subscriberName').textContent = userData.name;
+            document.getElementById('subscriberRole').textContent = userData.role;
+            document.getElementById('subscriberAvatar').src = userData.avatar;
+            document.getElementById('subscriberDetails').textContent = userData.description;
+            document.getElementById('statMonths').textContent = userData.stats.months;
+            document.getElementById('statMessages').textContent = userData.stats.messages;
+            document.getElementById('statStreams').textContent = userData.stats.streams;
+            
+            infoPanel.classList.add('show');
+        }
+
+        function hideSubscriberInfo() {
+            const infoPanel = document.getElementById('subscriberInfo');
+            infoPanel.classList.remove('show');
+        }
+
+        // Инициализация интерактивности
+        function initInteractivity() {
+            const nodes = document.querySelectorAll('.data-node');
+            
+            nodes.forEach(node => {
+                const userId = node.getAttribute('data-user');
                 
-                <div class="legend-section">
-                    <div class="status-legend">
-                        <span class="legend-item"><span class="status-badge completed"></span> Пройдено/Посмотрено</span>
-                        <span class="legend-item"><span class="status-badge playing"></span> Проходим/Смотрим</span>
-                        <span class="legend-item"><span class="status-badge dropped"></span> Брошено/Бросили</span>
-                        <span class="legend-item"><span class="status-badge on-hold"></span> Под вопросом</span>
-                    </div>
-                </div>
-            </div>
+                node.addEventListener('mouseenter', function() {
+                    showSubscriberInfo(userId);
+                });
+                
+                node.addEventListener('mouseleave', function() {
+                    hideSubscriberInfo();
+                });
+            });
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            createEdgeParticles();
+            initInteractivity();
+        });
+
+        // Добавляем CSS анимации для частиц
+        const particleStyle = document.createElement('style');
+        particleStyle.textContent = `
+            .particle {
+                opacity: 0;
+            }
             
-            <div class="games-content-container">
-                <div class="games-content active" id="games-content">
-                    <div class="games-grid"></div>
-                </div>
-                <div class="games-content" id="movies-content">
-                    <div class="games-grid movies"></div>
-                </div>
-            </div>
-            <button class="toggle-games" id="toggle-games">Развернуть</button>
-        </div>
-    </section>
-
-    <div id="gameModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 class="modal-game-title" id="modalGameTitle">Название игры</h2>
-            <div class="modal-game-rating" id="modalGameRating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-                <span>4/5</span>
-            </div>
-            <p class="modal-game-description" id="modalGameDescription">Описание игры...</p>
-            <div class="video-container">
-                <iframe id="modalGameVideo" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-
-    <div id="historyModal" class="history-modal">
-        <div class="history-modal-content">
-            <span class="close-history-modal">&times;</span>
-            <h2 class="history-modal-title">История комьюнити</h2>
-            <div class="history-grid">
-                <div class="history-card">
-                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Модератор" class="history-image">
-                    <div class="history-info">
-                        <h3 class="history-name">Алексей</h3>
-                        <div class="history-role">Главный модератор</div>
-                        <p class="history-description">Помогает поддерживать порядок в чате с самого первого дня. Всегда справедлив и внимателен к комьюнити.</p>
-                    </div>
-                </div>
-                <div class="history-card">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Сапporter" class="history-image">
-                    <div class="history-info">
-                        <h3 class="history-name">Мария</h3>
-                        <div class="history-role">Легенда комьюнити</div>
-                        <p class="history-description">С нами с первых трансляций. Всегда поддерживает теплую атмосферу и помогает новичкам освоиться.</p>
-                    </div>
-                </div>
-                <div class="history-card">
-                    <img src="https://images.unsplash.com/photo-1623582854588-d60de57fa33f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Друг" class="history-image">
-                    <div class="history-info">
-                        <h3 class="history-name">Дмитрий</h3>
-                        <div class="history-role">Стример-наставник</div>
-                        <p class="history-description">Помогал с настройкой оборудования и делился профессиональными советами по стримингу.</p>
-                    </div>
-                </div>
-                <div class="history-card">
-                    <img src="https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Художник" class="history-image">
-                    <div class="history-info">
-                        <h3 class="history-name">Ольга</h3>
-                        <div class="history-role">Талантливый художник</div>
-                        <p class="history-description">Создала уникальный стиль для канала и продолжает радовать нас потрясающими работами.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <section id="specs">
-        <div class="container">
-            <h2 class="section-title">Мое железо</h2>
-            <div class="specs-grid">
-                <div class="spec-item">
-                    <i class="fas fa-microchip"></i>
-                    <h3>Процессор</h3>
-                    <p>Intel Core i7-12700H</p>
-                </div>
-                <div class="spec-item">
-                    <i class="fas fa-laptop"></i>
-                    <h3>Видеокарта</h3>
-                    <p>NVIDIA GeForce RTX 3060</p>
-                </div>
-                <div class="spec-item">
-                    <i class="fas fa-memory"></i>
-                    <h3>Память</h3>
-                    <p>16GB RAM</p>
-                </div>
-                <div class="spec-item">
-                    <i class="fas fa-microphone"></i>
-                    <h3>Микрофон</h3>
-                    <p>Shure SM7B</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="donation">
-        <div class="container">
-            <h2 class="section-title">Поддержать</h2>
-            <p>Если тебе нравится мой контент, ты можешь поддержать меня финансово</p>
-            <div class="donation-options">
-                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>DonationAlerts</h3>
-                    <p>Прямые донаты</p>
-                </a>
-                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>MemeAlerts</h3>
-                    <p>Альтернативные донаты</p>
-                </a>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>Twitch Подписка</h3>
-                    <p>Подписка на канале</p>
-                </a>
-            </div>
-            <div class="card-number" id="card-number">
-                <i class="fas fa-credit-card"></i> 4276 1805 5058 1960
-                <span id="copy-tooltip">Нажмите чтобы скопировать</span>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="social-links">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitch"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
-            </div>
-            <p>&copy; 2025 Ksusha Sher. Все права защищены. Сайт создан BAGERca.</p>
-        </div>
-    </footer>
-
-    <script type="module" src="js/app.js"></script>
+            @keyframes orbitalParticle {
+                0% {
+                    transform: translate(0, 0);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(0, 0);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes floatingParticle {
+                0% {
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.7;
+                }
+                90% {
+                    opacity: 0.7;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(particleStyle);
+    </script>
 </body>
 </html>
