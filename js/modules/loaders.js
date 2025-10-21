@@ -10,8 +10,8 @@ export let currentMoviesData = [];
 // Chart.js instance
 let radarChartInstance = null;
 
-// Base URL for data files
-const DATA_BASE_URL = './data/';
+// Base URL for data files - ИСПРАВЛЕННЫЙ ПУТЬ
+const DATA_BASE_URL = '../data/';
 
 // Load Chart.js dynamically
 function loadChartJS() {
@@ -109,7 +109,7 @@ export async function loadGames() {
         
         // Try alternative path
         try {
-            const altResponse = await fetch('data/games.json?t=' + new Date().getTime());
+            const altResponse = await fetch('../data/games.json?t=' + new Date().getTime());
             if (altResponse.ok) {
                 const games = await altResponse.json();
                 currentGamesData = games;
@@ -169,7 +169,7 @@ export async function loadMovies() {
         
         // Try alternative path
         try {
-            const altResponse = await fetch('data/movies.json?t=' + new Date().getTime());
+            const altResponse = await fetch('../data/movies.json?t=' + new Date().getTime());
             if (altResponse.ok) {
                 const movies = await altResponse.json();
                 currentMoviesData = movies;
@@ -206,7 +206,7 @@ export async function loadStats() {
             console.log('📈 Stats data loaded:', stats);
         } catch (error) {
             console.log('❌ Ошибка загрузки stats.json, пробуем альтернативный путь...');
-            const altResponse = await fetch('data/stats.json?t=' + new Date().getTime());
+            const altResponse = await fetch('../data/stats.json?t=' + new Date().getTime());
             if (altResponse.ok) {
                 stats = await altResponse.json();
             } else {
@@ -239,7 +239,7 @@ export async function loadSchedule() {
             data = await response.json();
         } catch (error) {
             console.log('❌ Ошибка загрузки schedule.json, пробуем альтернативный путь...');
-            const altResponse = await fetch('data/schedule.json?t=' + new Date().getTime());
+            const altResponse = await fetch('../data/schedule.json?t=' + new Date().getTime());
             if (altResponse.ok) {
                 data = await altResponse.json();
             } else {
@@ -482,37 +482,6 @@ function updateCenterStats(stats) {
     }
 }
 
-// Update stats cards with actual data
-function updateStatsCards(stats) {
-    const statCards = document.querySelectorAll('.stat-card');
-    
-    if (statCards.length === 6) {
-        // Followers card
-        statCards[0].querySelector('h3').textContent = `${(stats.followers / 1000).toFixed(1)}K+`;
-        statCards[0].querySelector('p').textContent = 'Подписчиков на Twitch';
-        
-        // Streams card
-        statCards[1].querySelector('h3').textContent = stats.streams.toLocaleString();
-        statCards[1].querySelector('p').textContent = 'Проведенных стримов';
-        
-        // Hours card
-        statCards[2].querySelector('h3').textContent = `${stats.hours.toLocaleString()}+`;
-        statCards[2].querySelector('p').textContent = 'Часов контента';
-        
-        // Chat activity card
-        statCards[3].querySelector('h3').textContent = `${stats.chatActivity}/ч`;
-        statCards[3].querySelector('p').textContent = 'Активность в чате';
-        
-        // Loyalty card
-        statCards[4].querySelector('h3').textContent = `${stats.loyalty}%`;
-        statCards[4].querySelector('p').textContent = 'Лояльность аудитории';
-        
-        // Games variety card
-        statCards[5].querySelector('h3').textContent = `${stats.gamesVariety}+`;
-        statCards[5].querySelector('p').textContent = 'Разных игр показано';
-    }
-}
-
 // FALLBACK BAR CHART if radar fails
 function createFallbackBarChart(stats, maxValues) {
     const ctx = document.getElementById('radarChart');
@@ -682,10 +651,10 @@ export async function debugDataPaths() {
     console.log('🔍 Debugging data paths...');
     
     const paths = [
-        './data/games.json',
-        './data/movies.json', 
-        './data/stats.json',
-        './data/schedule.json'
+        '../data/games.json',
+        '../data/movies.json', 
+        '../data/stats.json',
+        '../data/schedule.json'
     ];
     
     for (const path of paths) {
