@@ -4,29 +4,29 @@
       "day": "Понедельник",
       "time": "16:00 - 19:00+",
       "game": "Dead Island 2",
-      "description": "",
+      "description": "Прохождение с комьюнити",
       "highlighted": false
     },
     {
-      "day": "Вторник",
+      "day": "Вторник", 
       "time": "16:00 - 19:00+",
       "game": "Hollow Knight: Silksong",
-      "description": "",
+      "description": "Новые приключения в Халлоунесте",
       "highlighted": false
     },
     {
       "day": "Среда",
       "time": "16:00 - 19:00+",
-      "game": "Dead island 2",
-      "description": "",
+      "game": "Dead Island 2",
+      "description": "Продолжение зомби-апокалипсиса",
       "highlighted": false
     },
     {
       "day": "Четверг",
-      "time": "seg",
-      "game": "пып",
-      "description": "оакенвке",
-      "highlighted": false
+      "time": "16:00 - 19:00+",
+      "game": "Новая игра по выбору чата",
+      "description": "Голосуем вместе что будем проходить",
+      "highlighted": true
     }
   ]
 }
