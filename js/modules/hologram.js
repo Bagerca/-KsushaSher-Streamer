@@ -1,5 +1,3 @@
-// Голографический интерфейс - отдельный JS файл
-
 // Данные о подписчиках
 const subscribersData = {
     alexey: {
@@ -120,98 +118,17 @@ function createEdgeParticles() {
             // Случайные параметры орбиты
             const duration = 15 + Math.random() * 25;
             const delay = Math.random() * 5;
-            particle.style.animation = `orbitalParticle ${duration}s linear ${delay}s infinite`;
-            addOrbitalKeyframes(particle, left, top, duration);
+            particle.style.animation = `particleMove ${duration}s linear ${delay}s infinite`;
         } else {
             particle.classList.add('particle-floating');
             // Плавающая анимация
             const duration = 10 + Math.random() * 20;
             const delay = Math.random() * 3;
-            particle.style.animation = `floatingParticle ${duration}s ease-in-out ${delay}s infinite`;
-            addFloatingKeyframes(particle, left, top, duration);
+            particle.style.animation = `particleFloat ${duration}s ease-in-out ${delay}s infinite`;
         }
         
         document.body.appendChild(particle);
     }
-}
-
-// Добавление keyframes для орбитальных частиц
-function addOrbitalKeyframes(particle, startLeft, startTop, duration) {
-    const style = document.createElement('style');
-    const animationName = `orbitalParticle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Создаем эллиптическую орбиту вокруг центра экрана
-    const radiusX = 30 + Math.random() * 20;
-    const radiusY = 20 + Math.random() * 15;
-    
-    style.textContent = `
-        @keyframes ${animationName} {
-            0% {
-                transform: translate(0, 0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            25% {
-                transform: translate(${radiusX}vw, ${-radiusY}vh);
-            }
-            50% {
-                transform: translate(0, ${-radiusY * 2}vh);
-                opacity: 0.8;
-            }
-            75% {
-                transform: translate(${-radiusX}vw, ${-radiusY}vh);
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(0, 0);
-                opacity: 0;
-            }
-        }
-    `;
-    
-    document.head.appendChild(style);
-    particle.style.animationName = animationName;
-}
-
-// Добавление keyframes для плавающих частиц
-function addFloatingKeyframes(particle, startLeft, startTop, duration) {
-    const style = document.createElement('style');
-    const animationName = `floatingParticle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Случайные точки для плавающего движения
-    const points = [];
-    const pointCount = 4 + Math.floor(Math.random() * 3);
-    
-    for (let i = 0; i < pointCount; i++) {
-        points.push({
-            x: Math.random() * 100,
-            y: Math.random() * 100
-        });
-    }
-    
-    let keyframes = `@keyframes ${animationName} {`;
-    const step = 100 / (points.length - 1);
-    
-    points.forEach((point, index) => {
-        const percentage = index * step;
-        keyframes += `
-            ${percentage}% {
-                left: ${point.x}vw;
-                top: ${point.y}vh;
-                opacity: ${index === 0 || index === points.length - 1 ? 0 : 0.7};
-            }
-        `;
-    });
-    
-    keyframes += `}`;
-    
-    style.textContent = keyframes;
-    document.head.appendChild(style);
-    particle.style.animationName = animationName;
 }
 
 // Показ информации о подписчике
