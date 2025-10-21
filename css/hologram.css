@@ -1,0 +1,471 @@
+/* Голографический интерфейс - отдельный CSS файл */
+
+.hero-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 5vh;
+}
+
+/* Панель информации о подписчике */
+.subscriber-info {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(15, 15, 25, 0.95);
+    border: 2px solid var(--neon-green);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 300px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000;
+}
+
+.subscriber-info.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.subscriber-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+}
+
+.subscriber-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--neon-pink);
+    margin-right: 15px;
+}
+
+.subscriber-name {
+    font-size: 1.3rem;
+    color: var(--neon-green);
+    font-weight: 600;
+}
+
+.subscriber-role {
+    font-size: 0.9rem;
+    color: var(--neon-pink);
+    margin-top: 2px;
+}
+
+.subscriber-details {
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.subscriber-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 45, 149, 0.3);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    color: var(--neon-green);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.stat-label {
+    color: #aaa;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+/* Голографический контейнер */
+.hologram-container {
+    perspective: 1000px;
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -30px;
+}
+
+/* Основное голографическое фото */
+.hologram-main {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: hologramFloat 6s ease-in-out infinite;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.hologram-main img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--neon-pink);
+    box-shadow: 
+        0 0 30px var(--neon-pink),
+        inset 0 0 20px rgba(255, 45, 149, 0.3);
+    filter: brightness(1.1) contrast(1.1);
+    transition: all 0.3s ease;
+}
+
+.hologram-main:hover img {
+    transform: scale(1.05);
+    box-shadow: 
+        0 0 40px var(--neon-pink),
+        0 0 60px var(--neon-green),
+        inset 0 0 30px rgba(255, 45, 149, 0.4);
+}
+
+/* Голографические слои с импульсами */
+.hologram-layer {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+    animation: layerRotate 10s linear infinite;
+    pointer-events: none;
+}
+
+.layer-1 {
+    width: 300px;
+    height: 300px;
+    border-color: var(--neon-green);
+    opacity: 0.6;
+    animation-duration: 15s;
+    animation-direction: reverse;
+}
+
+.layer-2 {
+    width: 350px;
+    height: 350px;
+    border-color: var(--neon-pink);
+    opacity: 0.4;
+    animation-duration: 12s;
+}
+
+.layer-3 {
+    width: 400px;
+    height: 400px;
+    border-color: var(--neon-green);
+    opacity: 0.3;
+    animation-duration: 18s;
+    animation-direction: reverse;
+}
+
+/* Импульсы на слоях */
+.layer-pulse {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    filter: blur(5px);
+    animation: pulseTravel 3s linear infinite;
+    opacity: 0;
+}
+
+.layer-1 .layer-pulse {
+    animation-duration: 4s;
+    background: var(--neon-green);
+}
+
+.layer-2 .layer-pulse {
+    animation-duration: 3s;
+    background: var(--neon-pink);
+}
+
+.layer-3 .layer-pulse {
+    animation-duration: 5s;
+    background: var(--neon-green);
+}
+
+/* Точки данных (маленькие фото) */
+.data-node {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: var(--dark-bg);
+    border: 2px solid;
+    border-radius: 50%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 5;
+    overflow: hidden;
+}
+
+.data-node img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.node-label {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--neon-green);
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px var(--neon-green);
+    font-weight: 600;
+}
+
+/* Позиционирование точек данных в 3D пространстве */
+.node-1 {
+    top: 50px;
+    left: 50px;
+    border-color: var(--neon-pink);
+    transform: translateZ(20px);
+}
+
+.node-2 {
+    top: 50px;
+    right: 50px;
+    border-color: var(--neon-green);
+    transform: translateZ(-15px);
+}
+
+.node-3 {
+    bottom: 50px;
+    left: 50px;
+    border-color: var(--neon-pink);
+    transform: translateZ(10px);
+}
+
+.node-4 {
+    bottom: 50px;
+    right: 50px;
+    border-color: var(--neon-green);
+    transform: translateZ(-20px);
+}
+
+.node-5 {
+    top: 50%;
+    left: 20px;
+    border-color: var(--neon-pink);
+    transform: translateZ(25px) translateY(-50%);
+}
+
+.node-6 {
+    top: 50%;
+    right: 20px;
+    border-color: var(--neon-green);
+    transform: translateZ(-10px) translateY(-50%);
+}
+
+/* Эффекты при наведении */
+.data-node:hover {
+    transform: translateZ(50px) scale(1.3);
+    box-shadow: 0 0 30px currentColor;
+    z-index: 20;
+}
+
+.data-node:hover img {
+    transform: scale(1.1);
+}
+
+.data-node:hover .node-label {
+    opacity: 1;
+    bottom: -30px;
+}
+
+/* Анимации голограммы */
+@keyframes hologramFloat {
+    0%, 100% { 
+        transform: translateY(0px) rotateX(5deg) rotateY(0deg); 
+    }
+    25% { 
+        transform: translateY(-10px) rotateX(8deg) rotateY(5deg); 
+    }
+    50% { 
+        transform: translateY(-5px) rotateX(5deg) rotateY(10deg); 
+    }
+    75% { 
+        transform: translateY(-15px) rotateX(10deg) rotateY(5deg); 
+    }
+}
+
+@keyframes layerRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulseTravel {
+    0% {
+        transform: rotate(0deg) translateX(0px);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(360deg) translateX(0px);
+        opacity: 0;
+    }
+}
+
+/* Дополнительные эффекты */
+.hologram-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%);
+    animation: glowPulse 4s ease-in-out infinite;
+    z-index: 2;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* Улучшенные частицы по краям экрана */
+.particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.particle-orbital {
+    animation: orbitalParticle 20s linear infinite;
+}
+
+.particle-floating {
+    animation: floatingParticle 15s ease-in-out infinite;
+}
+
+@keyframes orbitalParticle {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+}
+
+@keyframes floatingParticle {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Контент героя */
+.hero-content {
+    position: absolute;
+    bottom: 80px;
+    text-align: center;
+    z-index: 15;
+}
+
+.hero-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, var(--neon-green), var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: titleShine 3s ease-in-out infinite;
+}
+
+@keyframes titleShine {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(45deg); }
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background: linear-gradient(45deg, var(--neon-pink), var(--neon-green));
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 45, 149, 0.4);
+    cursor: pointer;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(57, 255, 20, 0.6);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .hero-section {
+        padding-top: 10vh;
+    }
+    
+    .hologram-container {
+        margin-top: 0;
+        transform: scale(0.8);
+    }
+    
+    .hero-content {
+        bottom: 60px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .subscriber-info {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
