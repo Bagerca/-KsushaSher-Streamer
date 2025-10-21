@@ -10,10 +10,10 @@
     padding-top: 5vh;
 }
 
-/* Панель информации о подписчике */
+/* Панель информации о подписчике - ПЕРЕМЕЩЕНА В ПРАВЫЙ НИЖНИЙ УГОЛ */
 .subscriber-info {
     position: fixed;
-    top: 20px;
+    bottom: 20px;  /* Изменено с top на bottom */
     right: 20px;
     background: rgba(15, 15, 25, 0.95);
     border: 2px solid var(--neon-green);
@@ -23,14 +23,14 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
     opacity: 0;
-    transform: translateX(100px);
+    transform: translateY(100px); /* Изменено с translateX на translateY */
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 1000;
 }
 
 .subscriber-info.show {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0); /* Появление снизу вверх */
 }
 
 .subscriber-header {
@@ -414,17 +414,12 @@
         font-size: 2.5rem;
     }
     
-   .subscriber-info {
-    position: fixed;
-    bottom: 20px;       /* ← Нижний угол */
-    right: 20px;
-    /* остальные стили */
-    transform: translateY(100px); /* Анимация снизу */
-}
-
-.subscriber-info.show {
-    transform: translateY(0); /* Появление снизу */
-}
+    .subscriber-info {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        bottom: 10px; /* Адаптивный нижний отступ */
+    }
     
     .data-node {
         width: 60px;
@@ -468,5 +463,11 @@
     
     .node-label {
         font-size: 10px;
+    }
+    
+    .subscriber-info {
+        bottom: 5px; /* Еще меньше отступ на маленьких экранах */
+        right: 5px;
+        left: 5px;
     }
 }
