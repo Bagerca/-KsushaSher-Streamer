@@ -1,5 +1,5 @@
 // Data loading functionality with Radar Chart support
-import { renderSchedule } from './renderers.js';
+import { renderSchedule, renderCards } from './renderers.js';
 
 // State variables
 export let gamesLoaded = false;
@@ -11,7 +11,7 @@ export let currentMoviesData = [];
 let radarChartInstance = null;
 
 // Base URL for data files - ИСПРАВЛЕННЫЙ ПУТЬ
-const DATA_BASE_URL = '../data/';
+const DATA_BASE_URL = './data/';
 
 // Load Chart.js dynamically
 function loadChartJS() {
@@ -44,40 +44,20 @@ export function initializeLoaders() {
         loadGames();
         
         console.log('📊 Loaders initialized');
-    }, 200);
+    }, 500); // Увеличил задержку для стабильности
     
     // Set up periodic updates
     setInterval(() => {
         loadStats();
         loadSchedule();
-    }, 300000); // Every 5 minutes
-    
-    // Set up intersection observer for radar chart
-    const statsSection = document.getElementById('stats');
-    if (statsSection) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    console.log('🎯 Stats section is visible, loading radar chart...');
-                    loadStats();
-                    observer.disconnect();
-                }
-            });
-        }, { 
-            threshold: 0.3,
-            rootMargin: '0px 0px -50px 0px'
-        });
-        
-        observer.observe(statsSection);
-    }
+    }, 300000);
 }
 
-// Load games with container verification
+// Load games with improved error handling
 export async function loadGames() {
-    // Verify container exists with retry mechanism
-    const container = await ensureContainerExists('#games-content .games-grid', 'games');
+    const container = document.querySelector('#games-content .games-grid');
     if (!container) {
-        console.error('❌ Games container not found after retries');
+        console.error('❌ Games container not found');
         return;
     }
     
@@ -85,20 +65,23 @@ export async function loadGames() {
     container.innerHTML = '<div class="loading-state">🔄 Загрузка игр...</div>';
     
     try {
+        console.log('🔄 Loading games from:', `${DATA_BASE_URL}games.json`);
+        
         const response = await fetch(`${DATA_BASE_URL}games.json?t=${new Date().getTime()}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
         const games = await response.json();
-        currentGamesData = games;
+        console.log('✅ Games data loaded:', games);
         
         if (Array.isArray(games) && games.length > 0) {
+            currentGamesData = games;
             gamesLoaded = true;
             
-            // Use renderers to display games
-            const renderers = await import('./renderers.js');
-            renderers.renderCards(container, games, 'game');
-            
-            console.log('🎮 Games loaded successfully:', games.length);
+            renderCards(container, games, 'game');
+            console.log('🎮 Games rendered successfully:', games.length);
             return games;
         } else {
             container.innerHTML = '<div class="empty-state">🎮 Игр пока нет</div>';
@@ -107,58 +90,73 @@ export async function loadGames() {
     } catch (error) {
         console.error('❌ Ошибка загрузки игр:', error);
         
-        // Try alternative path
-        try {
-            const altResponse = await fetch('../data/games.json?t=' + new Date().getTime());
-            if (altResponse.ok) {
-                const games = await altResponse.json();
-                currentGamesData = games;
-                const renderers = await import('./renderers.js');
-                renderers.renderCards(container, games, 'game');
-                return games;
+        // Try multiple alternative paths
+        const alternativePaths = [
+            './data/games.json',
+            'data/games.json',
+            '../data/games.json'
+        ];
+        
+        for (const path of alternativePaths) {
+            try {
+                console.log(`🔄 Trying alternative path: ${path}`);
+                const altResponse = await fetch(`${path}?t=${new Date().getTime()}`);
+                if (altResponse.ok) {
+                    const games = await altResponse.json();
+                    currentGamesData = games;
+                    renderCards(container, games, 'game');
+                    console.log('✅ Games loaded via alternative path');
+                    return games;
+                }
+            } catch (altError) {
+                console.warn(`❌ Alternative path failed: ${path}`, altError);
             }
-        } catch (altError) {
-            console.error('❌ Альтернативный путь тоже не сработал:', altError);
         }
         
+        // Final fallback
         if (currentGamesData.length > 0) {
-            const renderers = await import('./renderers.js');
-            renderers.renderCards(container, currentGamesData, 'game');
+            renderCards(container, currentGamesData, 'game');
             return currentGamesData;
         } else {
-            container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки игр</div>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    ❌ Ошибка загрузки игр
+                    <br><small>${error.message}</small>
+                </div>
+            `;
             return [];
         }
     }
 }
 
-// Load movies with container verification
+// Load movies with improved error handling
 export async function loadMovies() {
-    // Verify container exists with retry mechanism
-    const container = await ensureContainerExists('#movies-content .games-grid', 'movies');
+    const container = document.querySelector('#movies-content .games-grid');
     if (!container) {
-        console.error('❌ Movies container not found after retries');
+        console.error('❌ Movies container not found');
         return;
     }
     
-    // Show loading indicator
     container.innerHTML = '<div class="loading-state">🔄 Загрузка фильмов...</div>';
     
     try {
+        console.log('🔄 Loading movies from:', `${DATA_BASE_URL}movies.json`);
+        
         const response = await fetch(`${DATA_BASE_URL}movies.json?t=${new Date().getTime()}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
         const movies = await response.json();
-        currentMoviesData = movies;
+        console.log('✅ Movies data loaded:', movies);
         
         if (Array.isArray(movies) && movies.length > 0) {
+            currentMoviesData = movies;
             moviesLoaded = true;
             
-            // Use renderers to display movies
-            const renderers = await import('./renderers.js');
-            renderers.renderCards(container, movies, 'movie');
-            
-            console.log('🎬 Movies loaded successfully:', movies.length);
+            renderCards(container, movies, 'movie');
+            console.log('🎬 Movies rendered successfully:', movies.length);
             return movies;
         } else {
             container.innerHTML = '<div class="empty-state">🎬 Фильмов пока нет</div>';
@@ -167,35 +165,46 @@ export async function loadMovies() {
     } catch (error) {
         console.error('❌ Ошибка загрузки фильмов:', error);
         
-        // Try alternative path
-        try {
-            const altResponse = await fetch('../data/movies.json?t=' + new Date().getTime());
-            if (altResponse.ok) {
-                const movies = await altResponse.json();
-                currentMoviesData = movies;
-                const renderers = await import('./renderers.js');
-                renderers.renderCards(container, movies, 'movie');
-                return movies;
+        const alternativePaths = [
+            './data/movies.json',
+            'data/movies.json', 
+            '../data/movies.json'
+        ];
+        
+        for (const path of alternativePaths) {
+            try {
+                console.log(`🔄 Trying alternative path: ${path}`);
+                const altResponse = await fetch(`${path}?t=${new Date().getTime()}`);
+                if (altResponse.ok) {
+                    const movies = await altResponse.json();
+                    currentMoviesData = movies;
+                    renderCards(container, movies, 'movie');
+                    console.log('✅ Movies loaded via alternative path');
+                    return movies;
+                }
+            } catch (altError) {
+                console.warn(`❌ Alternative path failed: ${path}`, altError);
             }
-        } catch (altError) {
-            console.error('❌ Альтернативный путь тоже не сработал:', altError);
         }
         
         if (currentMoviesData.length > 0) {
-            const renderers = await import('./renderers.js');
-            renderers.renderCards(container, currentMoviesData, 'movie');
+            renderCards(container, currentMoviesData, 'movie');
             return currentMoviesData;
         } else {
-            container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки фильмов</div>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    ❌ Ошибка загрузки фильмов
+                    <br><small>${error.message}</small>
+                </div>
+            `;
             return [];
         }
     }
 }
 
-// Load statistics with NEW Radar Chart
+// Load statistics
 export async function loadStats() {
     try {
-        // Wait for Chart.js to load
         await loadChartJS();
         
         let stats;
@@ -205,12 +214,29 @@ export async function loadStats() {
             stats = await response.json();
             console.log('📈 Stats data loaded:', stats);
         } catch (error) {
-            console.log('❌ Ошибка загрузки stats.json, пробуем альтернативный путь...');
-            const altResponse = await fetch('../data/stats.json?t=' + new Date().getTime());
-            if (altResponse.ok) {
-                stats = await altResponse.json();
-            } else {
-                throw new Error('Оба пути не сработали');
+            console.log('❌ Ошибка загрузки stats.json, пробуем альтернативные пути...');
+            
+            const alternativePaths = [
+                './data/stats.json',
+                'data/stats.json',
+                '../data/stats.json'
+            ];
+            
+            for (const path of alternativePaths) {
+                try {
+                    const altResponse = await fetch(`${path}?t=${new Date().getTime()}`);
+                    if (altResponse.ok) {
+                        stats = await altResponse.json();
+                        console.log('✅ Stats loaded via alternative path');
+                        break;
+                    }
+                } catch (altError) {
+                    console.warn(`❌ Alternative path failed: ${path}`);
+                }
+            }
+            
+            if (!stats) {
+                throw new Error('Все пути не сработали');
             }
         }
         
@@ -229,29 +255,47 @@ export async function loadStats() {
     }
 }
 
-// Load schedule
+// Load schedule with improved error handling
 export async function loadSchedule() {
     try {
         let data;
+        console.log('🔄 Loading schedule from:', `${DATA_BASE_URL}schedule.json`);
+        
         try {
             const response = await fetch(`${DATA_BASE_URL}schedule.json?t=${new Date().getTime()}`);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             data = await response.json();
+            console.log('✅ Schedule data loaded:', data);
         } catch (error) {
-            console.log('❌ Ошибка загрузки schedule.json, пробуем альтернативный путь...');
-            const altResponse = await fetch('../data/schedule.json?t=' + new Date().getTime());
-            if (altResponse.ok) {
-                data = await altResponse.json();
-            } else {
-                throw new Error('Оба пути не сработали');
+            console.log('❌ Ошибка загрузки schedule.json, пробуем альтернативные пути...');
+            
+            const alternativePaths = [
+                './data/schedule.json',
+                'data/schedule.json', 
+                '../data/schedule.json'
+            ];
+            
+            for (const path of alternativePaths) {
+                try {
+                    const altResponse = await fetch(`${path}?t=${new Date().getTime()}`);
+                    if (altResponse.ok) {
+                        data = await altResponse.json();
+                        console.log('✅ Schedule loaded via alternative path');
+                        break;
+                    }
+                } catch (altError) {
+                    console.warn(`❌ Alternative path failed: ${path}`);
+                }
+            }
+            
+            if (!data) {
+                throw new Error('Все пути не сработали');
             }
         }
         
-        // Use renderers to display schedule
-        const renderers = await import('./renderers.js');
-        renderers.renderSchedule(data.schedule || data);
+        renderSchedule(data.schedule || data);
+        console.log('📅 Schedule rendered successfully');
         
-        console.log('📅 Schedule loaded successfully');
     } catch (error) {
         console.error('⏰ Schedule loading error:', error);
         const scheduleList = document.getElementById('schedule-list');
@@ -260,7 +304,7 @@ export async function loadSchedule() {
                 <div class="schedule-item">
                     <div class="schedule-content">
                         <div class="schedule-game">📅 Расписание временно недоступно</div>
-                        <div class="schedule-desc">Обновляем данные... ${error.message}</div>
+                        <div class="schedule-desc">Попробуйте обновить страницу или проверьте консоль для деталей</div>
                     </div>
                 </div>
             `;
@@ -268,35 +312,7 @@ export async function loadSchedule() {
     }
 }
 
-// Helper function to ensure container exists with retries
-async function ensureContainerExists(selector, type) {
-    return new Promise((resolve) => {
-        let attempts = 0;
-        const maxAttempts = 10;
-        
-        function checkContainer() {
-            attempts++;
-            const container = document.querySelector(selector);
-            
-            if (container) {
-                console.log(`✅ ${type} container found after ${attempts} attempts`);
-                resolve(container);
-                return;
-            }
-            
-            if (attempts < maxAttempts) {
-                setTimeout(checkContainer, 100); // Retry every 100ms
-            } else {
-                console.error(`❌ ${type} container not found after ${maxAttempts} attempts`);
-                resolve(null);
-            }
-        }
-        
-        checkContainer();
-    });
-}
-
-// NEW RADAR CHART - COMPLETELY REBUILT FOR SPIDER WEB STYLE
+// NEW RADAR CHART - остальной код оставляем без изменений
 function createNewRadarChart(stats) {
     const ctx = document.getElementById('radarChart');
     if (!ctx) {
@@ -304,13 +320,11 @@ function createNewRadarChart(stats) {
         return;
     }
     
-    // Destroy previous chart instance if exists
     if (radarChartInstance) {
         radarChartInstance.destroy();
-        console.log('🗑️ Previous radar chart destroyed');
     }
     
-    // Normalize data for radar chart (convert to scale 0-100)
+    // Normalize data for radar chart
     const maxValues = {
         followers: 10000,
         streams: 500,
@@ -331,9 +345,6 @@ function createNewRadarChart(stats) {
         gamesVariety: Math.min((stats.gamesVariety / maxValues.gamesVariety) * 100, 100)
     };
     
-    console.log('📊 Creating new spider web radar chart with data:', normalizedData);
-    
-    // NEW SPIDER WEB RADAR CHART CONFIGURATION
     const config = {
         type: 'radar',
         data: {
@@ -457,21 +468,15 @@ function createNewRadarChart(stats) {
         radarChartInstance = new Chart(ctx, config);
         console.log('✅ New spider web radar chart created successfully');
         
-        // Add glow effect to canvas
         ctx.style.filter = 'drop-shadow(0 0 15px rgba(57, 255, 20, 0.4))';
         
-        // Update center stats
         updateCenterStats(stats);
         
     } catch (error) {
         console.error('❌ Error creating new radar chart:', error);
-        
-        // Fallback to simple bar chart if radar fails
-        createFallbackBarChart(stats, maxValues);
     }
 }
 
-// Update center statistics display
 function updateCenterStats(stats) {
     const centerValue = document.querySelector('.center-value');
     const centerLabel = document.querySelector('.center-label');
@@ -482,179 +487,34 @@ function updateCenterStats(stats) {
     }
 }
 
-// FALLBACK BAR CHART if radar fails
-function createFallbackBarChart(stats, maxValues) {
-    const ctx = document.getElementById('radarChart');
-    if (!ctx) return;
-    
-    const percentages = {
-        followers: Math.round((stats.followers / maxValues.followers) * 100),
-        streams: Math.round((stats.streams / maxValues.streams) * 100),
-        hours: Math.round((stats.hours / maxValues.hours) * 100),
-        chatActivity: Math.round((stats.chatActivity / maxValues.chatActivity) * 100),
-        loyalty: Math.round((stats.loyalty / maxValues.loyalty) * 100),
-        gamesVariety: Math.round((stats.gamesVariety / maxValues.gamesVariety) * 100)
-    };
-    
-    const config = {
-        type: 'bar',
-        data: {
-            labels: ['Подписчики', 'Стримы', 'Часы', 'Чат', 'Лояльность', 'Игры'],
-            datasets: [{
-                label: 'Прогресс (%)',
-                data: [
-                    percentages.followers,
-                    percentages.streams,
-                    percentages.hours,
-                    percentages.chatActivity,
-                    percentages.loyalty,
-                    percentages.gamesVariety
-                ],
-                backgroundColor: [
-                    'rgba(57, 255, 20, 0.8)',
-                    'rgba(255, 45, 149, 0.8)',
-                    'rgba(64, 181, 246, 0.8)',
-                    'rgba(255, 215, 0, 0.8)',
-                    'rgba(156, 39, 176, 0.8)',
-                    'rgba(33, 150, 243, 0.8)'
-                ],
-                borderColor: [
-                    '#39ff14',
-                    '#ff2d95',
-                    '#64b5f6',
-                    '#ffd700',
-                    '#9c27b0',
-                    '#2196f3'
-                ],
-                borderWidth: 2,
-                borderRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Статистика канала',
-                    color: '#ffffff',
-                    font: {
-                        size: 16
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        color: '#ffffff',
-                        stepSize: 20
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: '#ffffff'
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    }
-                }
-            }
-        }
-    };
-    
-    radarChartInstance = new Chart(ctx, config);
-    console.log('📊 Fallback bar chart created');
-}
-
-// Add animation to stats cards
-function animateStatsCards() {
-    const statCards = document.querySelectorAll('.stat-card');
-    
-    statCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        
-        setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 200);
-    });
-}
-
-// Initialize stats section animations
-function initStatsAnimations() {
-    const statsSection = document.getElementById('stats');
-    if (!statsSection) return;
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateStatsCards();
-                observer.disconnect();
-            }
-        });
-    }, { threshold: 0.3 });
-    
-    observer.observe(statsSection);
-}
-
-// Enhanced error handling with retry mechanism
-async function loadDataWithRetry(url, maxRetries = 3) {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            const response = await fetch(`${url}?t=${new Date().getTime()}`);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return await response.json();
-        } catch (error) {
-            console.warn(`Attempt ${attempt} failed for ${url}:`, error);
-            if (attempt === maxRetries) throw error;
-            await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
-        }
-    }
-}
-
-// Utility function to format numbers
+// Utility functions
 export function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-// Export chart instance for external access if needed
 export function getRadarChartInstance() {
     return radarChartInstance;
 }
 
-// Force refresh radar chart
 export function refreshRadarChart() {
     if (radarChartInstance) {
         radarChartInstance.update();
-        console.log('🔄 Radar chart refreshed');
     }
 }
-
-// Initialize stats animations when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        initStatsAnimations();
-    }, 1000);
-});
 
 // Debug function to check data paths
 export async function debugDataPaths() {
     console.log('🔍 Debugging data paths...');
     
     const paths = [
-        '../data/games.json',
-        '../data/movies.json', 
-        '../data/stats.json',
-        '../data/schedule.json'
+        './data/games.json',
+        './data/movies.json', 
+        './data/stats.json',
+        './data/schedule.json',
+        'data/games.json',
+        'data/movies.json',
+        'data/stats.json', 
+        'data/schedule.json'
     ];
     
     for (const path of paths) {
@@ -663,23 +523,10 @@ export async function debugDataPaths() {
             console.log(`${path}: ${response.ok ? '✅ OK' : '❌ Failed'}`);
             if (response.ok) {
                 const data = await response.json();
-                console.log(`   Data:`, data);
+                console.log(`   Data sample:`, Array.isArray(data) ? data.slice(0, 2) : data);
             }
         } catch (error) {
             console.log(`${path}: ❌ Error - ${error.message}`);
-        }
-    }
-}
-
-// Performance monitoring
-export function monitorPerformance() {
-    if ('performance' in window) {
-        const navigationTiming = performance.getEntriesByType('navigation')[0];
-        if (navigationTiming) {
-            console.log('🚀 Page load performance:', {
-                'DOM Content Loaded': `${navigationTiming.domContentLoadedEventEnd - navigationTiming.navigationStart}ms`,
-                'Full Load': `${navigationTiming.loadEventEnd - navigationTiming.navigationStart}ms`
-            });
         }
     }
 }
