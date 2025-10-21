@@ -358,14 +358,14 @@
 }
 
 .particle-orbital {
-    animation: orbitalParticle 20s linear infinite;
+    animation: particleMove 20s linear infinite;
 }
 
 .particle-floating {
-    animation: floatingParticle 15s ease-in-out infinite;
+    animation: particleFloat 15s ease-in-out infinite;
 }
 
-@keyframes orbitalParticle {
+@keyframes particleMove {
     0% {
         transform: translate(0, 0);
         opacity: 0;
@@ -382,7 +382,7 @@
     }
 }
 
-@keyframes floatingParticle {
+@keyframes particleFloat {
     0% {
         opacity: 0;
     }
