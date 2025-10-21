@@ -3,7 +3,7 @@ const subscribersData = {
     alexey: {
         name: "Алексей",
         role: "Главный модератор",
-        avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        avatar: "https://i.redd.it/f2jbra8kopg81.jpg",
         description: "Помогает поддерживать порядок в чате с самого первого дня. Всегда справедлив и внимателен к комьюнити. Организует ивенты и конкурсы.",
         stats: {
             months: "24+",
@@ -14,7 +14,7 @@ const subscribersData = {
     maria: {
         name: "Мария", 
         role: "Легенда комьюнити",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        avatar: "https://img.championat.com/s/732x488/news/big/a/c/dzhejson-devid-frenk_16690405271591211867.jpg",
         description: "С нами с первых трансляций. Всегда поддерживает теплую атмосферу и помогает новичкам освоиться. Настоящая душа нашего сообщества.",
         stats: {
             months: "32+",
@@ -25,7 +25,7 @@ const subscribersData = {
     dmitry: {
         name: "Дмитрий",
         role: "Технический специалист",
-        avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9DeuKODbRaE6Gdhem6unM5GKOPKyGXBqCAw&s",
         description: "Помогал с настройкой оборудования и делился профессиональными советами по стримингу. Всегда готов помочь с техническими вопросами.",
         stats: {
             months: "18+",
@@ -36,7 +36,7 @@ const subscribersData = {
     olga: {
         name: "Ольга",
         role: "Талантливый художник", 
-        avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        avatar: "https://static.wikia.nocookie.net/powerrangers/images/5/51/17-blue.jpg/revision/latest?cb=20170326191809&path-prefix=ru",
         description: "Создала уникальный стиль для канала и продолжает радовать нас потрясающими работами. Её арты стали визитной карточкой сообщества.",
         stats: {
             months: "14+",
@@ -47,7 +47,7 @@ const subscribersData = {
     ivan: {
         name: "Иван",
         role: "Активный саппорт",
-        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        avatar: "https://static.wikia.nocookie.net/powerrangers/images/d/d9/17-red.jpg/revision/latest?cb=20170325124238&path-prefix=ru",
         description: "Постоянно поддерживает канал и помогает развиваться. Его донаты и конструктивные предложения помогают делать контент лучше.",
         stats: {
             months: "21+",
@@ -58,7 +58,7 @@ const subscribersData = {
     sergey: {
         name: "Сергей",
         role: "Ветеран сообщества",
-        avatar: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        avatar: "https://avatars.mds.yandex.net/get-shedevrum/12733905/72aaedc8d4d311eea810fe19746b188b/orig",
         description: "Присоединился одним из первых и с тех пор не пропустил почти ни одного стрима. Его опыт и мудрость помогают сообществу расти.",
         stats: {
             months: "36+",
