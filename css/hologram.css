@@ -414,11 +414,17 @@
         font-size: 2.5rem;
     }
     
-    .subscriber-info {
-        right: 10px;
-        left: 10px;
-        max-width: none;
-    }
+   .subscriber-info {
+    position: fixed;
+    bottom: 20px;       /* ← Нижний угол */
+    right: 20px;
+    /* остальные стили */
+    transform: translateY(100px); /* Анимация снизу */
+}
+
+.subscriber-info.show {
+    transform: translateY(0); /* Появление снизу */
+}
     
     .data-node {
         width: 60px;
