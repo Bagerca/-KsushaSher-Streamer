@@ -1,8 +1,7 @@
 // UI interactions and animations
 export function initializeApp() {
     initMobileMenu();
-    initSmoothScroll();
-    initHeaderScroll();
+    initHeaderHover(); // Добавлена новая функция для хедера
     initModals();
     initHeroImageEasterEgg();
     initCardCopy();
@@ -38,6 +37,76 @@ function initMobileMenu() {
     }
 }
 
+// Header hover functionality - НОВАЯ ФУНКЦИЯ ДЛЯ СКРЫВАЮЩЕГОСЯ ХЕДЕРА
+function initHeaderHover() {
+    const header = document.querySelector('header');
+    if (!header) return;
+
+    // Создаем зону срабатывания вверху страницы
+    const hoverZone = document.createElement('div');
+    hoverZone.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        background: transparent;
+        z-index: 999;
+        pointer-events: auto;
+    `;
+    document.body.appendChild(hoverZone);
+
+    let hideTimeout;
+    let isHeaderHovered = false;
+
+    // Показываем хедер при наведении на верхнюю зону
+    hoverZone.addEventListener('mouseenter', () => {
+        clearTimeout(hideTimeout);
+        header.classList.add('header-expanded');
+    });
+
+    // Скрываем хедер при уходе мыши из зоны, если мышь не на хедере
+    hoverZone.addEventListener('mouseleave', () => {
+        if (!isHeaderHovered) {
+            hideTimeout = setTimeout(() => {
+                header.classList.remove('header-expanded');
+            }, 500);
+        }
+    });
+
+    // Отслеживаем наведение на сам хедер
+    header.addEventListener('mouseenter', () => {
+        isHeaderHovered = true;
+        clearTimeout(hideTimeout);
+        header.classList.add('header-expanded');
+    });
+
+    header.addEventListener('mouseleave', () => {
+        isHeaderHovered = false;
+        hideTimeout = setTimeout(() => {
+            header.classList.remove('header-expanded');
+        }, 500);
+    });
+
+    // На мобильных устройствах удаляем зону и обработчики
+    if (window.innerWidth <= 768) {
+        hoverZone.remove();
+        header.classList.add('header-expanded'); // На мобильных хедер всегда expanded
+    }
+
+    // Обработчик изменения размера окна
+    window.addEventListener('resize', () => {
+        if (window.innerWidth <= 768) {
+            hoverZone.remove();
+            header.classList.add('header-expanded');
+        } else {
+            if (!document.body.contains(hoverZone)) {
+                document.body.appendChild(hoverZone);
+            }
+        }
+    });
+}
+
 // Smooth scrolling for anchor links
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -54,27 +123,6 @@ function initSmoothScroll() {
             }
         });
     });
-}
-
-// Header scroll behavior
-function initHeaderScroll() {
-    let lastScrollTop = 0;
-    const header = document.querySelector('header');
-    const headerHeight = header ? header.offsetHeight : 0;
-
-    if (header) {
-        window.addEventListener('scroll', function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
-                document.body.classList.add('scrolled-down');
-                document.body.classList.remove('scrolled-up');
-            } else {
-                document.body.classList.remove('scrolled-down');
-                document.body.classList.add('scrolled-up');
-            }
-            lastScrollTop = scrollTop;
-        });
-    }
 }
 
 // Modal windows functionality
@@ -310,31 +358,6 @@ export function generateStars(rating) {
     return starsHtml;
 }
 
-// Utility function to check if element exists in DOM
-export function elementExists(selector) {
-    return document.querySelector(selector) !== null;
-}
-
-// Utility function to wait for element to appear
-export function waitForElement(selector, timeout = 5000) {
-    return new Promise((resolve, reject) => {
-        const startTime = Date.now();
-        
-        function checkElement() {
-            const element = document.querySelector(selector);
-            if (element) {
-                resolve(element);
-            } else if (Date.now() - startTime >= timeout) {
-                reject(new Error(`Element ${selector} not found within ${timeout}ms`));
-            } else {
-                setTimeout(checkElement, 100);
-            }
-        }
-        
-        checkElement();
-    });
-}
-
 // Добавляем CSS для анимации модальных окон
 function addModalAnimations() {
     const style = document.createElement('style');
@@ -369,157 +392,10 @@ function addModalAnimations() {
     document.head.appendChild(style);
 }
 
-// Enhanced planet interactions
-function initPlanetInteractions() {
-    const planets = document.querySelectorAll('.planet');
-    
-    planets.forEach((planet, index) => {
-        // Hover effects
-        planet.addEventListener('mouseenter', () => {
-            planet.style.zIndex = '6'; // Поднимаем планету выше при hover
-            planet.style.transform = 'scale(1.1)';
-        });
-        
-        planet.addEventListener('mouseleave', () => {
-            planet.style.zIndex = '5'; // Возвращаем обратно
-            planet.style.transform = 'scale(1)';
-        });
-        
-        // Click effects with different behaviors for each planet
-        planet.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            // Пульсация при клике
-            planet.style.animation = 'planetPulse 0.5s ease-in-out';
-            setTimeout(() => {
-                planet.style.animation = '';
-            }, 500);
-            
-            // Разное поведение для каждой планеты
-            handlePlanetClick(index);
-        });
-    });
-    
-    // Добавляем CSS анимацию для пульсации планет
-    const pulseStyle = document.createElement('style');
-    pulseStyle.textContent = `
-        @keyframes planetPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-    `;
-    document.head.appendChild(pulseStyle);
-}
-
-// Обработка кликов по планетам
-function handlePlanetClick(planetIndex) {
-    const messages = [
-        "Розовая планета активирована! 🌸",
-        "Красная планета в действии! 🔥", 
-        "Голубая планета запущена! 💙"
-    ];
-    
-    // Создаем временное уведомление
-    showNotification(messages[planetIndex]);
-    
-    // Можно добавить разную логику для каждой планеты
-    switch(planetIndex) {
-        case 0:
-            // Логика для первой планеты
-            break;
-        case 1:
-            // Логика для второй планеты
-            break;
-        case 2:
-            // Логика для третьей планеты
-            break;
-    }
-}
-
-// Вспомогательная функция для показа уведомлений
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: rgba(255, 45, 149, 0.9);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        z-index: 10000;
-        animation: slideInRight 0.3s ease-out;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        border-left: 4px solid #39ff14;
-    `;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease-in';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 300);
-    }, 2000);
-    
-    // Добавляем CSS анимации для уведомлений
-    if (!document.querySelector('#notification-styles')) {
-        const style = document.createElement('style');
-        style.id = 'notification-styles';
-        style.textContent = `
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            @keyframes slideOutRight {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-}
-
-// Initialize all UI components when DOM is ready
-export function initUIWhenReady() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeApp();
-            addModalAnimations();
-            initPlanetInteractions();
-        });
-    } else {
-        setTimeout(() => {
-            initializeApp();
-            addModalAnimations();
-            initPlanetInteractions();
-        }, 100);
-    }
-}
-
 // Export for external use
 export default {
     initializeApp,
     setTabSliderPosition,
     showModal,
-    generateStars,
-    elementExists,
-    waitForElement,
-    initUIWhenReady
+    generateStars
 };
