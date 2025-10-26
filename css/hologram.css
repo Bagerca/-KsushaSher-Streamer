@@ -1,4 +1,4 @@
-/* Голографический интерфейс - отдельный CSS файл */
+/* Голографический интерфейс - Двойная звездная система */
 
 .hero-section {
     height: 100vh;
@@ -10,323 +10,287 @@
     padding-top: 5vh;
 }
 
-/* Панель информации о подписчике */
-.subscriber-info {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(15, 15, 25, 0.95);
-    border: 2px solid var(--neon-green);
-    border-radius: 15px;
-    padding: 20px;
-    max-width: 300px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
-    opacity: 0;
-    transform: translateY(100px);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    z-index: 1000;
-}
-
-.subscriber-info.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.subscriber-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(57, 255, 20, 0.3);
-}
-
-.subscriber-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--neon-pink);
-    margin-right: 15px;
-}
-
-.subscriber-name {
-    font-size: 1.3rem;
-    color: var(--neon-green);
-    font-weight: 600;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.subscriber-role {
-    font-size: 0.9rem;
-    color: var(--neon-pink);
-    margin-top: 2px;
-    font-family: 'Rajdhani', sans-serif;
-}
-
-.subscriber-details {
-    color: #ccc;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    font-family: 'Exo 2', sans-serif;
-}
-
-.subscriber-stats {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 45, 149, 0.3);
-}
-
-.stat {
-    text-align: center;
-}
-
-.stat-value {
-    color: var(--neon-green);
-    font-size: 1.1rem;
-    font-weight: 600;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.stat-label {
-    color: #aaa;
-    font-size: 0.8rem;
-    margin-top: 2px;
-    font-family: 'Exo 2', sans-serif;
-}
-
-/* Голографический контейнер */
-.hologram-container {
-    perspective: 1000px;
+/* ДВОЙНАЯ ЗВЕЗДНАЯ СИСТЕМА */
+.dual-star-system {
     position: relative;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: -30px;
+    margin-top: -50px;
 }
 
-/* ДВОЙНАЯ ЗВЕЗДНАЯ СИСТЕМА */
-.hologram-main {
+/* Прямоугольная орбита */
+.rectangular-orbit {
+    position: absolute;
+    width: 500px;
+    height: 300px;
+    border: 2px solid rgba(57, 255, 20, 0.3);
+    border-radius: 20px;
+    animation: orbitPulse 4s ease-in-out infinite;
+}
+
+@keyframes orbitPulse {
+    0%, 100% { 
+        border-color: rgba(57, 255, 20, 0.3);
+        box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+    }
+    50% { 
+        border-color: rgba(255, 45, 149, 0.4);
+        box-shadow: 0 0 30px rgba(255, 45, 149, 0.2);
+    }
+}
+
+/* ГЛАВНЫЕ ЗВЕЗДЫ */
+.main-star {
+    position: absolute;
     width: 180px;
     height: 180px;
-    position: absolute;
-    transform-style: preserve-3d;
-    animation: doubleStarFloat 8s ease-in-out infinite;
-    z-index: 10;
     cursor: pointer;
+    z-index: 20;
     filter: drop-shadow(0 0 20px currentColor);
 }
 
-.hologram-main.ksusha {
-    left: 35%;
-    transform: translateX(-50%) rotateY(-10deg);
-    animation-delay: 0s;
+.ksusha-star {
+    left: 25%;
+    transform: translateX(-50%);
 }
 
-.hologram-main.tetla {
-    left: 65%;
-    transform: translateX(-50%) rotateY(10deg);
-    animation-delay: -4s;
+.tetla-star {
+    right: 25%;
+    transform: translateX(50%);
 }
 
-.hologram-main img {
+.star-core {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 3;
+}
+
+.main-star img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--neon-pink);
-    box-shadow: 
-        0 0 30px var(--neon-pink),
-        inset 0 0 20px rgba(255, 45, 149, 0.3);
-    filter: brightness(1.1) contrast(1.1);
+    border: 4px solid;
     transition: all 0.4s ease;
 }
 
-.hologram-main.tetla img {
-    border-color: var(--neon-green);
+.ksusha-star img {
+    border-color: #ff2d95;
     box-shadow: 
-        0 0 30px var(--neon-green),
-        inset 0 0 20px rgba(57, 255, 20, 0.3);
+        0 0 40px #ff2d95,
+        inset 0 0 30px rgba(255, 45, 149, 0.4);
 }
 
-.hologram-main:hover img {
-    transform: scale(1.15);
+.tetla-star img {
+    border-color: #39ff14;
     box-shadow: 
-        0 0 50px currentColor,
-        0 0 80px var(--neon-green),
-        inset 0 0 40px rgba(255, 45, 149, 0.5);
+        0 0 40px #39ff14,
+        inset 0 0 30px rgba(57, 255, 20, 0.4);
 }
 
-/* Орбитальная система для спутников */
-.orbital-system {
+.star-glow {
     position: absolute;
-    width: 400px;
-    height: 400px;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: var(--star-color);
     border-radius: 50%;
-    animation: orbitalRotate 20s linear infinite;
-}
-
-/* Голографические слои с импульсами */
-.hologram-layer {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid;
-    animation: layerRotate 10s linear infinite;
-    pointer-events: none;
-}
-
-.layer-1 {
-    width: 320px;
-    height: 320px;
-    border-color: var(--neon-green);
+    filter: blur(30px);
     opacity: 0.6;
-    animation-duration: 15s;
-    animation-direction: reverse;
+    z-index: 2;
+    animation: starFloat 3s ease-in-out infinite;
 }
 
-.layer-2 {
-    width: 380px;
-    height: 380px;
-    border-color: var(--neon-pink);
-    opacity: 0.4;
-    animation-duration: 12s;
+.ksusha-star .star-glow {
+    animation-delay: 0s;
 }
 
-.layer-3 {
-    width: 440px;
-    height: 440px;
-    border-color: var(--neon-green);
-    opacity: 0.3;
-    animation-duration: 18s;
-    animation-direction: reverse;
+.tetla-star .star-glow {
+    animation-delay: -1.5s;
 }
 
-/* Импульсы на слоях */
-.layer-pulse {
+@keyframes starFloat {
+    0%, 100% { 
+        transform: translateY(0px) scale(1);
+        opacity: 0.4;
+    }
+    25% { 
+        transform: translateY(-15px) scale(1.05);
+        opacity: 0.6;
+    }
+    50% { 
+        transform: translateY(-5px) scale(1.02);
+        opacity: 0.5;
+    }
+    75% { 
+        transform: translateY(-20px) scale(1.08);
+        opacity: 0.7;
+    }
+}
+
+/* Энергетический мост между звездами */
+.energy-bridge {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: var(--neon-green);
-    border-radius: 50%;
-    filter: blur(5px);
-    animation: pulseTravel 3s linear infinite;
-    opacity: 0;
-}
-
-.layer-1 .layer-pulse {
-    animation-duration: 4s;
-    background: var(--neon-green);
-}
-
-.layer-2 .layer-pulse {
-    animation-duration: 3s;
-    background: var(--neon-pink);
-}
-
-.layer-3 .layer-pulse {
-    animation-duration: 5s;
-    background: var(--neon-green);
-}
-
-/* Точки данных (спутники) */
-.data-node {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    background: var(--dark-bg);
-    border: 2px solid;
-    border-radius: 50%;
-    cursor: pointer;
-    transform-style: preserve-3d;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    left: 50%;
+    right: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, #ff2d95, #39ff14);
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 5;
-    overflow: hidden;
+    opacity: 0.7;
+    animation: bridgePulse 2s ease-in-out infinite;
+}
+
+@keyframes bridgePulse {
+    0%, 100% { 
+        opacity: 0.5;
+        box-shadow: 0 0 10px #ff2d95;
+    }
+    50% { 
+        opacity: 0.9;
+        box-shadow: 0 0 20px #39ff14;
+    }
+}
+
+/* ОРБИТАЛЬНЫЕ СПУТНИКИ */
+.satellite {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    z-index: 15;
     filter: drop-shadow(0 0 15px currentColor);
 }
 
-.data-node img {
+.satellite-core {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    position: relative;
+    z-index: 3;
+}
+
+.satellite img {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid;
     transition: all 0.3s ease;
 }
 
-.node-label {
+.bager-sat img { border-color: #ff6464; }
+.angle-sat img { border-color: #ff8c42; }
+.kiriki-sat img { border-color: #14f7ff; }
+
+.satellite-glow {
     position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
-    color: var(--neon-green);
-    white-space: nowrap;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: var(--satellite-color);
+    border-radius: 50%;
+    filter: blur(20px);
+    opacity: 0.5;
+    z-index: 2;
+}
+
+.satellite-trail {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--satellite-color);
+    border-radius: 50%;
+    filter: blur(10px);
     opacity: 0;
-    transition: all 0.3s ease;
-    text-shadow: 0 0 10px var(--neon-green);
-    font-weight: 600;
-    font-family: 'Rajdhani', sans-serif;
+    z-index: 1;
 }
 
-/* Позиционирование спутников на орбите */
-.node-1 {
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-color: #14f7ff;
-    animation: satelliteOrbit1 15s linear infinite;
+/* Анимации движения спутников по прямоугольной орбите */
+.bager-sat {
+    animation: rectangularOrbit1 20s linear infinite;
 }
 
-.node-2 {
-    top: 50%;
-    right: 5%;
-    transform: translateY(-50%);
-    border-color: #bf5fff;
-    animation: satelliteOrbit2 18s linear infinite;
+.angle-sat {
+    animation: rectangularOrbit2 25s linear infinite;
 }
 
-.node-3 {
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-color: #ff8c42;
-    animation: satelliteOrbit3 22s linear infinite;
+.kiriki-sat {
+    animation: rectangularOrbit3 30s linear infinite;
+}
+
+@keyframes rectangularOrbit1 {
+    0% { transform: translate(200px, -120px); }
+    25% { transform: translate(-200px, -120px); }
+    50% { transform: translate(-200px, 120px); }
+    75% { transform: translate(200px, 120px); }
+    100% { transform: translate(200px, -120px); }
+}
+
+@keyframes rectangularOrbit2 {
+    0% { transform: translate(-150px, 150px); }
+    25% { transform: translate(-150px, -150px); }
+    50% { transform: translate(150px, -150px); }
+    75% { transform: translate(150px, 150px); }
+    100% { transform: translate(-150px, 150px); }
+}
+
+@keyframes rectangularOrbit3 {
+    0% { transform: translate(0px, 180px); }
+    25% { transform: translate(250px, 0px); }
+    50% { transform: translate(0px, -180px); }
+    75% { transform: translate(-250px, 0px); }
+    100% { transform: translate(0px, 180px); }
 }
 
 /* Эффекты при наведении */
-.data-node:hover {
-    transform: scale(1.4) translateZ(30px);
-    box-shadow: 0 0 40px currentColor;
-    z-index: 20;
+.main-star:hover img {
+    transform: scale(1.1);
+    box-shadow: 
+        0 0 60px currentColor,
+        0 0 80px var(--neon-green),
+        inset 0 0 40px rgba(255, 255, 255, 0.3);
 }
 
-.data-node:hover img {
+.satellite:hover img {
     transform: scale(1.2);
+    box-shadow: 
+        0 0 30px currentColor,
+        0 0 50px var(--neon-pink);
 }
 
-.data-node:hover .node-label {
-    opacity: 1;
-    bottom: -35px;
+.satellite:hover .satellite-trail {
+    animation: trailEffect 0.5s ease-out;
 }
 
-/* ГОЛОГРАФИЧЕСКАЯ КАРТОЧКА - ВАРИАНТ 1 */
-.hologram-card {
+@keyframes trailEffect {
+    0% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% { 
+        opacity: 0;
+        transform: scale(3);
+    }
+}
+
+/* ГОЛОГРАФИЧЕСКАЯ КАРТОЧКА СТАТИСТИК */
+.hologram-stats-card {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.9);
-    width: 350px;
+    width: 380px;
     background: rgba(7, 7, 17, 0.95);
-    border: 1px solid;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 0;
     backdrop-filter: blur(25px);
-    box-shadow: 
-        0 0 60px rgba(57, 255, 20, 0.4),
-        inset 0 0 40px rgba(57, 255, 20, 0.1);
     opacity: 0;
     visibility: hidden;
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -334,13 +298,13 @@
     overflow: hidden;
 }
 
-.hologram-card.show {
+.hologram-stats-card.show {
     opacity: 1;
     visibility: visible;
     transform: translate(-50%, -50%) scale(1);
 }
 
-.card-border-glow {
+.card-glow-border {
     position: absolute;
     top: -2px;
     left: -2px;
@@ -351,14 +315,20 @@
         #ff2d95,
         #39ff14,
         #14f7ff,
-        #bf5fff,
+        #ff8c42,
+        #ff6464,
         #ff2d95
     );
-    border-radius: 16px;
+    border-radius: 22px;
     z-index: -1;
     animation: rotateBorder 3s linear infinite;
-    filter: blur(10px);
-    opacity: 0.7;
+    filter: blur(8px);
+    opacity: 0.8;
+}
+
+@keyframes rotateBorder {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .card-content {
@@ -366,7 +336,7 @@
     z-index: 2;
     padding: 25px;
     background: rgba(7, 7, 17, 0.95);
-    border-radius: 15px;
+    border-radius: 20px;
     margin: 2px;
 }
 
@@ -380,40 +350,43 @@
 
 .avatar-container {
     position: relative;
-    margin-right: 15px;
+    margin-right: 20px;
 }
 
 .card-avatar {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--neon-pink);
+    border: 3px solid;
     position: relative;
     z-index: 2;
 }
 
-.avatar-glow {
+.avatar-halo {
     position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: var(--neon-pink);
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
     border-radius: 50%;
     filter: blur(15px);
-    opacity: 0.6;
+    opacity: 0.7;
     z-index: 1;
-    animation: avatarPulse 2s ease-in-out infinite;
+    animation: haloPulse 2s ease-in-out infinite;
 }
 
-.card-title {
+@keyframes haloPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.1); }
+}
+
+.card-titles {
     flex: 1;
 }
 
 .card-name {
-    font-size: 1.5rem;
-    color: var(--neon-green);
+    font-size: 1.6rem;
     font-weight: 700;
     font-family: 'Orbitron', sans-serif;
     margin-bottom: 5px;
@@ -421,7 +394,7 @@
 }
 
 .card-role {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--neon-pink);
     font-family: 'Rajdhani', sans-serif;
     font-weight: 600;
@@ -431,93 +404,78 @@
     color: #ccc;
     font-size: 0.9rem;
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    text-align: center;
     font-family: 'Exo 2', sans-serif;
-    text-align: center;
-    padding: 10px;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border-left: 3px solid var(--neon-green);
+    border-radius: 10px;
+    border-left: 3px solid;
 }
 
-.card-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.stat-item {
-    text-align: center;
-    padding: 12px 8px;
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid rgba(57, 255, 20, 0.2);
     transition: all 0.3s ease;
 }
 
-.stat-item:hover {
+.stat-row:hover {
     border-color: var(--neon-pink);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 45, 149, 0.3);
+    transform: translateX(5px);
 }
 
 .stat-icon {
-    font-size: 1.3rem;
-    margin-bottom: 8px;
+    font-size: 1.5rem;
+    width: 30px;
+    text-align: center;
     filter: drop-shadow(0 0 5px currentColor);
 }
 
 .stat-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex: 1;
+}
+
+.stat-name {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+}
+
+.stat-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 3px;
+}
+
+.stat-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.5s ease-in-out;
+    box-shadow: 0 0 8px currentColor;
 }
 
 .stat-value {
     color: var(--neon-green);
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 0.8rem;
     font-family: 'Orbitron', sans-serif;
-    margin-bottom: 2px;
-}
-
-.stat-label {
-    color: #aaa;
-    font-size: 0.75rem;
-    font-family: 'Exo 2', sans-serif;
-}
-
-.card-status {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border: 1px solid rgba(57, 255, 20, 0.2);
-}
-
-.status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green);
-    animation: statusPulse 2s ease-in-out infinite;
-}
-
-.status-text {
-    color: #ccc;
-    font-size: 0.85rem;
-    font-family: 'Exo 2', sans-serif;
     font-weight: 600;
+    text-align: right;
 }
 
 /* Частицы для карточки */
@@ -527,18 +485,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 15px;
+    border-radius: 20px;
     overflow: hidden;
     z-index: 1;
 }
 
 .particle {
     position: absolute;
-    width: 4px;
-    height: 4px;
-    background: var(--neon-green);
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    animation: floatParticle 6s linear infinite;
+    animation: particleFloat 8s linear infinite;
     opacity: 0;
 }
 
@@ -551,101 +508,28 @@
 .particle:nth-child(2) {
     top: 20%;
     right: 15%;
-    animation-delay: 1s;
+    animation-delay: 1.5s;
 }
 
 .particle:nth-child(3) {
     bottom: 30%;
     left: 20%;
-    animation-delay: 2s;
+    animation-delay: 3s;
 }
 
 .particle:nth-child(4) {
     bottom: 15%;
     right: 25%;
-    animation-delay: 3s;
+    animation-delay: 4.5s;
 }
 
 .particle:nth-child(5) {
     top: 50%;
     left: 50%;
-    animation-delay: 4s;
+    animation-delay: 6s;
 }
 
-/* АНИМАЦИИ */
-@keyframes doubleStarFloat {
-    0%, 100% { 
-        transform: translateY(0px) rotateX(5deg); 
-    }
-    25% { 
-        transform: translateY(-15px) rotateX(8deg); 
-    }
-    50% { 
-        transform: translateY(-8px) rotateX(5deg); 
-    }
-    75% { 
-        transform: translateY(-20px) rotateX(10deg); 
-    }
-}
-
-@keyframes orbitalRotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes satelliteOrbit1 {
-    0% { transform: translateX(-50%) rotate(0deg) translateY(-180px) rotate(0deg); }
-    100% { transform: translateX(-50%) rotate(360deg) translateY(-180px) rotate(-360deg); }
-}
-
-@keyframes satelliteOrbit2 {
-    0% { transform: translateY(-50%) rotate(0deg) translateX(180px) rotate(0deg); }
-    100% { transform: translateY(-50%) rotate(360deg) translateX(180px) rotate(-360deg); }
-}
-
-@keyframes satelliteOrbit3 {
-    0% { transform: translateX(-50%) rotate(0deg) translateY(180px) rotate(0deg); }
-    100% { transform: translateX(-50%) rotate(360deg) translateY(180px) rotate(-360deg); }
-}
-
-@keyframes layerRotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes pulseTravel {
-    0% {
-        transform: rotate(0deg) translateX(0px);
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    90% {
-        opacity: 1;
-    }
-    100% {
-        transform: rotate(360deg) translateX(0px);
-        opacity: 0;
-    }
-}
-
-@keyframes rotateBorder {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes avatarPulse {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.1); }
-}
-
-@keyframes statusPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.2); }
-}
-
-@keyframes floatParticle {
+@keyframes particleFloat {
     0% {
         transform: translateY(0) translateX(0);
         opacity: 0;
@@ -657,88 +541,68 @@
         opacity: 1;
     }
     100% {
-        transform: translateY(-100px) translateX(50px);
+        transform: translateY(-80px) translateX(40px);
         opacity: 0;
     }
 }
 
-/* Дополнительные эффекты */
-.hologram-glow {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, transparent 70%);
-    animation: glowPulse 4s ease-in-out infinite;
-    z-index: 2;
-}
-
-@keyframes glowPulse {
-    0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.1); }
-}
-
 /* Адаптивность */
 @media (max-width: 768px) {
-    .hero-section {
-        padding-top: 10vh;
-    }
-    
-    .hologram-container {
-        margin-top: 0;
+    .dual-star-system {
+        width: 400px;
+        height: 300px;
         transform: scale(0.8);
     }
     
-    .hero-content {
-        bottom: 60px;
+    .rectangular-orbit {
+        width: 350px;
+        height: 200px;
     }
     
-    .hero-title {
-        font-size: 2.5rem;
+    .main-star {
+        width: 120px;
+        height: 120px;
     }
     
-    .subscriber-info {
-        right: 10px;
-        left: 10px;
-        max-width: none;
-        bottom: 10px;
+    .ksusha-star {
+        left: 30%;
     }
     
-    .data-node {
+    .tetla-star {
+        right: 30%;
+    }
+    
+    .satellite {
         width: 50px;
         height: 50px;
     }
     
-    .hologram-main {
-        width: 140px;
-        height: 140px;
+    @keyframes rectangularOrbit1 {
+        0% { transform: translate(120px, -80px); }
+        25% { transform: translate(-120px, -80px); }
+        50% { transform: translate(-120px, 80px); }
+        75% { transform: translate(120px, 80px); }
+        100% { transform: translate(120px, -80px); }
     }
     
-    .hologram-main.ksusha {
-        left: 30%;
+    @keyframes rectangularOrbit2 {
+        0% { transform: translate(-100px, 100px); }
+        25% { transform: translate(-100px, -100px); }
+        50% { transform: translate(100px, -100px); }
+        75% { transform: translate(100px, 100px); }
+        100% { transform: translate(-100px, 100px); }
     }
     
-    .hologram-main.tetla {
-        left: 70%;
+    @keyframes rectangularOrbit3 {
+        0% { transform: translate(0px, 120px); }
+        25% { transform: translate(150px, 0px); }
+        50% { transform: translate(0px, -120px); }
+        75% { transform: translate(-150px, 0px); }
+        100% { transform: translate(0px, 120px); }
     }
     
-    .layer-1 {
-        width: 250px;
-        height: 250px;
-    }
-    
-    .layer-2 {
-        width: 300px;
-        height: 300px;
-    }
-    
-    .layer-3 {
-        width: 350px;
-        height: 350px;
-    }
-    
-    .hologram-card {
-        width: 300px;
+    .hologram-stats-card {
+        width: 320px;
     }
     
     .card-avatar {
@@ -749,48 +613,30 @@
     .card-name {
         font-size: 1.3rem;
     }
-    
-    .orbital-system {
-        width: 300px;
-        height: 300px;
-    }
 }
 
 @media (max-width: 480px) {
-    .hologram-container {
+    .dual-star-system {
+        width: 320px;
+        height: 240px;
         transform: scale(0.7);
     }
     
-    .hero-title {
-        font-size: 2rem;
+    .rectangular-orbit {
+        width: 280px;
+        height: 160px;
     }
     
-    .data-node {
-        width: 40px;
-        height: 40px;
+    .main-star {
+        width: 100px;
+        height: 100px;
     }
     
-    .node-label {
-        font-size: 9px;
-    }
-    
-    .subscriber-info {
-        bottom: 5px;
-        right: 5px;
-        left: 5px;
-    }
-    
-    .hologram-main {
-        width: 110px;
-        height: 110px;
-    }
-    
-    .hologram-card {
+    .hologram-stats-card {
         width: 280px;
     }
     
-    .card-stats {
-        grid-template-columns: 1fr;
-        gap: 8px;
+    .card-content {
+        padding: 20px;
     }
 }
