@@ -10,74 +10,84 @@ const FilterState = {
     currentTab: 'games'
 };
 
-// Данные для двойной звездной системы - ВАРИАНТ 1
-const starSystemData = {
-    ksusha: {
-        name: "Ksusha Sher",
-        role: "Главный стример",
-        avatar: "./assets/images/ksusha.jpg",
-        description: "Создатель контента и душа проекта. Стримит игры и общается с комьюнити уже более 3 лет, создавая уютное пространство для всех.",
-        stats: {
-            attack: 85,
-            defense: 70,
-            magic: 95
-        },
-        color: "#ff2d95"
-    },
-    tetla: {
-        name: "TetlaBot", 
-        role: "AI Ассистент",
-        avatar: "./assets/images/tetla.jpg",
-        description: "Умный бот помогающий модерации и взаимодействию с комьюнити. Всегда на страже порядка и готов помочь.",
-        stats: {
-            attack: 60,
-            defense: 90,
-            magic: 80
-        },
-        color: "#39ff14"
-    },
-    bager: {
-        name: "BAGERca",
+// Subscribers data for hologram interface
+const subscribersData = {
+    kirik: {
+        name: "Кирик",
         role: "Технический гений",
-        avatar: "./assets/images/bager.jpg", 
-        description: "Разработчик этого сайта и технический специалист. Создает магию из кода и решает самые сложные задачи.",
-        stats: {
-            attack: 95,
-            defense: 85,
-            magic: 75
+        avatar: "assets/images/kirik.jpg",
+        description: "Мастер настройки оборудования и решения технических проблем. Всегда помогает с оптимизацией стримов.",
+        stats: { 
+            attack: 85, 
+            defense: 70, 
+            speed: 90, 
+            accuracy: 78 
         },
-        color: "#ff6464"
+        color: "#007bff",
+        ability: "Техническая поддержка"
     },
-    tobeangle: {
-        name: "To Be Angle",
-        role: "Креативный директор",
-        avatar: "./assets/images/tobeangle.jpg",
-        description: "Отвечает за визуал и креатив. Превращает обычное в нечто невероятное с помощью творчества.",
-        stats: {
-            attack: 70,
-            defense: 65,
-            magic: 90
+    bagerka: {
+        name: "Багерка", 
+        role: "Стратег комьюнити",
+        avatar: "assets/images/bagerka.jpg",
+        description: "Разрабатывает стратегии развития сообщества и организует внутренние мероприятия.",
+        stats: { 
+            attack: 75, 
+            defense: 85, 
+            speed: 65, 
+            accuracy: 92 
         },
-        color: "#ff8c42"
+        color: "#ff6464",
+        ability: "Стратегическое планирование"
     },
-    kiriki: {
-        name: "Kiriki",
-        role: "Стратег и аналитик",
-        avatar: "./assets/images/kiriki.jpg",
-        description: "Анализирует тренды и помогает с стратегией развития. Видит то, что скрыто от других взглядов.",
-        stats: {
-            attack: 80,
-            defense: 90,
-            magic: 85
+    angel: {
+        name: "Ангел",
+        role: "Хранитель атмосферы",
+        avatar: "assets/images/angel.jpg",
+        description: "Создает и поддерживает дружескую атмосферу в чате. Помогает новичкам освоиться.",
+        stats: { 
+            attack: 60, 
+            defense: 95, 
+            speed: 80, 
+            accuracy: 88 
         },
-        color: "#14f7ff"
+        color: "#ffa500",
+        ability: "Поддержка комьюнити"
+    },
+    sanya: {
+        name: "Саня",
+        role: "Активный донатер",
+        avatar: "assets/images/sanya.jpg",
+        description: "Постоянно поддерживает развитие канала. Его донаты помогают улучшать качество контента.",
+        stats: { 
+            attack: 88, 
+            defense: 72, 
+            speed: 75, 
+            accuracy: 85 
+        },
+        color: "#ff2d95",
+        ability: "Финансовая поддержка"
+    },
+    max: {
+        name: "Макс",
+        role: "Мем-лорд",
+        avatar: "assets/images/max.jpg",
+        description: "Создает лучшие мемы и развлекает чат. Его шутки становятся легендами комьюнити.",
+        stats: { 
+            attack: 92, 
+            defense: 68, 
+            speed: 85, 
+            accuracy: 95 
+        },
+        color: "#39ff14",
+        ability: "Создание мемов"
     }
 };
 
 // Initialize all UI components
 export function initializeUI() {
     initFilters();
-    initStarSystemInteractivity();
+    initHologramInterface();
     initCardCopy();
     initSmoothScroll();
     
@@ -476,131 +486,171 @@ function updateTabSliders() {
     }
 }
 
-// Star system interactivity
-export function initStarSystemInteractivity() {
-    initStarHoverEffects();
-    initStarEasterEgg();
+// Hologram interface functionality
+export function initHologramInterface() {
+    initOrbitalInteractivity();
+    initMainPhotosInteractivity();
+    
+    console.log('🎮 Голографическая система инициализирована');
 }
 
-// Initialize star hover effects
-function initStarHoverEffects() {
-    const stars = document.querySelectorAll('.main-star, .satellite');
+// Инициализация взаимодействия с орбитальными узлами
+function initOrbitalInteractivity() {
+    const nodes = document.querySelectorAll('.orbital-node');
     
-    stars.forEach(star => {
-        const userId = star.getAttribute('data-user');
+    nodes.forEach(node => {
+        const userId = node.getAttribute('data-user');
         
-        star.addEventListener('mouseenter', function() {
+        node.addEventListener('mouseenter', function() {
             showHologramCard(userId);
+            highlightOrbitalNode(this);
         });
         
-        star.addEventListener('mouseleave', function() {
+        node.addEventListener('mouseleave', function() {
             hideHologramCard();
+            unhighlightOrbitalNode(this);
+        });
+        
+        node.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // Дополнительные действия при клике
+            console.log(`Selected: ${userId}`);
         });
     });
 }
 
-// Show hologram card with user data
+// Инициализация взаимодействия с основными фото
+function initMainPhotosInteractivity() {
+    const mainPhotos = document.querySelectorAll('.main-photo');
+    
+    mainPhotos.forEach(photo => {
+        photo.addEventListener('click', function() {
+            const isKsusha = this.classList.contains('ksusha-photo');
+            showMainCharacterCard(isKsusha ? 'ksusha' : 'tetla');
+        });
+        
+        photo.addEventListener('mouseenter', function() {
+            this.style.zIndex = '15';
+        });
+        
+        photo.addEventListener('mouseleave', function() {
+            this.style.zIndex = '10';
+        });
+    });
+}
+
+// Показать голографическую карточку
 function showHologramCard(userId) {
-    const userData = starSystemData[userId];
+    const userData = subscribersData[userId];
     if (!userData) return;
     
     const card = document.getElementById('hologramCard');
-    const avatar = document.getElementById('cardAvatar');
-    const name = document.getElementById('cardName');
-    const role = document.getElementById('cardRole');
-    const description = document.getElementById('cardDescription');
-    const attackBar = document.getElementById('statAttack');
-    const defenseBar = document.getElementById('statDefense');
-    const magicBar = document.getElementById('statMagic');
-    const attackValue = document.getElementById('statAttackValue');
-    const defenseValue = document.getElementById('statDefenseValue');
-    const magicValue = document.getElementById('statMagicValue');
-    const avatarHalo = document.querySelector('.avatar-halo');
-    const cardBorder = document.querySelector('.card-glow-border');
-    const statFills = document.querySelectorAll('.stat-fill');
+    const cardFrame = document.getElementById('cardFrame');
     
-    // Установка данных
-    avatar.src = userData.avatar;
-    name.textContent = userData.name;
-    role.textContent = userData.role;
-    description.textContent = userData.description;
+    // Заполняем данные карточки
+    document.getElementById('cardAvatar').src = userData.avatar;
+    document.getElementById('cardName').textContent = userData.name;
+    document.getElementById('cardRank').textContent = userData.role;
+    document.getElementById('cardDescription').textContent = userData.description;
+    document.getElementById('statAttack').textContent = userData.stats.attack;
+    document.getElementById('statDefense').textContent = userData.stats.defense;
+    document.getElementById('statSpeed').textContent = userData.stats.speed;
+    document.getElementById('statAccuracy').textContent = userData.stats.accuracy;
+    document.getElementById('cardAbility').querySelector('.ability-text').textContent = userData.ability;
     
-    // Анимация прогресс-баров
-    setTimeout(() => {
-        attackBar.style.width = userData.stats.attack + '%';
-        defenseBar.style.width = userData.stats.defense + '%';
-        magicBar.style.width = userData.stats.magic + '%';
-        
-        attackValue.textContent = userData.stats.attack + '%';
-        defenseValue.textContent = userData.stats.defense + '%';
-        magicValue.textContent = userData.stats.magic + '%';
-    }, 100);
+    // Устанавливаем цветовую тему
+    card.style.borderColor = userData.color;
+    cardFrame.style.borderColor = userData.color;
+    cardFrame.style.boxShadow = `0 0 20px ${userData.color}`;
     
-    // Цветовая схема
-    name.style.color = userData.color;
-    role.style.color = userData.color;
-    description.style.borderLeftColor = userData.color;
-    avatar.style.borderColor = userData.color;
-    avatarHalo.style.background = userData.color;
+    // Анимируем progress bars
+    animateProgressBars(userData.stats);
     
-    // Установка цветов для прогресс-баров
-    statFills.forEach(fill => {
-        fill.style.background = userData.color;
-        fill.style.boxShadow = `0 0 8px ${userData.color}`;
-    });
-    
-    // Анимация появления карточки
+    // Показываем карточку
     card.classList.add('show');
 }
 
-// Hide hologram card
+// Скрыть голографическую карточку
 function hideHologramCard() {
     const card = document.getElementById('hologramCard');
-    const statFills = document.querySelectorAll('.stat-fill');
-    
     card.classList.remove('show');
-    
-    // Сброс прогресс-баров
-    statFills.forEach(fill => {
-        fill.style.width = '0%';
-    });
 }
 
-// Star system easter egg
-function initStarEasterEgg() {
-    const stars = document.querySelectorAll('.main-star');
-    let clickSequence = [];
-    const secretSequence = ['ksusha', 'tetla', 'ksusha', 'tetla', 'ksusha'];
-    
-    stars.forEach(star => {
-        star.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user');
-            clickSequence.push(userId);
+// Анимировать progress bars
+function animateProgressBars(stats) {
+    setTimeout(() => {
+        document.querySelectorAll('.stat-progress').forEach(progress => {
+            const statType = progress.closest('.stat-row').querySelector('.stat-label').textContent.toLowerCase();
+            let value = 0;
             
-            // Проверка секретной последовательности
-            if (clickSequence.length > secretSequence.length) {
-                clickSequence.shift();
+            switch(statType) {
+                case 'атака': value = stats.attack; break;
+                case 'защита': value = stats.defense; break;
+                case 'скорость': value = stats.speed; break;
+                case 'точность': value = stats.accuracy; break;
             }
             
-            if (JSON.stringify(clickSequence) === JSON.stringify(secretSequence)) {
-                activateEasterEgg();
-                clickSequence = [];
-            }
+            progress.style.width = `${value}%`;
+            progress.setAttribute('data-value', value);
         });
-    });
+    }, 300);
 }
 
-// Activate easter egg
-function activateEasterEgg() {
-    console.log('🎉 Easter egg activated! Secret sequence discovered!');
+// Подсветить орбитальный узел
+function highlightOrbitalNode(node) {
+    node.style.transform = 'scale(1.4) translateZ(50px)';
+    node.style.zIndex = '25';
+    node.style.filter = 'brightness(1.3)';
+}
+
+// Убрать подсветку орбитального узла
+function unhighlightOrbitalNode(node) {
+    node.style.transform = '';
+    node.style.zIndex = '5';
+    node.style.filter = '';
+}
+
+// Показать карточку главного персонажа
+function showMainCharacterCard(character) {
+    const card = document.getElementById('hologramCard');
+    const cardFrame = document.getElementById('cardFrame');
     
-    // Добавьте специальные эффекты здесь
-    document.querySelectorAll('.satellite').forEach(satellite => {
-        satellite.style.animationPlayState = 'paused';
-        setTimeout(() => {
-            satellite.style.animationPlayState = 'running';
-        }, 1000);
+    if (character === 'ksusha') {
+        document.getElementById('cardAvatar').src = 'assets/images/ksusha.jpg';
+        document.getElementById('cardName').textContent = 'Ksusha Sher';
+        document.getElementById('cardRank').textContent = 'Главный стример';
+        document.getElementById('cardDescription').textContent = 'Создатель этого удивительного комьюнити. Профессиональный стример с более чем 3 годами опыта. Специализируется на играх и создании качественного развлекательного контента.';
+        document.getElementById('statAttack').textContent = '95';
+        document.getElementById('statDefense').textContent = '88';
+        document.getElementById('statSpeed').textContent = '92';
+        document.getElementById('statAccuracy').textContent = '98';
+        document.getElementById('cardAbility').querySelector('.ability-text').textContent = 'Создание контента';
+        
+        card.style.borderColor = '#ff2d95';
+        cardFrame.style.borderColor = '#ff2d95';
+    } else {
+        document.getElementById('cardAvatar').src = 'assets/images/tetla.jpg';
+        document.getElementById('cardName').textContent = 'TetlaBot';
+        document.getElementById('cardRank').textContent = 'Помощник стримера';
+        document.getElementById('cardDescription').textContent = 'Искусственный интеллект, помогающий в модерации чата и автоматизации процессов на стриме. Всегда на страже порядка и развлечений.';
+        document.getElementById('statAttack').textContent = '82';
+        document.getElementById('statDefense').textContent = '95';
+        document.getElementById('statSpeed').textContent = '99';
+        document.getElementById('statAccuracy').textContent = '100';
+        document.getElementById('cardAbility').querySelector('.ability-text').textContent = 'Автоматизация';
+        
+        card.style.borderColor = '#39ff14';
+        cardFrame.style.borderColor = '#39ff14';
+    }
+    
+    animateProgressBars({
+        attack: parseInt(document.getElementById('statAttack').textContent),
+        defense: parseInt(document.getElementById('statDefense').textContent),
+        speed: parseInt(document.getElementById('statSpeed').textContent),
+        accuracy: parseInt(document.getElementById('statAccuracy').textContent)
     });
+    
+    card.classList.add('show');
 }
 
 // Card number copy functionality
@@ -662,6 +712,7 @@ document.addEventListener('cardClick', (event) => {
 function showItemModal(item, type) {
     console.log(`Opening ${type} modal:`, item.title);
     // Modal implementation can be added here
+    // For now, just log to console
 }
 
 // Export filter state for external use
