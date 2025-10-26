@@ -54,18 +54,21 @@
     font-size: 1.3rem;
     color: var(--neon-green);
     font-weight: 600;
+    font-family: 'Orbitron', sans-serif;
 }
 
 .subscriber-role {
     font-size: 0.9rem;
     color: var(--neon-pink);
     margin-top: 2px;
+    font-family: 'Rajdhani', sans-serif;
 }
 
 .subscriber-details {
     color: #ccc;
     font-size: 0.95rem;
     line-height: 1.5;
+    font-family: 'Exo 2', sans-serif;
 }
 
 .subscriber-stats {
@@ -84,12 +87,14 @@
     color: var(--neon-green);
     font-size: 1.1rem;
     font-weight: 600;
+    font-family: 'Orbitron', sans-serif;
 }
 
 .stat-label {
     color: #aaa;
     font-size: 0.8rem;
     margin-top: 2px;
+    font-family: 'Exo 2', sans-serif;
 }
 
 /* Голографический контейнер */
@@ -233,6 +238,7 @@
     transition: all 0.3s ease;
     text-shadow: 0 0 10px var(--neon-green);
     font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
 }
 
 /* Позиционирование точек данных в 3D пространстве */
