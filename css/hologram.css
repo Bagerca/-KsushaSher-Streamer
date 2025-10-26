@@ -109,15 +109,28 @@
     margin-top: -30px;
 }
 
-/* Основное голографическое фото */
+/* ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ ДВОЙНОЙ СИСТЕМЫ */
+
 .hologram-main {
-    width: 250px;
-    height: 250px;
-    position: relative;
+    width: 200px;
+    height: 200px;
+    position: absolute;
     transform-style: preserve-3d;
     animation: hologramFloat 6s ease-in-out infinite;
     z-index: 10;
     cursor: pointer;
+}
+
+.hologram-main.ksusha {
+    left: 35%;
+    transform: translateX(-50%) rotateY(-15deg);
+    animation-delay: 0s;
+}
+
+.hologram-main.tetla {
+    left: 65%;
+    transform: translateX(-50%) rotateY(15deg);
+    animation-delay: -2s;
 }
 
 .hologram-main img {
@@ -133,10 +146,17 @@
     transition: all 0.3s ease;
 }
 
-.hologram-main:hover img {
-    transform: scale(1.05);
+.hologram-main.tetla img {
+    border-color: var(--neon-green);
     box-shadow: 
-        0 0 40px var(--neon-pink),
+        0 0 30px var(--neon-green),
+        inset 0 0 20px rgba(57, 255, 20, 0.3);
+}
+
+.hologram-main:hover img {
+    transform: scale(1.1);
+    box-shadow: 
+        0 0 40px currentColor,
         0 0 60px var(--neon-green),
         inset 0 0 30px rgba(255, 45, 149, 0.4);
 }
@@ -241,47 +261,26 @@
     font-family: 'Rajdhani', sans-serif;
 }
 
-/* Позиционирование точек данных в 3D пространстве */
+/* ОБНОВЛЕННЫЕ ПОЗИЦИИ ДЛЯ 3 ПЛАНЕТ */
 .node-1 {
-    top: 50px;
-    left: 50px;
-    border-color: var(--neon-pink);
+    top: 20%;
+    left: 20%;
+    border-color: var(--neon-green);
     transform: translateZ(20px);
 }
 
 .node-2 {
-    top: 50px;
-    right: 50px;
-    border-color: var(--neon-green);
+    top: 20%;
+    right: 20%;
+    border-color: var(--neon-pink);
     transform: translateZ(-15px);
 }
 
 .node-3 {
-    bottom: 50px;
-    left: 50px;
-    border-color: var(--neon-pink);
-    transform: translateZ(10px);
-}
-
-.node-4 {
-    bottom: 50px;
-    right: 50px;
-    border-color: var(--neon-green);
-    transform: translateZ(-20px);
-}
-
-.node-5 {
-    top: 50%;
-    left: 20px;
-    border-color: var(--neon-pink);
-    transform: translateZ(25px) translateY(-50%);
-}
-
-.node-6 {
-    top: 50%;
-    right: 20px;
-    border-color: var(--neon-green);
-    transform: translateZ(-10px) translateY(-50%);
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%) translateZ(10px);
+    border-color: #bf5fff;
 }
 
 /* Эффекты при наведении */
@@ -298,6 +297,183 @@
 .data-node:hover .node-label {
     opacity: 1;
     bottom: -30px;
+}
+
+/* НОВЫЕ СТИЛИ ДЛЯ ГОЛОГРАФИЧЕСКОЙ КАРТОЧКИ */
+.hologram-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    width: 320px;
+    background: rgba(15, 15, 25, 0.95);
+    border: 2px solid var(--neon-green);
+    border-radius: 20px;
+    padding: 25px;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 0 50px rgba(57, 255, 20, 0.3),
+        inset 0 0 30px rgba(57, 255, 20, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000;
+}
+
+.hologram-card.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+}
+
+.card-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--neon-pink);
+    margin-right: 15px;
+    box-shadow: 0 0 15px rgba(255, 45, 149, 0.5);
+}
+
+.card-title {
+    flex: 1;
+}
+
+.card-name {
+    font-size: 1.4rem;
+    color: var(--neon-green);
+    font-weight: 700;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 5px;
+}
+
+.card-role {
+    font-size: 0.9rem;
+    color: var(--neon-pink);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+}
+
+.card-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    border-color: var(--neon-pink);
+    transform: translateX(5px);
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    color: var(--neon-green);
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    color: #ccc;
+    font-size: 0.8rem;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.card-status {
+    margin-top: 15px;
+}
+
+.status-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.status-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-green));
+    border-radius: 3px;
+    width: 0%;
+    transition: width 1.5s ease-in-out;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.status-text {
+    color: #ccc;
+    font-size: 0.8rem;
+    text-align: center;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.card-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.card-particles::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        from 0deg,
+        transparent,
+        rgba(57, 255, 20, 0.1),
+        rgba(255, 45, 149, 0.1),
+        transparent
+    );
+    animation: rotateParticles 4s linear infinite;
+}
+
+@keyframes rotateParticles {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Анимации голограммы */
@@ -386,8 +562,16 @@
     }
     
     .hologram-main {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
+    }
+    
+    .hologram-main.ksusha {
+        left: 30%;
+    }
+    
+    .hologram-main.tetla {
+        left: 70%;
     }
     
     .layer-1 {
@@ -403,6 +587,20 @@
     .layer-3 {
         width: 350px;
         height: 350px;
+    }
+    
+    .hologram-card {
+        width: 280px;
+        padding: 20px;
+    }
+    
+    .card-avatar {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .card-name {
+        font-size: 1.2rem;
     }
 }
 
@@ -428,5 +626,10 @@
         bottom: 5px;
         right: 5px;
         left: 5px;
+    }
+    
+    .hologram-main {
+        width: 120px;
+        height: 120px;
     }
 }
