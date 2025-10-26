@@ -10,77 +10,47 @@ const FilterState = {
     currentTab: 'games'
 };
 
-// Subscribers data for hologram interface
-const subscribersData = {
-    kirik: {
-        name: "Кирик",
-        role: "Технический гений",
-        avatar: "assets/images/kirik.jpg",
-        description: "Мастер настройки оборудования и решения технических проблем. Всегда помогает с оптимизацией стримов.",
-        stats: { 
-            attack: 85, 
-            defense: 70, 
-            speed: 90, 
-            accuracy: 78 
-        },
-        color: "#007bff",
-        ability: "Техническая поддержка"
+// Обновленные данные персонажей
+const charactersData = {
+    ksusha: {
+        name: "Ksusha Sher",
+        role: "Главный Стример",
+        avatar: "https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0",
+        description: "Создатель этого безумного комьюнити. Профессиональный стример с харизмой и отличным чувством юмора.",
+        stats: { attack: 85, defense: 70, hp: 90 },
+        color: "#ff2d95"
+    },
+    tetla: {
+        name: "TetlaBot",
+        role: "Верный Бот",
+        avatar: "https://via.placeholder.com/300x300/0f0f1b/39ff14?text=TetlaBot",
+        description: "Искусственный интеллект, помогающий управлять чатом и развлекать зрителей. Никогда не спит!",
+        stats: { attack: 60, defense: 95, hp: 75 },
+        color: "#39ff14"
     },
     bagerka: {
-        name: "Багерка", 
-        role: "Стратег комьюнити",
-        avatar: "assets/images/bagerka.jpg",
-        description: "Разрабатывает стратегии развития сообщества и организует внутренние мероприятия.",
-        stats: { 
-            attack: 75, 
-            defense: 85, 
-            speed: 65, 
-            accuracy: 92 
-        },
-        color: "#ff6464",
-        ability: "Стратегическое планирование"
+        name: "BAGERca",
+        role: "Технический Гений",
+        avatar: "https://via.placeholder.com/150x150/0f0f1b/ff4444?text=BAGERca",
+        description: "Создатель этого сайта и технический специалист. Всегда находит решения самых сложных задач.",
+        stats: { attack: 70, defense: 80, hp: 85 },
+        color: "#ff4444"
     },
     angel: {
-        name: "Ангел",
-        role: "Хранитель атмосферы",
-        avatar: "assets/images/angel.jpg",
-        description: "Создает и поддерживает дружескую атмосферу в чате. Помогает новичкам освоиться.",
-        stats: { 
-            attack: 60, 
-            defense: 95, 
-            speed: 80, 
-            accuracy: 88 
-        },
-        color: "#ffa500",
-        ability: "Поддержка комьюнити"
+        name: "To Be Angle", 
+        role: "Ангел Хранитель",
+        avatar: "https://via.placeholder.com/150x150/0f0f1b/ff8c00?text=Angel",
+        description: "Душа компании. Всегда поддерживает позитивную атмосферу и помогает новичкам освоиться.",
+        stats: { attack: 75, defense: 75, hp: 95 },
+        color: "#ff8c00"
     },
-    sanya: {
-        name: "Саня",
-        role: "Активный донатер",
-        avatar: "assets/images/sanya.jpg",
-        description: "Постоянно поддерживает развитие канала. Его донаты помогают улучшать качество контента.",
-        stats: { 
-            attack: 88, 
-            defense: 72, 
-            speed: 75, 
-            accuracy: 85 
-        },
-        color: "#ff2d95",
-        ability: "Финансовая поддержка"
-    },
-    max: {
-        name: "Макс",
-        role: "Мем-лорд",
-        avatar: "assets/images/max.jpg",
-        description: "Создает лучшие мемы и развлекает чат. Его шутки становятся легендами комьюнити.",
-        stats: { 
-            attack: 92, 
-            defense: 68, 
-            speed: 85, 
-            accuracy: 95 
-        },
-        color: "#39ff14",
-        ability: "Создание мемов"
+    kiriki: {
+        name: "Kiriki",
+        role: "Мастер Настроения", 
+        avatar: "https://via.placeholder.com/150x150/0f0f1b/007bff?text=Kiriki",
+        description: "Король мемов и хорошего настроения. Его шутки заряжают энергией весь чат.",
+        stats: { attack: 80, defense: 65, hp: 80 },
+        color: "#007bff"
     }
 };
 
@@ -486,171 +456,104 @@ function updateTabSliders() {
     }
 }
 
-// Hologram interface functionality
+// Голографический интерфейс - обновленная версия
 export function initHologramInterface() {
-    initOrbitalInteractivity();
-    initMainPhotosInteractivity();
-    
-    console.log('🎮 Голографическая система инициализирована');
+    initCharacterInteractivity();
+    initOrbitalMovement();
 }
 
-// Инициализация взаимодействия с орбитальными узлами
-function initOrbitalInteractivity() {
-    const nodes = document.querySelectorAll('.orbital-node');
+// Инициализация взаимодействия с персонажами
+function initCharacterInteractivity() {
+    const allPhotos = document.querySelectorAll('.main-photo, .orbital-photo');
     
-    nodes.forEach(node => {
-        const userId = node.getAttribute('data-user');
-        
-        node.addEventListener('mouseenter', function() {
-            showHologramCard(userId);
-            highlightOrbitalNode(this);
-        });
-        
-        node.addEventListener('mouseleave', function() {
-            hideHologramCard();
-            unhighlightOrbitalNode(this);
-        });
-        
-        node.addEventListener('click', function(e) {
-            e.stopPropagation();
-            // Дополнительные действия при клике
-            console.log(`Selected: ${userId}`);
-        });
-    });
-}
-
-// Инициализация взаимодействия с основными фото
-function initMainPhotosInteractivity() {
-    const mainPhotos = document.querySelectorAll('.main-photo');
-    
-    mainPhotos.forEach(photo => {
-        photo.addEventListener('click', function() {
-            const isKsusha = this.classList.contains('ksusha-photo');
-            showMainCharacterCard(isKsusha ? 'ksusha' : 'tetla');
-        });
-        
+    allPhotos.forEach(photo => {
+        // Остановка анимации при наведении
         photo.addEventListener('mouseenter', function() {
-            this.style.zIndex = '15';
+            const allMovingElements = document.querySelectorAll('.main-photo, .orbital-photo, .orbit-line');
+            allMovingElements.forEach(el => {
+                el.style.animationPlayState = 'paused';
+            });
+            
+            const character = this.getAttribute('data-character');
+            showCharacterCard(character);
         });
         
+        // Возобновление анимации при уходе курсора
         photo.addEventListener('mouseleave', function() {
-            this.style.zIndex = '10';
+            const allMovingElements = document.querySelectorAll('.main-photo, .orbital-photo, .orbit-line');
+            allMovingElements.forEach(el => {
+                el.style.animationPlayState = 'running';
+            });
+            
+            hideCharacterCard();
         });
     });
 }
 
-// Показать голографическую карточку
-function showHologramCard(userId) {
-    const userData = subscribersData[userId];
-    if (!userData) return;
+// Показ карточки персонажа
+function showCharacterCard(characterId) {
+    const character = charactersData[characterId];
+    if (!character) return;
     
-    const card = document.getElementById('hologramCard');
-    const cardFrame = document.getElementById('cardFrame');
+    const card = document.getElementById('characterCard');
+    const cardGlow = card.querySelector('.card-glow');
     
-    // Заполняем данные карточки
-    document.getElementById('cardAvatar').src = userData.avatar;
-    document.getElementById('cardName').textContent = userData.name;
-    document.getElementById('cardRank').textContent = userData.role;
-    document.getElementById('cardDescription').textContent = userData.description;
-    document.getElementById('statAttack').textContent = userData.stats.attack;
-    document.getElementById('statDefense').textContent = userData.stats.defense;
-    document.getElementById('statSpeed').textContent = userData.stats.speed;
-    document.getElementById('statAccuracy').textContent = userData.stats.accuracy;
-    document.getElementById('cardAbility').querySelector('.ability-text').textContent = userData.ability;
+    // Установка данных
+    card.querySelector('.card-avatar').src = character.avatar;
+    card.querySelector('.card-name').textContent = character.name;
+    card.querySelector('.card-role').textContent = character.role;
+    card.querySelector('.card-description').textContent = character.description;
     
-    // Устанавливаем цветовую тему
-    card.style.borderColor = userData.color;
-    cardFrame.style.borderColor = userData.color;
-    cardFrame.style.boxShadow = `0 0 20px ${userData.color}`;
+    // Установка цвета
+    card.style.borderColor = character.color;
+    cardGlow.style.setProperty('--card-color', character.color);
+    card.style.setProperty('--card-color', character.color);
     
-    // Анимируем progress bars
-    animateProgressBars(userData.stats);
+    // Анимация статистики
+    animateStats(character.stats);
     
-    // Показываем карточку
+    // Показ карточки
     card.classList.add('show');
 }
 
-// Скрыть голографическую карточку
-function hideHologramCard() {
-    const card = document.getElementById('hologramCard');
+// Скрытие карточки персонажа
+function hideCharacterCard() {
+    const card = document.getElementById('characterCard');
     card.classList.remove('show');
 }
 
-// Анимировать progress bars
-function animateProgressBars(stats) {
-    setTimeout(() => {
-        document.querySelectorAll('.stat-progress').forEach(progress => {
-            const statType = progress.closest('.stat-row').querySelector('.stat-label').textContent.toLowerCase();
-            let value = 0;
-            
-            switch(statType) {
-                case 'атака': value = stats.attack; break;
-                case 'защита': value = stats.defense; break;
-                case 'скорость': value = stats.speed; break;
-                case 'точность': value = stats.accuracy; break;
-            }
-            
-            progress.style.width = `${value}%`;
-            progress.setAttribute('data-value', value);
-        });
-    }, 300);
-}
-
-// Подсветить орбитальный узел
-function highlightOrbitalNode(node) {
-    node.style.transform = 'scale(1.4) translateZ(50px)';
-    node.style.zIndex = '25';
-    node.style.filter = 'brightness(1.3)';
-}
-
-// Убрать подсветку орбитального узла
-function unhighlightOrbitalNode(node) {
-    node.style.transform = '';
-    node.style.zIndex = '5';
-    node.style.filter = '';
-}
-
-// Показать карточку главного персонажа
-function showMainCharacterCard(character) {
-    const card = document.getElementById('hologramCard');
-    const cardFrame = document.getElementById('cardFrame');
+// Анимация статистики
+function animateStats(stats) {
+    const statElements = {
+        attack: document.getElementById('statAttack'),
+        defense: document.getElementById('statDefense'), 
+        hp: document.getElementById('statHP')
+    };
     
-    if (character === 'ksusha') {
-        document.getElementById('cardAvatar').src = 'assets/images/ksusha.jpg';
-        document.getElementById('cardName').textContent = 'Ksusha Sher';
-        document.getElementById('cardRank').textContent = 'Главный стример';
-        document.getElementById('cardDescription').textContent = 'Создатель этого удивительного комьюнити. Профессиональный стример с более чем 3 годами опыта. Специализируется на играх и создании качественного развлекательного контента.';
-        document.getElementById('statAttack').textContent = '95';
-        document.getElementById('statDefense').textContent = '88';
-        document.getElementById('statSpeed').textContent = '92';
-        document.getElementById('statAccuracy').textContent = '98';
-        document.getElementById('cardAbility').querySelector('.ability-text').textContent = 'Создание контента';
-        
-        card.style.borderColor = '#ff2d95';
-        cardFrame.style.borderColor = '#ff2d95';
-    } else {
-        document.getElementById('cardAvatar').src = 'assets/images/tetla.jpg';
-        document.getElementById('cardName').textContent = 'TetlaBot';
-        document.getElementById('cardRank').textContent = 'Помощник стримера';
-        document.getElementById('cardDescription').textContent = 'Искусственный интеллект, помогающий в модерации чата и автоматизации процессов на стриме. Всегда на страже порядка и развлечений.';
-        document.getElementById('statAttack').textContent = '82';
-        document.getElementById('statDefense').textContent = '95';
-        document.getElementById('statSpeed').textContent = '99';
-        document.getElementById('statAccuracy').textContent = '100';
-        document.getElementById('cardAbility').querySelector('.ability-text').textContent = 'Автоматизация';
-        
-        card.style.borderColor = '#39ff14';
-        cardFrame.style.borderColor = '#39ff14';
-    }
+    const valueElements = {
+        attack: document.getElementById('statAttackValue'),
+        defense: document.getElementById('statDefenseValue'),
+        hp: document.getElementById('statHPValue')
+    };
     
-    animateProgressBars({
-        attack: parseInt(document.getElementById('statAttack').textContent),
-        defense: parseInt(document.getElementById('statDefense').textContent),
-        speed: parseInt(document.getElementById('statSpeed').textContent),
-        accuracy: parseInt(document.getElementById('statAccuracy').textContent)
+    // Сброс анимации
+    Object.values(statElements).forEach(el => {
+        el.style.width = '0%';
     });
     
-    card.classList.add('show');
+    // Запуск анимации с задержкой
+    setTimeout(() => {
+        Object.keys(stats).forEach(stat => {
+            const value = stats[stat];
+            statElements[stat].style.width = `${value}%`;
+            valueElements[stat].textContent = `${value}%`;
+        });
+    }, 100);
+}
+
+// Инициализация орбитального движения
+function initOrbitalMovement() {
+    console.log('🎮 Orbital movement initialized');
 }
 
 // Card number copy functionality
@@ -716,4 +619,4 @@ function showItemModal(item, type) {
 }
 
 // Export filter state for external use
-export { FilterState };
+export { FilterState, charactersData };
