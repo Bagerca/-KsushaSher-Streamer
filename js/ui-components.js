@@ -10,19 +10,18 @@ const FilterState = {
     currentTab: 'games'
 };
 
-// Subscribers data for hologram interface - ВАРИАНТ 1
-const subscribersData = {
+// Данные для двойной звездной системы - ВАРИАНТ 1
+const starSystemData = {
     ksusha: {
         name: "Ksusha Sher",
         role: "Главный стример",
         avatar: "./assets/images/ksusha.jpg",
         description: "Создатель контента и душа проекта. Стримит игры и общается с комьюнити уже более 3 лет, создавая уютное пространство для всех.",
         stats: {
-            stat1: { value: "5.2K", label: "Подписчики" },
-            stat2: { value: "154", label: "Стримы" },
-            stat3: { value: "3+", label: "Года" }
+            attack: 85,
+            defense: 70,
+            magic: 95
         },
-        status: { text: "В эфире" },
         color: "#ff2d95"
     },
     tetla: {
@@ -31,11 +30,10 @@ const subscribersData = {
         avatar: "./assets/images/tetla.jpg",
         description: "Умный бот помогающий модерации и взаимодействию с комьюнити. Всегда на страже порядка и готов помочь.",
         stats: {
-            stat1: { value: "2.1.4", label: "Версия" },
-            stat2: { value: "47", label: "Команды" },
-            stat3: { value: "24/7", label: "Онлайн" }
+            attack: 60,
+            defense: 90,
+            magic: 80
         },
-        status: { text: "Активен" },
         color: "#39ff14"
     },
     bager: {
@@ -44,12 +42,11 @@ const subscribersData = {
         avatar: "./assets/images/bager.jpg", 
         description: "Разработчик этого сайта и технический специалист. Создает магию из кода и решает самые сложные задачи.",
         stats: {
-            stat1: { value: "100%", label: "Код" },
-            stat2: { value: "∞", label: "Идеи" },
-            stat3: { value: "24/7", label: "Готовность" }
+            attack: 95,
+            defense: 85,
+            magic: 75
         },
-        status: { text: "Кодит" },
-        color: "#14f7ff"
+        color: "#ff6464"
     },
     tobeangle: {
         name: "To Be Angle",
@@ -57,12 +54,11 @@ const subscribersData = {
         avatar: "./assets/images/tobeangle.jpg",
         description: "Отвечает за визуал и креатив. Превращает обычное в нечто невероятное с помощью творчества.",
         stats: {
-            stat1: { value: "99%", label: "Креатив" },
-            stat2: { value: "50+", label: "Проекты" },
-            stat3: { value: "✨", label: "Магия" }
+            attack: 70,
+            defense: 65,
+            magic: 90
         },
-        status: { text: "Творит" },
-        color: "#bf5fff"
+        color: "#ff8c42"
     },
     kiriki: {
         name: "Kiriki",
@@ -70,19 +66,18 @@ const subscribersData = {
         avatar: "./assets/images/kiriki.jpg",
         description: "Анализирует тренды и помогает с стратегией развития. Видит то, что скрыто от других взглядов.",
         stats: {
-            stat1: { value: "100%", label: "Анализ" },
-            stat2: { value: "360°", label: "Обзор" },
-            stat3: { value: "♟️", label: "Стратегия" }
+            attack: 80,
+            defense: 90,
+            magic: 85
         },
-        status: { text: "Анализирует" },
-        color: "#ff8c42"
+        color: "#14f7ff"
     }
 };
 
 // Initialize all UI components
 export function initializeUI() {
     initFilters();
-    initHologramInterface();
+    initStarSystemInteractivity();
     initCardCopy();
     initSmoothScroll();
     
@@ -481,47 +476,32 @@ function updateTabSliders() {
     }
 }
 
-// Hologram interface functionality
-export function initHologramInterface() {
-    initSubscriberInteractivity();
-    initHeroImageEasterEgg();
+// Star system interactivity
+export function initStarSystemInteractivity() {
+    initStarHoverEffects();
+    initStarEasterEgg();
 }
 
-// Initialize subscriber interactivity
-function initSubscriberInteractivity() {
-    const nodes = document.querySelectorAll('.data-node');
-    const mainPhotos = document.querySelectorAll('.hologram-main');
+// Initialize star hover effects
+function initStarHoverEffects() {
+    const stars = document.querySelectorAll('.main-star, .satellite');
     
-    // Обработчики для спутников
-    nodes.forEach(node => {
-        const userId = node.getAttribute('data-user');
+    stars.forEach(star => {
+        const userId = star.getAttribute('data-user');
         
-        node.addEventListener('mouseenter', function() {
+        star.addEventListener('mouseenter', function() {
             showHologramCard(userId);
         });
         
-        node.addEventListener('mouseleave', function() {
-            hideHologramCard();
-        });
-    });
-    
-    // Обработчики для главных фото
-    mainPhotos.forEach(photo => {
-        const userId = photo.classList.contains('ksusha') ? 'ksusha' : 'tetla';
-        
-        photo.addEventListener('mouseenter', function() {
-            showHologramCard(userId);
-        });
-        
-        photo.addEventListener('mouseleave', function() {
+        star.addEventListener('mouseleave', function() {
             hideHologramCard();
         });
     });
 }
 
-// Show hologram card
+// Show hologram card with user data
 function showHologramCard(userId) {
-    const userData = subscribersData[userId];
+    const userData = starSystemData[userId];
     if (!userData) return;
     
     const card = document.getElementById('hologramCard');
@@ -529,66 +509,97 @@ function showHologramCard(userId) {
     const name = document.getElementById('cardName');
     const role = document.getElementById('cardRole');
     const description = document.getElementById('cardDescription');
-    const stat1 = document.getElementById('stat1');
-    const stat2 = document.getElementById('stat2');
-    const stat3 = document.getElementById('stat3');
-    const label1 = document.getElementById('label1');
-    const label2 = document.getElementById('label2');
-    const label3 = document.getElementById('label3');
-    const statusText = document.getElementById('statusText');
-    const statusDot = document.querySelector('.status-dot');
-    const cardBorder = document.querySelector('.card-border-glow');
+    const attackBar = document.getElementById('statAttack');
+    const defenseBar = document.getElementById('statDefense');
+    const magicBar = document.getElementById('statMagic');
+    const attackValue = document.getElementById('statAttackValue');
+    const defenseValue = document.getElementById('statDefenseValue');
+    const magicValue = document.getElementById('statMagicValue');
+    const avatarHalo = document.querySelector('.avatar-halo');
+    const cardBorder = document.querySelector('.card-glow-border');
+    const statFills = document.querySelectorAll('.stat-fill');
     
     // Установка данных
     avatar.src = userData.avatar;
     name.textContent = userData.name;
     role.textContent = userData.role;
     description.textContent = userData.description;
-    stat1.textContent = userData.stats.stat1.value;
-    stat2.textContent = userData.stats.stat2.value;
-    stat3.textContent = userData.stats.stat3.value;
-    label1.textContent = userData.stats.stat1.label;
-    label2.textContent = userData.stats.stat2.label;
-    label3.textContent = userData.stats.stat3.label;
-    statusText.textContent = userData.status.text;
+    
+    // Анимация прогресс-баров
+    setTimeout(() => {
+        attackBar.style.width = userData.stats.attack + '%';
+        defenseBar.style.width = userData.stats.defense + '%';
+        magicBar.style.width = userData.stats.magic + '%';
+        
+        attackValue.textContent = userData.stats.attack + '%';
+        defenseValue.textContent = userData.stats.defense + '%';
+        magicValue.textContent = userData.stats.magic + '%';
+    }, 100);
     
     // Цветовая схема
     name.style.color = userData.color;
-    statusDot.style.background = userData.color;
-    statusDot.style.boxShadow = `0 0 10px ${userData.color}`;
-    cardBorder.style.background = `conic-gradient(from 0deg at 50% 50%, ${userData.color}, #39ff14, #14f7ff, #bf5fff, ${userData.color})`;
+    role.style.color = userData.color;
+    description.style.borderLeftColor = userData.color;
+    avatar.style.borderColor = userData.color;
+    avatarHalo.style.background = userData.color;
     
+    // Установка цветов для прогресс-баров
+    statFills.forEach(fill => {
+        fill.style.background = userData.color;
+        fill.style.boxShadow = `0 0 8px ${userData.color}`;
+    });
+    
+    // Анимация появления карточки
     card.classList.add('show');
 }
 
 // Hide hologram card
 function hideHologramCard() {
     const card = document.getElementById('hologramCard');
+    const statFills = document.querySelectorAll('.stat-fill');
+    
     card.classList.remove('show');
+    
+    // Сброс прогресс-баров
+    statFills.forEach(fill => {
+        fill.style.width = '0%';
+    });
 }
 
-// Hero image easter egg
-function initHeroImageEasterEgg() {
-    const mainPhotos = document.querySelectorAll('.hologram-main');
-    let clickCount = 0;
-
-    mainPhotos.forEach(photo => {
-        photo.addEventListener('click', (e) => {
-            e.stopPropagation();
-            clickCount++;
+// Star system easter egg
+function initStarEasterEgg() {
+    const stars = document.querySelectorAll('.main-star');
+    let clickSequence = [];
+    const secretSequence = ['ksusha', 'tetla', 'ksusha', 'tetla', 'ksusha'];
+    
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user');
+            clickSequence.push(userId);
             
-            if (clickCount >= 5) {
-                // Специальный эффект
-                document.querySelectorAll('.data-node').forEach(node => {
-                    node.style.animation = 'none';
-                    setTimeout(() => {
-                        node.style.animation = '';
-                    }, 100);
-                });
-                console.log('🎉 Easter egg activated!');
-                clickCount = 0;
+            // Проверка секретной последовательности
+            if (clickSequence.length > secretSequence.length) {
+                clickSequence.shift();
+            }
+            
+            if (JSON.stringify(clickSequence) === JSON.stringify(secretSequence)) {
+                activateEasterEgg();
+                clickSequence = [];
             }
         });
+    });
+}
+
+// Activate easter egg
+function activateEasterEgg() {
+    console.log('🎉 Easter egg activated! Secret sequence discovered!');
+    
+    // Добавьте специальные эффекты здесь
+    document.querySelectorAll('.satellite').forEach(satellite => {
+        satellite.style.animationPlayState = 'paused';
+        setTimeout(() => {
+            satellite.style.animationPlayState = 'running';
+        }, 1000);
     });
 }
 
