@@ -70,50 +70,59 @@
                 <img src="./assets/images/tetla.jpg" alt="TetlaBot">
             </div>
             
-            <!-- Точки данных с именами подписчиков -->
-            <div class="data-node node-1" data-user="bager">
-                <img src="./assets/images/bager.jpg" alt="BAGERca">
-                <div class="node-label">BAGERca</div>
-            </div>
-            
-            <div class="data-node node-2" data-user="tobeangle">
-                <img src="./assets/images/tobeangle.jpg" alt="To Be Angle">
-                <div class="node-label">To Be Angle</div>
-            </div>
-            
-            <div class="data-node node-3" data-user="kiriki">
-                <img src="./assets/images/kiriki.jpg" alt="Kiriki">
-                <div class="node-label">Kiriki</div>
+            <!-- Орбитальные точки данных -->
+            <div class="orbital-system">
+                <div class="data-node node-1" data-user="bager">
+                    <img src="./assets/images/bager.jpg" alt="BAGERca">
+                    <div class="node-label">BAGERca</div>
+                </div>
+                
+                <div class="data-node node-2" data-user="tobeangle">
+                    <img src="./assets/images/tobeangle.jpg" alt="To Be Angle">
+                    <div class="node-label">To Be Angle</div>
+                </div>
+                
+                <div class="data-node node-3" data-user="kiriki">
+                    <img src="./assets/images/kiriki.jpg" alt="Kiriki">
+                    <div class="node-label">Kiriki</div>
+                </div>
             </div>
         </div>
 
         <!-- Голографическая карточка -->
         <div class="hologram-card" id="hologramCard">
+            <div class="card-border-glow"></div>
             <div class="card-content">
                 <div class="card-header">
-                    <img src="" alt="Аватар" class="card-avatar" id="cardAvatar">
+                    <div class="avatar-container">
+                        <img src="" alt="Аватар" class="card-avatar" id="cardAvatar">
+                        <div class="avatar-glow"></div>
+                    </div>
                     <div class="card-title">
                         <div class="card-name" id="cardName">Имя</div>
                         <div class="card-role" id="cardRole">Роль</div>
                     </div>
                 </div>
+                <div class="card-description" id="cardDescription">
+                    Описание появляется здесь...
+                </div>
                 <div class="card-stats">
                     <div class="stat-item">
-                        <div class="stat-icon">⚡</div>
+                        <div class="stat-icon">📊</div>
                         <div class="stat-info">
                             <div class="stat-value" id="stat1">0</div>
                             <div class="stat-label" id="label1">Статистика</div>
                         </div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-icon">🎮</div>
+                        <div class="stat-icon">⚡</div>
                         <div class="stat-info">
                             <div class="stat-value" id="stat2">0</div>
                             <div class="stat-label" id="label2">Статистика</div>
                         </div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-icon">💬</div>
+                        <div class="stat-icon">🎯</div>
                         <div class="stat-info">
                             <div class="stat-value" id="stat3">0</div>
                             <div class="stat-label" id="label3">Статистика</div>
@@ -121,13 +130,19 @@
                     </div>
                 </div>
                 <div class="card-status">
-                    <div class="status-bar">
-                        <div class="status-fill" id="statusFill"></div>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <div class="status-text" id="statusText">Статус</div>
                     </div>
-                    <div class="status-text" id="statusText">Статус</div>
                 </div>
             </div>
-            <div class="card-particles"></div>
+            <div class="card-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
         </div>
 
         <!-- Текстовый контент -->
@@ -141,6 +156,7 @@
         </div>
     </section>
 
+    <!-- ОСТАЛЬНАЯ ЧАСТЬ ФАЙЛА БЕЗ ИЗМЕНЕНИЙ -->
     <section id="about">
         <div class="container">
             <h2 class="section-title">Обо мне</h2>
@@ -381,7 +397,7 @@
                     <p>Альтернативные донаты</p>
                 </a>
                 <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>Twitch Подпика</h3>
+                    <h3>Twitch Подписка</h3>
                     <p>Подписка на канале</p>
                 </a>
             </div>
