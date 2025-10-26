@@ -1,22 +1,16 @@
-/css
-  /components
-    header.css
-    hero.css
-    sections.css
-    modals.css
-  main.css
-/js
-  /modules
-    loaders.js
-    renderers.js
-    ui.js
-    filters.js
-  app.js
-/data
-  schedule.json
-  stats.json
-  games.json
-  movies.json
-/assets
-  /images (для будущих локальных изображений)
-index.html
+ksusha-sher-website/
+├── index.html
+├── css/
+│   ├── style.css           # Все основные стили
+│   └── hologram.css        # Только голографические эффекты
+├── js/
+│   ├── app.js              # Точка входа и инициализация
+│   ├── data-manager.js     # Загрузка + рендеринг данных
+│   └── ui-components.js    # UI + фильтры + взаимодействия
+├── data/
+│   ├── games.json
+│   ├── movies.json
+│   ├── stats.json
+│   └── schedule.json
+└── assets/
+    └── images/
