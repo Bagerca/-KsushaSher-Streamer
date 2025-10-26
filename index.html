@@ -62,41 +62,72 @@
                 <div class="layer-pulse"></div>
             </div>
             
-            <!-- Основное фото -->
-            <div class="hologram-main" id="mainPhoto">
-                <img src="https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0" alt="Ksusha Sher">
+            <!-- Основные фото - двойная звездная система -->
+            <div class="hologram-main ksusha" id="mainPhotoKsusha">
+                <img src="./assets/images/ksusha.jpg" alt="Ksusha Sher">
+            </div>
+            <div class="hologram-main tetla" id="mainPhotoTetla">
+                <img src="./assets/images/tetla.jpg" alt="TetlaBot">
             </div>
             
             <!-- Точки данных с именами подписчиков -->
-            <div class="data-node node-1" data-user="alexey">
-                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Алексей">
-                <div class="node-label">Алексей</div>
+            <div class="data-node node-1" data-user="bager">
+                <img src="./assets/images/bager.jpg" alt="BAGERca">
+                <div class="node-label">BAGERca</div>
             </div>
             
-            <div class="data-node node-2" data-user="maria">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Мария">
-                <div class="node-label">Мария</div>
+            <div class="data-node node-2" data-user="tobeangle">
+                <img src="./assets/images/tobeangle.jpg" alt="To Be Angle">
+                <div class="node-label">To Be Angle</div>
             </div>
             
-            <div class="data-node node-3" data-user="dmitry">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Дмитрий">
-                <div class="node-label">Дмитрий</div>
+            <div class="data-node node-3" data-user="kiriki">
+                <img src="./assets/images/kiriki.jpg" alt="Kiriki">
+                <div class="node-label">Kiriki</div>
             </div>
-            
-            <div class="data-node node-4" data-user="olga">
-                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Ольга">
-                <div class="node-label">Ольга</div>
+        </div>
+
+        <!-- Голографическая карточка -->
+        <div class="hologram-card" id="hologramCard">
+            <div class="card-content">
+                <div class="card-header">
+                    <img src="" alt="Аватар" class="card-avatar" id="cardAvatar">
+                    <div class="card-title">
+                        <div class="card-name" id="cardName">Имя</div>
+                        <div class="card-role" id="cardRole">Роль</div>
+                    </div>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat1">0</div>
+                            <div class="stat-label" id="label1">Статистика</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">🎮</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat2">0</div>
+                            <div class="stat-label" id="label2">Статистика</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat3">0</div>
+                            <div class="stat-label" id="label3">Статистика</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-status">
+                    <div class="status-bar">
+                        <div class="status-fill" id="statusFill"></div>
+                    </div>
+                    <div class="status-text" id="statusText">Статус</div>
+                </div>
             </div>
-            
-            <div class="data-node node-5" data-user="ivan">
-                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Иван">
-                <div class="node-label">Иван</div>
-            </div>
-            
-            <div class="data-node node-6" data-user="sergey">
-                <img src="https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Сергей">
-                <div class="node-label">Сергей</div>
-            </div>
+            <div class="card-particles"></div>
         </div>
 
         <!-- Текстовый контент -->
@@ -350,7 +381,7 @@
                     <p>Альтернативные донаты</p>
                 </a>
                 <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>Twitch Подписка</h3>
+                    <h3>Twitch Подпика</h3>
                     <p>Подписка на канале</p>
                 </a>
             </div>
