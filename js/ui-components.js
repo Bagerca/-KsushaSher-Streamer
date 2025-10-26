@@ -12,47 +12,70 @@ const FilterState = {
 
 // Subscribers data for hologram interface
 const subscribersData = {
-    alexey: {
-        name: "Алексей",
-        role: "Главный модератор",
-        avatar: "https://i.redd.it/f2jbra8kopg81.jpg",
-        description: "Помогает поддерживать порядок в чате с самого первого дня. Всегда справедлив и внимателен к комьюнити. Организует ивенты и конкурсы.",
-        stats: { months: "24+", messages: "8.7K", streams: "156" }
+    ksusha: {
+        name: "Ksusha Sher",
+        role: "Главный стример",
+        avatar: "./assets/images/ksusha.jpg",
+        description: "Создатель контента и душа проекта. Стримит игры и общается с комьюнити уже более 3 лет.",
+        stats: {
+            stat1: { value: "5.2K+", label: "Подписчиков" },
+            stat2: { value: "154", label: "Стримов" },
+            stat3: { value: "1000+", label: "Часов" }
+        },
+        status: { level: 85, text: "В эфире" },
+        color: "#ff2d95"
     },
-    maria: {
-        name: "Мария", 
-        role: "Легенда комьюнити",
-        avatar: "https://img.championat.com/s/732x488/news/big/a/c/dzhejson-devid-frenk_16690405271591211867.jpg",
-        description: "С нами с первых трансляций. Всегда поддерживает теплую атмосферу и помогает новичкам освоиться. Настоящая душа нашего сообщества.",
-        stats: { months: "32+", messages: "12.4K", streams: "210" }
+    tetla: {
+        name: "TetlaBot", 
+        role: "AI Ассистент",
+        avatar: "./assets/images/tetla.jpg",
+        description: "Умный бот помогающий модерации и взаимодействию с комьюнити. Всегда на страже порядка.",
+        stats: {
+            stat1: { value: "2.1.4", label: "Версия" },
+            stat2: { value: "47", label: "Команд" },
+            stat3: { value: "24/7", label: "Онлайн" }
+        },
+        status: { level: 100, text: "Активен" },
+        color: "#39ff14"
     },
-    dmitry: {
-        name: "Дмитрий",
-        role: "Технический специалист",
-        avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9DeuKODbRaE6Gdhem6unM5GKOPKyGXBqCAw&s",
-        description: "Помогал с настройкой оборудования и делился профессиональными советами по стримингу. Всегда готов помочь с техническими вопросами.",
-        stats: { months: "18+", messages: "3.2K", streams: "89" }
+    bager: {
+        name: "BAGERca",
+        role: "Технический гений",
+        avatar: "./assets/images/bager.jpg", 
+        description: "Разработчик этого сайта и технический специалист. Создает магию из кода.",
+        stats: {
+            stat1: { value: "100%", label: "Надежность" },
+            stat2: { value: "∞", label: "Идей" },
+            stat3: { value: "24/7", label: "Поддержка" }
+        },
+        status: { level: 95, text: "Кодит" },
+        color: "#14f7ff"
     },
-    olga: {
-        name: "Ольга",
-        role: "Талантливый художник", 
-        avatar: "https://static.wikia.nocookie.net/powerrangers/images/5/51/17-blue.jpg/revision/latest?cb=20170326191809&path-prefix=ru",
-        description: "Создала уникальный стиль для канала и продолжает радовать нас потрясающими работами. Её арты стали визитной карточкой сообщества.",
-        stats: { months: "14+", messages: "2.1K", streams: "67" }
+    tobeangle: {
+        name: "To Be Angle",
+        role: "Креативный директор",
+        avatar: "./assets/images/tobeangle.jpg",
+        description: "Отвечает за визуал и креатив. Превращает обычное в нечто невероятное.",
+        stats: {
+            stat1: { value: "99%", label: "Креатив" },
+            stat2: { value: "50+", label: "Проектов" },
+            stat3: { value: "✨", label: "Магия" }
+        },
+        status: { level: 90, text: "Творит" },
+        color: "#bf5fff"
     },
-    ivan: {
-        name: "Иван",
-        role: "Активный саппорт",
-        avatar: "https://static.wikia.nocookie.net/powerrangers/images/d/d9/17-red.jpg/revision/latest?cb=20170325124238&path-prefix=ru",
-        description: "Постоянно поддерживает канал и помогает развиваться. Его донаты и конструктивные предложения помогают делать контент лучше.",
-        stats: { months: "21+", messages: "5.6K", streams: "134" }
-    },
-    sergey: {
-        name: "Сергей",
-        role: "Ветеран сообщества",
-        avatar: "https://avatars.mds.yandex.net/get-shedevrum/12733905/72aaedc8d4d311eea810fe19746b188b/orig",
-        description: "Присоединился одним из первых и с тех пор не пропустил почти ни одного стрима. Его опыт и мудрость помогают сообществу расти.",
-        stats: { months: "36+", messages: "15.8K", streams: "245" }
+    kiriki: {
+        name: "Kiriki",
+        role: "Стратег и аналитик",
+        avatar: "./assets/images/kiriki.jpg",
+        description: "Анализирует тренды и помогает с стратегией развития. Видит то, что скрыто от других.",
+        stats: {
+            stat1: { value: "100%", label: "Анализ" },
+            stat2: { value: "360°", label: "Обзор" },
+            stat3: { value: "♟️", label: "Стратегия" }
+        },
+        status: { level: 88, text: "Анализирует" },
+        color: "#ff8c42"
     }
 };
 
@@ -467,7 +490,9 @@ export function initHologramInterface() {
 // Initialize subscriber interactivity
 function initSubscriberInteractivity() {
     const nodes = document.querySelectorAll('.data-node');
+    const mainPhotos = document.querySelectorAll('.hologram-main');
     
+    // Обработчики для маленьких планет
     nodes.forEach(node => {
         const userId = node.getAttribute('data-user');
         
@@ -479,6 +504,19 @@ function initSubscriberInteractivity() {
             hideSubscriberInfo();
         });
     });
+    
+    // Обработчики для главных фото
+    mainPhotos.forEach(photo => {
+        const userId = photo.classList.contains('ksusha') ? 'ksusha' : 'tetla';
+        
+        photo.addEventListener('mouseenter', function() {
+            showSubscriberInfo(userId);
+        });
+        
+        photo.addEventListener('mouseleave', function() {
+            hideSubscriberInfo();
+        });
+    });
 }
 
 // Show subscriber information
@@ -486,41 +524,70 @@ function showSubscriberInfo(userId) {
     const userData = subscribersData[userId];
     if (!userData) return;
     
-    const infoPanel = document.getElementById('subscriberInfo');
-    document.getElementById('subscriberName').textContent = userData.name;
-    document.getElementById('subscriberRole').textContent = userData.role;
-    document.getElementById('subscriberAvatar').src = userData.avatar;
-    document.getElementById('subscriberDetails').textContent = userData.description;
-    document.getElementById('statMonths').textContent = userData.stats.months;
-    document.getElementById('statMessages').textContent = userData.stats.messages;
-    document.getElementById('statStreams').textContent = userData.stats.streams;
+    const card = document.getElementById('hologramCard');
+    const avatar = document.getElementById('cardAvatar');
+    const name = document.getElementById('cardName');
+    const role = document.getElementById('cardRole');
+    const stat1 = document.getElementById('stat1');
+    const stat2 = document.getElementById('stat2');
+    const stat3 = document.getElementById('stat3');
+    const label1 = document.getElementById('label1');
+    const label2 = document.getElementById('label2');
+    const label3 = document.getElementById('label3');
+    const statusFill = document.getElementById('statusFill');
+    const statusText = document.getElementById('statusText');
     
-    infoPanel.classList.add('show');
+    // Установка данных
+    avatar.src = userData.avatar;
+    name.textContent = userData.name;
+    role.textContent = userData.role;
+    stat1.textContent = userData.stats.stat1.value;
+    stat2.textContent = userData.stats.stat2.value;
+    stat3.textContent = userData.stats.stat3.value;
+    label1.textContent = userData.stats.stat1.label;
+    label2.textContent = userData.stats.stat2.label;
+    label3.textContent = userData.stats.stat3.label;
+    statusText.textContent = userData.status.text;
+    
+    // Анимация прогресс-бара
+    setTimeout(() => {
+        statusFill.style.width = userData.status.level + '%';
+    }, 100);
+    
+    // Цветовая схема
+    card.style.borderColor = userData.color;
+    card.style.boxShadow = `0 0 50px ${userData.color}30, inset 0 0 30px ${userData.color}15`;
+    name.style.color = userData.color;
+    
+    card.classList.add('show');
 }
 
 // Hide subscriber information
 function hideSubscriberInfo() {
-    const infoPanel = document.getElementById('subscriberInfo');
-    infoPanel.classList.remove('show');
+    const card = document.getElementById('hologramCard');
+    const statusFill = document.getElementById('statusFill');
+    
+    card.classList.remove('show');
+    statusFill.style.width = '0%';
 }
 
 // Hero image easter egg
 function initHeroImageEasterEgg() {
-    const mainPhoto = document.querySelector('.hologram-main');
+    const mainPhotos = document.querySelectorAll('.hologram-main');
     let clickCount = 0;
 
-    if (mainPhoto) {
-        mainPhoto.addEventListener('click', (e) => {
+    mainPhotos.forEach(photo => {
+        photo.addEventListener('click', (e) => {
             e.stopPropagation();
             clickCount++;
             
             if (clickCount >= 7) {
-                // Could add special effect here
+                // Специальный эффект можно добавить здесь
                 console.log('🎉 Easter egg activated!');
                 clickCount = 0;
             }
         });
-    }
+    });
 }
 
 // Card number copy functionality
