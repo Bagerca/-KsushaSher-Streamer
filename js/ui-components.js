@@ -10,71 +10,71 @@ const FilterState = {
     currentTab: 'games'
 };
 
-// Subscribers data for hologram interface
+// Subscribers data for hologram interface - ВАРИАНТ 1
 const subscribersData = {
     ksusha: {
         name: "Ksusha Sher",
         role: "Главный стример",
         avatar: "./assets/images/ksusha.jpg",
-        description: "Создатель контента и душа проекта. Стримит игры и общается с комьюнити уже более 3 лет.",
+        description: "Создатель контента и душа проекта. Стримит игры и общается с комьюнити уже более 3 лет, создавая уютное пространство для всех.",
         stats: {
-            stat1: { value: "5.2K+", label: "Подписчиков" },
-            stat2: { value: "154", label: "Стримов" },
-            stat3: { value: "1000+", label: "Часов" }
+            stat1: { value: "5.2K", label: "Подписчики" },
+            stat2: { value: "154", label: "Стримы" },
+            stat3: { value: "3+", label: "Года" }
         },
-        status: { level: 85, text: "В эфире" },
+        status: { text: "В эфире" },
         color: "#ff2d95"
     },
     tetla: {
         name: "TetlaBot", 
         role: "AI Ассистент",
         avatar: "./assets/images/tetla.jpg",
-        description: "Умный бот помогающий модерации и взаимодействию с комьюнити. Всегда на страже порядка.",
+        description: "Умный бот помогающий модерации и взаимодействию с комьюнити. Всегда на страже порядка и готов помочь.",
         stats: {
             stat1: { value: "2.1.4", label: "Версия" },
-            stat2: { value: "47", label: "Команд" },
+            stat2: { value: "47", label: "Команды" },
             stat3: { value: "24/7", label: "Онлайн" }
         },
-        status: { level: 100, text: "Активен" },
+        status: { text: "Активен" },
         color: "#39ff14"
     },
     bager: {
         name: "BAGERca",
         role: "Технический гений",
         avatar: "./assets/images/bager.jpg", 
-        description: "Разработчик этого сайта и технический специалист. Создает магию из кода.",
+        description: "Разработчик этого сайта и технический специалист. Создает магию из кода и решает самые сложные задачи.",
         stats: {
-            stat1: { value: "100%", label: "Надежность" },
-            stat2: { value: "∞", label: "Идей" },
-            stat3: { value: "24/7", label: "Поддержка" }
+            stat1: { value: "100%", label: "Код" },
+            stat2: { value: "∞", label: "Идеи" },
+            stat3: { value: "24/7", label: "Готовность" }
         },
-        status: { level: 95, text: "Кодит" },
+        status: { text: "Кодит" },
         color: "#14f7ff"
     },
     tobeangle: {
         name: "To Be Angle",
         role: "Креативный директор",
         avatar: "./assets/images/tobeangle.jpg",
-        description: "Отвечает за визуал и креатив. Превращает обычное в нечто невероятное.",
+        description: "Отвечает за визуал и креатив. Превращает обычное в нечто невероятное с помощью творчества.",
         stats: {
             stat1: { value: "99%", label: "Креатив" },
-            stat2: { value: "50+", label: "Проектов" },
+            stat2: { value: "50+", label: "Проекты" },
             stat3: { value: "✨", label: "Магия" }
         },
-        status: { level: 90, text: "Творит" },
+        status: { text: "Творит" },
         color: "#bf5fff"
     },
     kiriki: {
         name: "Kiriki",
         role: "Стратег и аналитик",
         avatar: "./assets/images/kiriki.jpg",
-        description: "Анализирует тренды и помогает с стратегией развития. Видит то, что скрыто от других.",
+        description: "Анализирует тренды и помогает с стратегией развития. Видит то, что скрыто от других взглядов.",
         stats: {
             stat1: { value: "100%", label: "Анализ" },
             stat2: { value: "360°", label: "Обзор" },
             stat3: { value: "♟️", label: "Стратегия" }
         },
-        status: { level: 88, text: "Анализирует" },
+        status: { text: "Анализирует" },
         color: "#ff8c42"
     }
 };
@@ -100,7 +100,7 @@ function initSmoothScroll() {
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 window.scrollTo({
-                    top: targetElement.offsetTop - 20, // Уменьшили отступ т.к. header удален
+                    top: targetElement.offsetTop - 20,
                     behavior: 'smooth'
                 });
             }
@@ -492,16 +492,16 @@ function initSubscriberInteractivity() {
     const nodes = document.querySelectorAll('.data-node');
     const mainPhotos = document.querySelectorAll('.hologram-main');
     
-    // Обработчики для маленьких планет
+    // Обработчики для спутников
     nodes.forEach(node => {
         const userId = node.getAttribute('data-user');
         
         node.addEventListener('mouseenter', function() {
-            showSubscriberInfo(userId);
+            showHologramCard(userId);
         });
         
         node.addEventListener('mouseleave', function() {
-            hideSubscriberInfo();
+            hideHologramCard();
         });
     });
     
@@ -510,17 +510,17 @@ function initSubscriberInteractivity() {
         const userId = photo.classList.contains('ksusha') ? 'ksusha' : 'tetla';
         
         photo.addEventListener('mouseenter', function() {
-            showSubscriberInfo(userId);
+            showHologramCard(userId);
         });
         
         photo.addEventListener('mouseleave', function() {
-            hideSubscriberInfo();
+            hideHologramCard();
         });
     });
 }
 
-// Show subscriber information
-function showSubscriberInfo(userId) {
+// Show hologram card
+function showHologramCard(userId) {
     const userData = subscribersData[userId];
     if (!userData) return;
     
@@ -528,19 +528,22 @@ function showSubscriberInfo(userId) {
     const avatar = document.getElementById('cardAvatar');
     const name = document.getElementById('cardName');
     const role = document.getElementById('cardRole');
+    const description = document.getElementById('cardDescription');
     const stat1 = document.getElementById('stat1');
     const stat2 = document.getElementById('stat2');
     const stat3 = document.getElementById('stat3');
     const label1 = document.getElementById('label1');
     const label2 = document.getElementById('label2');
     const label3 = document.getElementById('label3');
-    const statusFill = document.getElementById('statusFill');
     const statusText = document.getElementById('statusText');
+    const statusDot = document.querySelector('.status-dot');
+    const cardBorder = document.querySelector('.card-border-glow');
     
     // Установка данных
     avatar.src = userData.avatar;
     name.textContent = userData.name;
     role.textContent = userData.role;
+    description.textContent = userData.description;
     stat1.textContent = userData.stats.stat1.value;
     stat2.textContent = userData.stats.stat2.value;
     stat3.textContent = userData.stats.stat3.value;
@@ -549,26 +552,19 @@ function showSubscriberInfo(userId) {
     label3.textContent = userData.stats.stat3.label;
     statusText.textContent = userData.status.text;
     
-    // Анимация прогресс-бара
-    setTimeout(() => {
-        statusFill.style.width = userData.status.level + '%';
-    }, 100);
-    
     // Цветовая схема
-    card.style.borderColor = userData.color;
-    card.style.boxShadow = `0 0 50px ${userData.color}30, inset 0 0 30px ${userData.color}15`;
     name.style.color = userData.color;
+    statusDot.style.background = userData.color;
+    statusDot.style.boxShadow = `0 0 10px ${userData.color}`;
+    cardBorder.style.background = `conic-gradient(from 0deg at 50% 50%, ${userData.color}, #39ff14, #14f7ff, #bf5fff, ${userData.color})`;
     
     card.classList.add('show');
 }
 
-// Hide subscriber information
-function hideSubscriberInfo() {
+// Hide hologram card
+function hideHologramCard() {
     const card = document.getElementById('hologramCard');
-    const statusFill = document.getElementById('statusFill');
-    
     card.classList.remove('show');
-    statusFill.style.width = '0%';
 }
 
 // Hero image easter egg
@@ -581,8 +577,14 @@ function initHeroImageEasterEgg() {
             e.stopPropagation();
             clickCount++;
             
-            if (clickCount >= 7) {
-                // Специальный эффект можно добавить здесь
+            if (clickCount >= 5) {
+                // Специальный эффект
+                document.querySelectorAll('.data-node').forEach(node => {
+                    node.style.animation = 'none';
+                    setTimeout(() => {
+                        node.style.animation = '';
+                    }, 100);
+                });
                 console.log('🎉 Easter egg activated!');
                 clickCount = 0;
             }
@@ -649,7 +651,6 @@ document.addEventListener('cardClick', (event) => {
 function showItemModal(item, type) {
     console.log(`Opening ${type} modal:`, item.title);
     // Modal implementation can be added here
-    // For now, just log to console
 }
 
 // Export filter state for external use
