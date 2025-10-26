@@ -15,131 +15,81 @@
     <link rel="stylesheet" href="css/hologram.css">
 </head>
 <body>
-    <!-- Голографическая карточка -->
-    <div class="hologram-card" id="hologramCard">
-        <div class="card-header">
-            <div class="card-avatar">
-                <img src="" alt="Аватар" id="cardAvatar">
-                <div class="card-frame" id="cardFrame"></div>
-            </div>
-            <div class="card-title">
-                <h3 class="card-name" id="cardName">Имя игрока</h3>
-                <span class="card-rank" id="cardRank">Ранг</span>
-            </div>
-        </div>
-        
-        <div class="card-description" id="cardDescription">
-            Описание персонажа и его роль в комьюнити...
-        </div>
-        
-        <div class="card-stats">
-            <div class="stat-row">
-                <div class="stat-item">
-                    <div class="stat-icon">⚔️</div>
-                    <div class="stat-info">
-                        <div class="stat-value" id="statAttack">85</div>
-                        <div class="stat-label">Атака</div>
-                    </div>
-                    <div class="stat-bar">
-                        <div class="stat-progress" data-value="85"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-row">
-                <div class="stat-item">
-                    <div class="stat-icon">🛡️</div>
-                    <div class="stat-info">
-                        <div class="stat-value" id="statDefense">70</div>
-                        <div class="stat-label">Защита</div>
-                    </div>
-                    <div class="stat-bar">
-                        <div class="stat-progress" data-value="70"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-row">
-                <div class="stat-item">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-info">
-                        <div class="stat-value" id="statSpeed">90</div>
-                        <div class="stat-label">Скорость</div>
-                    </div>
-                    <div class="stat-bar">
-                        <div class="stat-progress" data-value="90"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-row">
-                <div class="stat-item">
-                    <div class="stat-icon">🎯</div>
-                    <div class="stat-info">
-                        <div class="stat-value" id="statAccuracy">78</div>
-                        <div class="stat-label">Точность</div>
-                    </div>
-                    <div class="stat-bar">
-                        <div class="stat-progress" data-value="78"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card-footer">
-            <div class="special-ability" id="cardAbility">
-                <span class="ability-icon">🌟</span>
-                <span class="ability-text">Особый навык</span>
-            </div>
-        </div>
-    </div>
-
+    <!-- Обновленная hero секция -->
     <section class="hero-section">
-        <!-- Обновленный голографический контейнер -->
+        <!-- Голографический интерфейс -->
         <div class="hologram-container">
-            <!-- Голографическое свечение -->
-            <div class="hologram-glow"></div>
-            
-            <!-- Прямоугольные орбитальные линии -->
-            <div class="hologram-orbit orbit-1"></div>
-            <div class="hologram-orbit orbit-2"></div>
-            <div class="hologram-orbit orbit-3"></div>
-            
-            <!-- Основные фото -->
-            <div class="main-photo ksusha-photo">
+            <!-- Главные фото -->
+            <div class="main-photo ksusha" data-character="ksusha">
+                <img src="https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0" alt="Ksusha Sher">
                 <div class="photo-frame pink"></div>
-                <img src="assets/images/ksusha.jpg" alt="Ksusha Sher">
             </div>
             
-            <div class="main-photo tetla-photo">
+            <div class="main-photo tetla" data-character="tetla">
+                <img src="https://via.placeholder.com/300x300/0f0f1b/39ff14?text=TetlaBot" alt="TetlaBot">
                 <div class="photo-frame green"></div>
-                <img src="assets/images/tetla.jpg" alt="TetlaBot">
             </div>
-            
-            <!-- Орбитальные фото подписчиков -->
-            <div class="orbital-node node-1" data-user="kirik">
-                <div class="node-frame blue"></div>
-                <img src="assets/images/kirik.jpg" alt="Кирик">
+
+            <!-- Орбиты -->
+            <div class="orbit inner-orbit">
+                <div class="orbit-line"></div>
             </div>
-            
-            <div class="orbital-node node-2" data-user="bagerka">
-                <div class="node-frame red"></div>
-                <img src="assets/images/bagerka.jpg" alt="Багерка">
+            <div class="orbit middle-orbit">
+                <div class="orbit-line"></div>
+                <!-- Маленькие фото на орбите -->
+                <div class="orbital-photo bagerka" data-character="bagerka">
+                    <img src="https://via.placeholder.com/150x150/0f0f1b/ff4444?text=BAGERca" alt="BAGERca">
+                    <div class="photo-frame red"></div>
+                </div>
+                <div class="orbital-photo angel" data-character="angel">
+                    <img src="https://via.placeholder.com/150x150/0f0f1b/ff8c00?text=Angel" alt="To Be Angle">
+                    <div class="photo-frame orange"></div>
+                </div>
+                <div class="orbital-photo kiriki" data-character="kiriki">
+                    <img src="https://via.placeholder.com/150x150/0f0f1b/007bff?text=Kiriki" alt="Kiriki">
+                    <div class="photo-frame blue"></div>
+                </div>
             </div>
-            
-            <div class="orbital-node node-3" data-user="angel">
-                <div class="node-frame orange"></div>
-                <img src="assets/images/angel.jpg" alt="Ангел">
+            <div class="orbit outer-orbit">
+                <div class="orbit-line"></div>
             </div>
-            
-            <div class="orbital-node node-4" data-user="sanya">
-                <div class="node-frame pink"></div>
-                <img src="assets/images/sanya.jpg" alt="Саня">
-            </div>
-            
-            <div class="orbital-node node-5" data-user="max">
-                <div class="node-frame green"></div>
-                <img src="assets/images/max.jpg" alt="Макс">
+        </div>
+
+        <!-- Голографическая карточка -->
+        <div class="hologram-card" id="characterCard">
+            <div class="card-glow"></div>
+            <div class="card-content">
+                <div class="card-header">
+                    <img class="card-avatar" src="" alt="">
+                    <div class="card-titles">
+                        <h3 class="card-name"></h3>
+                        <span class="card-role"></span>
+                    </div>
+                </div>
+                <div class="card-description"></div>
+                <div class="card-stats">
+                    <div class="stat">
+                        <span class="stat-icon">⚔️</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="statAttack"></div>
+                        </div>
+                        <span class="stat-value" id="statAttackValue">0%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🛡️</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="statDefense"></div>
+                        </div>
+                        <span class="stat-value" id="statDefenseValue">0%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">❤️</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="statHP"></div>
+                        </div>
+                        <span class="stat-value" id="statHPValue">0%</span>
+                    </div>
+                </div>
             </div>
         </div>
 
