@@ -58,111 +58,12 @@ const subscribersData = {
 
 // Initialize all UI components
 export function initializeUI() {
-    initMobileMenu();
-    initHeaderHover();
     initFilters();
     initHologramInterface();
     initCardCopy();
     initSmoothScroll();
     
     console.log('🎨 UI components initialized successfully');
-}
-
-// Mobile menu functionality
-function initMobileMenu() {
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navMenu = document.getElementById('nav-menu');
-
-    if (!mobileMenu || !navMenu) return;
-
-    mobileMenu.addEventListener('click', function(e) {
-        e.stopPropagation();
-        mobileMenu.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
-
-    document.addEventListener('click', function(e) {
-        if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !mobileMenu.contains(e.target)) {
-            mobileMenu.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
-    });
-
-    document.querySelectorAll('#nav-menu a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            navMenu.classList.remove('active');
-        });
-    });
-}
-
-// Header hover functionality
-function initHeaderHover() {
-    const header = document.querySelector('header');
-    if (!header) return;
-
-    // Create hover zone at top of page
-    const hoverZone = document.createElement('div');
-    hoverZone.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 30px;
-        background: transparent;
-        z-index: 999;
-        pointer-events: auto;
-    `;
-    document.body.appendChild(hoverZone);
-
-    let hideTimeout;
-    let isHeaderHovered = false;
-
-    // Show header on hover zone enter
-    hoverZone.addEventListener('mouseenter', () => {
-        clearTimeout(hideTimeout);
-        header.classList.add('header-expanded');
-    });
-
-    // Hide header on hover zone leave
-    hoverZone.addEventListener('mouseleave', () => {
-        if (!isHeaderHovered) {
-            hideTimeout = setTimeout(() => {
-                header.classList.remove('header-expanded');
-            }, 500);
-        }
-    });
-
-    // Track header hover
-    header.addEventListener('mouseenter', () => {
-        isHeaderHovered = true;
-        clearTimeout(hideTimeout);
-        header.classList.add('header-expanded');
-    });
-
-    header.addEventListener('mouseleave', () => {
-        isHeaderHovered = false;
-        hideTimeout = setTimeout(() => {
-            header.classList.remove('header-expanded');
-        }, 500);
-    });
-
-    // Mobile handling
-    if (window.innerWidth <= 768) {
-        hoverZone.remove();
-        header.classList.add('header-expanded');
-    }
-
-    window.addEventListener('resize', () => {
-        if (window.innerWidth <= 768) {
-            hoverZone.remove();
-            header.classList.add('header-expanded');
-        } else {
-            if (!document.body.contains(hoverZone)) {
-                document.body.appendChild(hoverZone);
-            }
-        }
-    });
 }
 
 // Smooth scrolling for anchor links
@@ -176,7 +77,7 @@ function initSmoothScroll() {
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 window.scrollTo({
-                    top: targetElement.offsetTop - 80,
+                    top: targetElement.offsetTop - 20, // Уменьшили отступ т.к. header удален
                     behavior: 'smooth'
                 });
             }
