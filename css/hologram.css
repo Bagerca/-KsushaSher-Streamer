@@ -1,4 +1,4 @@
-/* --- Стили для "Бинарной Системы" v1.1 (исправленные орбиты) --- */
+/* --- Стили для "Бинарной Системы" v1.2 (ИДЕАЛЬНЫЕ ОРБИТЫ) --- */
 
 .hero-section {
     position: relative;
@@ -63,59 +63,69 @@
 .core-planet.ksusha { transform: translate(-120%, -50%); animation-delay: 0s; }
 .core-planet.tetla { transform: translate(20%, -50%); animation-delay: -4s; }
 
-/* Орбиты (БЕЗ ВРАЩЕНИЯ) */
+
+/* --- ИСПРАВЛЕННЫЕ ОРБИТЫ --- */
+
+/* .orbit теперь - вращающийся КВАДРАТНЫЙ контейнер */
 .orbit {
     position: absolute;
     top: 50%;
     left: 50%;
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: translate(-50%, -50%);
+    
+    /* Устанавливаем анимацию вращения */
+    animation: rotate-orbit 25s linear infinite;
 }
-/* Светящаяся "комета" на орбите */
-.orbit::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--neon-pink);
-    /* Анимация кометы */
-    animation: rotate-satellite 25s linear infinite;
-    transform-origin: 225px 3px;
+
+/* Делаем контейнеры квадратными и сжимаем их в овалы */
+.orbit.inner {
+    width: 450px;
+    height: 450px;
+    transform: translate(-50%, -50%) scaleY(0.555); /* 250 / 450 = 0.555 */
+    animation-duration: 25s;
 }
-.orbit.middle::before {
+.orbit.middle {
+    width: 650px;
+    height: 650px;
+    transform: translate(-50%, -50%) scaleY(0.615); /* 400 / 650 = 0.615 */
     animation-duration: 40s;
     animation-direction: reverse;
-    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--neon-green);
-    transform-origin: 325px 3px;
 }
-.orbit.outer::before {
+.orbit.outer {
+    width: 850px;
+    height: 850px;
+    transform: translate(-50%, -50%) scaleY(0.647); /* 550 / 850 = 0.647 */
     animation-duration: 55s;
-    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #007bff;
-    transform-origin: 425px 3px;
 }
 
-.orbit.inner { width: 450px; height: 250px; }
-.orbit.middle { width: 650px; height: 400px; }
-.orbit.outer { width: 850px; height: 550px; }
-
-
-/* Спутники (С АНИМАЦИЕЙ ВРАЩЕНИЯ) */
+/* Спутник внутри вращающегося контейнера */
 .satellite {
     width: 80px;
     height: 80px;
-    position: absolute;
     top: 50%;
-    left: 0;
+    /* Позиционируем на краю квадратного контейнера */
+    left: calc(0% - 40px); /* 0% минус половина ширины спутника */
+    transform: translateY(-50%);
 }
-/* Задаем центр вращения для каждой орбиты (половина ширины орбиты) */
-.orbit.inner .satellite { transform-origin: 225px 0; animation: rotate-satellite 25s linear infinite; }
-.orbit.middle .satellite { transform-origin: 325px 0; animation: rotate-satellite 40s linear infinite reverse; }
-.orbit.outer .satellite { transform-origin: 425px 0; animation: rotate-satellite 55s linear infinite; }
+
+/* "Растягиваем" спутники обратно, чтобы они не были сплюснутыми */
+.orbit.inner .satellite { transform: translateY(-50%) scaleY(1.8); } /* 1 / 0.555 = 1.8 */
+.orbit.middle .satellite { transform: translateY(-50%) scaleY(1.625); } /* 1 / 0.615 = 1.625 */
+.orbit.outer .satellite { transform: translateY(-50%) scaleY(1.545); } /* 1 / 0.647 = 1.545 */
+
+
+/* Компенсируем вращение, чтобы фото всегда смотрело на нас */
+.satellite img, .satellite::after, .satellite .photo-frame {
+    animation: counter-rotate-orbit 25s linear infinite;
+}
+.orbit.middle .satellite img, .orbit.middle .satellite::after, .orbit.middle .satellite .photo-frame {
+    animation-duration: 40s;
+    animation-direction: reverse;
+}
+.orbit.outer .satellite img, .orbit.outer .satellite::after, .orbit.outer .satellite .photo-frame {
+    animation-duration: 55s;
+}
 
 
 /* Рамки для фото */
@@ -131,12 +141,19 @@
 .photo-frame.blue { border-color: #007bff; box-shadow: 0 0 20px #007bff; }
 
 /* --- ИНТЕРАКТИВНОСТЬ --- */
-.core-planet:hover, .satellite:hover {
-    transform: scale(1.15);
-    z-index: 100;
+.core-planet:hover { z-index: 100; }
+.satellite:hover { z-index: 100; }
+
+/* Применяем hover-эффект к несжатому спутнику */
+.orbit .satellite:hover {
+    transform: translateY(-50%) scale(1.15) !important; /* Увеличиваем */
 }
-.core-planet.ksusha:hover { transform: translate(-120%, -50%) scale(1.15); }
-.core-planet.tetla:hover { transform: translate(20%, -50%) scale(1.15); }
+/* Восстанавливаем сжатие для дочерних элементов при hover */
+.orbit.inner .satellite:hover { transform: translateY(-50%) scale(1.15) scaleY(1.8) !important; }
+.orbit.middle .satellite:hover { transform: translateY(-50%) scale(1.15) scaleY(1.625) !important; }
+.orbit.outer .satellite:hover { transform: translateY(-50%) scale(1.15) scaleY(1.545) !important; }
+
+.core-planet:hover { transform: translate(var(--tx), var(--ty)) scale(1.15) !important; }
 
 .binary-system-container:has(:hover) .core-planet:not(:hover),
 .binary-system-container:has(:hover) .satellite:not(:hover) {
@@ -182,16 +199,23 @@
     50% { transform: translate(5%, 2%) scale(1.1); }
 }
 @keyframes planet-float {
-    0%, 100% { transform: translate(var(--tx, -120%), var(--ty, -50%)) translateY(0px); }
-    50% { transform: translate(var(--tx, -120%), var(--ty, -50%)) translateY(-15px); }
+    0%, 100% { transform: translate(var(--tx), var(--ty)) translateY(0px); }
+    50% { transform: translate(var(--tx), var(--ty)) translateY(-15px); }
 }
 .core-planet.ksusha { --tx: -120%; --ty: -50%; }
 .core-planet.tetla { --tx: 20%; --ty: -50%; }
 
-/* Новая анимация для вращения спутников */
-@keyframes rotate-satellite {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+@keyframes rotate-orbit {
+    from { transform: translate(-50%, -50%) rotate(0deg) var(--scale, scaleY(1)); }
+    to { transform: translate(-50%, -50%) rotate(360deg) var(--scale, scaleY(1)); }
+}
+.orbit.inner { --scale: scaleY(0.555); }
+.orbit.middle { --scale: scaleY(0.615); }
+.orbit.outer { --scale: scaleY(0.647); }
+
+@keyframes counter-rotate-orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
 }
 @keyframes cardGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 @keyframes statShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
