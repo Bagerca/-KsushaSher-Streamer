@@ -14,75 +14,40 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- АНИМАЦИЯ ЗАГРУЗКИ СИСТЕМЫ -->
-    <div id="preloader">
-        <canvas id="matrix-canvas"></canvas>
-        <div class="preloader-text">
-            <p>INITIALIZING SYSTEM...</p>
-            <p>LOADING CORE MODULES... [OK]</p>
-            <p>CONNECTING TO KSUSHA_SHER NETWORK... [ESTABLISHED]</p>
-            <p>RENDERING HUD... [COMPLETE]</p>
-            <p class="blink">BOOT SEQUENCE COMPLETE. WELCOME.</p>
-        </div>
-    </div>
-    
-    <!-- КАСТОМНЫЙ КУРСОР -->
-    <div class="cursor-follower"></div>
-
     <!-- НОВАЯ УЛУЧШЕННАЯ СЕКЦИЯ HERO В СТИЛЕ HUD -->
     <section class="hero-section-hud">
         <div class="hud-grid-background"></div>
         <div class="hud-scanline"></div>
 
         <div class="hud-container">
-            <!-- ИНТЕРАКТИВНАЯ ЛЕВАЯ ПАНЕЛЬ -->
-            <div class="hud-side-panel left" id="ally-panel">
-                <div class="panel-flipper">
-                    <!-- Передняя сторона -->
-                    <div class="panel-front">
-                        <div class="panel-content">
-                            <div class="panel-header">
-                                <span class="header-title">СОЮЗНИК</span><span class="header-deco-line"></span>
-                            </div>
-                            <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar">
-                            <h3 class="panel-name">TETLA</h3>
-                            <div class="data-block"><span class="data-label">СТАТУС:</span><span class="data-value status-ok">В СЕТИ</span></div>
-                            <div class="data-block"><span class="data-label">РОЛЬ:</span><span class="data-value">ПОДДЕРЖКА</span></div>
-                        </div>
+            <div class="hud-side-panel left">
+                <div class="panel-content">
+                    <div class="panel-header">
+                        <span class="header-title">СОЮЗНИК</span>
+                        <span class="header-deco-line"></span>
                     </div>
-                    <!-- Задняя сторона -->
-                    <div class="panel-back">
-                        <div class="panel-content">
-                            <div class="panel-header">
-                                <span class="header-title">АНАЛИЗ</span><span class="header-deco-line"></span>
-                            </div>
-                            <h3 class="panel-name">СИСТЕМНЫЕ ДАННЫЕ</h3>
-                            <div class="progress-block">
-                                <span class="progress-label">CPU LOAD</span>
-                                <div class="progress-bar"><div class="progress-fill" style="--width: 73%;"></div></div>
-                            </div>
-                            <div class="progress-block">
-                                <span class="progress-label">NETWORK STABILITY</span>
-                                <div class="progress-bar"><div class="progress-fill" style="--width: 98%;"></div></div>
-                            </div>
-                            <div class="progress-block">
-                                <span class="progress-label">CHAT LATENCY</span>
-                                <div class="progress-bar"><div class="progress-fill" style="--width: 12%;"></div></div>
-                            </div>
-                        </div>
+                    <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar">
+                    <h3 class="panel-name">TETLA</h3>
+                    <div class="data-block">
+                        <span class="data-label">СТАТУС:</span>
+                        <span class="data-value status-ok">В СЕТИ</span>
+                    </div>
+                    <div class="data-block">
+                        <span class="data-label">РОЛЬ:</span>
+                        <span class="data-value">ПОДДЕРЖКА</span>
                     </div>
                 </div>
             </div>
 
-            <div class="hud-main-display" id="main-display">
+            <div class="hud-main-display">
                 <div class="main-display-rings">
-                    <div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div>
+                    <div class="ring ring-1"></div>
+                    <div class="ring ring-2"></div>
+                    <div class="ring ring-3"></div>
                 </div>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="main-avatar-link">
-                    <div class="main-avatar-container">
-                        <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar">
-                    </div>
-                </a>
+                <div class="main-avatar-container">
+                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar">
+                </div>
                 <div class="main-display-status">
                     <span class="status-indicator"></span>
                     <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
@@ -91,20 +56,38 @@
 
             <div class="hud-side-panel right" id="squad-panel">
                 <div class="panel-content">
+                    <!-- Стандартный вид -->
                     <div class="squad-default-view">
-                        <div class="panel-header"><span class="header-title">ОТРЯД</span><span class="header-deco-line"></span></div>
+                        <div class="panel-header">
+                            <span class="header-title">ОТРЯД</span>
+                            <span class="header-deco-line"></span>
+                        </div>
                         <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
                         <div class="squad-list">
-                            <div class="squad-member" data-member="bagerka"><img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar"><span class="squad-name">BAGERca</span></div>
-                            <div class="squad-member" data-member="angel"><img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar"><span class="squad-name">Angel</span></div>
-                            <div class="squad-member" data-member="kiriki"><img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar"><span class="squad-name">Kiriki</span></div>
+                            <div class="squad-member" data-member="bagerka">
+                                <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar">
+                                <span class="squad-name">BAGERca</span>
+                            </div>
+                            <div class="squad-member" data-member="angel">
+                                <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar">
+                                <span class="squad-name">Angel</span>
+                            </div>
+                            <div class="squad-member" data-member="kiriki">
+                                <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar">
+                                <span class="squad-name">Kiriki</span>
+                            </div>
                         </div>
-                        <div class="data-block"><span class="data-label">СИНХРОНИЗАЦИЯ:</span><span class="data-value status-ok">100%</span></div>
+                        <div class="data-block">
+                            <span class="data-label">СИНХРОНИЗАЦИЯ:</span>
+                            <span class="data-value status-ok">100%</span>
+                        </div>
                     </div>
+                    <!-- Детальный вид (скрыт по умолчанию) -->
                     <div class="squad-detail-view">
                         <button class="close-detail-btn">&times;</button>
                         <img src="" alt="" class="detail-avatar">
-                        <h3 class="detail-name"></h3><p class="detail-description"></p>
+                        <h3 class="detail-name"></h3>
+                        <p class="detail-description"></p>
                     </div>
                 </div>
             </div>
@@ -123,11 +106,7 @@
 
     <section id="about">
         <div class="container">
-            <div class="section-title-hud">
-                <span class="title-deco">//:</span>
-                <h2 class="section-title">Обо мне</h2>
-                <span class="title-deco"></span>
-            </div>
+            <h2 class="section-title">Обо мне</h2>
             <div class="about-content">
                 <div class="about-text">
                     <p>Привет! Я Ksusha Sher - стример на Twitch, который специализируется на играх и общении с комьюнити. Я создаю уютное и welcoming сообщество, где каждый чувствует себя как дома.</p>
@@ -145,11 +124,7 @@
 
     <section id="stats">
         <div class="container">
-            <div class="section-title-hud">
-                <span class="title-deco">//:</span>
-                <h2 class="section-title">Статистика канала</h2>
-                <span class="title-deco"></span>
-            </div>
+            <h2 class="section-title">Статистика канала</h2>
             <p class="stats-subtitle">Динамика развития и ключевые показатели</p>
             
             <div class="radar-chart-container">
@@ -171,6 +146,7 @@
                         <div class="stat-trend positive">+12% за месяц</div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-icon">📡</div>
                     <div class="stat-content">
@@ -179,6 +155,7 @@
                         <div class="stat-trend positive">3.2 в неделю</div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-icon">⏰</div>
                     <div class="stat-content">
@@ -187,6 +164,7 @@
                         <div class="stat-trend positive">250ч/год</div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-icon">💬</div>
                     <div class="stat-content">
@@ -195,6 +173,7 @@
                         <div class="stat-trend positive">Высокая вовлеченность</div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-icon">💰</div>
                     <div class="stat-content">
@@ -203,6 +182,7 @@
                         <div class="stat-trend positive">Стабильный рост</div>
                     </div>
                 </div>
+                
                 <div class="stat-card">
                     <div class="stat-icon">🎮</div>
                     <div class="stat-content">
@@ -217,11 +197,7 @@
 
     <section id="schedule">
         <div class="container">
-            <div class="section-title-hud">
-                <span class="title-deco">//:</span>
-                <h2 class="section-title">Расписание стримов</h2>
-                <span class="title-deco"></span>
-            </div>
+            <h2 class="section-title">Расписание стримов</h2>
             <p class="schedule-subtitle">🕓 Начало в <span class="neon-text">16:00 по МСК</span>, длительность 3+ часа</p>
             
             <div class="schedule-list" id="schedule-list">
@@ -241,11 +217,7 @@
 
     <section id="games">
         <div class="container">
-            <div class="section-title-hud">
-                <span class="title-deco">//:</span>
-                <h2 class="section-title">Игры и кино</h2>
-                <span class="title-deco"></span>
-            </div>
+            <h2 class="section-title">Игры и кино</h2>
             <div class="games-controls">
                 <div class="controls-section">
                     <div class="games-tabs">
@@ -332,11 +304,7 @@
 
     <section id="specs">
         <div class="container">
-            <div class="section-title-hud">
-                <span class="title-deco">//:</span>
-                <h2 class="section-title">Мое железо</h2>
-                <span class="title-deco"></span>
-            </div>
+            <h2 class="section-title">Мое железо</h2>
             <div class="specs-grid">
                 <div class="spec-item">
                     <i class="fas fa-microchip"></i>
@@ -364,11 +332,7 @@
 
     <section id="donation">
         <div class="container">
-            <div class="section-title-hud">
-                <span class="title-deco">//:</span>
-                <h2 class="section-title">Поддержать</h2>
-                <span class="title-deco"></span>
-            </div>
+            <h2 class="section-title">Поддержать</h2>
             <p>Если тебе нравится мой контент, ты можешь поддержать меня финансово</p>
             <div class="donation-options">
                 <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" rel="noopener noreferrer" class="donation-option">
