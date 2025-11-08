@@ -456,22 +456,21 @@ function updateTabSliders() {
     }
 }
 
-// Голографический интерфейс - "Космический Танец"
+// Голографический интерфейс - "Бинарная Система"
 export function initHologramInterface() {
     initCharacterInteractivity();
-    console.log('🌌 Cosmic Dance initialized');
+    console.log('🪐 Binary System initialized');
 }
 
 // Инициализация взаимодействия с персонажами
 function initCharacterInteractivity() {
-    // ОБНОВЛЕННЫЙ СЕЛЕКТОР для всех тел в галактике
-    const allBodies = document.querySelectorAll('.galaxy-sun, .orbiting-body');
-    
+    const allBodies = document.querySelectorAll('.core-planet, .satellite');
+    const animatedElements = document.querySelectorAll('.core-planet, .orbit, .satellite img, .satellite::after, .satellite .photo-frame');
+
     allBodies.forEach(body => {
         // Остановка анимации при наведении
         body.addEventListener('mouseenter', function() {
-            // Приостанавливаем анимацию у всех элементов для "замирания" сцены
-            document.querySelectorAll('.orbital-plane, .orbiting-body, .galaxy-sun img, .orbiting-body img').forEach(el => {
+            animatedElements.forEach(el => {
                 el.style.animationPlayState = 'paused';
             });
             
@@ -481,8 +480,7 @@ function initCharacterInteractivity() {
         
         // Возобновление анимации при уходе курсора
         body.addEventListener('mouseleave', function() {
-            // Возобновляем анимацию у всех элементов
-            document.querySelectorAll('.orbital-plane, .orbiting-body, .galaxy-sun img, .orbiting-body img').forEach(el => {
+            animatedElements.forEach(el => {
                 el.style.animationPlayState = 'running';
             });
             
