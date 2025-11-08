@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ОБЩИЕ АНИМАЦИИ HUD ---
     const scanline = heroSection.querySelector('.hud-scanline');
     const dataTicker = heroSection.querySelector('#data-ticker');
-    
+
     // 1. Анимация сканирующей линии
     let lastScanTime = 0;
     const scanSpeed = 0.05;
@@ -37,6 +37,63 @@ document.addEventListener('DOMContentLoaded', () => {
         typingTimeout = setTimeout(typeData, typeSpeed);
     }
     setTimeout(typeData, 1000);
+
+    // --- НОВАЯ ЛОГИКА: АНИМАЦИЯ ПОДКЛЮЧЕНИЯ К СТРИМУ ---
+    const mainDisplayLink = document.getElementById('main-display-link');
+    const twitchButton = document.querySelector('.cta-button.twitch');
+    let isConnecting = false; // Флаг, чтобы предотвратить двойное нажатие
+
+    function initiateConnectionSequence(event) {
+        // 1. Предотвращаем стандартный переход по ссылке
+        event.preventDefault();
+        
+        if (isConnecting) return; // Если анимация уже запущена, ничего не делаем
+        isConnecting = true;
+
+        // 2. Находим все нужные элементы
+        const rings = mainDisplayLink.querySelectorAll('.ring');
+        const statusDisplay = mainDisplayLink.querySelector('.main-display-status');
+        const statusText = statusDisplay.querySelector('.status-text');
+        const redirectUrl = this.href;
+
+        // 3. Запускаем анимацию
+        statusDisplay.classList.add('connecting');
+        rings.forEach(ring => ring.classList.add('fast-spin'));
+
+        // 4. Запускаем эффект "пишущей машинки" для текста статуса
+        let i = 0;
+        const newText = "ПОДКЛЮЧЕНИЕ...";
+        statusText.textContent = '';
+        const typingInterval = setInterval(() => {
+            if (i < newText.length) {
+                statusText.textContent += newText.charAt(i);
+                i++;
+            } else {
+                clearInterval(typingInterval);
+            }
+        }, 80);
+
+        // 5. Через 1.5 секунды перенаправляем пользователя
+        setTimeout(() => {
+            window.open(redirectUrl, '_blank');
+            
+            // Возвращаем все в исходное состояние (на случай, если пользователь вернется на вкладку)
+            statusDisplay.classList.remove('connecting');
+            rings.forEach(ring => ring.classList.remove('fast-spin'));
+            statusText.textContent = "ПРЯМАЯ ТРАНСЛЯЦИЯ";
+            isConnecting = false;
+
+        }, 1500);
+    }
+
+    // 6. Назначаем обработчики событий
+    if (mainDisplayLink) {
+        mainDisplayLink.addEventListener('click', initiateConnectionSequence);
+    }
+    if (twitchButton) {
+        twitchButton.addEventListener('click', initiateConnectionSequence);
+    }
+
 
     // --- ЛОГИКА ПАНЕЛИ ОТРЯДА ---
     const squadPanel = document.getElementById('squad-panel');
