@@ -1,11 +1,11 @@
-/* --- Стили для "Космического Танца" v2.0 (с объемными сферами) --- */
+/* --- Стили для "Бинарной Системы" v1.0 --- */
 
 .hero-section {
-    perspective: 1200px; /* Увеличим глубину перспективы */
+    position: relative;
     overflow: hidden;
 }
 
-/* Атмосферный фон с туманностью */
+/* Атмосферный фон */
 .hero-section::before {
     content: '';
     position: absolute;
@@ -16,144 +16,130 @@
     animation: slow-pan 120s linear infinite;
 }
 
-/* Контейнер для всей 3D сцены */
-.galaxy-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform-style: preserve-3d;
+/* Контейнер для всей сцены */
+.binary-system-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
     z-index: 10;
 }
 
-/* "Плоскость", на которой все вращается. Она наклонена к нам. */
-.orbital-plane {
-    position: relative;
-    width: 1px;
-    height: 1px;
-    transform-style: preserve-3d;
-    transform: rotateX(70deg) rotateZ(0deg);
-    animation: system-rotation 90s linear infinite;
-}
-
-/* Центральная звезда (Ксюша) - УЛУЧШЕНА */
-.galaxy-sun {
+/* Базовые стили для всех небесных тел */
+.core-planet, .satellite {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 180px;
-    height: 180px;
-    transform: translate(-50%, -50%);
     border-radius: 50%;
     cursor: pointer;
-    z-index: 100;
-    animation: sun-pulse 6s ease-in-out infinite;
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); /* Плавная анимация */
 }
 
-.galaxy-sun img {
-    width: 100%;
-    height: 100%;
+.core-planet img, .satellite img {
+    width: 100%; height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    /* Добавляем легкое внутреннее свечение для объема */
-    box-shadow: inset 0 0 30px 10px rgba(0,0,0,0.5);
+    opacity: 0.9;
 }
 
-/* Пути орбит */
-.orbit-path {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border: 2px dotted rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform-style: preserve-3d;
-    transform: translate(-50%, -50%);
-}
-
-.orbit-path.inner {
-    width: 350px;
-    height: 350px;
-}
-
-.orbit-path.outer {
-    width: 600px;
-    height: 600px;
-    border-width: 1px;
-}
-
-/* Вращающиеся тела - УЛУЧШЕНЫ */
-.orbiting-body {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border-radius: 50%;
-    cursor: pointer;
-    transform-style: preserve-3d;
-    transition: all 0.4s ease;
-}
-
-/* --- МАГИЯ ОБЪЕМА --- */
-.orbiting-body::after {
+/* Псевдо-элемент для создания объема */
+.core-planet::after, .satellite::after {
     content: '';
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     border-radius: 50%;
-    /* Градиент имитирует свет сверху-слева */
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), rgba(255,255,255,0) 60%);
-    /* Внутренняя тень создает глубину */
-    box-shadow: inset 0 0 20px 5px rgba(0,0,0,0.4);
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), rgba(255,255,255,0) 60%);
+    box-shadow: inset 0 0 20px 5px rgba(0,0,0,0.5);
+    transition: all 0.4s ease;
 }
 
-.orbiting-body img {
-    width: 100%; height: 100%;
-    object-fit: cover;
+/* Центральные планеты */
+.core-planet {
+    top: 50%;
+    left: 50%;
+    width: 180px;
+    height: 180px;
+    animation: planet-float 8s ease-in-out infinite;
+}
+
+.core-planet.ksusha { transform: translate(-120%, -50%); animation-delay: 0s; }
+.core-planet.tetla { transform: translate(20%, -50%); animation-delay: -4s; }
+
+/* Орбиты */
+.orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     border-radius: 50%;
-    opacity: 0.9; /* Чтобы градиент лучше смешивался */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    animation: rotate-orbit 60s linear infinite;
 }
-/* -------------------- */
-
-.orbiting-body img, .orbiting-body .photo-frame, .orbiting-body::after {
-    /* Компенсируем вращение родителя, чтобы фото всегда смотрело на нас */
-    animation: counter-system-rotation 90s linear infinite;
-}
-
-
-/* Позиционирование и анимация спутников */
-.orbiting-body.tetla { width: 100px; height: 100px; margin: -50px 0 0 -50px; animation: orbit-inner 20s linear infinite; }
-.orbiting-body.bagerka { width: 80px; height: 80px; margin: -40px 0 0 -40px; animation: orbit-outer-1 35s linear infinite; }
-.orbiting-body.angel { width: 80px; height: 80px; margin: -40px 0 0 -40px; animation: orbit-outer-2 30s linear infinite; }
-.orbiting-body.kiriki { width: 80px; height: 80px; margin: -40px 0 0 -40px; animation: orbit-outer-3 40s linear infinite; }
-
-/* УЛУЧШЕННЫЕ ЭФФЕКТЫ ПРИ НАВЕДЕНИИ */
-.galaxy-sun:hover, .orbiting-body:hover {
-    transform: translateZ(50px) scale(1.2);
-}
-/* Затемняем и размываем все, КРОМЕ того, на что навели курсор */
-.galaxy-container:has(:hover) .galaxy-sun:not(:hover),
-.galaxy-container:has(:hover) .orbiting-body:not(:hover) {
-    opacity: 0.4;
-    filter: blur(3px) grayscale(80%);
+/* Светящаяся "комета" на орбите */
+.orbit::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--neon-pink);
 }
 
+.orbit.inner { width: 450px; height: 250px; animation-duration: 25s; }
+.orbit.middle { width: 650px; height: 400px; animation-duration: 40s; animation-direction: reverse; }
+.orbit.outer { width: 850px; height: 550px; animation-duration: 55s; }
+.orbit.middle::before { box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--neon-green); }
+.orbit.outer::before { box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #007bff; }
 
-/* Рамки для фото - УЛУЧШЕНЫ */
+/* Спутники */
+.satellite {
+    width: 80px;
+    height: 80px;
+    /* Позиционируем на орбите, а сама орбита вращается */
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+.satellite img, .satellite::after, .satellite .photo-frame {
+    /* Компенсируем вращение, чтобы спутник не переворачивался */
+    animation: counter-rotate-orbit 60s linear infinite;
+}
+.orbit.inner .satellite img, .orbit.inner .satellite::after, .orbit.inner .satellite .photo-frame { animation-duration: 25s; }
+.orbit.middle .satellite img, .orbit.middle .satellite::after, .orbit.middle .satellite .photo-frame { animation-duration: 40s; animation-direction: reverse; }
+.orbit.outer .satellite img, .orbit.outer .satellite::after, .orbit.outer .satellite .photo-frame { animation-duration: 55s; }
+
+/* Рамки для фото */
 .photo-frame {
     position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
     border-radius: 50%; border: 2px solid; pointer-events: none;
-    animation: counter-system-rotation 90s linear infinite; /* Тоже должно контр-вращаться */
+    transition: all 0.4s ease;
 }
-.photo-frame.pink { border-color: #ff2d95; box-shadow: 0 0 25px #ff2d95, inset 0 0 10px rgba(255, 45, 149, 0.5); filter: blur(1px); }
-.photo-frame.green { border-color: #39ff14; box-shadow: 0 0 25px #39ff14, inset 0 0 10px rgba(57, 255, 20, 0.5); filter: blur(1px); }
-.photo-frame.red { border-color: #ff4444; box-shadow: 0 0 20px #ff4444, inset 0 0 8px rgba(255, 68, 68, 0.5); }
-.photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 20px #ff8c00, inset 0 0 8px rgba(255, 140, 0, 0.5); }
-.photo-frame.blue { border-color: #007bff; box-shadow: 0 0 20px #007bff, inset 0 0 8px rgba(0, 123, 255, 0.5); }
+.photo-frame.pink { border-color: #ff2d95; box-shadow: 0 0 25px #ff2d95; }
+.photo-frame.green { border-color: #39ff14; box-shadow: 0 0 25px #39ff14; }
+.photo-frame.red { border-color: #ff4444; box-shadow: 0 0 20px #ff4444; }
+.photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 20px #ff8c00; }
+.photo-frame.blue { border-color: #007bff; box-shadow: 0 0 20px #007bff; }
+
+/* --- ИНТЕРАКТИВНОСТЬ --- */
+.core-planet:hover, .satellite:hover {
+    transform: scale(1.15);
+    z-index: 100;
+}
+.core-planet.ksusha:hover { transform: translate(-120%, -50%) scale(1.15); }
+.core-planet.tetla:hover { transform: translate(20%, -50%) scale(1.15); }
+
+.binary-system-container:has(:hover) .core-planet:not(:hover),
+.binary-system-container:has(:hover) .satellite:not(:hover) {
+    opacity: 0.3;
+    filter: blur(4px);
+}
+.binary-system-container:has(:hover) .orbit {
+    opacity: 0.2;
+}
 
 
-/* Карточка персонажа (без изменений, кроме z-index) */
+/* Карточка персонажа (без изменений) */
 .hologram-card {
     position: fixed; bottom: 30px; right: 30px; width: 300px;
     background: rgba(15, 15, 25, 0.95); border-radius: 15px; padding: 20px;
@@ -163,7 +149,6 @@
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 1000; overflow: hidden;
 }
-/* ... (остальные стили для карточки остаются как есть) ... */
 .hologram-card.show { opacity: 1; transform: translateY(0) scale(1); }
 .card-glow { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--card-color, #39ff14), transparent); animation: cardGlow 2s ease-in-out infinite; }
 .card-content { position: relative; z-index: 2; }
@@ -183,52 +168,28 @@
 
 /* --- АНИМАЦИИ --- */
 @keyframes slow-pan {
-    0% { transform: translate(0, 0); }
-    50% { transform: translate(10%, 5%); }
-    100% { transform: translate(0, 0); }
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(5%, 2%) scale(1.1); }
 }
+@keyframes planet-float {
+    0%, 100% { transform: translate(var(--tx, -120%), var(--ty, -50%)) translateY(0px); }
+    50% { transform: translate(var(--tx, -120%), var(--ty, -50%)) translateY(-15px); }
+}
+.core-planet.ksusha { --tx: -120%; --ty: -50%; }
+.core-planet.tetla { --tx: 20%; --ty: -50%; }
 
-@keyframes system-rotation {
-    from { transform: rotateX(70deg) rotateZ(0deg); }
-    to { transform: rotateX(70deg) rotateZ(360deg); }
+@keyframes rotate-orbit {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
-
-@keyframes counter-system-rotation {
-    from { transform: rotateZ(0deg) rotateX(-70deg); }
-    to { transform: rotateZ(-360deg) rotateX(-70deg); }
+@keyframes counter-rotate-orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
 }
-
-@keyframes sun-pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.05); }
-}
-
-@keyframes orbit-inner {
-    from { transform: rotate(0deg) translateX(175px) rotate(0deg); }
-    to { transform: rotate(360deg) translateX(175px) rotate(-360deg); }
-}
-@keyframes orbit-outer-1 {
-    from { transform: rotate(0deg) translateX(300px) rotate(0deg); }
-    to { transform: rotate(360deg) translateX(300px) rotate(-360deg); }
-}
-@keyframes orbit-outer-2 {
-    from { transform: rotate(120deg) translateX(300px) rotate(-120deg); }
-    to { transform: rotate(480deg) translateX(300px) rotate(-480deg); }
-}
-@keyframes orbit-outer-3 {
-    from { transform: rotate(240deg) translateX(300px) rotate(-240deg); }
-    to { transform: rotate(600deg) translateX(300px) rotate(-600deg); }
-}
-
 @keyframes cardGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 @keyframes statShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
 /* Адаптивность */
-@media (max-width: 768px) {
-    .galaxy-container { transform: scale(0.7); }
-    .hologram-card { right: 10px; bottom: 10px; width: calc(100vw - 20px); max-width: 300px; }
-}
-@media (max-width: 480px) {
-    .galaxy-container { transform: scale(0.5); }
-    .hero-content { bottom: 40px; }
-}
+@media (max-width: 900px) { .binary-system-container { transform: scale(0.8); } }
+@media (max-width: 768px) { .binary-system-container { transform: scale(0.7); margin-top: -50px; } }
+@media (max-width: 480px) { .binary-system-container { transform: scale(0.5); margin-top: -100px; } }
