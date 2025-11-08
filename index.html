@@ -14,22 +14,18 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- НОВАЯ СЕКЦИЯ HERO В СТИЛЕ HUD -->
+    <!-- НОВАЯ УЛУЧШЕННАЯ СЕКЦИЯ HERO В СТИЛЕ HUD -->
     <section class="hero-section-hud">
-        <!-- Анимированные фоновые элементы -->
         <div class="hud-grid-background"></div>
         <div class="hud-scanline"></div>
 
-        <!-- Основной контейнер интерфейса -->
         <div class="hud-container">
-
-            <!-- Левая панель: Партнер -->
             <div class="hud-side-panel left">
-                <div class="panel-header">
-                    <span class="header-title">СОЮЗНИК</span>
-                    <span class="header-deco-line"></span>
-                </div>
                 <div class="panel-content">
+                    <div class="panel-header">
+                        <span class="header-title">СОЮЗНИК</span>
+                        <span class="header-deco-line"></span>
+                    </div>
                     <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar">
                     <h3 class="panel-name">TETLA</h3>
                     <div class="data-block">
@@ -41,42 +37,41 @@
                         <span class="data-value">ПОДДЕРЖКА</span>
                     </div>
                 </div>
-                <div class="panel-footer"></div>
             </div>
 
-            <!-- Центральный дисплей: Стример -->
             <div class="hud-main-display">
                 <div class="main-display-rings">
                     <div class="ring ring-1"></div>
                     <div class="ring ring-2"></div>
                     <div class="ring ring-3"></div>
                 </div>
-                <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar">
+                <div class="main-avatar-container">
+                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar">
+                </div>
                 <div class="main-display-status">
                     <span class="status-indicator"></span>
                     <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
                 </div>
             </div>
 
-            <!-- Правая панель: Команда -->
             <div class="hud-side-panel right">
-                <div class="panel-header">
-                    <span class="header-title">ОТРЯД</span>
-                    <span class="header-deco-line"></span>
-                </div>
                 <div class="panel-content">
+                    <div class="panel-header">
+                        <span class="header-title">ОТРЯД</span>
+                        <span class="header-deco-line"></span>
+                    </div>
                     <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
                     <div class="squad-list">
                         <div class="squad-member">
-                            <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar">
+                            <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar">
                             <span class="squad-name">BAGERca</span>
                         </div>
                         <div class="squad-member">
-                            <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar">
+                            <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar">
                             <span class="squad-name">Angel</span>
                         </div>
                         <div class="squad-member">
-                            <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar">
+                            <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar">
                             <span class="squad-name">Kiriki</span>
                         </div>
                     </div>
@@ -85,11 +80,9 @@
                         <span class="data-value status-ok">100%</span>
                     </div>
                 </div>
-                <div class="panel-footer"></div>
             </div>
         </div>
         
-        <!-- Основной контент (заголовок, кнопки) -->
         <div class="hero-content-hud">
             <h1 class="hero-title-hud">SYSTEM ONLINE: KSUSHA SHER</h1>
             <p class="hero-subtitle-hud" id="data-ticker">Загрузка данных канала...</p>
@@ -101,7 +94,6 @@
     </section>
     <!-- КОНЕЦ НОВОЙ СЕКЦИИ -->
 
-    <!-- Остальные секции -->
     <section id="about">
         <div class="container">
             <h2 class="section-title">Обо мне</h2>
