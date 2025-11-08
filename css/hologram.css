@@ -1,4 +1,4 @@
-/* Голографический интерфейс - обновленная версия */
+/* Голографический интерфейс - версия "Фокус и Созвездие" */
 
 .hero-section {
     height: 100vh;
@@ -14,7 +14,7 @@
 .hologram-container {
     position: relative;
     width: 600px;
-    height: 400px;
+    height: 450px; /* Изменено */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,17 +32,18 @@
     z-index: 20;
     animation: photoFloat 4s ease-in-out infinite;
     transition: all 0.3s ease;
+    bottom: 40px; /* Новое позиционирование */
 }
 
 .main-photo.ksusha {
-    left: 30%;
-    transform: translateX(-50%);
+    left: 50%;
+    transform: translateX(-110%); /* Изменено */
     animation-delay: 0s;
 }
 
 .main-photo.tetla {
-    right: 30%;
-    transform: translateX(50%);
+    left: 50%;
+    transform: translateX(10%); /* Изменено */
     animation-delay: -2s;
 }
 
@@ -70,58 +71,8 @@
 .photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 15px #ff8c00; }
 .photo-frame.blue { border-color: #007bff; box-shadow: 0 0 15px #007bff; }
 
-/* Орбиты */
-.orbit {
-    position: absolute;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 45%;
-    pointer-events: none;
-}
 
-.inner-orbit {
-    width: 400px;
-    height: 250px;
-    animation: orbitPulse 6s linear infinite;
-}
-
-.middle-orbit {
-    width: 550px;
-    height: 350px;
-    animation: orbitPulse 8s linear infinite reverse;
-}
-
-.outer-orbit {
-    width: 700px;
-    height: 450px;
-    animation: orbitPulse 10s linear infinite;
-}
-
-.orbit-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 45%;
-    overflow: hidden;
-}
-
-.orbit-line::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--orbit-color, #39ff14), transparent);
-    animation: orbitLineMove 3s linear infinite;
-}
-
-.inner-orbit .orbit-line::before { --orbit-color: #ff2d95; animation-duration: 4s; }
-.middle-orbit .orbit-line::before { --orbit-color: #39ff14; animation-duration: 3s; }
-.outer-orbit .orbit-line::before { --orbit-color: #007bff; animation-duration: 5s; }
-
-/* Маленькие фото на орбите */
+/* Второстепенные фото ("Созвездие") - Стили орбит удалены */
 .orbital-photo {
     width: 80px;
     height: 80px;
@@ -130,16 +81,31 @@
     overflow: hidden;
     cursor: pointer;
     z-index: 15;
+    transition: all 0.3s ease;
+    animation: constellationPulse 6s ease-in-out infinite; /* Новая анимация */
+}
+
+/* Статичные позиции для "созвездия" */
+.orbital-photo.bagerka {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    animation: orbitalMove 12s linear infinite;
-    transition: all 0.3s ease;
+    animation-delay: 0s;
 }
 
-.orbital-photo.bagerka { animation-delay: 0s; }
-.orbital-photo.angel { animation-delay: -4s; }
-.orbital-photo.kiriki { animation-delay: -8s; }
+.orbital-photo.angel {
+    top: 80px;
+    left: 25%;
+    transform: translateX(-50%);
+    animation-delay: -2s;
+}
+
+.orbital-photo.kiriki {
+    top: 80px;
+    right: 25%;
+    transform: translateX(50%);
+    animation-delay: -4s;
+}
 
 .orbital-photo img {
     width: 100%;
@@ -156,10 +122,25 @@
     z-index: 25;
 }
 
-.main-photo.ksusha:hover { transform: translateX(-50%) scale(1.1); }
-.main-photo.tetla:hover { transform: translateX(50%) scale(1.1); }
+/* Обновленные :hover состояния */
+.main-photo.ksusha:hover { 
+    transform: translateX(-110%) scale(1.1); 
+}
+.main-photo.tetla:hover { 
+    transform: translateX(10%) scale(1.1); 
+}
+.orbital-photo.bagerka:hover {
+    transform: translateX(-50%) scale(1.1);
+}
+.orbital-photo.angel:hover {
+    transform: translateX(-50%) scale(1.1);
+}
+.orbital-photo.kiriki:hover {
+    transform: translateX(50%) scale(1.1);
+}
 
-/* Голографическая карточка */
+
+/* Голографическая карточка (без изменений) */
 .hologram-card {
     position: fixed;
     bottom: 30px;
@@ -300,28 +281,24 @@
     animation-name: photoFloatTetla;
 }
 
+/* Обновленная анимация для Tetla */
 @keyframes photoFloatTetla {
-    0%, 100% { transform: translateX(50%) translateY(0px); }
-    50% { transform: translateX(50%) translateY(-15px); }
+    0%, 100% { transform: translateX(10%) translateY(0px); }
+    50% { transform: translateX(10%) translateY(-15px); }
 }
 
-@keyframes orbitalMove {
-    0% {
-        transform: translateX(-50%) rotate(0deg) translateX(275px) rotate(0deg);
+/* Анимации орбит удалены */
+
+/* Новая анимация "мерцания" для созвездия */
+@keyframes constellationPulse {
+    0%, 100% {
+        opacity: 0.7;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
-    100% {
-        transform: translateX(-50%) rotate(360deg) translateX(275px) rotate(-360deg);
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     }
-}
-
-@keyframes orbitPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.7; }
-}
-
-@keyframes orbitLineMove {
-    0% { left: -100%; }
-    100% { left: 100%; }
 }
 
 @keyframes cardGlow {
@@ -348,36 +325,15 @@
         max-width: 300px;
     }
     
+    /* Обновляем адаптивные позиции, если нужно (пока оставляем) */
     .main-photo.ksusha {
-        left: 25%;
+        left: 50%;
+        transform: translateX(-110%);
     }
     
     .main-photo.tetla {
-        right: 25%;
-    }
-    
-    .inner-orbit {
-        width: 300px;
-        height: 200px;
-    }
-    
-    .middle-orbit {
-        width: 400px;
-        height: 250px;
-    }
-    
-    .outer-orbit {
-        width: 500px;
-        height: 300px;
-    }
-    
-    @keyframes orbitalMove {
-        0% {
-            transform: translateX(-50%) rotate(0deg) translateX(200px) rotate(0deg);
-        }
-        100% {
-            transform: translateX(-50%) rotate(360deg) translateX(200px) rotate(-360deg);
-        }
+        left: 50%;
+        transform: translateX(10%);
     }
 }
 
