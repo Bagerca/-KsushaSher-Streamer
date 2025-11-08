@@ -1,334 +1,239 @@
-/* --- Стили для Нового Нейронного Интерфейса --- */
+/* --- Стили для "Космического Танца" --- */
 
 .hero-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    padding-top: 5vh;
+    /* Задаем 3D-контекст для дочерних элементов */
+    perspective: 1000px;
+    overflow: hidden; /* Важно, чтобы элементы не вылезали за пределы */
 }
 
-/* Общий контейнер */
-.hologram-container {
-    position: relative;
-    width: 600px;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: -30px;
-}
-
-/* Базовые стили для фото (ядер и узлов) */
-.neural-core, .neural-node {
-    position: absolute;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-    z-index: 20;
-    transition: all 0.3s ease;
-    animation: coreFloat 5s ease-in-out infinite;
-}
-
-.neural-core img, .neural-node img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/* Рамки для фото (остаются как есть) */
-.photo-frame {
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    bottom: -4px;
-    border-radius: 50%;
-    border: 2px solid;
-    pointer-events: none;
-}
-
-.photo-frame.pink { border-color: #ff2d95; box-shadow: 0 0 20px #ff2d95; }
-.photo-frame.green { border-color: #39ff14; box-shadow: 0 0 20px #39ff14; }
-.photo-frame.red { border-color: #ff4444; box-shadow: 0 0 15px #ff4444; }
-.photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 15px #ff8c00; }
-.photo-frame.blue { border-color: #007bff; box-shadow: 0 0 15px #007bff; }
-
-
-/* Главные "Ядра" */
-.neural-core {
-    width: 150px;
-    height: 150px;
-    top: 50px; /* Располагаем сверху */
-}
-
-.neural-core.ksusha {
-    left: 25%;
-    transform: translateX(-50%);
-    animation-delay: 0s;
-}
-
-.neural-core.tetla {
-    right: 25%;
-    transform: translateX(50%);
-    animation-delay: -2.5s;
-}
-
-/* Второстепенные "Узлы" */
-.neural-node {
-    width: 80px;
-    height: 80px;
-    bottom: 0px; /* Располагаем снизу */
-}
-
-.neural-node.bagerka {
-    left: 15%;
-    transform: translateX(-50%);
-    animation-delay: -1s;
-}
-
-.neural-node.angel {
-    left: 50%;
-    bottom: -30px; /* Центральный узел чуть ниже */
-    transform: translateX(-50%);
-    animation-delay: -2s;
-}
-
-.neural-node.kiriki {
-    right: 15%;
-    transform: translateX(50%);
-    animation-delay: -3s;
-}
-
-
-/* Эффекты при наведении */
-.neural-core:hover, .neural-node:hover {
-    transform: scale(1.1);
-    z-index: 25;
-    animation-play-state: paused;
-}
-/* Корректировка transform для позиционированных элементов */
-.neural-core.ksusha:hover { transform: translateX(-50%) scale(1.1); }
-.neural-core.tetla:hover { transform: translateX(50%) scale(1.1); }
-.neural-node.bagerka:hover { transform: translateX(-50%) scale(1.1); }
-.neural-node.angel:hover { transform: translateX(-50%) scale(1.1); }
-.neural-node.kiriki:hover { transform: translateX(50%) scale(1.1); }
-
-
-/* Стилизация SVG линий */
-.neural-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    pointer-events: none; /* Чтобы не мешали кликать на фото */
-}
-
-.neural-lines path {
-    fill: none;
-    stroke: rgba(57, 255, 20, 0.4); /* Зеленый неон */
-    stroke-width: 1.5px;
-    stroke-linecap: round;
-    stroke-dasharray: 10 15; /* Пунктирная линия */
-    animation: moveDash 30s linear infinite;
-}
-
-/* Индивидуальные цвета линий */
-.neural-lines #line-ksusha-bagerka,
-.neural-lines #line-ksusha-angel {
-    stroke: rgba(255, 45, 149, 0.4); /* Розовый неон от Ксюши */
-}
-
-.neural-lines #line-ksusha-tetla {
-    stroke-dasharray: none; /* Сплошная линия между главными */
-    stroke: rgba(0, 123, 255, 0.5);
-    animation: none;
-}
-
-/* Голографическая карточка (стили без изменений) */
-.hologram-card {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 300px;
-    background: rgba(15, 15, 25, 0.95);
-    border-radius: 15px;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    transform: translateY(100px) scale(0.9);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    z-index: 1000;
-    overflow: hidden;
-}
-
-.hologram-card.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-.card-glow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--card-color, #39ff14), transparent);
-    animation: cardGlow 2s ease-in-out infinite;
-}
-
-.card-content {
-    position: relative;
-    z-index: 2;
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.card-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--card-color, #39ff14);
-    margin-right: 15px;
-}
-
-.card-titles h3 {
-    color: var(--card-color, #39ff14);
-    font-size: 1.3rem;
-    margin-bottom: 5px;
-    font-family: 'Orbitron', sans-serif;
-    text-shadow: 0 0 10px currentColor;
-}
-
-.card-role {
-    color: #ccc;
-    font-size: 0.9rem;
-    font-family: 'Rajdhani', sans-serif;
-}
-
-.card-description {
-    color: #ccc;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    margin-bottom: 20px;
-    font-family: 'Exo 2', sans-serif;
-}
-
-.card-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.stat {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.stat-icon {
-    font-size: 1.2rem;
-    width: 20px;
-    text-align: center;
-}
-
-.stat-bar {
-    flex: 1;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.stat-fill {
-    height: 100%;
-    background: var(--card-color, #39ff14);
-    border-radius: 4px;
-    width: 0%;
-    transition: width 1s ease-in-out;
-    position: relative;
-}
-
-.stat-fill::after {
+/* Атмосферный фон с туманностью */
+.hero-section::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: statShine 2s ease-in-out infinite;
+    top: -10%; left: -10%;
+    width: 120%; height: 120%;
+    background: url(https://www.transparenttextures.com/patterns/stardust.png), radial-gradient(ellipse at center, rgba(15, 15, 25, 0.8) 0%, #070711 70%);
+    z-index: 1;
+    animation: slow-pan 120s linear infinite;
 }
 
-.stat-value {
-    color: var(--card-color, #39ff14);
-    font-weight: 600;
-    font-family: 'Orbitron', sans-serif;
-    min-width: 40px;
-    text-align: right;
-    font-size: 0.9rem;
+/* Контейнер для всей 3D сцены */
+.galaxy-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+    z-index: 10;
 }
 
-/* Анимации */
-@keyframes coreFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+/* "Плоскость", на которой все вращается. Она наклонена к нам. */
+.orbital-plane {
+    position: relative;
+    width: 1px;
+    height: 1px;
+    transform-style: preserve-3d;
+    transform: rotateX(70deg) rotateZ(0deg);
+    animation: system-rotation 90s linear infinite;
 }
 
-@keyframes moveDash {
-    from {
-        stroke-dashoffset: 1000;
-    }
-    to {
-        stroke-dashoffset: 0;
-    }
+/* Центральная звезда (Ксюша) */
+.galaxy-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 180px;
+    height: 180px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    animation: sun-pulse 6s ease-in-out infinite;
+    transition: transform 0.3s ease;
 }
 
-@keyframes cardGlow {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+.galaxy-sun img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
-@keyframes statShine {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+/* Пути орбит */
+.orbit-path {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 2px dotted rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    transform: translate(-50%, -50%);
 }
 
+.orbit-path.inner {
+    width: 350px;
+    height: 350px;
+}
+
+.orbit-path.outer {
+    width: 600px;
+    height: 600px;
+    border-width: 1px;
+}
+
+/* Вращающиеся тела (спутники и планеты) */
+.orbiting-body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+}
+.orbiting-body img, .orbiting-body .photo-frame {
+    /* Важно! Компенсируем вращение родителя, чтобы фото всегда смотрело на нас */
+    animation: counter-system-rotation 90s linear infinite;
+}
+
+
+/* Позиционирование и анимация спутников */
+.orbiting-body.tetla {
+    width: 100px;
+    height: 100px;
+    margin: -50px 0 0 -50px;
+    animation: orbit-inner 20s linear infinite;
+}
+.orbiting-body.bagerka {
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
+    animation: orbit-outer-1 35s linear infinite;
+}
+.orbiting-body.angel {
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
+    animation: orbit-outer-2 30s linear infinite;
+}
+.orbiting-body.kiriki {
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
+    animation: orbit-outer-3 40s linear infinite;
+}
+
+/* Эффекты при наведении */
+.galaxy-sun:hover, .orbiting-body:hover {
+    transform: translateZ(50px) scale(1.2);
+    /* Сбрасываем translate от родителя, чтобы hover был корректным */
+    margin-top: -50%;
+    margin-left: -50%;
+}
+.galaxy-container:has(:hover) .galaxy-sun:not(:hover),
+.galaxy-container:has(:hover) .orbiting-body:not(:hover) {
+    opacity: 0.5;
+    filter: grayscale(80%);
+}
+
+
+/* Рамки для фото */
+.photo-frame {
+    position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
+    border-radius: 50%; border: 2px solid; pointer-events: none;
+}
+.photo-frame.pink { border-color: #ff2d95; box-shadow: 0 0 20px #ff2d95, inset 0 0 10px #ff2d95; }
+.photo-frame.green { border-color: #39ff14; box-shadow: 0 0 20px #39ff14, inset 0 0 10px #39ff14; }
+.photo-frame.red { border-color: #ff4444; box-shadow: 0 0 15px #ff4444, inset 0 0 8px #ff4444; }
+.photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 15px #ff8c00, inset 0 0 8px #ff8c00; }
+.photo-frame.blue { border-color: #007bff; box-shadow: 0 0 15px #007bff, inset 0 0 8px #007bff; }
+
+
+/* Карточка персонажа (без изменений, кроме z-index) */
+.hologram-card {
+    position: fixed; bottom: 30px; right: 30px; width: 300px;
+    background: rgba(15, 15, 25, 0.95); border-radius: 15px; padding: 20px;
+    backdrop-filter: blur(10px); border: 1px solid;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+    opacity: 0; transform: translateY(100px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000; overflow: hidden;
+}
+/* ... (остальные стили для карточки остаются как есть, они ниже) ... */
+.hologram-card.show { opacity: 1; transform: translateY(0) scale(1); }
+.card-glow { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--card-color, #39ff14), transparent); animation: cardGlow 2s ease-in-out infinite; }
+.card-content { position: relative; z-index: 2; }
+.card-header { display: flex; align-items: center; margin-bottom: 15px; }
+.card-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--card-color, #39ff14); margin-right: 15px; }
+.card-titles h3 { color: var(--card-color, #39ff14); font-size: 1.3rem; margin-bottom: 5px; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 10px currentColor; }
+.card-role { color: #ccc; font-size: 0.9rem; font-family: 'Rajdhani', sans-serif; }
+.card-description { color: #ccc; font-size: 0.9rem; line-height: 1.4; margin-bottom: 20px; font-family: 'Exo 2', sans-serif; }
+.card-stats { display: flex; flex-direction: column; gap: 12px; }
+.stat { display: flex; align-items: center; gap: 10px; }
+.stat-icon { font-size: 1.2rem; width: 20px; text-align: center; }
+.stat-bar { flex: 1; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden; }
+.stat-fill { height: 100%; background: var(--card-color, #39ff14); border-radius: 4px; width: 0%; transition: width 1s ease-in-out; position: relative; }
+.stat-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: statShine 2s ease-in-out infinite; }
+.stat-value { color: var(--card-color, #39ff14); font-weight: 600; font-family: 'Orbitron', sans-serif; min-width: 40px; text-align: right; font-size: 0.9rem; }
+
+
+/* --- АНИМАЦИИ --- */
+
+/* Движение фона */
+@keyframes slow-pan {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(10%, 5%); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Общее вращение системы */
+@keyframes system-rotation {
+    from { transform: rotateX(70deg) rotateZ(0deg); }
+    to { transform: rotateX(70deg) rotateZ(360deg); }
+}
+
+/* Компенсация вращения, чтобы фото не переворачивались */
+@keyframes counter-system-rotation {
+    from { transform: rotateZ(0deg) rotateX(-70deg); }
+    to { transform: rotateZ(-360deg) rotateX(-70deg); }
+}
+
+/* Пульсация центральной звезды */
+@keyframes sun-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* Анимации орбит */
+@keyframes orbit-inner {
+    from { transform: rotate(0deg) translateX(175px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(175px) rotate(-360deg); }
+}
+@keyframes orbit-outer-1 {
+    from { transform: rotate(0deg) translateX(300px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(300px) rotate(-360deg); }
+}
+@keyframes orbit-outer-2 {
+    from { transform: rotate(120deg) translateX(300px) rotate(-120deg); }
+    to { transform: rotate(480deg) translateX(300px) rotate(-480deg); }
+}
+@keyframes orbit-outer-3 {
+    from { transform: rotate(240deg) translateX(300px) rotate(-240deg); }
+    to { transform: rotate(600deg) translateX(300px) rotate(-600deg); }
+}
+
+/* Анимации карточки */
+@keyframes cardGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+@keyframes statShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .hologram-container {
-        transform: scale(0.7);
-        margin-top: -50px;
-    }
-    
-    .hologram-card {
-        right: 10px;
-        bottom: 10px;
-        width: calc(100vw - 20px);
-        max-width: 300px;
-    }
+    .galaxy-container { transform: scale(0.7); }
+    .hologram-card { right: 10px; bottom: 10px; width: calc(100vw - 20px); max-width: 300px; }
 }
-
 @media (max-width: 480px) {
-    .hologram-container {
-        transform: scale(0.6);
-        margin-top: -80px;
-    }
-    
-    .hero-content {
-        bottom: 40px;
-    }
+    .galaxy-container { transform: scale(0.5); }
+    .hero-content { bottom: 40px; }
 }
