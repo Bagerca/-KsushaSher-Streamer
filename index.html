@@ -1,3 +1,8 @@
+Вот полный код `index.html` с обновленным блоком `.hologram-container`.
+
+Просто скопируйте и вставьте его в свой файл.
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,7 +11,6 @@
     <title>Ksusha Sher - Стример на Twitch</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,47 +19,31 @@
     <link rel="stylesheet" href="css/hologram.css">
 </head>
 <body>
-    <!-- Обновленная hero секция -->
     <section class="hero-section">
-        <!-- Голографический интерфейс -->
         <div class="hologram-container">
-            <!-- Главные фото -->
             <div class="main-photo ksusha" data-character="ksusha">
                 <img src="https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0" alt="Ksusha Sher">
                 <div class="photo-frame pink"></div>
             </div>
-            
             <div class="main-photo tetla" data-character="tetla">
                 <img src="https://via.placeholder.com/300x300/0f0f1b/39ff14?text=TetlaBot" alt="TetlaBot">
                 <div class="photo-frame green"></div>
             </div>
 
-            <!-- Орбиты -->
-            <div class="orbit inner-orbit">
-                <div class="orbit-line"></div>
+            <div class="orbital-photo bagerka" data-character="bagerka">
+                <img src="https://via.placeholder.com/150x150/0f0f1b/ff4444?text=BAGERca" alt="BAGERca">
+                <div class="photo-frame red"></div>
             </div>
-            <div class="orbit middle-orbit">
-                <div class="orbit-line"></div>
-                <!-- Маленькие фото на орбите -->
-                <div class="orbital-photo bagerka" data-character="bagerka">
-                    <img src="https://via.placeholder.com/150x150/0f0f1b/ff4444?text=BAGERca" alt="BAGERca">
-                    <div class="photo-frame red"></div>
-                </div>
-                <div class="orbital-photo angel" data-character="angel">
-                    <img src="https://via.placeholder.com/150x150/0f0f1b/ff8c00?text=Angel" alt="To Be Angle">
-                    <div class="photo-frame orange"></div>
-                </div>
-                <div class="orbital-photo kiriki" data-character="kiriki">
-                    <img src="https://via.placeholder.com/150x150/0f0f1b/007bff?text=Kiriki" alt="Kiriki">
-                    <div class="photo-frame blue"></div>
-                </div>
+            <div class="orbital-photo angel" data-character="angel">
+                <img src="https://via.placeholder.com/150x150/0f0f1b/ff8c00?text=Angel" alt="To Be Angle">
+                <div class="photo-frame orange"></div>
             </div>
-            <div class="orbit outer-orbit">
-                <div class="orbit-line"></div>
+            <div class="orbital-photo kiriki" data-character="kiriki">
+                <img src="https://via.placeholder.com/150x150/0f0f1b/007bff?text=Kiriki" alt="Kiriki">
+                <div class="photo-frame blue"></div>
             </div>
         </div>
 
-        <!-- Голографическая карточка -->
         <div class="hologram-card" id="characterCard">
             <div class="card-glow"></div>
             <div class="card-content">
@@ -93,7 +81,6 @@
             </div>
         </div>
 
-        <!-- Текстовый контент -->
         <div class="hero-content">
             <h1 class="hero-title">Ksusha Sher</h1>
             <p class="hero-subtitle">Профессиональный стример • Создатель контента • Геймер</p>
@@ -104,7 +91,6 @@
         </div>
     </section>
 
-    <!-- Остальные секции остаются без изменений -->
     <section id="about">
         <div class="container">
             <h2 class="section-title">Обо мне</h2>
@@ -372,3 +358,4 @@
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
+```
