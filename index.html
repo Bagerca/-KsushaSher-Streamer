@@ -54,30 +54,40 @@
                 </div>
             </div>
 
-            <div class="hud-side-panel right">
+            <div class="hud-side-panel right" id="squad-panel">
                 <div class="panel-content">
-                    <div class="panel-header">
-                        <span class="header-title">ОТРЯД</span>
-                        <span class="header-deco-line"></span>
+                    <!-- Стандартный вид -->
+                    <div class="squad-default-view">
+                        <div class="panel-header">
+                            <span class="header-title">ОТРЯД</span>
+                            <span class="header-deco-line"></span>
+                        </div>
+                        <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
+                        <div class="squad-list">
+                            <div class="squad-member" data-member="bagerka">
+                                <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar">
+                                <span class="squad-name">BAGERca</span>
+                            </div>
+                            <div class="squad-member" data-member="angel">
+                                <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar">
+                                <span class="squad-name">Angel</span>
+                            </div>
+                            <div class="squad-member" data-member="kiriki">
+                                <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar">
+                                <span class="squad-name">Kiriki</span>
+                            </div>
+                        </div>
+                        <div class="data-block">
+                            <span class="data-label">СИНХРОНИЗАЦИЯ:</span>
+                            <span class="data-value status-ok">100%</span>
+                        </div>
                     </div>
-                    <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
-                    <div class="squad-list">
-                        <div class="squad-member">
-                            <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar">
-                            <span class="squad-name">BAGERca</span>
-                        </div>
-                        <div class="squad-member">
-                            <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar">
-                            <span class="squad-name">Angel</span>
-                        </div>
-                        <div class="squad-member">
-                            <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar">
-                            <span class="squad-name">Kiriki</span>
-                        </div>
-                    </div>
-                    <div class="data-block">
-                        <span class="data-label">СИНХРОНИЗАЦИЯ:</span>
-                        <span class="data-value status-ok">100%</span>
+                    <!-- Детальный вид (скрыт по умолчанию) -->
+                    <div class="squad-detail-view">
+                        <button class="close-detail-btn">&times;</button>
+                        <img src="" alt="" class="detail-avatar">
+                        <h3 class="detail-name"></h3>
+                        <p class="detail-description"></p>
                     </div>
                 </div>
             </div>
