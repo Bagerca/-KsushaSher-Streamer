@@ -10,12 +10,12 @@ const FilterState = {
     currentTab: 'games'
 };
 
-// Обновленные данные персонажей
+// Обновленные данные персонажей с локальными путями
 const charactersData = {
     ksusha: {
         name: "Ksusha Sher",
         role: "Главный Стример",
-        avatar: "https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0",
+        avatar: "assets/images/ksusha.jpg",
         description: "Создатель этого безумного комьюнити. Профессиональный стример с харизмой и отличным чувством юмора.",
         stats: { attack: 85, defense: 70, hp: 90 },
         color: "#ff2d95"
@@ -23,7 +23,7 @@ const charactersData = {
     tetla: {
         name: "TetlaBot",
         role: "Верный Бот",
-        avatar: "https://via.placeholder.com/300x300/0f0f1b/39ff14?text=TetlaBot",
+        avatar: "assets/images/tetlabot.jpg",
         description: "Искусственный интеллект, помогающий управлять чатом и развлекать зрителей. Никогда не спит!",
         stats: { attack: 60, defense: 95, hp: 75 },
         color: "#39ff14"
@@ -31,7 +31,7 @@ const charactersData = {
     bagerka: {
         name: "BAGERca",
         role: "Технический Гений",
-        avatar: "https://via.placeholder.com/150x150/0f0f1b/ff4444?text=BAGERca",
+        avatar: "assets/images/bagerca.jpg",
         description: "Создатель этого сайта и технический специалист. Всегда находит решения самых сложных задач.",
         stats: { attack: 70, defense: 80, hp: 85 },
         color: "#ff4444"
@@ -39,7 +39,7 @@ const charactersData = {
     angel: {
         name: "To Be Angle", 
         role: "Ангел Хранитель",
-        avatar: "https://via.placeholder.com/150x150/0f0f1b/ff8c00?text=Angel",
+        avatar: "assets/images/angel.jpg",
         description: "Душа компании. Всегда поддерживает позитивную атмосферу и помогает новичкам освоиться.",
         stats: { attack: 75, defense: 75, hp: 95 },
         color: "#ff8c00"
@@ -47,7 +47,7 @@ const charactersData = {
     kiriki: {
         name: "Kiriki",
         role: "Мастер Настроения", 
-        avatar: "https://via.placeholder.com/150x150/0f0f1b/007bff?text=Kiriki",
+        avatar: "assets/images/kiriki.jpg",
         description: "Король мемов и хорошего настроения. Его шутки заряжают энергией весь чат.",
         stats: { attack: 80, defense: 65, hp: 80 },
         color: "#007bff"
@@ -459,20 +459,18 @@ function updateTabSliders() {
 // Голографический интерфейс - обновленная версия
 export function initHologramInterface() {
     initCharacterInteractivity();
-    initOrbitalMovement();
+    console.log('🎮 Neural interface initialized');
 }
 
 // Инициализация взаимодействия с персонажами
 function initCharacterInteractivity() {
-    const allPhotos = document.querySelectorAll('.main-photo, .orbital-photo');
+    // ОБНОВЛЕННЫЙ СЕЛЕКТОР
+    const allPhotos = document.querySelectorAll('.neural-core, .neural-node');
     
     allPhotos.forEach(photo => {
         // Остановка анимации при наведении
         photo.addEventListener('mouseenter', function() {
-            const allMovingElements = document.querySelectorAll('.main-photo, .orbital-photo, .orbit-line');
-            allMovingElements.forEach(el => {
-                el.style.animationPlayState = 'paused';
-            });
+            this.style.animationPlayState = 'paused';
             
             const character = this.getAttribute('data-character');
             showCharacterCard(character);
@@ -480,10 +478,7 @@ function initCharacterInteractivity() {
         
         // Возобновление анимации при уходе курсора
         photo.addEventListener('mouseleave', function() {
-            const allMovingElements = document.querySelectorAll('.main-photo, .orbital-photo, .orbit-line');
-            allMovingElements.forEach(el => {
-                el.style.animationPlayState = 'running';
-            });
+            this.style.animationPlayState = 'running';
             
             hideCharacterCard();
         });
@@ -549,11 +544,6 @@ function animateStats(stats) {
             valueElements[stat].textContent = `${value}%`;
         });
     }, 100);
-}
-
-// Инициализация орбитального движения
-function initOrbitalMovement() {
-    console.log('🎮 Orbital movement initialized');
 }
 
 // Card number copy functionality
