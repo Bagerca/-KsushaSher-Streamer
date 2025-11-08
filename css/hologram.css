@@ -1,4 +1,4 @@
-/* --- Стили для "Бинарной Системы" v1.0 --- */
+/* --- Стили для "Бинарной Системы" v1.1 (исправленные орбиты) --- */
 
 .hero-section {
     position: relative;
@@ -29,7 +29,7 @@
     position: absolute;
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); /* Плавная анимация */
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .core-planet img, .satellite img {
@@ -63,7 +63,7 @@
 .core-planet.ksusha { transform: translate(-120%, -50%); animation-delay: 0s; }
 .core-planet.tetla { transform: translate(20%, -50%); animation-delay: -4s; }
 
-/* Орбиты */
+/* Орбиты (БЕЗ ВРАЩЕНИЯ) */
 .orbit {
     position: absolute;
     top: 50%;
@@ -71,7 +71,6 @@
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transform: translate(-50%, -50%);
-    animation: rotate-orbit 60s linear infinite;
 }
 /* Светящаяся "комета" на орбите */
 .orbit::before {
@@ -84,30 +83,40 @@
     border-radius: 50%;
     background: #fff;
     box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--neon-pink);
+    /* Анимация кометы */
+    animation: rotate-satellite 25s linear infinite;
+    transform-origin: 225px 3px;
+}
+.orbit.middle::before {
+    animation-duration: 40s;
+    animation-direction: reverse;
+    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--neon-green);
+    transform-origin: 325px 3px;
+}
+.orbit.outer::before {
+    animation-duration: 55s;
+    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #007bff;
+    transform-origin: 425px 3px;
 }
 
-.orbit.inner { width: 450px; height: 250px; animation-duration: 25s; }
-.orbit.middle { width: 650px; height: 400px; animation-duration: 40s; animation-direction: reverse; }
-.orbit.outer { width: 850px; height: 550px; animation-duration: 55s; }
-.orbit.middle::before { box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--neon-green); }
-.orbit.outer::before { box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #007bff; }
+.orbit.inner { width: 450px; height: 250px; }
+.orbit.middle { width: 650px; height: 400px; }
+.orbit.outer { width: 850px; height: 550px; }
 
-/* Спутники */
+
+/* Спутники (С АНИМАЦИЕЙ ВРАЩЕНИЯ) */
 .satellite {
     width: 80px;
     height: 80px;
-    /* Позиционируем на орбите, а сама орбита вращается */
+    position: absolute;
     top: 50%;
     left: 0;
-    transform: translate(-50%, -50%);
 }
-.satellite img, .satellite::after, .satellite .photo-frame {
-    /* Компенсируем вращение, чтобы спутник не переворачивался */
-    animation: counter-rotate-orbit 60s linear infinite;
-}
-.orbit.inner .satellite img, .orbit.inner .satellite::after, .orbit.inner .satellite .photo-frame { animation-duration: 25s; }
-.orbit.middle .satellite img, .orbit.middle .satellite::after, .orbit.middle .satellite .photo-frame { animation-duration: 40s; animation-direction: reverse; }
-.orbit.outer .satellite img, .orbit.outer .satellite::after, .orbit.outer .satellite .photo-frame { animation-duration: 55s; }
+/* Задаем центр вращения для каждой орбиты (половина ширины орбиты) */
+.orbit.inner .satellite { transform-origin: 225px 0; animation: rotate-satellite 25s linear infinite; }
+.orbit.middle .satellite { transform-origin: 325px 0; animation: rotate-satellite 40s linear infinite reverse; }
+.orbit.outer .satellite { transform-origin: 425px 0; animation: rotate-satellite 55s linear infinite; }
+
 
 /* Рамки для фото */
 .photo-frame {
@@ -149,6 +158,7 @@
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 1000; overflow: hidden;
 }
+/* ... (остальные стили карточки) */
 .hologram-card.show { opacity: 1; transform: translateY(0) scale(1); }
 .card-glow { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--card-color, #39ff14), transparent); animation: cardGlow 2s ease-in-out infinite; }
 .card-content { position: relative; z-index: 2; }
@@ -178,13 +188,10 @@
 .core-planet.ksusha { --tx: -120%; --ty: -50%; }
 .core-planet.tetla { --tx: 20%; --ty: -50%; }
 
-@keyframes rotate-orbit {
+/* Новая анимация для вращения спутников */
+@keyframes rotate-satellite {
     from { transform: translate(-50%, -50%) rotate(0deg); }
     to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-@keyframes counter-rotate-orbit {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
 }
 @keyframes cardGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 @keyframes statShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
