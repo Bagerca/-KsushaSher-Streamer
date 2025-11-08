@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDeleting = false;
 
     function typeData() {
+        if (!dataTicker) return;
         const fullMessage = dataMessages[messageIndex];
         
         if (isDeleting) {
@@ -70,19 +71,5 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(typeData, typeSpeed);
     }
     
-    if (dataTicker) {
-        setTimeout(typeData, 1000);
-    }
-    
-    // (Опционально) Добавление звуков при наведении
-    // const sidePanels = document.querySelectorAll('.hud-side-panel');
-    // const uiSound = new Audio('path/to/your/ui-hover.wav'); // Укажите путь к вашему аудиофайлу
-    // uiSound.volume = 0.3;
-
-    // sidePanels.forEach(panel => {
-    //     panel.addEventListener('mouseenter', () => {
-    //         uiSound.currentTime = 0;
-    //         uiSound.play();
-    //     });
-    // });
+    setTimeout(typeData, 1000);
 });
