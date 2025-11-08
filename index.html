@@ -91,8 +91,8 @@
         
         <!-- Основной контент (заголовок, кнопки) -->
         <div class="hero-content-hud">
-            <h1 class="hero-title">SYSTEM ONLINE: KSUSHA SHER</h1>
-            <p class="hero-subtitle" id="data-ticker">Загрузка данных канала...</p>
+            <h1 class="hero-title-hud">SYSTEM ONLINE: KSUSHA SHER</h1>
+            <p class="hero-subtitle-hud" id="data-ticker">Загрузка данных канала...</p>
             <div class="hero-buttons">
                 <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> ПОДКЛЮЧИТЬСЯ К СТРИМУ</a>
                 <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> КАНАЛ СВЯЗИ</a>
@@ -101,17 +101,269 @@
     </section>
     <!-- КОНЕЦ НОВОЙ СЕКЦИИ -->
 
-    <!-- Остальные секции остаются без изменений -->
+    <!-- Остальные секции -->
     <section id="about">
-        <!-- ... ваш код секции "Обо мне" ... -->
+        <div class="container">
+            <h2 class="section-title">Обо мне</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Привет! Я Ksusha Sher - стример на Twitch, который специализируется на играх и общении с комьюнити. Я создаю уютное и welcoming сообщество, где каждый чувствует себя как дома.</p>
+                    <p>Мои стримы - это не только игровой контент, но и общение, шутки, и просто хорошее времяпрепровождение вместе с комьюнити.</p>
+                    <p>Присоединяйся к нашему уютному сообществу и стань часть нашей цифровой семьи!</p>
+                </div>
+                <div class="about-image">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/LYtMQlY8Qlk" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
+
     <section id="stats">
-        <!-- ... ваш код секции "Статистика" ... -->
+        <div class="container">
+            <h2 class="section-title">Статистика канала</h2>
+            <p class="stats-subtitle">Динамика развития и ключевые показатели</p>
+            
+            <div class="radar-chart-container">
+                <canvas id="radarChart"></canvas>
+                <div class="radar-center">
+                    <div class="center-stats">
+                        <span class="center-value">3+</span>
+                        <span class="center-label">года опыта</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3>5.2K+</h3>
+                        <p>Подписчиков на Twitch</p>
+                        <div class="stat-trend positive">+12% за месяц</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📡</div>
+                    <div class="stat-content">
+                        <h3>154</h3>
+                        <p>Проведенных стримов</p>
+                        <div class="stat-trend positive">3.2 в неделю</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-content">
+                        <h3>1,000+</h3>
+                        <p>Часов контента</p>
+                        <div class="stat-trend positive">250ч/год</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-content">
+                        <h3>280/ч</h3>
+                        <p>Активность в чате</p>
+                        <div class="stat-trend positive">Высокая вовлеченность</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <h3>95%</h3>
+                        <p>Лояльность аудитории</p>
+                        <div class="stat-trend positive">Стабильный рост</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🎮</div>
+                    <div class="stat-content">
+                        <h3>25+</h3>
+                        <p>Разных игр показано</p>
+                        <div class="stat-trend positive">Разнообразие контента</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
-    <!-- ... и так далее для всех остальных секций ... -->
-    
+
+    <section id="schedule">
+        <div class="container">
+            <h2 class="section-title">Расписание стримов</h2>
+            <p class="schedule-subtitle">🕓 Начало в <span class="neon-text">16:00 по МСК</span>, длительность 3+ часа</p>
+            
+            <div class="schedule-list" id="schedule-list">
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="schedule-game">Загрузка расписания...</div>
+                        <div class="schedule-desc">Данные загружаются</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="schedule-footer">
+                <p>✨ Расписание может меняться! Актуальные анонсы в <a href="https://t.me/pizdeckakoi_to" target="_blank" class="neon-link">Телеграм-канале</a></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="games">
+        <div class="container">
+            <h2 class="section-title">Игры и кино</h2>
+            <div class="games-controls">
+                <div class="controls-section">
+                    <div class="games-tabs">
+                        <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i></div>
+                        <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i></div>
+                        <div class="tab-slider"></div>
+                    </div>
+                    
+                    <div class="filter-container">
+                        <div class="filter-toggle" id="filter-toggle">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                        <div class="filter-dropdown" id="filter-dropdown">
+                            <div class="filter-group games-filters">
+                                <div class="filter-group-title">Статус</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="games" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="games"> Пройдено</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="playing" data-type="games"> Проходим</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="games"> Брошено</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="games"> Под вопросом</label>
+                                
+                                <div class="filter-divider"></div>
+                                
+                                <div class="filter-group-title">Жанры игр</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="games" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="games"> Хоррор</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="adventure" data-type="games"> Приключения</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="shooter" data-type="games"> Шутер</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="simulator" data-type="games"> Симулятор</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="puzzle" data-type="games"> Головоломка</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="coop" data-type="games"> Кооператив</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="platformer" data-type="games"> Платформер</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="rpg" data-type="games"> RPG</label>
+                            </div>
+                            <div class="filter-group movies-filters" style="display:none">
+                                <div class="filter-group-title">Статус</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="movies" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="watched" data-type="movies"> Посмотрено</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="watching" data-type="movies"> Смотрим</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="movies"> Бросили</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="movies"> Под вопросом</label>
+                                
+                                <div class="filter-divider"></div>
+                                
+                                <div class="filter-group-title">Жанры фильмов</div>
+                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="movies" checked> Все</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="animation" data-type="movies"> Анимация</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="fantasy" data-type="movies"> Фэнтези</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="crossover" data-type="movies"> Кроссовер</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="movies"> Хоррор</label>
+                                <label class="filter-option"><input type="checkbox" data-filter="family" data-type="movies"> Семейный</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sort-tabs">
+                        <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i></div>
+                        <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i></div>
+                        <div class="sort-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="legend-section">
+                    <div class="status-legend">
+                        <span class="legend-item"><span class="status-badge completed"></span> Пройдено/Посмотрено</span>
+                        <span class="legend-item"><span class="status-badge playing"></span> Проходим/Смотрим</span>
+                        <span class="legend-item"><span class="status-badge dropped"></span> Брошено/Бросили</span>
+                        <span class="legend-item"><span class="status-badge on-hold"></span> Под вопросом</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="games-content-container">
+                <div class="games-content active" id="games-content">
+                    <div class="games-grid"></div>
+                </div>
+                <div class="games-content" id="movies-content">
+                    <div class="games-grid movies"></div>
+                </div>
+            </div>
+            <button class="toggle-games" id="toggle-games">Развернуть</button>
+        </div>
+    </section>
+
+    <section id="specs">
+        <div class="container">
+            <h2 class="section-title">Мое железо</h2>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <i class="fas fa-microchip"></i>
+                    <h3>Процессор</h3>
+                    <p>Intel Core i7-12700H</p>
+                </div>
+                <div class="spec-item">
+                    <i class="fas fa-laptop"></i>
+                    <h3>Видеокарта</h3>
+                    <p>NVIDIA GeForce RTX 3060</p>
+                </div>
+                <div class="spec-item">
+                    <i class="fas fa-memory"></i>
+                    <h3>Память</h3>
+                    <p>16GB RAM</p>
+                </div>
+                <div class="spec-item">
+                    <i class="fas fa-microphone"></i>
+                    <h3>Микрофон</h3>
+                    <p>Shure SM7B</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="donation">
+        <div class="container">
+            <h2 class="section-title">Поддержать</h2>
+            <p>Если тебе нравится мой контент, ты можешь поддержать меня финансово</p>
+            <div class="donation-options">
+                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" rel="noopener noreferrer" class="donation-option">
+                    <h3>DonationAlerts</h3>
+                    <p>Прямые донаты</p>
+                </a>
+                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" rel="noopener noreferrer" class="donation-option">
+                    <h3>MemeAlerts</h3>
+                    <p>Альтернативные донаты</p>
+                </a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
+                    <h3>Twitch Подписка</h3>
+                    <p>Подписка на канале</p>
+                </a>
+            </div>
+            <div class="card-number" id="card-number">
+                <i class="fas fa-credit-card"></i> 4276 1805 5058 1960
+                <span id="copy-tooltip">Нажмите чтобы скопировать</span>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        <!-- ... ваш код футера ... -->
+        <div class="container">
+            <div class="social-links">
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitch"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
+                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p>&copy; 2025 Ksusha Sher. Все права защищены. Сайт создан BAGERca.</p>
+        </div>
     </footer>
 
     <script type="module" src="js/app.js"></script>
