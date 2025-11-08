@@ -456,29 +456,35 @@ function updateTabSliders() {
     }
 }
 
-// Голографический интерфейс - обновленная версия
+// Голографический интерфейс - "Космический Танец"
 export function initHologramInterface() {
     initCharacterInteractivity();
-    console.log('🎮 Neural interface initialized');
+    console.log('🌌 Cosmic Dance initialized');
 }
 
 // Инициализация взаимодействия с персонажами
 function initCharacterInteractivity() {
-    // ОБНОВЛЕННЫЙ СЕЛЕКТОР
-    const allPhotos = document.querySelectorAll('.neural-core, .neural-node');
+    // ОБНОВЛЕННЫЙ СЕЛЕКТОР для всех тел в галактике
+    const allBodies = document.querySelectorAll('.galaxy-sun, .orbiting-body');
     
-    allPhotos.forEach(photo => {
+    allBodies.forEach(body => {
         // Остановка анимации при наведении
-        photo.addEventListener('mouseenter', function() {
-            this.style.animationPlayState = 'paused';
+        body.addEventListener('mouseenter', function() {
+            // Приостанавливаем анимацию у всех элементов для "замирания" сцены
+            document.querySelectorAll('.orbital-plane, .orbiting-body, .galaxy-sun img, .orbiting-body img').forEach(el => {
+                el.style.animationPlayState = 'paused';
+            });
             
             const character = this.getAttribute('data-character');
             showCharacterCard(character);
         });
         
         // Возобновление анимации при уходе курсора
-        photo.addEventListener('mouseleave', function() {
-            this.style.animationPlayState = 'running';
+        body.addEventListener('mouseleave', function() {
+            // Возобновляем анимацию у всех элементов
+            document.querySelectorAll('.orbital-plane, .orbiting-body, .galaxy-sun img, .orbiting-body img').forEach(el => {
+                el.style.animationPlayState = 'running';
+            });
             
             hideCharacterCard();
         });
