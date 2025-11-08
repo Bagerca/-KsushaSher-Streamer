@@ -1,4 +1,4 @@
-/* --- Стили для "Бинарной Системы" v1.3 (ФИНАЛЬНАЯ ВЕРСИЯ) --- */
+/* --- Стили для "Бинарной Системы" v1.4 (ФИНАЛЬНАЯ ВЕРСИЯ С ИСПРАВЛЕНИЯМИ) --- */
 
 .hero-section {
     position: relative;
@@ -19,8 +19,8 @@
 /* Контейнер для всей сцены */
 .binary-system-container {
     position: relative;
-    width: 800px;
-    height: 600px;
+    width: 1000px; /* Увеличиваем контейнер для больших орбит */
+    height: 700px;
     z-index: 10;
 }
 
@@ -66,46 +66,43 @@
 
 /* --- ИСПРАВЛЕННЫЕ ОРБИТЫ --- */
 
-/* СТАТИЧНЫЕ видимые пути орбит */
-.orbit-path {
+/* Статичные видимые пути И невидимые вращающиеся роторы */
+.orbit-path, .orbit-rotor {
     position: absolute;
     top: 50%;
     left: 50%;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: translate(-50%, -50%);
-    /* БЕЗ АНИМАЦИИ */
 }
-.orbit-path.inner { width: 450px; height: 250px; }
-.orbit-path.middle { width: 650px; height: 400px; }
-.orbit-path.outer { width: 850px; height: 550px; }
 
-/* НЕВИДИМЫЕ вращающиеся контейнеры (роторы) */
+.orbit-path {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: -1; /* Орбиты всегда на заднем плане */
+}
+
+/* НОВЫЕ РАЗМЕРЫ ОРБИТ */
+/* Inner */
+.orbit-path.inner, .orbit-rotor.inner {
+    width: 550px; height: 550px;
+    transform: translate(-50%, -50%) scaleY(0.545); /* 300 / 550 */
+}
+/* Middle */
+.orbit-path.middle, .orbit-rotor.middle {
+    width: 750px; height: 750px;
+    transform: translate(-50%, -50%) scaleY(0.6); /* 450 / 750 */
+}
+/* Outer */
+.orbit-path.outer, .orbit-rotor.outer {
+    width: 950px; height: 950px;
+    transform: translate(-50%, -50%) scaleY(0.63); /* 600 / 950 */
+}
+
+/* Анимация вращения ТОЛЬКО для роторов */
 .orbit-rotor {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-style: preserve-3d;
     animation: rotate-rotor 25s linear infinite;
 }
+.orbit-rotor.middle { animation-duration: 40s; animation-direction: reverse; }
+.orbit-rotor.outer { animation-duration: 55s; }
 
-/* Делаем роторы квадратными и сжимаем в овалы */
-.orbit-rotor.inner {
-    width: 450px; height: 450px;
-    transform: translate(-50%, -50%) scaleY(0.555); /* 250 / 450 */
-    animation-duration: 25s;
-}
-.orbit-rotor.middle {
-    width: 650px; height: 650px;
-    transform: translate(-50%, -50%) scaleY(0.615); /* 400 / 650 */
-    animation-duration: 40s;
-    animation-direction: reverse;
-}
-.orbit-rotor.outer {
-    width: 850px; height: 850px;
-    transform: translate(-50%, -50%) scaleY(0.647); /* 550 / 850 */
-    animation-duration: 55s;
-}
 
 /* Спутник внутри ротора */
 .satellite {
@@ -116,17 +113,16 @@
 }
 
 /* "Растягиваем" спутники обратно, чтобы они не были сплюснутыми */
-.orbit-rotor.inner .satellite { transform: translateY(-50%) scaleY(1.8); } /* 1 / 0.555 */
-.orbit-rotor.middle .satellite { transform: translateY(-50%) scaleY(1.625); } /* 1 / 0.615 */
-.orbit-rotor.outer .satellite { transform: translateY(-50%) scaleY(1.545); } /* 1 / 0.647 */
+.orbit-rotor.inner .satellite { transform: translateY(-50%) scaleY(1.83); } /* 1 / 0.545 */
+.orbit-rotor.middle .satellite { transform: translateY(-50%) scaleY(1.667); } /* 1 / 0.6 */
+.orbit-rotor.outer .satellite { transform: translateY(-50%) scaleY(1.587); } /* 1 / 0.63 */
 
 /* Компенсируем вращение ротора, чтобы фото всегда смотрело на нас */
 .satellite img, .satellite::after, .satellite .photo-frame {
     animation: counter-rotate-rotor 25s linear infinite;
 }
 .orbit-rotor.middle .satellite img, .orbit-rotor.middle .satellite::after, .orbit-rotor.middle .satellite .photo-frame {
-    animation-duration: 40s;
-    animation-direction: reverse;
+    animation-duration: 40s; animation-direction: reverse;
 }
 .orbit-rotor.outer .satellite img, .orbit-rotor.outer .satellite::after, .orbit-rotor.outer .satellite .photo-frame {
     animation-duration: 55s;
@@ -145,7 +141,7 @@
 .photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 20px #ff8c00; }
 .photo-frame.blue { border-color: #007bff; box-shadow: 0 0 20px #007bff; }
 
-/* --- ИНТЕРАКТИВНОСТЬ --- */
+/* --- ИСПРАВЛЕННАЯ ИНТЕРАКТИВНОСТЬ --- */
 .core-planet:hover, .satellite:hover { z-index: 100; }
 
 .core-planet:hover {
@@ -154,18 +150,22 @@
 .satellite:hover {
     transform: translateY(-50%) scale(1.15) !important;
 }
-.orbit-rotor.inner .satellite:hover { transform: translateY(-50%) scaleY(1.8) scale(1.15) !important; }
-.orbit-rotor.middle .satellite:hover { transform: translateY(-50%) scaleY(1.625) scale(1.15) !important; }
-.orbit-rotor.outer .satellite:hover { transform: translateY(-50%) scaleY(1.545) scale(1.15) !important; }
+.orbit-rotor.inner .satellite:hover { transform: translateY(-50%) scaleY(1.83) scale(1.15) !important; }
+.orbit-rotor.middle .satellite:hover { transform: translateY(-50%) scaleY(1.667) scale(1.15) !important; }
+.orbit-rotor.outer .satellite:hover { transform: translateY(-50%) scaleY(1.587) scale(1.15) !important; }
 
-.binary-system-container:has(:hover) .core-planet:not(:hover),
-.binary-system-container:has(:hover) .satellite:not(:hover) {
+/* Умный блюр: блюрим только неактивные элементы */
+.binary-system-container:has(.core-planet:hover) .satellite,
+.binary-system-container:has(.satellite:hover) .core-planet,
+.binary-system-container:has(.satellite:hover) .satellite:not(:hover),
+.binary-system-container:has(.core-planet:hover) .core-planet:not(:hover) {
     opacity: 0.3;
     filter: blur(4px);
 }
 .binary-system-container:has(:hover) .orbit-path {
     opacity: 0.2;
 }
+
 
 /* Карточка персонажа (без изменений) */
 .hologram-card {
@@ -211,9 +211,9 @@
     from { transform: translate(-50%, -50%) rotate(0deg) var(--scale, scaleY(1)); }
     to { transform: translate(-50%, -50%) rotate(360deg) var(--scale, scaleY(1)); }
 }
-.orbit-rotor.inner { --scale: scaleY(0.555); }
-.orbit-rotor.middle { --scale: scaleY(0.615); }
-.orbit-rotor.outer { --scale: scaleY(0.647); }
+.orbit-rotor.inner { --scale: scaleY(0.545); }
+.orbit-rotor.middle { --scale: scaleY(0.6); }
+.orbit-rotor.outer { --scale: scaleY(0.63); }
 
 @keyframes counter-rotate-rotor {
     from { transform: rotate(0deg); }
@@ -224,6 +224,6 @@
 @keyframes statShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
 /* Адаптивность */
-@media (max-width: 900px) { .binary-system-container { transform: scale(0.8); } }
-@media (max-width: 768px) { .binary-system-container { transform: scale(0.7); margin-top: -50px; } }
-@media (max-width: 480px) { .binary-system-container { transform: scale(0.5); margin-top: -100px; } }
+@media (max-width: 1100px) { .binary-system-container { transform: scale(0.8); } }
+@media (max-width: 900px) { .binary-system-container { transform: scale(0.7); margin-top: -50px; } }
+@media (max-width: 700px) { .binary-system-container { transform: scale(0.5); margin-top: -100px; } }
