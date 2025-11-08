@@ -14,49 +14,88 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- НОВАЯ СЕКЦИЯ HERO С КАРТОЧКАМИ -->
-    <section class="hero-section-cards">
-        <div class="cards-wrapper">
-            <!-- Второстепенные персонажи (на заднем плане) -->
-            <div class="character-card minor bagerka-card" style="transform: rotate(-15deg) translate(-180%, -30%) translateZ(-150px);">
-                <div class="card-glow"></div>
-                <img src="assets/images/bagerca.jpg" alt="BAGERca">
-                <div class="card-name">BAGERca</div>
+    <!-- НОВАЯ СЕКЦИЯ HERO В СТИЛЕ HUD -->
+    <section class="hero-section-hud">
+        <!-- Анимированные фоновые элементы -->
+        <div class="hud-grid-background"></div>
+        <div class="hud-scanline"></div>
+
+        <!-- Основной контейнер интерфейса -->
+        <div class="hud-container">
+
+            <!-- Левая панель: Партнер -->
+            <div class="hud-side-panel left">
+                <div class="panel-header">
+                    <span class="header-title">СОЮЗНИК</span>
+                    <span class="header-deco-line"></span>
+                </div>
+                <div class="panel-content">
+                    <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar">
+                    <h3 class="panel-name">TETLA</h3>
+                    <div class="data-block">
+                        <span class="data-label">СТАТУС:</span>
+                        <span class="data-value status-ok">В СЕТИ</span>
+                    </div>
+                    <div class="data-block">
+                        <span class="data-label">РОЛЬ:</span>
+                        <span class="data-value">ПОДДЕРЖКА</span>
+                    </div>
+                </div>
+                <div class="panel-footer"></div>
             </div>
 
-            <div class="character-card minor angel-card" style="transform: rotate(5deg) translate(0, -140%) translateZ(-200px);">
-                <div class="card-glow"></div>
-                <img src="assets/images/angel.jpg" alt="Angel">
-                <div class="card-name">Angel</div>
+            <!-- Центральный дисплей: Стример -->
+            <div class="hud-main-display">
+                <div class="main-display-rings">
+                    <div class="ring ring-1"></div>
+                    <div class="ring ring-2"></div>
+                    <div class="ring ring-3"></div>
+                </div>
+                <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar">
+                <div class="main-display-status">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
+                </div>
             </div>
 
-            <div class="character-card minor kiriki-card" style="transform: rotate(15deg) translate(180%, -20%) translateZ(-180px);">
-                <div class="card-glow"></div>
-                <img src="assets/images/kiriki.jpg" alt="Kiriki">
-                <div class="card-name">Kiriki</div>
-            </div>
-
-            <!-- Главные персонажи -->
-            <div class="character-card main ksusha-card" style="transform: translate(-55%, -50%) rotate(-5deg);">
-                <div class="card-glow"></div>
-                <img src="assets/images/ksusha.jpg" alt="Ksusha Sher">
-                <div class="card-name">Ksusha Sher</div>
-            </div>
-
-            <div class="character-card main tetla-card" style="transform: translate(55%, -50%) rotate(5deg);">
-                <div class="card-glow"></div>
-                <img src="assets/images/tetlabot.jpg" alt="Tetla">
-                <div class="card-name">Tetla</div>
+            <!-- Правая панель: Команда -->
+            <div class="hud-side-panel right">
+                <div class="panel-header">
+                    <span class="header-title">ОТРЯД</span>
+                    <span class="header-deco-line"></span>
+                </div>
+                <div class="panel-content">
+                    <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
+                    <div class="squad-list">
+                        <div class="squad-member">
+                            <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar">
+                            <span class="squad-name">BAGERca</span>
+                        </div>
+                        <div class="squad-member">
+                            <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar">
+                            <span class="squad-name">Angel</span>
+                        </div>
+                        <div class="squad-member">
+                            <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar">
+                            <span class="squad-name">Kiriki</span>
+                        </div>
+                    </div>
+                    <div class="data-block">
+                        <span class="data-label">СИНХРОНИЗАЦИЯ:</span>
+                        <span class="data-value status-ok">100%</span>
+                    </div>
+                </div>
+                <div class="panel-footer"></div>
             </div>
         </div>
-
-        <!-- Контент поверх карточек -->
-        <div class="hero-content-cards">
-            <h1 class="hero-title">Ksusha Sher & Community</h1>
-            <p class="hero-subtitle">Профессиональный стример • Создатель контента • Геймер</p>
+        
+        <!-- Основной контент (заголовок, кнопки) -->
+        <div class="hero-content-hud">
+            <h1 class="hero-title">SYSTEM ONLINE: KSUSHA SHER</h1>
+            <p class="hero-subtitle" id="data-ticker">Загрузка данных канала...</p>
             <div class="hero-buttons">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> ПОДКЛЮЧИТЬСЯ К СТРИМУ</a>
+                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> КАНАЛ СВЯЗИ</a>
             </div>
         </div>
     </section>
