@@ -1,9 +1,8 @@
-/* --- Стили для "Космического Танца" --- */
+/* --- Стили для "Космического Танца" v2.0 (с объемными сферами) --- */
 
 .hero-section {
-    /* Задаем 3D-контекст для дочерних элементов */
-    perspective: 1000px;
-    overflow: hidden; /* Важно, чтобы элементы не вылезали за пределы */
+    perspective: 1200px; /* Увеличим глубину перспективы */
+    overflow: hidden;
 }
 
 /* Атмосферный фон с туманностью */
@@ -39,7 +38,7 @@
     animation: system-rotation 90s linear infinite;
 }
 
-/* Центральная звезда (Ксюша) */
+/* Центральная звезда (Ксюша) - УЛУЧШЕНА */
 .galaxy-sun {
     position: absolute;
     top: 50%;
@@ -51,7 +50,7 @@
     cursor: pointer;
     z-index: 100;
     animation: sun-pulse 6s ease-in-out infinite;
-    transition: transform 0.3s ease;
+    transition: all 0.4s ease;
 }
 
 .galaxy-sun img {
@@ -59,6 +58,8 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    /* Добавляем легкое внутреннее свечение для объема */
+    box-shadow: inset 0 0 30px 10px rgba(0,0,0,0.5);
 }
 
 /* Пути орбит */
@@ -83,7 +84,7 @@
     border-width: 1px;
 }
 
-/* Вращающиеся тела (спутники и планеты) */
+/* Вращающиеся тела - УЛУЧШЕНЫ */
 .orbiting-body {
     position: absolute;
     top: 50%;
@@ -91,64 +92,65 @@
     border-radius: 50%;
     cursor: pointer;
     transform-style: preserve-3d;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 }
-.orbiting-body img, .orbiting-body .photo-frame {
-    /* Важно! Компенсируем вращение родителя, чтобы фото всегда смотрело на нас */
+
+/* --- МАГИЯ ОБЪЕМА --- */
+.orbiting-body::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    /* Градиент имитирует свет сверху-слева */
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), rgba(255,255,255,0) 60%);
+    /* Внутренняя тень создает глубину */
+    box-shadow: inset 0 0 20px 5px rgba(0,0,0,0.4);
+}
+
+.orbiting-body img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    opacity: 0.9; /* Чтобы градиент лучше смешивался */
+}
+/* -------------------- */
+
+.orbiting-body img, .orbiting-body .photo-frame, .orbiting-body::after {
+    /* Компенсируем вращение родителя, чтобы фото всегда смотрело на нас */
     animation: counter-system-rotation 90s linear infinite;
 }
 
 
 /* Позиционирование и анимация спутников */
-.orbiting-body.tetla {
-    width: 100px;
-    height: 100px;
-    margin: -50px 0 0 -50px;
-    animation: orbit-inner 20s linear infinite;
-}
-.orbiting-body.bagerka {
-    width: 80px;
-    height: 80px;
-    margin: -40px 0 0 -40px;
-    animation: orbit-outer-1 35s linear infinite;
-}
-.orbiting-body.angel {
-    width: 80px;
-    height: 80px;
-    margin: -40px 0 0 -40px;
-    animation: orbit-outer-2 30s linear infinite;
-}
-.orbiting-body.kiriki {
-    width: 80px;
-    height: 80px;
-    margin: -40px 0 0 -40px;
-    animation: orbit-outer-3 40s linear infinite;
-}
+.orbiting-body.tetla { width: 100px; height: 100px; margin: -50px 0 0 -50px; animation: orbit-inner 20s linear infinite; }
+.orbiting-body.bagerka { width: 80px; height: 80px; margin: -40px 0 0 -40px; animation: orbit-outer-1 35s linear infinite; }
+.orbiting-body.angel { width: 80px; height: 80px; margin: -40px 0 0 -40px; animation: orbit-outer-2 30s linear infinite; }
+.orbiting-body.kiriki { width: 80px; height: 80px; margin: -40px 0 0 -40px; animation: orbit-outer-3 40s linear infinite; }
 
-/* Эффекты при наведении */
+/* УЛУЧШЕННЫЕ ЭФФЕКТЫ ПРИ НАВЕДЕНИИ */
 .galaxy-sun:hover, .orbiting-body:hover {
     transform: translateZ(50px) scale(1.2);
-    /* Сбрасываем translate от родителя, чтобы hover был корректным */
-    margin-top: -50%;
-    margin-left: -50%;
 }
+/* Затемняем и размываем все, КРОМЕ того, на что навели курсор */
 .galaxy-container:has(:hover) .galaxy-sun:not(:hover),
 .galaxy-container:has(:hover) .orbiting-body:not(:hover) {
-    opacity: 0.5;
-    filter: grayscale(80%);
+    opacity: 0.4;
+    filter: blur(3px) grayscale(80%);
 }
 
 
-/* Рамки для фото */
+/* Рамки для фото - УЛУЧШЕНЫ */
 .photo-frame {
     position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
     border-radius: 50%; border: 2px solid; pointer-events: none;
+    animation: counter-system-rotation 90s linear infinite; /* Тоже должно контр-вращаться */
 }
-.photo-frame.pink { border-color: #ff2d95; box-shadow: 0 0 20px #ff2d95, inset 0 0 10px #ff2d95; }
-.photo-frame.green { border-color: #39ff14; box-shadow: 0 0 20px #39ff14, inset 0 0 10px #39ff14; }
-.photo-frame.red { border-color: #ff4444; box-shadow: 0 0 15px #ff4444, inset 0 0 8px #ff4444; }
-.photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 15px #ff8c00, inset 0 0 8px #ff8c00; }
-.photo-frame.blue { border-color: #007bff; box-shadow: 0 0 15px #007bff, inset 0 0 8px #007bff; }
+.photo-frame.pink { border-color: #ff2d95; box-shadow: 0 0 25px #ff2d95, inset 0 0 10px rgba(255, 45, 149, 0.5); filter: blur(1px); }
+.photo-frame.green { border-color: #39ff14; box-shadow: 0 0 25px #39ff14, inset 0 0 10px rgba(57, 255, 20, 0.5); filter: blur(1px); }
+.photo-frame.red { border-color: #ff4444; box-shadow: 0 0 20px #ff4444, inset 0 0 8px rgba(255, 68, 68, 0.5); }
+.photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 20px #ff8c00, inset 0 0 8px rgba(255, 140, 0, 0.5); }
+.photo-frame.blue { border-color: #007bff; box-shadow: 0 0 20px #007bff, inset 0 0 8px rgba(0, 123, 255, 0.5); }
 
 
 /* Карточка персонажа (без изменений, кроме z-index) */
@@ -161,7 +163,7 @@
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 1000; overflow: hidden;
 }
-/* ... (остальные стили для карточки остаются как есть, они ниже) ... */
+/* ... (остальные стили для карточки остаются как есть) ... */
 .hologram-card.show { opacity: 1; transform: translateY(0) scale(1); }
 .card-glow { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--card-color, #39ff14), transparent); animation: cardGlow 2s ease-in-out infinite; }
 .card-content { position: relative; z-index: 2; }
@@ -180,33 +182,27 @@
 
 
 /* --- АНИМАЦИИ --- */
-
-/* Движение фона */
 @keyframes slow-pan {
     0% { transform: translate(0, 0); }
     50% { transform: translate(10%, 5%); }
     100% { transform: translate(0, 0); }
 }
 
-/* Общее вращение системы */
 @keyframes system-rotation {
     from { transform: rotateX(70deg) rotateZ(0deg); }
     to { transform: rotateX(70deg) rotateZ(360deg); }
 }
 
-/* Компенсация вращения, чтобы фото не переворачивались */
 @keyframes counter-system-rotation {
     from { transform: rotateZ(0deg) rotateX(-70deg); }
     to { transform: rotateZ(-360deg) rotateX(-70deg); }
 }
 
-/* Пульсация центральной звезды */
 @keyframes sun-pulse {
     0%, 100% { transform: translate(-50%, -50%) scale(1); }
     50% { transform: translate(-50%, -50%) scale(1.05); }
 }
 
-/* Анимации орбит */
 @keyframes orbit-inner {
     from { transform: rotate(0deg) translateX(175px) rotate(0deg); }
     to { transform: rotate(360deg) translateX(175px) rotate(-360deg); }
@@ -224,7 +220,6 @@
     to { transform: rotate(600deg) translateX(300px) rotate(-600deg); }
 }
 
-/* Анимации карточки */
 @keyframes cardGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 @keyframes statShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
