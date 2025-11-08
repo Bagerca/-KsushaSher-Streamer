@@ -1,4 +1,4 @@
-/* Голографический интерфейс - обновленная версия */
+/* --- Стили для Нового Нейронного Интерфейса --- */
 
 .hero-section {
     height: 100vh;
@@ -10,7 +10,7 @@
     padding-top: 5vh;
 }
 
-/* Голографический контейнер */
+/* Общий контейнер */
 .hologram-container {
     position: relative;
     width: 600px;
@@ -21,38 +21,25 @@
     margin-top: -30px;
 }
 
-/* Главные фото */
-.main-photo {
-    width: 180px;
-    height: 180px;
+/* Базовые стили для фото (ядер и узлов) */
+.neural-core, .neural-node {
     position: absolute;
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
     z-index: 20;
-    animation: photoFloat 4s ease-in-out infinite;
     transition: all 0.3s ease;
+    animation: coreFloat 5s ease-in-out infinite;
 }
 
-.main-photo.ksusha {
-    left: 30%;
-    transform: translateX(-50%);
-    animation-delay: 0s;
-}
-
-.main-photo.tetla {
-    right: 30%;
-    transform: translateX(50%);
-    animation-delay: -2s;
-}
-
-.main-photo img {
+.neural-core img, .neural-node img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
 }
 
+/* Рамки для фото (остаются как есть) */
 .photo-frame {
     position: absolute;
     top: -4px;
@@ -70,96 +57,100 @@
 .photo-frame.orange { border-color: #ff8c00; box-shadow: 0 0 15px #ff8c00; }
 .photo-frame.blue { border-color: #007bff; box-shadow: 0 0 15px #007bff; }
 
-/* Орбиты */
-.orbit {
-    position: absolute;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 45%;
-    pointer-events: none;
+
+/* Главные "Ядра" */
+.neural-core {
+    width: 150px;
+    height: 150px;
+    top: 50px; /* Располагаем сверху */
 }
 
-.inner-orbit {
-    width: 400px;
-    height: 250px;
-    animation: orbitPulse 6s linear infinite;
+.neural-core.ksusha {
+    left: 25%;
+    transform: translateX(-50%);
+    animation-delay: 0s;
 }
 
-.middle-orbit {
-    width: 550px;
-    height: 350px;
-    animation: orbitPulse 8s linear infinite reverse;
+.neural-core.tetla {
+    right: 25%;
+    transform: translateX(50%);
+    animation-delay: -2.5s;
 }
 
-.outer-orbit {
-    width: 700px;
-    height: 450px;
-    animation: orbitPulse 10s linear infinite;
+/* Второстепенные "Узлы" */
+.neural-node {
+    width: 80px;
+    height: 80px;
+    bottom: 0px; /* Располагаем снизу */
 }
 
-.orbit-line {
+.neural-node.bagerka {
+    left: 15%;
+    transform: translateX(-50%);
+    animation-delay: -1s;
+}
+
+.neural-node.angel {
+    left: 50%;
+    bottom: -30px; /* Центральный узел чуть ниже */
+    transform: translateX(-50%);
+    animation-delay: -2s;
+}
+
+.neural-node.kiriki {
+    right: 15%;
+    transform: translateX(50%);
+    animation-delay: -3s;
+}
+
+
+/* Эффекты при наведении */
+.neural-core:hover, .neural-node:hover {
+    transform: scale(1.1);
+    z-index: 25;
+    animation-play-state: paused;
+}
+/* Корректировка transform для позиционированных элементов */
+.neural-core.ksusha:hover { transform: translateX(-50%) scale(1.1); }
+.neural-core.tetla:hover { transform: translateX(50%) scale(1.1); }
+.neural-node.bagerka:hover { transform: translateX(-50%) scale(1.1); }
+.neural-node.angel:hover { transform: translateX(-50%) scale(1.1); }
+.neural-node.kiriki:hover { transform: translateX(50%) scale(1.1); }
+
+
+/* Стилизация SVG линий */
+.neural-lines {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 45%;
-    overflow: hidden;
+    z-index: 10;
+    pointer-events: none; /* Чтобы не мешали кликать на фото */
 }
 
-.orbit-line::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--orbit-color, #39ff14), transparent);
-    animation: orbitLineMove 3s linear infinite;
+.neural-lines path {
+    fill: none;
+    stroke: rgba(57, 255, 20, 0.4); /* Зеленый неон */
+    stroke-width: 1.5px;
+    stroke-linecap: round;
+    stroke-dasharray: 10 15; /* Пунктирная линия */
+    animation: moveDash 30s linear infinite;
 }
 
-.inner-orbit .orbit-line::before { --orbit-color: #ff2d95; animation-duration: 4s; }
-.middle-orbit .orbit-line::before { --orbit-color: #39ff14; animation-duration: 3s; }
-.outer-orbit .orbit-line::before { --orbit-color: #007bff; animation-duration: 5s; }
-
-/* Маленькие фото на орбите */
-.orbital-photo {
-    width: 80px;
-    height: 80px;
-    position: absolute;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-    z-index: 15;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: orbitalMove 12s linear infinite;
-    transition: all 0.3s ease;
+/* Индивидуальные цвета линий */
+.neural-lines #line-ksusha-bagerka,
+.neural-lines #line-ksusha-angel {
+    stroke: rgba(255, 45, 149, 0.4); /* Розовый неон от Ксюши */
 }
 
-.orbital-photo.bagerka { animation-delay: 0s; }
-.orbital-photo.angel { animation-delay: -4s; }
-.orbital-photo.kiriki { animation-delay: -8s; }
-
-.orbital-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
+.neural-lines #line-ksusha-tetla {
+    stroke-dasharray: none; /* Сплошная линия между главными */
+    stroke: rgba(0, 123, 255, 0.5);
+    animation: none;
 }
 
-/* Остановка анимации при наведении */
-.main-photo:hover,
-.orbital-photo:hover {
-    animation-play-state: paused;
-    transform: scale(1.1);
-    z-index: 25;
-}
-
-.main-photo.ksusha:hover { transform: translateX(-50%) scale(1.1); }
-.main-photo.tetla:hover { transform: translateX(50%) scale(1.1); }
-
-/* Голографическая карточка */
+/* Голографическая карточка (стили без изменений) */
 .hologram-card {
     position: fixed;
     bottom: 30px;
@@ -291,37 +282,18 @@
 }
 
 /* Анимации */
-@keyframes photoFloat {
+@keyframes coreFloat {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
+    50% { transform: translateY(-10px); }
 }
 
-.main-photo.tetla {
-    animation-name: photoFloatTetla;
-}
-
-@keyframes photoFloatTetla {
-    0%, 100% { transform: translateX(50%) translateY(0px); }
-    50% { transform: translateX(50%) translateY(-15px); }
-}
-
-@keyframes orbitalMove {
-    0% {
-        transform: translateX(-50%) rotate(0deg) translateX(275px) rotate(0deg);
+@keyframes moveDash {
+    from {
+        stroke-dashoffset: 1000;
     }
-    100% {
-        transform: translateX(-50%) rotate(360deg) translateX(275px) rotate(-360deg);
+    to {
+        stroke-dashoffset: 0;
     }
-}
-
-@keyframes orbitPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.7; }
-}
-
-@keyframes orbitLineMove {
-    0% { left: -100%; }
-    100% { left: 100%; }
 }
 
 @keyframes cardGlow {
@@ -333,6 +305,7 @@
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
 }
+
 
 /* Адаптивность */
 @media (max-width: 768px) {
@@ -346,38 +319,6 @@
         bottom: 10px;
         width: calc(100vw - 20px);
         max-width: 300px;
-    }
-    
-    .main-photo.ksusha {
-        left: 25%;
-    }
-    
-    .main-photo.tetla {
-        right: 25%;
-    }
-    
-    .inner-orbit {
-        width: 300px;
-        height: 200px;
-    }
-    
-    .middle-orbit {
-        width: 400px;
-        height: 250px;
-    }
-    
-    .outer-orbit {
-        width: 500px;
-        height: 300px;
-    }
-    
-    @keyframes orbitalMove {
-        0% {
-            transform: translateX(-50%) rotate(0deg) translateX(200px) rotate(0deg);
-        }
-        100% {
-            transform: translateX(-50%) rotate(360deg) translateX(200px) rotate(-360deg);
-        }
     }
 }
 
