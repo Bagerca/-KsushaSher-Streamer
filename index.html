@@ -12,98 +12,99 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/hologram.css">
 </head>
 <body>
-    <!-- НОВАЯ УЛУЧШЕННАЯ СЕКЦИЯ HERO В СТИЛЕ HUD -->
-    <section class="hero-section-hud">
-        <div class="hud-grid-background"></div>
-        <div class="hud-scanline"></div>
-
-        <div class="hud-container">
-            <div class="hud-side-panel left">
-                <div class="panel-content">
-                    <div class="panel-header">
-                        <span class="header-title">СОЮЗНИК</span>
-                        <span class="header-deco-line"></span>
-                    </div>
-                    <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar">
-                    <h3 class="panel-name">TETLA</h3>
-                    <div class="data-block">
-                        <span class="data-label">СТАТУС:</span>
-                        <span class="data-value status-ok">В СЕТИ</span>
-                    </div>
-                    <div class="data-block">
-                        <span class="data-label">РОЛЬ:</span>
-                        <span class="data-value">ПОДДЕРЖКА</span>
-                    </div>
-                </div>
+    <!-- Обновленная hero секция -->
+    <section class="hero-section">
+        <!-- Голографический интерфейс -->
+        <div class="hologram-container">
+            <!-- Главные фото -->
+            <div class="main-photo ksusha" data-character="ksusha">
+                <img src="https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0" alt="Ksusha Sher">
+                <div class="photo-frame pink"></div>
+            </div>
+            
+            <div class="main-photo tetla" data-character="tetla">
+                <img src="https://via.placeholder.com/300x300/0f0f1b/39ff14?text=TetlaBot" alt="TetlaBot">
+                <div class="photo-frame green"></div>
             </div>
 
-            <div class="hud-main-display">
-                <div class="main-display-rings">
-                    <div class="ring ring-1"></div>
-                    <div class="ring ring-2"></div>
-                    <div class="ring ring-3"></div>
+            <!-- Орбиты -->
+            <div class="orbit inner-orbit">
+                <div class="orbit-line"></div>
+            </div>
+            <div class="orbit middle-orbit">
+                <div class="orbit-line"></div>
+                <!-- Маленькие фото на орбите -->
+                <div class="orbital-photo bagerka" data-character="bagerka">
+                    <img src="https://via.placeholder.com/150x150/0f0f1b/ff4444?text=BAGERca" alt="BAGERca">
+                    <div class="photo-frame red"></div>
                 </div>
-                <div class="main-avatar-container">
-                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar">
+                <div class="orbital-photo angel" data-character="angel">
+                    <img src="https://via.placeholder.com/150x150/0f0f1b/ff8c00?text=Angel" alt="To Be Angle">
+                    <div class="photo-frame orange"></div>
                 </div>
-                <div class="main-display-status">
-                    <span class="status-indicator"></span>
-                    <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
+                <div class="orbital-photo kiriki" data-character="kiriki">
+                    <img src="https://via.placeholder.com/150x150/0f0f1b/007bff?text=Kiriki" alt="Kiriki">
+                    <div class="photo-frame blue"></div>
                 </div>
             </div>
+            <div class="orbit outer-orbit">
+                <div class="orbit-line"></div>
+            </div>
+        </div>
 
-            <div class="hud-side-panel right" id="squad-panel">
-                <div class="panel-content">
-                    <!-- Стандартный вид -->
-                    <div class="squad-default-view">
-                        <div class="panel-header">
-                            <span class="header-title">ОТРЯД</span>
-                            <span class="header-deco-line"></span>
-                        </div>
-                        <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
-                        <div class="squad-list">
-                            <div class="squad-member" data-member="bagerka">
-                                <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar">
-                                <span class="squad-name">BAGERca</span>
-                            </div>
-                            <div class="squad-member" data-member="angel">
-                                <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar">
-                                <span class="squad-name">Angel</span>
-                            </div>
-                            <div class="squad-member" data-member="kiriki">
-                                <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar">
-                                <span class="squad-name">Kiriki</span>
-                            </div>
-                        </div>
-                        <div class="data-block">
-                            <span class="data-label">СИНХРОНИЗАЦИЯ:</span>
-                            <span class="data-value status-ok">100%</span>
-                        </div>
+        <!-- Голографическая карточка -->
+        <div class="hologram-card" id="characterCard">
+            <div class="card-glow"></div>
+            <div class="card-content">
+                <div class="card-header">
+                    <img class="card-avatar" src="" alt="">
+                    <div class="card-titles">
+                        <h3 class="card-name"></h3>
+                        <span class="card-role"></span>
                     </div>
-                    <!-- Детальный вид (скрыт по умолчанию) -->
-                    <div class="squad-detail-view">
-                        <button class="close-detail-btn">&times;</button>
-                        <img src="" alt="" class="detail-avatar">
-                        <h3 class="detail-name"></h3>
-                        <p class="detail-description"></p>
+                </div>
+                <div class="card-description"></div>
+                <div class="card-stats">
+                    <div class="stat">
+                        <span class="stat-icon">⚔️</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="statAttack"></div>
+                        </div>
+                        <span class="stat-value" id="statAttackValue">0%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🛡️</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="statDefense"></div>
+                        </div>
+                        <span class="stat-value" id="statDefenseValue">0%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">❤️</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" id="statHP"></div>
+                        </div>
+                        <span class="stat-value" id="statHPValue">0%</span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="hero-content-hud">
-            <h1 class="hero-title-hud">SYSTEM ONLINE: KSUSHA SHER</h1>
-            <p class="hero-subtitle-hud" id="data-ticker">Загрузка данных канала...</p>
+
+        <!-- Текстовый контент -->
+        <div class="hero-content">
+            <h1 class="hero-title">Ksusha Sher</h1>
+            <p class="hero-subtitle">Профессиональный стример • Создатель контента • Геймер</p>
             <div class="hero-buttons">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> ПОДКЛЮЧИТЬСЯ К СТРИМУ</a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> КАНАЛ СВЯЗИ</a>
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> Смотреть на Twitch</a>
+                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> Телеграм канал</a>
             </div>
         </div>
     </section>
-    <!-- КОНЕЦ НОВОЙ СЕКЦИИ -->
 
+    <!-- Остальные секции остаются без изменений -->
     <section id="about">
         <div class="container">
             <h2 class="section-title">Обо мне</h2>
@@ -369,6 +370,5 @@
     </footer>
 
     <script type="module" src="js/app.js"></script>
-    <script src="js/hud-script.js"></script>
 </body>
 </html>
