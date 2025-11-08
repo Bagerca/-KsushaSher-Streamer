@@ -15,49 +15,43 @@
     <link rel="stylesheet" href="css/hologram.css">
 </head>
 <body>
-    <!-- Обновленная hero секция -->
+    <!-- ОБНОВЛЕННАЯ HERO СЕКЦИЯ "КОСМИЧЕСКИЙ ТАНЕЦ" -->
     <section class="hero-section">
-        <!-- НОВЫЙ ИНТЕРАКТИВНЫЙ НЕЙРОННЫЙ ИНТЕРФЕЙС -->
-        <div class="hologram-container">
-            <!-- SVG для Нейронных Линий (должен быть на заднем плане) -->
-            <svg class="neural-lines" preserveAspectRatio="none" viewBox="0 0 600 400">
-                <!-- Линии от Ксюши -->
-                <path id="line-ksusha-bagerka" d="M 210 130 L 150 300" />
-                <path id="line-ksusha-angel" d="M 210 130 L 300 350" />
-                
-                <!-- Линии от TetlaBot -->
-                <path id="line-tetla-kiriki" d="M 390 130 L 450 300" />
-                <path id="line-tetla-angel" d="M 390 130 L 300 350" />
         
-                <!-- Соединяющая линия -->
-                <path id="line-ksusha-tetla" d="M 210 130 L 390 130" />
-            </svg>
-        
-            <!-- Главные "Ядра" интерфейса -->
-            <div class="neural-core ksusha" data-character="ksusha">
-                <img src="assets/images/ksusha.jpg" alt="Ksusha Sher">
-                <div class="photo-frame pink"></div>
-            </div>
-            <div class="neural-core tetla" data-character="tetla">
-                <img src="assets/images/tetlabot.jpg" alt="TetlaBot">
-                <div class="photo-frame green"></div>
-            </div>
-        
-            <!-- Второстепенные "Узлы" -->
-            <div class="neural-node bagerka" data-character="bagerka">
-                <img src="assets/images/bagerca.jpg" alt="BAGERca">
-                <div class="photo-frame red"></div>
-            </div>
-            <div class="neural-node angel" data-character="angel">
-                <img src="assets/images/angel.jpg" alt="To Be Angle">
-                <div class="photo-frame orange"></div>
-            </div>
-            <div class="neural-node kiriki" data-character="kiriki">
-                <img src="assets/images/kiriki.jpg" alt="Kiriki">
-                <div class="photo-frame blue"></div>
+        <div class="galaxy-container">
+            <div class="orbital-plane">
+                <!-- Центральная звезда -->
+                <div class="galaxy-sun" data-character="ksusha">
+                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher">
+                    <div class="photo-frame pink"></div>
+                </div>
+
+                <!-- Первая орбита -->
+                <div class="orbit-path inner">
+                    <div class="orbiting-body tetla" data-character="tetla">
+                        <img src="assets/images/tetlabot.jpg" alt="TetlaBot">
+                        <div class="photo-frame green"></div>
+                    </div>
+                </div>
+
+                <!-- Вторая орбита -->
+                <div class="orbit-path outer">
+                    <div class="orbiting-body bagerka" data-character="bagerka">
+                        <img src="assets/images/bagerca.jpg" alt="BAGERca">
+                        <div class="photo-frame red"></div>
+                    </div>
+                    <div class="orbiting-body angel" data-character="angel">
+                        <img src="assets/images/angel.jpg" alt="To Be Angle">
+                        <div class="photo-frame orange"></div>
+                    </div>
+                     <div class="orbiting-body kiriki" data-character="kiriki">
+                        <img src="assets/images/kiriki.jpg" alt="Kiriki">
+                        <div class="photo-frame blue"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        
+
         <!-- Голографическая карточка (без изменений) -->
         <div class="hologram-card" id="characterCard">
             <div class="card-glow"></div>
