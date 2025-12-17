@@ -1,0 +1,121 @@
+/* --- ABOUT SECTION --- */
+#about { background: rgba(15, 15, 25, 0.5); border-top: 1px solid rgba(255, 45, 149, 0.3); border-bottom: 1px solid rgba(57, 255, 20, 0.3); }
+.about-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+.about-text { flex: 1; min-width: 300px; }
+.about-text p { margin-bottom: 20px; font-size: 1.1rem; line-height: 1.8; color: #ddd; }
+.about-image { flex: 1; min-width: 300px; }
+.video-container { position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 10px; overflow: hidden; border: 2px solid var(--neon-pink); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+/* --- SCHEDULE SECTION --- */
+#schedule { background: var(--dark-bg); position: relative; }
+.schedule-subtitle { text-align: center; margin-top: -30px; margin-bottom: 40px; color: var(--light-text); }
+.neon-text { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
+.schedule-list { display: grid; gap: 20px; max-width: 900px; margin: 0 auto; }
+.schedule-item { display: flex; background: rgba(15, 15, 27, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 20px; transition: all 0.3s ease; align-items: center; position: relative; overflow: hidden; }
+.schedule-item:hover { border-color: var(--neon-pink); transform: translateX(10px); background: rgba(15, 15, 27, 0.9); }
+.schedule-item.highlighted { border-color: var(--neon-pink); box-shadow: 0 0 15px rgba(255, 45, 149, 0.2); }
+.schedule-day-wrapper { min-width: 140px; border-right: 1px solid rgba(255, 255, 255, 0.1); margin-right: 20px; padding-right: 20px; }
+.schedule-day { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--white); font-weight: 700; }
+.schedule-time { color: var(--neon-green); font-size: 0.9rem; margin-top: 5px; }
+.schedule-content { flex: 1; }
+.schedule-game { font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 5px; }
+.schedule-desc { color: var(--light-text); font-size: 0.9rem; }
+.schedule-status { width: 10px; height: 10px; background: #333; border-radius: 50%; margin-left: 20px; }
+.schedule-status.active { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation: pulse 2s infinite; }
+.schedule-footer { text-align: center; margin-top: 40px; color: #888; font-size: 0.9rem; }
+.neon-link { color: var(--neon-pink); text-decoration: underline; }
+
+/* --- GAMES & MOVIES SECTION --- */
+#games { background: var(--medium-bg); }
+.games-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+.controls-section { display: flex; align-items: center; gap: 20px; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); }
+.games-tabs, .sort-tabs { display: flex; gap: 15px; position: relative; }
+.games-tab, .sort-tab { cursor: pointer; padding: 8px 15px; color: #888; font-size: 1.2rem; transition: 0.3s; z-index: 2; }
+.games-tab.active, .sort-tab.active { color: var(--white); }
+.tab-slider, .sort-slider { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--neon-green); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 0; }
+
+.filter-container { position: relative; }
+.filter-toggle { cursor: pointer; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+.filter-toggle:hover, .filter-dropdown.active { background: var(--neon-pink); color: white; }
+.filter-dropdown { position: absolute; top: 50px; left: 50%; transform: translateX(-50%); width: 250px; background: var(--dark-bg); border: 1px solid var(--neon-pink); border-radius: 10px; padding: 15px; z-index: 100; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.filter-dropdown.active { display: block; animation: fadeIn 0.3s ease; }
+.filter-group-title { color: var(--neon-green); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; font-weight: 700; }
+.filter-option { display: block; margin-bottom: 8px; cursor: pointer; color: #ccc; font-size: 0.9rem; }
+.filter-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0; }
+
+.legend-section { display: flex; justify-content: flex-end; width: 100%; margin-bottom: 20px; }
+.status-legend { display: flex; flex-wrap: wrap; gap: 15px; font-size: 0.8rem; color: #888; }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.status-badge { width: 8px; height: 8px; border-radius: 50%; }
+.status-badge.completed { background: var(--completed-color); }
+.status-badge.playing { background: var(--playing-color); }
+.status-badge.dropped { background: var(--dropped-color); }
+.status-badge.on-hold { background: var(--on-hold-color); }
+
+.games-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
+.games-content.active { display: block; opacity: 1; }
+.games-content.fade-in { display: block; animation: fadeIn 0.3s forwards; }
+
+.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-height: 800px; overflow: hidden; transition: max-height 0.5s ease; -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 98%); mask-image: linear-gradient(to bottom, black 85%, transparent 98%); }
+.game-card { background: rgba(255,255,255,0.02); border-radius: 12px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; border: 1px solid rgba(255,255,255,0.05); }
+.game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); z-index: 5; }
+.game-card.completed, .game-card.watched { border-bottom: 3px solid var(--completed-color); }
+.game-card.playing, .game-card.watching { border-bottom: 3px solid var(--playing-color); }
+.game-card.dropped { border-bottom: 3px solid var(--dropped-color); }
+.game-card.on-hold { border-bottom: 3px solid var(--on-hold-color); }
+.game-card[style*="--custom-hover-color"]:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 15px var(--custom-hover-color); border-color: var(--custom-hover-color); }
+
+.game-image-container { height: 350px; overflow: hidden; position: relative; }
+.game-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.game-card:hover .game-image { transform: scale(1.05); }
+.game-info { padding: 15px; }
+.game-title { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.game-genres { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.game-genre { font-size: 0.7rem; padding: 2px 8px; background: rgba(255,255,255,0.1); border-radius: 4px; color: #ccc; }
+.game-rating { color: #ffd700; font-size: 0.9rem; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+.game-rating span { color: #888; font-size: 0.8rem; margin-left: 5px; }
+.game-description { font-size: 0.85rem; color: #aaa; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+.toggle-games { display: block; width: 100%; max-width: 200px; margin: 30px auto 0; padding: 10px; background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; }
+.toggle-games:hover { background: var(--neon-green); color: var(--dark-bg); }
+
+/* --- SPECS SECTION --- */
+#specs { background: var(--dark-bg); border-top: 1px solid rgba(57, 255, 20, 0.2); }
+.specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
+.spec-item { text-align: center; padding: 30px; background: rgba(255,255,255,0.03); border-radius: 15px; transition: 0.3s; border: 1px solid transparent; }
+.spec-item:hover { background: rgba(255,255,255,0.05); border-color: var(--neon-pink); transform: translateY(-5px); }
+.spec-item i { font-size: 2.5rem; color: var(--neon-green); margin-bottom: 15px; }
+.spec-item h3 { font-family: 'Orbitron', sans-serif; margin-bottom: 10px; }
+.spec-item p { color: #aaa; }
+
+/* --- DONATION SECTION --- */
+#donation { background: radial-gradient(circle at center, #1a1a2e 0%, var(--dark-bg) 100%); text-align: center; }
+.donation-options { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin: 40px 0; }
+.donation-option { display: block; width: 250px; padding: 30px 20px; background: rgba(255,255,255,0.05); border: 2px solid transparent; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+.donation-option:hover { border-color: var(--neon-pink); box-shadow: 0 0 20px rgba(255, 45, 149, 0.2); transform: translateY(-5px); }
+.donation-option h3 { color: var(--neon-green); margin-bottom: 10px; font-family: 'Orbitron', sans-serif; }
+.donation-option p { color: #ccc; font-size: 0.9rem; }
+
+.card-number { display: inline-block; padding: 15px 30px; background: rgba(0,0,0,0.3); border: 1px dashed var(--light-text); border-radius: 8px; font-family: 'monospace'; font-size: 1.2rem; letter-spacing: 2px; cursor: pointer; position: relative; transition: 0.3s; }
+.card-number:hover { border-color: var(--neon-green); color: var(--neon-green); }
+#copy-tooltip { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; color: #888; width: 200px; font-family: 'Exo 2', sans-serif; letter-spacing: 0; }
+
+/* --- FOOTER --- */
+footer { background: #000; padding: 40px 0; text-align: center; border-top: 1px solid #222; }
+.social-links { margin-bottom: 20px; }
+.social-links a { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); margin: 0 10px; font-size: 1.2rem; }
+.social-links a:hover { background: var(--neon-green); color: black; transform: scale(1.1); }
+footer p { color: #555; font-size: 0.9rem; }
+
+/* Адаптив Content */
+@media (max-width: 768px) {
+    .section-title { font-size: 2rem; }
+    .about-content { flex-direction: column; }
+    .games-controls { flex-direction: column; align-items: flex-start; }
+    .controls-section { width: 100%; justify-content: space-between; }
+    .legend-section { justify-content: center; }
+    .schedule-item { flex-direction: column; text-align: center; }
+    .schedule-day-wrapper { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin: 0 0 15px 0; padding: 0 0 10px 0; width: 100%; }
+    .schedule-status { margin: 15px auto 0; }
+}

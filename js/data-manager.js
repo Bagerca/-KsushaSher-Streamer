@@ -19,7 +19,8 @@ const genreTranslations = {
     'animation': 'Анимация',
     'fantasy': 'Фэнтези',
     'crossover': 'Кроссовер',
-    'family': 'Семейный'
+    'family': 'Семейный',
+    'action': 'Экшен'
 };
 
 // Initialize data manager
@@ -71,7 +72,8 @@ async function loadData(endpoint, fallbackData = []) {
     return fallbackData;
 }
 
-// Load and render games
+// --- GAMES & MOVIES ---
+
 export async function loadGames() {
     const container = document.querySelector('#games-content .games-grid');
     if (!container) return;
@@ -96,7 +98,6 @@ export async function loadGames() {
     }
 }
 
-// Load and render movies
 export async function loadMovies() {
     const container = document.querySelector('#movies-content .games-grid');
     if (!container) return;
@@ -121,7 +122,70 @@ export async function loadMovies() {
     }
 }
 
-// Load and render schedule
+export function renderCards(container, data, type) {
+    if (!container) return;
+
+    if (!data || data.length === 0) {
+        container.innerHTML = `<div class="empty-state">${type === 'game' ? '🎮 Игр пока нет' : '🎬 Фильмов пока нет'}</div>`;
+        return;
+    }
+
+    container.innerHTML = data.map(item => createCard(item, type)).join('');
+    
+    // Attach click events
+    container.querySelectorAll(`.game-card`).forEach(card => {
+        card.addEventListener('click', () => {
+            const itemId = card.getAttribute(`data-${type}`);
+            const item = data.find(i => i.id === itemId);
+            if (item) {
+                document.dispatchEvent(new CustomEvent('cardClick', { detail: { item, type } }));
+            }
+        });
+    });
+}
+
+function createCard(item, type) {
+    const statusClass = type === 'game' ? item.status : 
+                       item.status === 'watched' ? 'watched' : 
+                       item.status === 'watching' ? 'watching' : item.status;
+
+    return `
+        <div class="game-card ${statusClass}" data-${type}="${item.id}" ${item.customColor ? `style="--custom-hover-color: ${item.customColor}"` : ''}>
+            <div class="game-image-container">
+                <img src="${item.image}" alt="${item.title}" class="game-image" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400/0f0f1b/39ff14?text=No+Image'">
+            </div>
+            <div class="game-info">
+                <h3 class="game-title">${item.title}</h3>
+                <div class="game-genres">${renderGenres(item.genres)}</div>
+                <div class="game-rating">${generateStars(item.rating)}<span>${item.rating}/5</span></div>
+                <p class="game-description">${item.description}</p>
+            </div>
+        </div>
+    `;
+}
+
+function renderGenres(genres) {
+    if (!genres || !Array.isArray(genres)) return '';
+    return genres.map(genre => 
+        `<span class="game-genre">${genreTranslations[genre] || genre}</span>`
+    ).join('');
+}
+
+function generateStars(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    return [
+        ...Array(fullStars).fill('<i class="fas fa-star"></i>'),
+        ...(hasHalfStar ? ['<i class="fas fa-star-half-alt"></i>'] : []),
+        ...Array(emptyStars).fill('<i class="far fa-star"></i>')
+    ].join('');
+}
+
+
+// --- SCHEDULE ---
+
 export async function loadSchedule() {
     try {
         const data = await loadData('schedule.json', { schedule: [] });
@@ -132,32 +196,6 @@ export async function loadSchedule() {
     }
 }
 
-// Load and render statistics
-export async function loadStats() {
-    try {
-        await loadChartJS();
-        const stats = await loadData('stats.json', getDefaultStats());
-        createRadarChart(stats);
-    } catch (error) {
-        console.error('❌ Error loading stats:', error);
-        createRadarChart(getDefaultStats());
-    }
-}
-
-// Default statistics fallback
-function getDefaultStats() {
-    return {
-        followers: 5200,
-        streams: 154,
-        hours: 1000,
-        years: 3,
-        chatActivity: 280,
-        loyalty: 95,
-        gamesVariety: 25
-    };
-}
-
-// Render schedule data
 function renderSchedule(scheduleData) {
     const scheduleList = document.getElementById('schedule-list');
     if (!scheduleList) return;
@@ -191,92 +229,15 @@ function renderSchedule(scheduleData) {
     highlightCurrentDay();
 }
 
-// Render game/movie cards
-export function renderCards(container, data, type) {
-    if (!container) return;
-
-    if (!data || data.length === 0) {
-        container.innerHTML = `<div class="empty-state">${type === 'game' ? '🎮 Игр пока нет' : '🎬 Фильмов пока нет'}</div>`;
-        return;
-    }
-
-    container.innerHTML = data.map(item => createCard(item, type)).join('');
-    attachCardListeners(type, data);
-}
-
-// Create individual card
-function createCard(item, type) {
-    const statusClass = type === 'game' ? item.status : 
-                       item.status === 'watched' ? 'watched' : 
-                       item.status === 'watching' ? 'watching' : item.status;
-
-    return `
-        <div class="game-card ${statusClass}" data-${type}="${item.id}" ${item.customColor ? `style="--custom-hover-color: ${item.customColor}"` : ''}>
-            <div class="game-image-container">
-                <img src="${item.image}" alt="${item.title}" class="game-image" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400/0f0f1b/39ff14?text=No+Image'">
-            </div>
-            <div class="game-info">
-                <h3 class="game-title">${item.title}</h3>
-                <div class="game-genres">${renderGenres(item.genres)}</div>
-                <div class="game-rating">${generateStars(item.rating)}<span>${item.rating}/5</span></div>
-                <p class="game-description">${item.description}</p>
-            </div>
-        </div>
-    `;
-}
-
-// Render genres as tags
-function renderGenres(genres) {
-    if (!genres || !Array.isArray(genres)) return '';
-    return genres.map(genre => 
-        `<span class="game-genre">${genreTranslations[genre] || genre}</span>`
-    ).join('');
-}
-
-// Generate stars for rating
-function generateStars(rating) {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-    return [
-        ...Array(fullStars).fill('<i class="fas fa-star"></i>'),
-        ...(hasHalfStar ? ['<i class="fas fa-star-half-alt"></i>'] : []),
-        ...Array(emptyStars).fill('<i class="far fa-star"></i>')
-    ].join('');
-}
-
-// Attach event listeners to cards
-function attachCardListeners(type, data) {
-    document.querySelectorAll(`[data-${type}]`).forEach(card => {
-        card.addEventListener('click', () => {
-            const itemId = card.getAttribute(`data-${type}`);
-            const item = data.find(i => i.id === itemId);
-            if (item) {
-                // Dispatch custom event for UI components to handle
-                document.dispatchEvent(new CustomEvent('cardClick', { 
-                    detail: { item, type } 
-                }));
-            }
-        });
-
-        const image = card.querySelector('.game-image');
-        if (image) {
-            card.addEventListener('mouseenter', () => image.style.transform = 'scale(1.05)');
-            card.addEventListener('mouseleave', () => image.style.transform = 'scale(1)');
-        }
-    });
-}
-
-// Highlight current day in schedule
 function highlightCurrentDay() {
-    const today = new Date().getDay();
-    if (today === 0 || today === 6) return; // Don't highlight weekends
+    const today = new Date().getDay(); // 0 is Sunday
+    if (today === 0 || today === 6) return; // Optional: skip weekends
 
     const scheduleItems = document.querySelectorAll('.schedule-item');
+    // Поправка на то, что getDay() возвращает 1 для Пн, а массив с 0
     const scheduleIndex = today - 1;
     
-    if (scheduleIndex < scheduleItems.length) {
+    if (scheduleItems[scheduleIndex]) {
         const currentStatus = scheduleItems[scheduleIndex].querySelector('.schedule-status');
         if (currentStatus) {
             currentStatus.classList.add('active');
@@ -284,7 +245,87 @@ function highlightCurrentDay() {
     }
 }
 
-// Load Chart.js dynamically
+
+// --- STATS & CHARTS (UPDATED FOR BENTO GRID) ---
+
+export async function loadStats() {
+    try {
+        await loadChartJS();
+        const stats = await loadData('stats.json', getDefaultStats());
+        
+        // 1. Рисуем график
+        createRadarChart(stats);
+        
+        // 2. Обновляем цифры в Bento Grid
+        updateBentoGrid(stats);
+        
+    } catch (error) {
+        console.error('❌ Error loading stats:', error);
+        const defaults = getDefaultStats();
+        createRadarChart(defaults);
+        updateBentoGrid(defaults);
+    }
+}
+
+function getDefaultStats() {
+    return {
+        followers: 5200,
+        streams: 154,
+        hours: 1000,
+        years: 3,
+        chatActivity: 280,
+        loyalty: 95,
+        gamesVariety: 25
+    };
+}
+
+// Новая функция для обновления значений в Bento Grid
+function updateBentoGrid(stats) {
+    // 1. Подписчики
+    const followersEl = document.querySelector('.followers-item .stat-main-value');
+    if (followersEl) followersEl.textContent = formatNumber(stats.followers);
+    
+    // 2. Стримы и Часы (в блоке streams-item)
+    // Находим все средние значения в этом блоке
+    const streamsItem = document.querySelector('.streams-item');
+    if (streamsItem) {
+        const values = streamsItem.querySelectorAll('.stat-value-medium');
+        if (values.length >= 2) {
+            values[0].textContent = stats.streams; // Всего стримов
+            values[1].textContent = formatNumber(stats.hours) + '+'; // Часов
+        }
+    }
+    
+    // 3. Чат
+    const chatEl = document.querySelector('.chat-item .stat-value-large');
+    if (chatEl) chatEl.textContent = stats.chatActivity;
+    
+    // 4. Лояльность (Круг)
+    const loyaltyChart = document.querySelector('.circular-chart');
+    if (loyaltyChart) {
+        // Обновляем CSS переменную для анимации
+        loyaltyChart.style.setProperty('--percentage', stats.loyalty);
+        // Обновляем текст
+        const textEl = loyaltyChart.querySelector('.percentage-text');
+        if (textEl) textEl.innerHTML = `${stats.loyalty}%<span>Лояльность</span>`;
+    }
+    
+    // 5. Игры
+    const gamesEl = document.querySelector('.games-item .stat-value-medium');
+    if (gamesEl) gamesEl.textContent = stats.gamesVariety + '+';
+    
+    // 6. Центр графика (Годы опыта)
+    const chartCenterVal = document.querySelector('.chart-overlay-value span');
+    if (chartCenterVal) chartCenterVal.textContent = stats.years + '+';
+}
+
+function formatNumber(num) {
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+}
+
 function loadChartJS() {
     return new Promise((resolve) => {
         if (window.Chart) {
@@ -306,7 +347,7 @@ function loadChartJS() {
     });
 }
 
-// Create radar chart
+// Обновленная конфигурация графика для Bento дизайна
 function createRadarChart(stats) {
     const ctx = document.getElementById('radarChart');
     if (!ctx || !window.Chart) return;
@@ -320,50 +361,80 @@ function createRadarChart(stats) {
     radarChartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Рост аудитории', 'Активность стримов', 'Объем контента', 'Вовлеченность чата', 'Лояльность', 'Разнообразие игр'],
+            labels: ['Рост', 'Стримы', 'Контент', 'Чат', 'Лояльность', 'Игры'],
             datasets: [{
-                label: 'Текущие показатели',
+                label: 'Показатели',
                 data: [
-                    Math.round(normalizedData.followers),
-                    Math.round(normalizedData.streams),
-                    Math.round(normalizedData.hours),
-                    Math.round(normalizedData.chatActivity),
-                    Math.round(normalizedData.loyalty),
-                    Math.round(normalizedData.gamesVariety)
+                    normalizedData.followers,
+                    normalizedData.streams,
+                    normalizedData.hours,
+                    normalizedData.chatActivity,
+                    normalizedData.loyalty,
+                    normalizedData.gamesVariety
                 ],
-                backgroundColor: 'rgba(57, 255, 20, 0.1)',
-                borderColor: '#39ff14',
-                borderWidth: 3,
+                backgroundColor: 'rgba(57, 255, 20, 0.15)', // Полупрозрачный зеленый
+                borderColor: '#39ff14', // Неоновый зеленый
+                borderWidth: 2,
                 pointBackgroundColor: '#39ff14',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                pointRadius: 4
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#39ff14',
+                pointRadius: 3,
+                pointHoverRadius: 5
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // Важно для вписывания в контейнер
             scales: {
                 r: {
                     beginAtZero: true,
                     max: 100,
-                    ticks: { display: false },
-                    angleLines: { color: 'rgba(255, 255, 255, 0.15)' },
-                    grid: { color: 'rgba(255, 45, 149, 0.1)' },
+                    ticks: {
+                        display: false // Скрываем цифры шкалы
+                    },
+                    angleLines: {
+                        color: 'rgba(255, 255, 255, 0.05)' // Очень тусклые лучи
+                    },
+                    grid: {
+                        color: 'rgba(57, 255, 20, 0.1)', // Тусклая зеленая сетка
+                        circular: true
+                    },
                     pointLabels: {
-                        color: '#ffffff',
-                        font: { size: 11, weight: '600' },
-                        backdropColor: 'rgba(7, 7, 17, 0.8)'
+                        color: '#ccc',
+                        font: {
+                            size: 10,
+                            family: "'Rajdhani', sans-serif",
+                            weight: '600'
+                        },
+                        backdropColor: 'transparent'
                     }
                 }
             },
-            plugins: { legend: { display: false } }
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 15, 27, 0.9)',
+                    titleColor: '#39ff14',
+                    bodyColor: '#fff',
+                    borderColor: '#39ff14',
+                    borderWidth: 1,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw + '%'; // Показываем как проценты
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeOutQuart'
+            }
         }
     });
-
-    updateCenterStats(stats);
 }
 
-// Normalize statistics for radar chart
 function normalizeStats(stats) {
     const maxValues = {
         followers: 10000, streams: 500, hours: 2000, years: 10,
@@ -381,16 +452,4 @@ function normalizeStats(stats) {
     };
 }
 
-// Update center statistics display
-function updateCenterStats(stats) {
-    const centerValue = document.querySelector('.center-value');
-    const centerLabel = document.querySelector('.center-label');
-    
-    if (centerValue && centerLabel) {
-        centerValue.textContent = `${stats.years}+`;
-        centerLabel.textContent = 'года опыта';
-    }
-}
-
-// Export data for external use
 export { currentGamesData, currentMoviesData };

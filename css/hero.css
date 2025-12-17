@@ -1,0 +1,299 @@
+/* =========================================
+   HERO SECTION (HUD DESIGN - CLEAN TECH V3)
+   ========================================= */
+
+.hero-section-hud {
+    height: 100vh;
+    min-height: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    background-color: #0a0b14;
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 0.2) 0%, #050508 100%),
+        radial-gradient(circle at 80% 20%, rgba(57, 255, 20, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 20% 80%, rgba(255, 45, 149, 0.05) 0%, transparent 40%),
+        radial-gradient(1px 1px at 10% 10%, #fff 100%, transparent),
+        radial-gradient(2px 2px at 80% 40%, rgba(255,255,255,0.3) 100%, transparent);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 500px 500px, 600px 600px;
+    animation: space-drift 60s linear infinite;
+}
+
+@keyframes space-drift {
+    0% { background-position: center, center, center, 0 0, 0 0; }
+    100% { background-position: center, center, center, 500px 500px, -600px -600px; }
+}
+
+.hud-grid-background, .hud-scanline { display: none; }
+
+.hud-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1700px; /* Еще шире */
+    position: relative;
+    z-index: 5;
+    margin-bottom: 80px;
+    padding: 0 20px;
+}
+
+/* ФИКС КАРТИНОК (Обязательно) */
+.hud-side-panel .main-photo, 
+.hud-side-panel .orbital-photo,
+.hud-main-display .main-photo {
+    position: relative !important;
+    top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+    transform: none !important;
+    animation: none !important;
+    display: block;
+}
+
+/* --------------------------------------------------
+   БОКОВЫЕ ПАНЕЛИ (НОВЫЙ ДИЗАЙН)
+   -------------------------------------------------- */
+.hud-side-panel {
+    width: 400px;  /* Шире */
+    height: 580px; /* Выше (места теперь много) */
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    
+    /* Форма панели (срез углов) */
+    clip-path: polygon(
+        20px 0, 100% 0, 
+        100% calc(100% - 20px), calc(100% - 20px) 100%, 
+        0 100%, 0 20px
+    );
+    
+    /* Основной фон панели */
+    background: linear-gradient(135deg, rgba(15, 20, 30, 0.9), rgba(5, 7, 10, 0.95));
+    backdrop-filter: blur(10px);
+    
+    /* Имитация рамки через padding и box-shadow, так как border режется clip-path */
+    padding: 2px; /* Толщина рамки */
+}
+
+/* Внутренний контейнер создает эффект рамки */
+.panel-content {
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(57, 255, 20, 0.02) 3px),
+        rgba(0, 0, 0, 0.6);
+    
+    clip-path: polygon(
+        20px 0, 100% 0, 
+        100% calc(100% - 20px), calc(100% - 20px) 100%, 
+        0 100%, 0 20px
+    );
+    
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* ДЕКОРАТИВНЫЕ ЛИНИИ (Вместо уголков) */
+/* Верхняя линия */
+.hud-side-panel::before {
+    content: ''; position: absolute;
+    top: 0; left: 20px; right: 0; height: 2px;
+    background: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+    z-index: 10;
+}
+/* Нижняя линия */
+.hud-side-panel::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 20px; height: 2px;
+    background: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+    z-index: 10;
+}
+
+/* Заголовок */
+.panel-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: #000;
+    background: var(--neon-green);
+    padding: 4px 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    transform: skewX(-15deg); /* Наклон плашки */
+}
+
+.header-deco-line {
+    flex-grow: 1;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, var(--neon-green), var(--neon-green) 2px, transparent 2px, transparent 6px);
+    margin-left: 15px;
+    opacity: 0.5;
+}
+
+/* Левая панель (Терминал) */
+.ally-container { text-align: center; margin-bottom: 20px; }
+.panel-avatar { 
+    width: 130px; height: 130px; 
+    object-fit: cover; border-radius: 50%; 
+    border: 2px solid var(--neon-green); 
+    margin: 0 auto 15px; display: block;
+    box-shadow: 0 0 25px rgba(57, 255, 20, 0.1);
+}
+.panel-name { 
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 1.8rem; color: #fff; 
+    text-shadow: 0 0 15px rgba(57, 255, 20, 0.3); 
+}
+.bot-version { 
+    font-size: 0.7rem; background: rgba(57, 255, 20, 0.1); 
+    border: 1px solid var(--neon-green); color: var(--neon-green);
+    padding: 2px 5px; border-radius: 3px; vertical-align: top;
+}
+
+/* Терминал */
+.ally-terminal {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    padding: 15px;
+    font-family: 'monospace';
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: auto; /* Занимает доступное место */
+    border-radius: 4px;
+}
+.ally-terminal p { margin-bottom: 5px; }
+.terminal-ok { color: var(--neon-green); }
+.terminal-load { color: var(--neon-pink); animation: blink 1s infinite; }
+.terminal-cursor { display: inline-block; width: 8px; height: 14px; background: var(--neon-green); animation: blink 1s infinite step-end; }
+
+/* Статистика внизу */
+.ally-stats-grid { 
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; 
+}
+.ally-stat-box { 
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 4px; padding: 10px 5px; text-align: center; 
+    display: flex; flex-direction: column;
+}
+.a-label { font-size: 0.7rem; color: #777; margin-bottom: 3px; }
+.a-value { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff; font-size: 1.1rem; }
+.a-value.status-ok { color: var(--neon-green); }
+
+/* Правая панель (Отряд) */
+.squad-list { display: flex; justify-content: space-around; margin-top: 30px; margin-bottom: auto; }
+.squad-member { text-align: center; cursor: pointer; transition: transform 0.2s; }
+.squad-member:hover { transform: scale(1.1); }
+.squad-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid; margin-bottom: 10px; }
+.squad-name { font-family: 'Rajdhani', sans-serif; font-size: 1rem; color: #ccc; }
+
+.bagerka-avatar { border-color: var(--bagerka-color); box-shadow: 0 0 10px var(--bagerka-color); }
+.angel-avatar { border-color: var(--angel-color); box-shadow: 0 0 10px var(--angel-color); }
+.kiriki-avatar { border-color: var(--kiriki-color); box-shadow: 0 0 10px var(--kiriki-color); }
+
+.data-block { 
+    display: flex; justify-content: space-between; margin-top: 20px;
+    font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; 
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;
+}
+.data-label { color: #888; } .data-value { font-weight: 700; color: #fff; }
+
+/* Ховер эффекты (СМЕНА ЦВЕТА) */
+.hud-side-panel.left:hover::before, .hud-side-panel.left:hover::after { background: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
+.hud-side-panel.right:hover::before, .hud-side-panel.right:hover::after { background: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
+
+.hud-side-panel.right:hover .header-title,
+.hud-side-panel.left:hover .header-title { background: var(--neon-pink); }
+
+.hud-side-panel.right:hover .header-deco-line,
+.hud-side-panel.left:hover .header-deco-line { 
+    background: repeating-linear-gradient(90deg, var(--neon-pink), var(--neon-pink) 2px, transparent 2px, transparent 6px);
+}
+
+/* Детали отряда */
+.squad-default-view { height: 100%; display: flex; flex-direction: column; transition: opacity 0.3s; }
+.squad-detail-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 30px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: all 0.3s ease; }
+.hud-side-panel.right.expanded .squad-default-view { opacity: 0; pointer-events: none; }
+.hud-side-panel.right.expanded .squad-detail-view { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+.detail-avatar { width: 140px; height: 140px; border-radius: 50%; border: 3px solid; margin: 20px auto; display: block; }
+.detail-name { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 20px; }
+.detail-description { font-family: 'Exo 2', sans-serif; text-align: center; color: #ccc; line-height: 1.6; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; }
+.close-detail-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2.5rem; cursor: pointer; }
+
+/* --------------------------------------------------
+   ЦЕНТРАЛЬНЫЙ ДИСПЛЕЙ (Без изменений)
+   -------------------------------------------------- */
+.hud-main-display {
+    position: relative; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; z-index: 10;
+    width: 300px; height: 300px;
+}
+.main-avatar-container {
+    position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;
+}
+.main-display-avatar {
+    width: 250px; height: 250px; border-radius: 50%; object-fit: cover;
+    border: 3px solid var(--neon-pink); padding: 5px;
+    background-color: rgba(7, 7, 17, 0.8);
+    filter: drop-shadow(0 0 20px var(--neon-pink));
+    margin: 0 auto; position: relative; z-index: 2;
+}
+.main-display-rings {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 0; height: 0; pointer-events: none;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1; animation: ring-breathing 6s ease-in-out infinite;
+}
+.main-display-rings .ring {
+    position: absolute; border-radius: 50%; border: 1px solid; opacity: 0.6;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.ring-1 { width: 340px; height: 340px; border-color: rgba(57, 255, 20, 0.3); border-top-color: var(--neon-green); animation: rotate 20s linear infinite; }
+.ring-2 { width: 440px; height: 440px; border-color: rgba(255, 45, 149, 0.2); border-bottom-color: var(--neon-pink); animation: rotate 30s linear infinite reverse; }
+.ring-3 { width: 580px; height: 580px; border-style: dashed; border-color: rgba(57, 255, 20, 0.1); animation: rotate 45s linear infinite; }
+
+.main-display-status {
+    position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%);
+    z-index: 12; display: flex; align-items: center; justify-content: center;
+    background: rgba(10, 11, 20, 0.95); padding: 8px 20px;
+    border: 1px solid var(--neon-pink);
+    font-family: 'Orbitron', sans-serif; color: var(--neon-pink); letter-spacing: 2px;
+    white-space: nowrap; width: auto; box-shadow: 0 0 15px rgba(255, 45, 149, 0.2);
+}
+.status-indicator { width: 8px; height: 8px; background: var(--neon-pink); border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; }
+
+/* Текст внизу */
+.hero-content-hud { position: absolute; bottom: 2%; text-align: center; z-index: 51; width: 100%; }
+.hero-title-hud { font-family: 'Rajdhani', sans-serif; font-size: 4rem; font-weight: 700; letter-spacing: 5px; color: var(--white); text-shadow: 0 0 20px rgba(255, 45, 149, 0.6); margin-bottom: 5px; text-transform: uppercase; }
+.hero-subtitle-hud { font-family: 'Exo 2', sans-serif; font-size: 1.1rem; color: var(--neon-green); margin-bottom: 30px; letter-spacing: 3px; font-weight: 300; min-height: 1.5em; }
+
+@keyframes rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.9); } }
+@keyframes ring-breathing { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.6; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Адаптив Hero */
+@media (max-width: 1200px) {
+    .hud-container { max-width: 1000px; }
+    .hud-side-panel { width: 320px; height: 500px; }
+}
+@media (max-width: 1024px) {
+    .hud-container { flex-direction: column; height: auto; margin-top: 50px; }
+    .hud-main-display { order: 1; margin-bottom: 50px; }
+    .hud-side-panel.left { order: 2; margin-bottom: 30px; }
+    .hud-side-panel.right { order: 3; }
+}

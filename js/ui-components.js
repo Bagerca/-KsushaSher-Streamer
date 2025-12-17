@@ -1,4 +1,4 @@
-// UI interactions, filters, and hologram functionality
+// UI interactions, filters
 
 // Filter and sort state
 const FilterState = {
@@ -10,54 +10,9 @@ const FilterState = {
     currentTab: 'games'
 };
 
-// Обновленные данные персонажей
-const charactersData = {
-    ksusha: {
-        name: "Ksusha Sher",
-        role: "Главный Стример",
-        avatar: "https://sun9-77.userapi.com/s/v1/ig2/0OR3RICiyT0ChbYSgH_Z__xZK1P3I2Dt_HfYblOl_MGxbfw44HoOLWjQopWlWRyoiumXYzf0QH_qCwspbr0mnyT0.jpg?quality=96&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1620x2160&from=bu&cs=1620x0",
-        description: "Создатель этого безумного комьюнити. Профессиональный стример с харизмой и отличным чувством юмора.",
-        stats: { attack: 85, defense: 70, hp: 90 },
-        color: "#ff2d95"
-    },
-    tetla: {
-        name: "TetlaBot",
-        role: "Верный Бот",
-        avatar: "https://via.placeholder.com/300x300/0f0f1b/39ff14?text=TetlaBot",
-        description: "Искусственный интеллект, помогающий управлять чатом и развлекать зрителей. Никогда не спит!",
-        stats: { attack: 60, defense: 95, hp: 75 },
-        color: "#39ff14"
-    },
-    bagerka: {
-        name: "BAGERca",
-        role: "Технический Гений",
-        avatar: "https://via.placeholder.com/150x150/0f0f1b/ff4444?text=BAGERca",
-        description: "Создатель этого сайта и технический специалист. Всегда находит решения самых сложных задач.",
-        stats: { attack: 70, defense: 80, hp: 85 },
-        color: "#ff4444"
-    },
-    angel: {
-        name: "To Be Angle", 
-        role: "Ангел Хранитель",
-        avatar: "https://via.placeholder.com/150x150/0f0f1b/ff8c00?text=Angel",
-        description: "Душа компании. Всегда поддерживает позитивную атмосферу и помогает новичкам освоиться.",
-        stats: { attack: 75, defense: 75, hp: 95 },
-        color: "#ff8c00"
-    },
-    kiriki: {
-        name: "Kiriki",
-        role: "Мастер Настроения", 
-        avatar: "https://via.placeholder.com/150x150/0f0f1b/007bff?text=Kiriki",
-        description: "Король мемов и хорошего настроения. Его шутки заряжают энергией весь чат.",
-        stats: { attack: 80, defense: 65, hp: 80 },
-        color: "#007bff"
-    }
-};
-
 // Initialize all UI components
 export function initializeUI() {
     initFilters();
-    initHologramInterface();
     initCardCopy();
     initSmoothScroll();
     
@@ -456,106 +411,6 @@ function updateTabSliders() {
     }
 }
 
-// Голографический интерфейс - обновленная версия
-export function initHologramInterface() {
-    initCharacterInteractivity();
-    initOrbitalMovement();
-}
-
-// Инициализация взаимодействия с персонажами
-function initCharacterInteractivity() {
-    const allPhotos = document.querySelectorAll('.main-photo, .orbital-photo');
-    
-    allPhotos.forEach(photo => {
-        // Остановка анимации при наведении
-        photo.addEventListener('mouseenter', function() {
-            const allMovingElements = document.querySelectorAll('.main-photo, .orbital-photo, .orbit-line');
-            allMovingElements.forEach(el => {
-                el.style.animationPlayState = 'paused';
-            });
-            
-            const character = this.getAttribute('data-character');
-            showCharacterCard(character);
-        });
-        
-        // Возобновление анимации при уходе курсора
-        photo.addEventListener('mouseleave', function() {
-            const allMovingElements = document.querySelectorAll('.main-photo, .orbital-photo, .orbit-line');
-            allMovingElements.forEach(el => {
-                el.style.animationPlayState = 'running';
-            });
-            
-            hideCharacterCard();
-        });
-    });
-}
-
-// Показ карточки персонажа
-function showCharacterCard(characterId) {
-    const character = charactersData[characterId];
-    if (!character) return;
-    
-    const card = document.getElementById('characterCard');
-    const cardGlow = card.querySelector('.card-glow');
-    
-    // Установка данных
-    card.querySelector('.card-avatar').src = character.avatar;
-    card.querySelector('.card-name').textContent = character.name;
-    card.querySelector('.card-role').textContent = character.role;
-    card.querySelector('.card-description').textContent = character.description;
-    
-    // Установка цвета
-    card.style.borderColor = character.color;
-    cardGlow.style.setProperty('--card-color', character.color);
-    card.style.setProperty('--card-color', character.color);
-    
-    // Анимация статистики
-    animateStats(character.stats);
-    
-    // Показ карточки
-    card.classList.add('show');
-}
-
-// Скрытие карточки персонажа
-function hideCharacterCard() {
-    const card = document.getElementById('characterCard');
-    card.classList.remove('show');
-}
-
-// Анимация статистики
-function animateStats(stats) {
-    const statElements = {
-        attack: document.getElementById('statAttack'),
-        defense: document.getElementById('statDefense'), 
-        hp: document.getElementById('statHP')
-    };
-    
-    const valueElements = {
-        attack: document.getElementById('statAttackValue'),
-        defense: document.getElementById('statDefenseValue'),
-        hp: document.getElementById('statHPValue')
-    };
-    
-    // Сброс анимации
-    Object.values(statElements).forEach(el => {
-        el.style.width = '0%';
-    });
-    
-    // Запуск анимации с задержкой
-    setTimeout(() => {
-        Object.keys(stats).forEach(stat => {
-            const value = stats[stat];
-            statElements[stat].style.width = `${value}%`;
-            valueElements[stat].textContent = `${value}%`;
-        });
-    }, 100);
-}
-
-// Инициализация орбитального движения
-function initOrbitalMovement() {
-    console.log('🎮 Orbital movement initialized');
-}
-
 // Card number copy functionality
 function initCardCopy() {
     const cardNumberElement = document.getElementById('card-number');
@@ -605,18 +460,5 @@ function copyCardNumber() {
         });
 }
 
-// Listen for card click events from data manager
-document.addEventListener('cardClick', (event) => {
-    const { item, type } = event.detail;
-    showItemModal(item, type);
-});
-
-// Show item modal (could be expanded for games/movies details)
-function showItemModal(item, type) {
-    console.log(`Opening ${type} modal:`, item.title);
-    // Modal implementation can be added here
-    // For now, just log to console
-}
-
 // Export filter state for external use
-export { FilterState, charactersData };
+export { FilterState };

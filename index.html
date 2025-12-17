@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ksusha Sher - Стример на Twitch</title>
+    
+    <!-- Иконки -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Шрифты -->
@@ -11,52 +13,79 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- НОВАЯ УЛУЧШЕННАЯ СЕКЦИЯ HERO В СТИЛЕ HUD -->
+    
+    <!-- СЕКЦИЯ HERO (HUD ИНТЕРФЕЙС) -->
     <section class="hero-section-hud">
-        <div class="hud-grid-background"></div>
-        <div class="hud-scanline"></div>
-
+        
         <div class="hud-container">
+            
+            <!-- Левая панель: Бот (ТЕРМИНАЛ) -->
             <div class="hud-side-panel left">
                 <div class="panel-content">
                     <div class="panel-header">
                         <span class="header-title">СОЮЗНИК</span>
                         <span class="header-deco-line"></span>
                     </div>
-                    <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar">
-                    <h3 class="panel-name">TETLA</h3>
-                    <div class="data-block">
-                        <span class="data-label">СТАТУС:</span>
-                        <span class="data-value status-ok">В СЕТИ</span>
+                    
+                    <div class="ally-container">
+                        <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar main-photo tetla" data-character="tetla">
+                        <h3 class="panel-name">TETLA <span class="bot-version">v2.4</span></h3>
                     </div>
-                    <div class="data-block">
-                        <span class="data-label">РОЛЬ:</span>
-                        <span class="data-value">ПОДДЕРЖКА</span>
+
+                    <!-- Описание в стиле терминала -->
+                    <div class="ally-terminal">
+                        <p>> Запуск протоколов защиты...</p>
+                        <p>> Модерация чата: <span class="terminal-ok">АКТИВНА</span></p>
+                        <p>> Генерация мемов: <span class="terminal-load">ЗАГРУЗКА</span></p>
+                        <div class="terminal-cursor"></div>
+                    </div>
+
+                    <!-- Сетка характеристик -->
+                    <div class="ally-stats-grid">
+                        <div class="ally-stat-box">
+                            <span class="a-label">СТАТУС</span>
+                            <span class="a-value status-ok">ONLINE</span>
+                        </div>
+                        <div class="ally-stat-box">
+                            <span class="a-label">РОЛЬ</span>
+                            <span class="a-value">MODER</span>
+                        </div>
+                        <div class="ally-stat-box">
+                            <span class="a-label">UPTIME</span>
+                            <span class="a-value">99.9%</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Центр: Стример -->
             <div class="hud-main-display">
-                <div class="main-display-rings">
-                    <div class="ring ring-1"></div>
-                    <div class="ring ring-2"></div>
-                    <div class="ring ring-3"></div>
-                </div>
+                <!-- Контейнер аватара СОДЕРЖИТ КОЛЬЦА для идеальной центровки -->
                 <div class="main-avatar-container">
-                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar">
+                    <!-- Кольца -->
+                    <div class="main-display-rings">
+                        <div class="ring ring-1"></div>
+                        <div class="ring ring-2"></div>
+                        <div class="ring ring-3"></div>
+                    </div>
+                    
+                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar main-photo ksusha" data-character="ksusha">
                 </div>
+                
                 <div class="main-display-status">
                     <span class="status-indicator"></span>
                     <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
                 </div>
             </div>
 
+            <!-- Правая панель: Отряд -->
             <div class="hud-side-panel right" id="squad-panel">
                 <div class="panel-content">
-                    <!-- Стандартный вид -->
+                    <!-- Стандартный вид (Список) -->
                     <div class="squad-default-view">
                         <div class="panel-header">
                             <span class="header-title">ОТРЯД</span>
@@ -65,24 +94,24 @@
                         <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
                         <div class="squad-list">
                             <div class="squad-member" data-member="bagerka">
-                                <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar">
+                                <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar orbital-photo bagerka">
                                 <span class="squad-name">BAGERca</span>
                             </div>
                             <div class="squad-member" data-member="angel">
-                                <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar">
+                                <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar orbital-photo angel">
                                 <span class="squad-name">Angel</span>
                             </div>
                             <div class="squad-member" data-member="kiriki">
-                                <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar">
+                                <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar orbital-photo kiriki">
                                 <span class="squad-name">Kiriki</span>
                             </div>
                         </div>
-                        <div class="data-block">
+                        <div class="data-block" style="margin-top: 20px;">
                             <span class="data-label">СИНХРОНИЗАЦИЯ:</span>
                             <span class="data-value status-ok">100%</span>
                         </div>
                     </div>
-                    <!-- Детальный вид (скрыт по умолчанию) -->
+                    <!-- Детальный вид (Появляется при клике) -->
                     <div class="squad-detail-view">
                         <button class="close-detail-btn">&times;</button>
                         <img src="" alt="" class="detail-avatar">
@@ -93,17 +122,14 @@
             </div>
         </div>
         
+        <!-- Нижний блок с текстом -->
         <div class="hero-content-hud">
-            <h1 class="hero-title-hud">SYSTEM ONLINE: KSUSHA SHER</h1>
-            <p class="hero-subtitle-hud" id="data-ticker">Загрузка данных канала...</p>
-            <div class="hero-buttons">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="cta-button twitch"><i class="fab fa-twitch"></i> ПОДКЛЮЧИТЬСЯ К СТРИМУ</a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer" class="cta-button telegram"><i class="fab fa-telegram"></i> КАНАЛ СВЯЗИ</a>
-            </div>
+            <h1 class="hero-title-hud">KSUSHA SHER</h1>
+            <p class="hero-subtitle-hud" id="data-ticker">STREAMER & CONTENT CREATOR</p>
         </div>
     </section>
-    <!-- КОНЕЦ НОВОЙ СЕКЦИИ -->
 
+    <!-- СЕКЦИЯ ОБО МНЕ -->
     <section id="about">
         <div class="container">
             <h2 class="section-title">Обо мне</h2>
@@ -122,79 +148,117 @@
         </div>
     </section>
 
-    <section id="stats">
+    <!-- СЕКЦИЯ СТАТИСТИКИ (BENTO GRID) -->
+    <section id="stats" class="stats-section-redesigned">
+        <div class="stats-bg-grid"></div>
         <div class="container">
-            <h2 class="section-title">Статистика канала</h2>
-            <p class="stats-subtitle">Динамика развития и ключевые показатели</p>
-            
-            <div class="radar-chart-container">
-                <canvas id="radarChart"></canvas>
-                <div class="radar-center">
-                    <div class="center-stats">
-                        <span class="center-value">3+</span>
-                        <span class="center-label">года опыта</span>
-                    </div>
-                </div>
+            <div class="stats-header">
+                <h2 class="section-title">АНАЛИТИКА СИСТЕМЫ</h2>
+                <div class="stats-decor-line"></div>
+                <p class="stats-subtitle">Данные трансляции в реальном времени</p>
             </div>
             
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-content">
-                        <h3>5.2K+</h3>
-                        <p>Подписчиков на Twitch</p>
-                        <div class="stat-trend positive">+12% за месяц</div>
+            <div class="bento-grid">
+                <!-- Блок 1: Основной график (Большой) -->
+                <div class="bento-item chart-item">
+                    <div class="item-header">
+                        <i class="fas fa-chart-radar"></i>
+                        <span>ПРОФИЛЬ СТРИМЕРА</span>
+                    </div>
+                    <div class="radar-chart-wrapper">
+                        <canvas id="radarChart"></canvas>
+                        <div class="chart-overlay-value">
+                            <span class="glitch-text">3+</span>
+                            <small>ГОДА</small>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">📡</div>
-                    <div class="stat-content">
-                        <h3>154</h3>
-                        <p>Проведенных стримов</p>
-                        <div class="stat-trend positive">3.2 в неделю</div>
+    
+                <!-- Блок 2: Подписчики (Высокий) -->
+                <div class="bento-item followers-item">
+                    <div class="stats-glow-bg green"></div>
+                    <i class="fas fa-users stats-icon-bg"></i>
+                    <div class="stat-main-value">5.2K</div>
+                    <div class="stat-label">Подписчиков</div>
+                    <div class="stat-progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                    <div class="stat-footer">
+                        <span class="trend positive"><i class="fas fa-arrow-up"></i> +12%</span>
+                        <span class="period">за месяц</span>
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">⏰</div>
-                    <div class="stat-content">
-                        <h3>1,000+</h3>
-                        <p>Часов контента</p>
-                        <div class="stat-trend positive">250ч/год</div>
+    
+                <!-- Блок 3: Стримы (Широкий) -->
+                <div class="bento-item streams-item">
+                    <div class="item-row">
+                        <div class="icon-box pink">
+                            <i class="fas fa-satellite-dish"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value-medium">154</div>
+                            <div class="stat-label-small">Всего стримов</div>
+                        </div>
+                        <div class="separator-vertical"></div>
+                        <div>
+                            <div class="stat-value-medium">1,000+</div>
+                            <div class="stat-label-small">Часов в эфире</div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">💬</div>
-                    <div class="stat-content">
-                        <h3>280/ч</h3>
-                        <p>Активность в чате</p>
-                        <div class="stat-trend positive">Высокая вовлеченность</div>
+    
+                <!-- Блок 4: Чат (Квадрат) -->
+                <div class="bento-item chat-item">
+                    <div class="stats-glow-bg pink"></div>
+                    <div class="item-header">
+                        <i class="fas fa-comments"></i>
+                        <span>ЧАТ</span>
+                    </div>
+                    <div class="stat-center-box">
+                        <div class="stat-value-large">280</div>
+                        <div class="stat-unit">сообщ/час</div>
+                    </div>
+                    <div class="activity-dots">
+                        <span></span><span></span><span></span><span></span>
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-content">
-                        <h3>95%</h3>
-                        <p>Лояльность аудитории</p>
-                        <div class="stat-trend positive">Стабильный рост</div>
+    
+                <!-- Блок 5: Лояльность (Квадрат) -->
+                <div class="bento-item loyalty-item">
+                    <div class="circular-chart" style="--percentage: 95">
+                        <svg viewBox="0 0 36 36" class="circular-svg">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="95, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div class="percentage-text">
+                            95%
+                            <span>Лояльность</span>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">🎮</div>
-                    <div class="stat-content">
-                        <h3>25+</h3>
-                        <p>Разных игр показано</p>
-                        <div class="stat-trend positive">Разнообразие контента</div>
+    
+                <!-- Блок 6: Игры (Длинный) -->
+                <div class="bento-item games-item">
+                    <div class="item-content-flex">
+                        <div class="game-icon-stack">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="game-text-info">
+                            <div class="stat-value-medium">25+</div>
+                            <div class="stat-label">Игр пройдено</div>
+                        </div>
+                        <div class="game-genre-tags">
+                            <span>Horror</span>
+                            <span>RPG</span>
+                            <span>Co-op</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- СЕКЦИЯ РАСПИСАНИЯ -->
     <section id="schedule">
         <div class="container">
             <h2 class="section-title">Расписание стримов</h2>
@@ -215,6 +279,7 @@
         </div>
     </section>
 
+    <!-- СЕКЦИЯ ИГР И КИНО -->
     <section id="games">
         <div class="container">
             <h2 class="section-title">Игры и кино</h2>
@@ -302,6 +367,7 @@
         </div>
     </section>
 
+    <!-- СЕКЦИЯ ЖЕЛЕЗА -->
     <section id="specs">
         <div class="container">
             <h2 class="section-title">Мое железо</h2>
@@ -330,6 +396,7 @@
         </div>
     </section>
 
+    <!-- СЕКЦИЯ ДОНАТОВ -->
     <section id="donation">
         <div class="container">
             <h2 class="section-title">Поддержать</h2>
@@ -355,6 +422,7 @@
         </div>
     </section>
 
+    <!-- FOOTER -->
     <footer>
         <div class="container">
             <div class="social-links">
@@ -368,6 +436,7 @@
         </div>
     </footer>
 
+    <!-- СКРИПТЫ -->
     <script type="module" src="js/app.js"></script>
     <script src="js/hud-script.js"></script>
 </body>
