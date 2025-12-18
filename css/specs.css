@@ -1,5 +1,7 @@
+/* css/specs.css */
+
 /* =========================================
-   SECTION: HARDWARE (TECH SPECS V2)
+   SECTION: HARDWARE (TECH SPECS - FINAL)
    ========================================= */
 
 .specs-section {
@@ -23,16 +25,109 @@
     pointer-events: none;
 }
 
-.specs-section .section-title {
-    margin-bottom: 25px; 
+/* =========================================
+   NEW CYBER HEADER STYLE
+   ========================================= */
+
+.cyber-header-wrapper {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 5;
 }
 
-/* --- СЕТКА: ИСПРАВЛЕНО ДЛЯ ОДНОЙ СТРОКИ --- */
+/* Маленький технический текст сверху */
+.cyber-header-sub {
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--neon-green);
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    opacity: 0.8;
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+}
+
+/* Главный заголовок */
+.cyber-header-main {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    
+    /* Неоновая тень */
+    text-shadow: 
+        0 0 10px rgba(57, 255, 20, 0.5),
+        0 0 20px rgba(57, 255, 20, 0.3),
+        2px 2px 0px #000;
+}
+
+/* Эффект глитча при наведении */
+.cyber-header-main::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px; top: 0;
+    color: var(--neon-green);
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    animation: none;
+    opacity: 0;
+}
+
+.cyber-header-wrapper:hover .cyber-header-main::before {
+    opacity: 0.5;
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+/* Декоративные линии снизу */
+.cyber-header-lines {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    opacity: 0.6;
+}
+
+.cyber-header-lines .line {
+    height: 1px; width: 100px;
+    background: linear-gradient(90deg, transparent, var(--neon-green));
+}
+.cyber-header-lines .line:last-child {
+    background: linear-gradient(90deg, var(--neon-green), transparent);
+}
+
+.cyber-header-lines .dot {
+    width: 8px; height: 8px;
+    background: var(--neon-green);
+    transform: rotate(45deg);
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+/* Анимация глитча */
+@keyframes glitch-anim {
+    0% { clip: rect(44px, 9999px, 56px, 0); transform: skew(0.5deg); }
+    10% { clip: rect(33px, 9999px, 11px, 0); transform: skew(-0.5deg); }
+    20% { clip: rect(88px, 9999px, 99px, 0); }
+    30% { clip: rect(11px, 9999px, 33px, 0); }
+    40% { clip: rect(55px, 9999px, 2px, 0); transform: skew(0.5deg); }
+    100% { clip: rect(66px, 9999px, 88px, 0); }
+}
+
+/* =========================================
+   GRID & CARDS (WIDE LAYOUT)
+   ========================================= */
+
 .specs-grid {
     display: grid;
-    /* Явно задаем 4 колонки одинаковой ширины */
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 20px;
+    /* 2 ШИРОКИЕ КОЛОНКИ */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 30px; 
     position: relative; 
     z-index: 2;
 }
@@ -40,11 +135,10 @@
 /* --- КАРТОЧКА --- */
 .spec-card {
     position: relative;
-    height: 170px;
+    height: 140px;
     background: rgba(20, 20, 25, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    clip-path: none; 
+    border-radius: 16px;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: default;
@@ -62,14 +156,13 @@
     border-color: var(--neon-green);
     box-shadow: 0 10px 30px rgba(57, 255, 20, 0.15);
 }
-
 .spec-card:hover .card-glass { opacity: 1; }
 
 .spec-content {
     display: flex;
-    align-items: center;
-    gap: 15px; /* Чуть уменьшил отступ, чтобы текст не теснился */
-    padding: 15px 20px;
+    align-items: center; 
+    gap: 25px; /* Отступ между иконкой и текстом */
+    padding: 20px 30px;
     height: 100%;
     position: relative; 
     z-index: 2;
@@ -77,16 +170,13 @@
 
 /* --- ИКОНКА --- */
 .spec-icon-box {
-    width: 50px; height: 50px; /* Слегка уменьшил иконку для узких экранов */
+    width: 65px; height: 65px;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(57, 255, 20, 0.3);
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    font-size: 1.4rem;
-    color: var(--neon-green);
-    border-radius: 12px;
-    transition: 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; color: var(--neon-green);
+    border-radius: 12px; transition: 0.3s;
+    flex-shrink: 0;
 }
 
 .spec-card:hover .spec-icon-box {
@@ -98,40 +188,34 @@
 /* --- ТЕКСТ --- */
 .spec-info { 
     flex-grow: 1; 
-    min-width: 0; /* Чтобы текст мог сокращаться, а не распирать карточку */
+    display: flex; flex-direction: column; justify-content: center;
+    min-width: 0;
 }
 
 .spec-label {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 0.7rem;
-    color: #777;
-    letter-spacing: 1px;
-    margin-bottom: 2px;
-    text-transform: uppercase;
+    font-size: 0.8rem; color: #777;
+    letter-spacing: 2px; margin-bottom: 5px;
+    text-transform: uppercase; font-weight: 600;
 }
 
 .spec-value {
     font-family: 'Orbitron', sans-serif;
-    font-size: 1rem; /* Уменьшил шрифт, чтобы влезало в узкие колонки */
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 8px;
-    line-height: 1.2;
-    white-space: nowrap; /* Запрет переноса, чтобы не ломать высоту */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Три точки, если название очень длинное */
+    font-size: 1.2rem;
+    font-weight: 700; color: #fff;
+    margin-bottom: 8px; line-height: 1.2;
+    /* Разрешаем перенос длинных слов */
+    white-space: normal; 
 }
 
-.spec-meta { display: flex; gap: 5px; }
+.spec-meta { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .meta-tag {
     font-family: 'Exo 2', sans-serif;
-    font-size: 0.6rem;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 2px 6px;
-    border-radius: 5px;
-    color: #aaa;
-    border: 1px solid transparent;
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 4px 10px; border-radius: 6px;
+    color: #ccc; border: 1px solid rgba(255,255,255,0.05);
 }
 
 /* --- ДЕКОРАТИВНЫЕ УГЛЫ --- */
@@ -139,55 +223,41 @@
     position: absolute;
     width: 20px; height: 20px;
     border: 2px solid transparent;
-    transition: 0.3s;
-    pointer-events: none;
+    transition: 0.3s; pointer-events: none;
 }
-
 .tech-corner.top-right {
     top: 0; right: 0;
     border-top: 2px solid rgba(255, 255, 255, 0.1);
     border-right: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0 20px 0 0;
+    border-radius: 0 16px 0 0;
 }
-
 .tech-corner.bottom-left {
     bottom: 0; left: 0;
     border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     border-left: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0 0 0 20px;
+    border-radius: 0 0 0 16px;
 }
+.spec-card:hover .tech-corner { border-color: var(--neon-green); }
 
-.spec-card:hover .tech-corner {
-    border-color: var(--neon-green);
-}
-
+/* Зеленая линия загрузки */
 .spec-bar-loader {
-    position: absolute;
-    bottom: 0; left: 0;
-    height: 3px;
-    width: 0%;
+    position: absolute; bottom: 0; left: 0;
+    height: 3px; width: 0%;
     background: var(--neon-green);
     transition: width 0.5s ease;
 }
-
 .spec-card:hover .spec-bar-loader { width: 100%; }
 
 /* --- АДАПТИВНОСТЬ --- */
 
-/* Планшеты: 2 в ряд */
 @media (max-width: 1024px) {
-    .specs-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .specs-grid { gap: 15px; }
+    .spec-card { height: auto; min-height: 140px; }
 }
 
-/* Мобилки: 1 в ряд */
-@media (max-width: 600px) {
-    .specs-section { padding: 30px 0; }
-    .specs-grid {
-        grid-template-columns: 1fr;
-    }
-    .spec-card { height: auto; }
-    .spec-content { flex-direction: column; text-align: center; padding: 20px; }
-    .spec-meta { justify-content: center; }
+@media (max-width: 768px) {
+    .specs-grid { grid-template-columns: 1fr; }
+    .spec-content { padding: 20px; }
+    .cyber-header-main { font-size: 2.5rem; }
+    .cyber-header-lines .line { width: 50px; }
 }

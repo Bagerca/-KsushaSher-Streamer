@@ -8,7 +8,11 @@ const ArchiveState = {
     filter: 'all',
     searchQuery: '',
     sort: 'name',         // 'name' или 'rating'
-    sortDirection: 'asc'  // 'asc' или 'desc'
+    sortDirection: 'asc',  // 'asc' или 'desc'
+    
+    // --- ПАРАМЕТРЫ ОТОБРАЖЕНИЯ ---
+    isExpanded: false,    // Развернут ли список полностью
+    limit: 12             // Лимит отображения по умолчанию
 };
 
 // Перевод жанров
@@ -60,7 +64,7 @@ async function switchArchiveType(type) {
         ArchiveState.currentType = type;
         ArchiveState.filter = 'all';
         ArchiveState.searchQuery = '';
-        // Сортировку не сбрасываем, чтобы сохранить выбор пользователя
+        ArchiveState.isExpanded = false; // Сбрасываем раскрытие списка
         
         // Сброс поиска
         const searchInput = document.getElementById('archive-search');
@@ -133,7 +137,6 @@ function renderFilters() {
     });
 
     // Центральная кнопка "ВСЕ"
-    // Проверяем, активна ли она сейчас
     const allActiveClass = ArchiveState.filter === 'all' ? 'active' : '';
     statusHtml += `<div class="filter-chip is-status ${allActiveClass}" data-filter="all">ВСЕ</div>`;
 
@@ -165,6 +168,7 @@ function renderFilters() {
             chip.classList.add('active');
             
             ArchiveState.filter = chip.dataset.filter;
+            ArchiveState.isExpanded = false; // Сбрасываем раскрытие при смене фильтра
             renderGrid();
         });
     });
@@ -209,21 +213,37 @@ function getFilteredAndSortedData() {
 }
 
 /**
- * Рендер сетки
+ * Рендер сетки (ПЛАВНАЯ ВЕРСИЯ С ЗАДЕРЖКОЙ СВОРАЧИВАНИЯ)
  */
 function renderGrid() {
     const container = document.getElementById('archive-grid');
+    const wrapper = document.querySelector('.archive-full-grid-wrapper');
+    
+    // Удаляем старую кнопку и оверлей, если есть
+    const oldBtn = document.querySelector('.archive-footer-controls');
+    if (oldBtn) oldBtn.remove();
+    
+    // Оверлей для затемнения
+    let overlay = wrapper.querySelector('.archive-fade-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'archive-fade-overlay';
+        wrapper.appendChild(overlay);
+    }
+
     if (!container) return;
 
-    const filtered = getFilteredAndSortedData();
+    // 1. Получаем полные данные
+    const fullFilteredData = getFilteredAndSortedData();
 
-    if (filtered.length === 0) {
+    if (fullFilteredData.length === 0) {
         container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:50px; color:#666; font-family:\'Exo 2\';">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
+        wrapper.classList.remove('has-more');
         return;
     }
 
-    // Генерируем HTML
-    container.innerHTML = filtered.map(item => {
+    // 2. Рендерим ВСЕ карточки, но лишним даем класс visually-hidden
+    container.innerHTML = fullFilteredData.map((item, index) => {
         const genresHtml = item.genres 
             ? item.genres.slice(0, 3).map(g => `<span class="genre-tag">${genreMap[g] || g}</span>`).join('') 
             : '';
@@ -234,11 +254,18 @@ function renderGrid() {
             starsHtml += i < fullStars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star" style="opacity: 0.3;"></i>';
         }
 
+        // Логика скрытия: если индекс больше лимита И мы не в режиме "Показать все"
+        const isHidden = !ArchiveState.isExpanded && index >= ArchiveState.limit;
+        const hiddenClass = isHidden ? 'visually-hidden' : '';
+
+        // Анимация (delay) только для первых карточек, чтобы не тормозило
+        const delay = index < 20 ? index * 50 : 0;
+        const animationStyle = `style="animation-delay: ${delay}ms"`;
+
         return `
-            <div class="archive-card" data-status="${item.status}" data-id="${item.id}">
+            <div class="archive-card animate-entry ${hiddenClass}" data-status="${item.status}" data-id="${item.id}" ${animationStyle}>
                 <div class="card-thumb-container">
                     <img src="${item.image}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
-                    
                     <div class="card-rating-badge">
                         <span class="stars-visual">${starsHtml}</span>
                         <span class="rating-number">${item.rating}</span>
@@ -253,17 +280,72 @@ function renderGrid() {
         `;
     }).join('');
 
-    // Применяем каскадную анимацию (Staggered Animation)
-    const cards = container.querySelectorAll('.archive-card');
-    cards.forEach((card, index) => {
-        // Добавляем класс анимации
-        card.classList.add('animate-entry');
+    // 3. Логика Кнопки и Оверлея
+    if (fullFilteredData.length > ArchiveState.limit) {
         
-        // Рассчитываем задержку: 30мс на каждую следующую карточку
-        // Ограничиваем индекс 30-ю, чтобы на огромных списках не ждать слишком долго
-        const delay = Math.min(index, 30) * 30;
-        card.style.animationDelay = `${delay}ms`;
-    });
+        // Управление затемнением
+        if (!ArchiveState.isExpanded) wrapper.classList.add('has-more');
+        else wrapper.classList.remove('has-more');
+
+        // Создаем кнопку
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'archive-footer-controls';
+        
+        const btnText = ArchiveState.isExpanded ? 'СВЕРНУТЬ БАЗУ' : `ПОКАЗАТЬ ВСЕ (${fullFilteredData.length})`;
+        const btnIcon = ArchiveState.isExpanded ? '<i class="fas fa-chevron-up"></i>' : '<i class="fas fa-chevron-down"></i>';
+        const collapseClass = ArchiveState.isExpanded ? 'collapse-mode' : '';
+
+        controlsDiv.innerHTML = `
+            <button class="cyber-load-btn ${collapseClass}" id="archive-toggle-btn">
+                <span>${btnText} ${btnIcon}</span>
+            </button>
+        `;
+
+        wrapper.after(controlsDiv);
+
+        // --- ЛОГИКА КЛИКА С ЗАДЕРЖКОЙ ---
+        const btnElement = document.getElementById('archive-toggle-btn');
+        
+        btnElement.addEventListener('click', () => {
+            if (ArchiveState.isExpanded) {
+                // == СВОРАЧИВАНИЕ ==
+                
+                // 1. Сначала плавно скроллим вверх к началу секции
+                const sectionTop = document.getElementById('media-archive').offsetTop;
+                // Небольшой отступ (80px), чтобы заголовок не прилипал к верху
+                window.scrollTo({ top: sectionTop - 80, behavior: 'smooth' });
+
+                // 2. Ждем, пока скролл завершится (600мс), и только потом скрываем карточки
+                // Это предотвращает "прыжок" экрана, так как мы скрываем элементы, когда они уже не видны
+                setTimeout(() => {
+                    ArchiveState.isExpanded = false;
+                    
+                    // Скрываем лишние карточки
+                    const cards = container.querySelectorAll('.archive-card');
+                    cards.forEach((card, idx) => {
+                        if (idx >= ArchiveState.limit) card.classList.add('visually-hidden');
+                    });
+                    
+                    // Обновляем кнопку и оверлей
+                    renderGrid(); 
+                }, 600);
+
+            } else {
+                // == РАЗВОРАЧИВАНИЕ ==
+                ArchiveState.isExpanded = true;
+                
+                // Сразу показываем все карточки
+                const cards = container.querySelectorAll('.archive-card');
+                cards.forEach(card => card.classList.remove('visually-hidden'));
+                
+                // Обновляем кнопку
+                renderGrid();
+            }
+        });
+
+    } else {
+        wrapper.classList.remove('has-more');
+    }
 }
 
 /**
@@ -288,6 +370,7 @@ function setupSearch() {
 
     input.addEventListener('input', (e) => {
         ArchiveState.searchQuery = e.target.value.toLowerCase();
+        ArchiveState.isExpanded = false; // Сбрасываем при поиске
         renderGrid();
     });
 }
