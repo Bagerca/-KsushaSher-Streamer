@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Темная подложка (Круг) для контраста на любой теме -->
+  <circle cx="32" cy="32" r="32" fill="#050508"/>
+
+  <!-- Основной контур головы (Неоновый Зеленый) -->
+  <!-- Толстые линии для лучшей видимости -->
+  <path d="M12 14 L22 36 L32 48 L42 36 L52 14 L32 24 Z" 
+        fill="none" 
+        stroke="#39ff14" 
+        stroke-width="4" 
+        stroke-linejoin="round" 
+        stroke-linecap="round"/>
+
+  <!-- Глаза (Неоновый Розовый) -->
+  <!-- Агрессивные цифровые полоски -->
+  <path d="M22 28 L28 32" stroke="#ff2d95" stroke-width="4" stroke-linecap="round" />
+  <path d="M42 28 L36 32" stroke="#ff2d95" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Лобный сканер / Сенсор (Деталь интерфейса) -->
+  <rect x="30" y="10" width="4" height="8" fill="#39ff14" rx="1" />
+  
+  <!-- Нос -->
+  <circle cx="32" cy="48" r="3" fill="#ff2d95"/>
+</svg>
