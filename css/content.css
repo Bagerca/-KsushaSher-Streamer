@@ -1,60 +1,91 @@
-/* --- ABOUT SECTION (FULL WIDTH LAYOUT) --- */
+/* =========================================
+   ABOUT SECTION (ОБО МНЕ) - DEEP SPACE STYLE
+   ========================================= */
+
 #about {
-    background: radial-gradient(circle at 0% 50%, rgba(57, 255, 20, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 100% 50%, rgba(255, 45, 149, 0.05) 0%, transparent 50%),
-                #0b0c15;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    overflow: hidden;
+    /* Базовый цвет - совпадает с низом Hero секции */
+    background-color: #050508;
     
-    /* Уменьшенные отступы секции */
-    padding: 40px 0;
+    /* Эффект глубокого космоса: Туманности + Звезды */
+    background-image: 
+        /* Зеленоватое свечение слева */
+        radial-gradient(circle at 0% 50%, rgba(57, 255, 20, 0.03) 0%, transparent 50%),
+        /* Розоватое свечение справа */
+        radial-gradient(circle at 100% 30%, rgba(255, 45, 149, 0.03) 0%, transparent 50%),
+        /* Мелкие звезды (шум) */
+        radial-gradient(white 1px, transparent 0),
+        radial-gradient(white 1px, transparent 0);
+        
+    /* Размеры и позиции фонов */
+    background-size: 100% 100%, 100% 100%, 550px 550px, 350px 350px;
+    background-position: 0 0, 0 0, 0 0, 20px 20px;
+    
+    /* УБРАНА ВЕРХНЯЯ ГРАНИЦА для бесшовности */
+    border-top: none; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    
+    overflow: hidden;
+    padding: 80px 0; 
+    position: relative;
 }
 
-/* Уменьшаем отступ у заголовка внутри этой секции */
+/* Страховочный градиент сверху */
+#about::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(to bottom, #050508 0%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+#about .container {
+    position: relative;
+    z-index: 2;
+}
+
 #about .section-title {
-    margin-bottom: 30px;
+    margin-bottom: 50px;
 }
 
 .about-grid-layout {
     display: grid;
-    /* 1fr - левая часть, 650px - правая */
+    /* Левая колонка (1fr) и правая фиксированная (650px) */
     grid-template-columns: 1fr 650px;
-    
-    /* Отступ между конвейером и видео */
-    gap: 30px;
-    
+    gap: 40px;
     align-items: stretch;
     width: 100%;
-    padding: 0;
 }
 
-/* --- ЛЕВАЯ КОЛОНКА: КАРУСЕЛЬ --- */
+/* --- ЛЕВАЯ КОЛОНКА: КАРУСЕЛЬ (MARQUEE) --- */
 .subs-marquee-wrapper {
     position: relative;
     border: 1px solid rgba(57, 255, 20, 0.3);
     border-left: 1px solid rgba(57, 255, 20, 0.3); 
     
-    background: rgba(0, 0, 0, 0.4);
+    /* ИСПРАВЛЕНИЕ: Сплошной темный фон, чтобы перекрыть звезды */
+    background: #090a10;
+    /* Можно добавить легкий градиент для объема, но непрозрачный */
+    background: linear-gradient(180deg, #0f111a 0%, #050508 100%);
+    
     display: flex;
     flex-direction: column;
     height: 100%; 
     min-height: 600px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     overflow: hidden;
-    
-    padding: 20px 0 20px 20px;
-    
-    /* ОТСТУП ОТ ЛЕВОГО КРАЯ ЭКРАНА */
+    padding: 20px 0;
     margin-left: 50px; 
-    
-    /* Скругление всех углов */
     border-radius: 20px;
+    z-index: 10; /* Поднимаем выше фона */
 }
 
 .marquee-header {
     flex-shrink: 0;
-    padding: 0 30px 20px 0;
+    padding: 0 30px 20px 30px;
     color: var(--neon-green);
     font-family: 'Orbitron', sans-serif;
     font-size: 1.1rem;
@@ -64,6 +95,7 @@
     align-items: center;
     gap: 15px;
     background: transparent;
+    z-index: 2;
 }
 
 .pulse-dot {
@@ -81,15 +113,18 @@
     align-items: center; 
     overflow: hidden;
     position: relative;
-    mask-image: linear-gradient(to right, transparent, black 1%, black 99%, transparent);
+    /* Мягкая маска (30px), чтобы не резать края карточек */
+    mask-image: linear-gradient(to right, transparent 0%, black 30px, black calc(100% - 30px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30px, black calc(100% - 30px), transparent 100%);
+    padding: 30px 0; /* Отступ для теней */
 }
 
 .marquee-track {
     display: flex;
-    gap: 50px; 
+    gap: 60px; 
     width: max-content;
     animation: scrollLeft 45s linear infinite; 
-    padding: 0 25px; 
+    padding: 0 60px; 
     align-items: center;
 }
 
@@ -97,29 +132,24 @@
     animation-play-state: paused; 
 }
 
-/* === ВЕРТИКАЛЬНЫЕ КАРТОЧКИ (UPGRADED) === */
+/* --- КАРТОЧКИ ПОДПИСЧИКОВ --- */
 .holo-card {
-    /* УВЕЛИЧЕННЫЕ РАЗМЕРЫ */
     width: 300px;
     height: 480px;
     padding: 40px 25px;
-    
-    /* Градиентный фон */
     background: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.5) 100%);
     backdrop-filter: blur(10px);
-    
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    
     transition: all 0.3s ease;
     flex-shrink: 0;
     position: relative;
-    overflow: hidden;
+    overflow: visible; 
+    transform: translateZ(0);
 }
 
 .card-top-deco {
@@ -135,7 +165,6 @@
 
 .holo-avatar-container {
     position: relative;
-    /* УВЕЛИЧЕННЫЙ КОНТЕЙНЕР */
     width: 150px;
     height: 150px;
     display: flex; 
@@ -154,23 +183,25 @@
     overflow: hidden;
     z-index: 2;
     border: 3px solid rgba(255,255,255,0.2);
+    position: relative;
 }
 
 .holo-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-/* --- РАМКА АВАТАРА (Центровка + Увеличение + Transition) --- */
+/* --- РАМКА АВАТАРА --- */
 .avatar-ring {
     position: absolute;
     top: 50%; 
     left: 50%;
-    
-    /* УВЕЛИЧЕННОЕ КОЛЬЦО */
     width: 180px;
     height: 180px;
-    
+    /* Центровка через margin */
+    margin-left: -90px;
+    margin-top: -90px;
     border-radius: 50%;
     border: 1px dashed rgba(255,255,255,0.3);
-    animation: rotate 12s linear infinite;
+    /* Анимация только вращения */
+    animation: rotate-simple 12s linear infinite;
     z-index: 1;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -180,7 +211,6 @@
 .holo-name {
     font-family: 'Orbitron', sans-serif;
     font-weight: 700;
-    /* УВЕЛИЧЕННЫЙ ШРИФТ */
     font-size: 1.8rem;
     color: #fff;
     margin-bottom: 5px;
@@ -243,27 +273,28 @@
 .holo-card.purple .card-stat-bar .fill { background: #bd00ff; color: #bd00ff; }
 .holo-card.purple:hover { box-shadow: 0 0 40px rgba(189, 0, 255, 0.3); border-color: #bd00ff; transform: translateY(-5px) scale(1.02); }
 
+/* Hover effects for rings */
+.holo-card.green:hover .avatar-ring { border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+.holo-card.red:hover .avatar-ring { border-color: var(--bagerka-color); box-shadow: 0 0 15px var(--bagerka-color); }
+.holo-card.orange:hover .avatar-ring { border-color: var(--angel-color); box-shadow: 0 0 15px var(--angel-color); }
+.holo-card.blue:hover .avatar-ring { border-color: var(--kiriki-color); box-shadow: 0 0 15px var(--kiriki-color); }
+.holo-card.pink:hover .avatar-ring { border-color: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
+.holo-card.cyan:hover .avatar-ring { border-color: #00ffff; box-shadow: 0 0 15px #00ffff; }
+.holo-card.purple:hover .avatar-ring { border-color: #bd00ff; box-shadow: 0 0 15px #bd00ff; }
+
 
 /* --- ПРАВАЯ КОЛОНКА: ДОСЬЕ --- */
 .streamer-dossier {
     display: flex;
     flex-direction: column;
-    
-    /* Отступ между видео и биографией */
     gap: 25px;
-    
     height: 100%; 
-    
-    /* Убрали "табличку" */
     background: transparent;
     padding: 0;
     border-radius: 0;
-    
-    /* Отступ от правого края экрана */
     margin-right: 50px; 
 }
 
-/* Монитор видео */
 .cyber-monitor {
     border: 2px solid #333;
     border-radius: 5px;
@@ -271,7 +302,6 @@
     padding: 5px;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    margin-bottom: 0;
 }
 
 .monitor-header, .monitor-footer {
@@ -310,16 +340,12 @@
     opacity: 0.3;
 }
 
-/* Текст досье */
 .dossier-text {
     background: rgba(255, 255, 255, 0.02);
     border-left: 3px solid var(--neon-pink);
     padding: 30px;
     font-family: 'Exo 2', sans-serif;
-    
-    /* Скругляем все углы */
     border-radius: 10px;
-    
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -360,34 +386,14 @@
     color: #aaa;
 }
 
-@keyframes scrollLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); } 
-}
-
-/* --- SCHEDULE SECTION (и далее без изменений) --- */
-#schedule { background: var(--dark-bg); position: relative; }
-.schedule-subtitle { text-align: center; margin-top: -30px; margin-bottom: 40px; color: var(--light-text); }
-.neon-text { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
-.schedule-list { display: grid; gap: 20px; max-width: 900px; margin: 0 auto; }
-.schedule-item { display: flex; background: rgba(15, 15, 27, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 20px; transition: all 0.3s ease; align-items: center; position: relative; overflow: hidden; }
-.schedule-item:hover { border-color: var(--neon-pink); transform: translateX(10px); background: rgba(15, 15, 27, 0.9); }
-.schedule-item.highlighted { border-color: var(--neon-pink); box-shadow: 0 0 15px rgba(255, 45, 149, 0.2); }
-.schedule-day-wrapper { min-width: 140px; border-right: 1px solid rgba(255, 255, 255, 0.1); margin-right: 20px; padding-right: 20px; }
-.schedule-day { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--white); font-weight: 700; }
-.schedule-time { color: var(--neon-green); font-size: 0.9rem; margin-top: 5px; }
-.schedule-content { flex: 1; }
-.schedule-game { font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 5px; }
-.schedule-desc { color: var(--light-text); font-size: 0.9rem; }
-.schedule-status { width: 10px; height: 10px; background: #333; border-radius: 50%; margin-left: 20px; }
-.schedule-status.active { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); animation: pulse 2s infinite; }
-.schedule-footer { text-align: center; margin-top: 40px; color: #888; font-size: 0.9rem; }
-.neon-link { color: var(--neon-pink); text-decoration: underline; }
-
-/* --- GAMES & MOVIES SECTION --- */
+/* =========================================
+   GAMES & MOVIES SECTION
+   ========================================= */
 #games { background: var(--medium-bg); }
+
 .games-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
 .controls-section { display: flex; align-items: center; gap: 20px; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); }
+
 .games-tabs, .sort-tabs { display: flex; gap: 15px; position: relative; }
 .games-tab, .sort-tab { cursor: pointer; padding: 8px 15px; color: #888; font-size: 1.2rem; transition: 0.3s; z-index: 2; }
 .games-tab.active, .sort-tab.active { color: var(--white); }
@@ -438,7 +444,9 @@
 .toggle-games { display: block; width: 100%; max-width: 200px; margin: 30px auto 0; padding: 10px; background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; }
 .toggle-games:hover { background: var(--neon-green); color: var(--dark-bg); }
 
-/* --- SPECS SECTION --- */
+/* =========================================
+   SPECS SECTION
+   ========================================= */
 #specs { background: var(--dark-bg); border-top: 1px solid rgba(57, 255, 20, 0.2); }
 .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
 .spec-item { text-align: center; padding: 30px; background: rgba(255,255,255,0.03); border-radius: 15px; transition: 0.3s; border: 1px solid transparent; }
@@ -447,7 +455,9 @@
 .spec-item h3 { font-family: 'Orbitron', sans-serif; margin-bottom: 10px; }
 .spec-item p { color: #aaa; }
 
-/* --- DONATION SECTION --- */
+/* =========================================
+   DONATION SECTION
+   ========================================= */
 #donation { background: radial-gradient(circle at center, #1a1a2e 0%, var(--dark-bg) 100%); text-align: center; }
 .donation-options { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin: 40px 0; }
 .donation-option { display: block; width: 250px; padding: 30px 20px; background: rgba(255,255,255,0.05); border: 2px solid transparent; border-radius: 15px; cursor: pointer; transition: 0.3s; }
@@ -459,34 +469,55 @@
 .card-number:hover { border-color: var(--neon-green); color: var(--neon-green); }
 #copy-tooltip { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; color: #888; width: 200px; font-family: 'Exo 2', sans-serif; letter-spacing: 0; }
 
-/* --- FOOTER --- */
+/* =========================================
+   FOOTER
+   ========================================= */
 footer { background: #000; padding: 40px 0; text-align: center; border-top: 1px solid #222; }
 .social-links { margin-bottom: 20px; }
 .social-links a { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); margin: 0 10px; font-size: 1.2rem; }
 .social-links a:hover { background: var(--neon-green); color: black; transform: scale(1.1); }
 footer p { color: #555; font-size: 0.9rem; }
 
-/* --- АДАПТИВ (MEDIA QUERIES) --- */
+/* =========================================
+   ANIMATIONS & UTILS
+   ========================================= */
+@keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } 
+}
 
-/* 1. Возврат к коробочному виду на экранах меньше 1200px */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rotate-simple {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   RESPONSIVE (MEDIA QUERIES)
+   ========================================= */
 @media (max-width: 1200px) {
     .about-grid-layout {
-        grid-template-columns: 1fr; /* Одна колонка */
+        grid-template-columns: 1fr;
         gap: 30px;
         padding: 0 15px; 
-        width: auto;
     }
 
     .subs-marquee-wrapper {
         min-height: 450px;
         order: 2; 
-        
-        /* Возвращаем скругления и границы */
         border-radius: 15px;
         border-left: 1px solid rgba(57, 255, 20, 0.3);
         padding: 20px 0;
-        
-        /* Убираем отступ */
         margin-left: 0;
     }
     
@@ -495,13 +526,7 @@ footer p { color: #555; font-size: 0.9rem; }
     }
 
     .streamer-dossier {
-        background: transparent; 
-        padding: 0;
-        margin-right: 0; /* Убираем правый отступ */
-    }
-    
-    .dossier-text {
-        border-radius: 10px; 
+        margin-right: 0; 
     }
 }
 
@@ -510,51 +535,4 @@ footer p { color: #555; font-size: 0.9rem; }
     .games-controls { flex-direction: column; align-items: flex-start; }
     .controls-section { width: 100%; justify-content: space-between; }
     .legend-section { justify-content: center; }
-    .schedule-item { flex-direction: column; text-align: center; }
-    .schedule-day-wrapper { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin: 0 0 15px 0; padding: 0 0 10px 0; width: 100%; }
-    .schedule-status { margin: 15px auto 0; }
-}
-
-/* --- СВЕЧЕНИЕ КОЛЬЦА ПРИ НАВЕДЕНИИ --- */
-
-/* Зеленая карточка */
-.holo-card.green:hover .avatar-ring {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 15px var(--neon-green), inset 0 0 10px rgba(57, 255, 20, 0.2);
-}
-
-/* Красная карточка */
-.holo-card.red:hover .avatar-ring {
-    border-color: var(--bagerka-color);
-    box-shadow: 0 0 15px var(--bagerka-color), inset 0 0 10px rgba(255, 68, 68, 0.2);
-}
-
-/* Оранжевая карточка */
-.holo-card.orange:hover .avatar-ring {
-    border-color: var(--angel-color);
-    box-shadow: 0 0 15px var(--angel-color), inset 0 0 10px rgba(255, 140, 0, 0.2);
-}
-
-/* Синяя карточка */
-.holo-card.blue:hover .avatar-ring {
-    border-color: var(--kiriki-color);
-    box-shadow: 0 0 15px var(--kiriki-color), inset 0 0 10px rgba(0, 123, 255, 0.2);
-}
-
-/* Розовая карточка */
-.holo-card.pink:hover .avatar-ring {
-    border-color: var(--neon-pink);
-    box-shadow: 0 0 15px var(--neon-pink), inset 0 0 10px rgba(255, 45, 149, 0.2);
-}
-
-/* Голубая (Cyan) карточка */
-.holo-card.cyan:hover .avatar-ring {
-    border-color: #00ffff;
-    box-shadow: 0 0 15px #00ffff, inset 0 0 10px rgba(0, 255, 255, 0.2);
-}
-
-/* Фиолетовая карточка */
-.holo-card.purple:hover .avatar-ring {
-    border-color: #bd00ff;
-    box-shadow: 0 0 15px #bd00ff, inset 0 0 10px rgba(189, 0, 255, 0.2);
 }

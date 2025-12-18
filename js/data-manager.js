@@ -36,7 +36,7 @@ async function loadAllData() {
         loadSchedule(),
         loadGames(),
         loadMovies(),
-        loadSubscribers() // <-- Загрузка подписчиков
+        loadSubscribers()
     ]);
 }
 
@@ -73,7 +73,7 @@ async function loadData(endpoint, fallbackData = []) {
     return fallbackData;
 }
 
-// --- GAMES & MOVIES ---
+// --- GAMES & MOVIES (СТАНДАРТНАЯ ЛОГИКА) ---
 
 export async function loadGames() {
     const container = document.querySelector('#games-content .games-grid');
@@ -185,68 +185,64 @@ function generateStars(rating) {
 }
 
 
-// --- SCHEDULE ---
+// --- COMMAND CENTER: SCHEDULE (ОБНОВЛЕНО) ---
 
 export async function loadSchedule() {
-    try {
-        const data = await loadData('schedule.json', { schedule: [] });
-        renderSchedule(data.schedule || data);
-    } catch (error) {
-        console.error('❌ Error loading schedule:', error);
-        renderSchedule([]);
-    }
-}
-
-function renderSchedule(scheduleData) {
-    const scheduleList = document.getElementById('schedule-list');
-    if (!scheduleList) return;
-
-    if (!scheduleData || scheduleData.length === 0) {
-        scheduleList.innerHTML = `
-            <div class="schedule-item">
-                <div class="schedule-content">
-                    <div class="schedule-game">📅 Расписание загружается...</div>
-                    <div class="schedule-desc">Данные будут доступны скоро</div>
-                </div>
-            </div>
-        `;
+    const container = document.getElementById('schedule-container');
+    // Если контейнера нет (например, старая версия HTML), пробуем найти старый
+    if (!container) {
+        const oldContainer = document.getElementById('schedule-list');
+        if(oldContainer) return loadOldSchedule(oldContainer);
         return;
     }
 
-    scheduleList.innerHTML = scheduleData.map(item => `
-        <div class="schedule-item ${item.highlighted ? 'highlighted' : ''}">
-            <div class="schedule-day-wrapper">
-                <div class="schedule-day">${item.day || 'День'}</div>
-                <div class="schedule-time">${item.time || 'Время'}</div>
-            </div>
-            <div class="schedule-content">
-                <div class="schedule-game">${item.game || 'Игра'}</div>
-                <div class="schedule-desc">${item.description || 'Описание'}</div>
-            </div>
-            <div class="schedule-status"></div>
-        </div>
-    `).join('');
-
-    highlightCurrentDay();
-}
-
-function highlightCurrentDay() {
-    const today = new Date().getDay(); // 0 is Sunday
-    if (today === 0 || today === 6) return; // Optional: skip weekends
-
-    const scheduleItems = document.querySelectorAll('.schedule-item');
-    const scheduleIndex = today - 1;
-    
-    if (scheduleItems[scheduleIndex]) {
-        const currentStatus = scheduleItems[scheduleIndex].querySelector('.schedule-status');
-        if (currentStatus) {
-            currentStatus.classList.add('active');
-        }
+    try {
+        const data = await loadData('schedule.json', { schedule: [] });
+        const scheduleData = data.schedule || data;
+        
+        renderCommandSchedule(container, scheduleData);
+    } catch (error) {
+        console.error('❌ Error loading schedule:', error);
+        container.innerHTML = '<div style="padding:20px; color:#ff6464;">ОШИБКА ЗАГРУЗКИ РАСПИСАНИЯ</div>';
     }
 }
 
+function renderCommandSchedule(container, scheduleData) {
+    if (!scheduleData || scheduleData.length === 0) {
+        container.innerHTML = '<div style="padding:20px; color:rgba(255,255,255,0.5);">ДАННЫЕ О МИССИЯХ ОТСУТСТВУЮТ</div>';
+        return;
+    }
 
-// --- STATS & CHARTS ---
+    container.innerHTML = scheduleData.map(item => {
+        // Очистка времени от лишних символов для отображения
+        const displayTime = item.time ? item.time.split('+')[0] : 'TBA';
+        
+        return `
+        <div class="cmd-schedule-item ${item.highlighted ? 'active' : ''}">
+            <div class="cmd-sch-time">
+                <span class="sch-day">${item.day}</span>
+                <span class="sch-hour">${displayTime}</span>
+            </div>
+            <div class="cmd-sch-info">
+                <div class="sch-game">${item.game}</div>
+                <div class="sch-desc">${item.description}</div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+// Fallback для старой верстки (если вдруг HTML не обновился)
+async function loadOldSchedule(container) {
+    try {
+        const data = await loadData('schedule.json', { schedule: [] });
+        // Рендер старого списка (код удален для краткости, так как мы перешли на Command Center)
+        container.innerHTML = 'Пожалуйста, обновите HTML страницу';
+    } catch (e) { console.error(e); }
+}
+
+
+// --- COMMAND CENTER: STATS & CHARTS (ОБНОВЛЕНО) ---
 
 export async function loadStats() {
     try {
@@ -254,13 +250,13 @@ export async function loadStats() {
         const stats = await loadData('stats.json', getDefaultStats());
         
         createRadarChart(stats);
-        updateBentoGrid(stats);
+        updateCommandStats(stats);
         
     } catch (error) {
         console.error('❌ Error loading stats:', error);
         const defaults = getDefaultStats();
         createRadarChart(defaults);
-        updateBentoGrid(defaults);
+        updateCommandStats(defaults);
     }
 }
 
@@ -276,34 +272,60 @@ function getDefaultStats() {
     };
 }
 
-function updateBentoGrid(stats) {
-    const followersEl = document.querySelector('.followers-item .stat-main-value');
-    if (followersEl) followersEl.textContent = formatNumber(stats.followers);
+// Обновление метрик в новом дизайне Command Center
+function updateCommandStats(stats) {
+    // 1. Подписчики (Agents)
+    const followersEl = document.querySelector('.followers-val');
+    if (followersEl) {
+        animateValue(followersEl, 0, stats.followers, 2000);
+    }
     
-    const streamsItem = document.querySelector('.streams-item');
-    if (streamsItem) {
-        const values = streamsItem.querySelectorAll('.stat-value-medium');
-        if (values.length >= 2) {
-            values[0].textContent = stats.streams;
-            values[1].textContent = formatNumber(stats.hours) + '+';
+    // 2. Часы (Hours)
+    const hoursEl = document.querySelector('.hours-val');
+    if (hoursEl) {
+        hoursEl.textContent = formatNumber(stats.hours) + '+';
+    }
+    
+    // 3. Лояльность (Circle Chart)
+    const circularSvg = document.querySelector('.circular-svg-compact .circle');
+    const loyaltyText = document.querySelector('.loyalty-val');
+    
+    if (circularSvg && loyaltyText) {
+        // Обновляем текст
+        loyaltyText.textContent = `${stats.loyalty}%`;
+        
+        // Обновляем круг
+        // Устанавливаем stroke-dasharray (значение, 100)
+        circularSvg.style.strokeDasharray = `${stats.loyalty}, 100`;
+        
+        // Цвет в зависимости от показателя
+        if (stats.loyalty >= 90) {
+            circularSvg.style.stroke = 'var(--neon-green)';
+        } else if (stats.loyalty >= 70) {
+            circularSvg.style.stroke = '#ffd700'; // Gold
+        } else {
+            circularSvg.style.stroke = '#ff6464'; // Red
         }
     }
-    
-    const chatEl = document.querySelector('.chat-item .stat-value-large');
-    if (chatEl) chatEl.textContent = stats.chatActivity;
-    
-    const loyaltyChart = document.querySelector('.circular-chart');
-    if (loyaltyChart) {
-        loyaltyChart.style.setProperty('--percentage', stats.loyalty);
-        const textEl = loyaltyChart.querySelector('.percentage-text');
-        if (textEl) textEl.innerHTML = `${stats.loyalty}%<span>Лояльность</span>`;
-    }
-    
-    const gamesEl = document.querySelector('.games-item .stat-value-medium');
-    if (gamesEl) gamesEl.textContent = stats.gamesVariety + '+';
-    
-    const chartCenterVal = document.querySelector('.chart-overlay-value span');
-    if (chartCenterVal) chartCenterVal.textContent = stats.years + '+';
+}
+
+// Анимация чисел
+function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        // Easing (easeOutExpo)
+        const easeProgress = 1 - Math.pow(2, -10 * progress);
+        
+        const currentVal = Math.floor(easeProgress * (end - start) + start);
+        obj.innerHTML = formatNumber(currentVal);
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
 }
 
 function formatNumber(num) {
@@ -421,7 +443,7 @@ function normalizeStats(stats) {
 }
 
 
-// --- SUBSCRIBERS (NEW) ---
+// --- SUBSCRIBERS (СТАНДАРТНАЯ ЛОГИКА) ---
 
 export async function loadSubscribers() {
     const container = document.getElementById('subscribers-track');

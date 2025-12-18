@@ -14,11 +14,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Стили -->
+    <!-- Убедитесь, что в style.css подключен @import "command-center.css"; -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     
-    <!-- СЕКЦИЯ HERO (HUD ИНТЕРФЕЙС) -->
+    <!-- =========================================
+         СЕКЦИЯ 1: HERO (HUD ИНТЕРФЕЙС)
+         ========================================= -->
     <section class="hero-section-hud">
         
         <div class="hud-container">
@@ -33,11 +36,9 @@
                     
                     <div class="ally-container">
                         <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar main-photo tetla" data-character="tetla">
-                        <!-- Версия бота v4.2 -->
                         <h3 class="panel-name">TETLA <span class="bot-version">v4.2</span></h3>
                     </div>
 
-                    <!-- Описание в стиле терминала -->
                     <div class="ally-terminal">
                         <p>> Запуск протоколов защиты...</p>
                         <p>> Модерация чата: <span class="terminal-ok">АКТИВНА</span></p>
@@ -45,7 +46,6 @@
                         <div class="terminal-cursor"></div>
                     </div>
 
-                    <!-- Сетка характеристик -->
                     <div class="ally-stats-grid">
                         <div class="ally-stat-box">
                             <span class="a-label">СТАТУС</span>
@@ -65,9 +65,7 @@
 
             <!-- Центр: Стример -->
             <div class="hud-main-display">
-                <!-- Контейнер аватара СОДЕРЖИТ КОЛЬЦА для идеальной центровки -->
                 <div class="main-avatar-container">
-                    <!-- Кольца (цвета настроены в CSS) -->
                     <div class="main-display-rings">
                         <div class="ring ring-1"></div>
                         <div class="ring ring-2"></div>
@@ -86,7 +84,6 @@
             <!-- Правая панель: Отряд -->
             <div class="hud-side-panel right" id="squad-panel">
                 <div class="panel-content">
-                    <!-- Стандартный вид (Список) -->
                     <div class="squad-default-view">
                         <div class="panel-header">
                             <span class="header-title">ОТРЯД</span>
@@ -112,7 +109,6 @@
                             <span class="data-value status-ok">100%</span>
                         </div>
                     </div>
-                    <!-- Детальный вид (Появляется при клике) -->
                     <div class="squad-detail-view">
                         <button class="close-detail-btn">&times;</button>
                         <img src="" alt="" class="detail-avatar">
@@ -123,22 +119,20 @@
             </div>
         </div>
         
-        <!-- Нижний блок с текстом -->
         <div class="hero-content-hud">
             <h1 class="hero-title-hud">KSUSHA SHER</h1>
             <p class="hero-subtitle-hud" id="data-ticker">STREAMER & CONTENT CREATOR</p>
         </div>
     </section>
 
-    <!-- СЕКЦИЯ ОБО МНЕ (ДИНАМИЧЕСКАЯ) -->
+    <!-- =========================================
+         СЕКЦИЯ 2: ОБО МНЕ
+         ========================================= -->
     <section id="about" class="about-cyber-section">
-        <!-- Контейнер теперь закрывается ПОСЛЕ заголовка, чтобы заголовок был по центру, а сетка на всю ширину -->
         <div class="container">
-            <!-- Заголовок с глитч-эффектом -->
             <h2 class="section-title" data-text="ОБО МНЕ">ОБО МНЕ</h2>
         </div>
         
-        <!-- Сетка вынесена из контейнера для растягивания на весь экран -->
         <div class="about-grid-layout">
             
             <!-- ЛЕВАЯ КОЛОНКА: Карусель подписчиков -->
@@ -147,9 +141,7 @@
                     <span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ
                 </div>
                 
-                <!-- Обертка для анимации -->
                 <div class="marquee-track-container">
-                    <!-- Контейнер для карточек (заполняется из JSON через JS) -->
                     <div class="marquee-track" id="subscribers-track">
                         <div style="color: rgba(255,255,255,0.5); padding: 20px; font-family: 'Exo 2';">Загрузка данных...</div>
                     </div>
@@ -158,31 +150,28 @@
 
             <!-- ПРАВАЯ КОЛОНКА: Видео и текст -->
             <div class="streamer-dossier">
-                <!-- Видео-монитор -->
                 <div class="cyber-monitor">
                     <div class="monitor-header">
                         <span>REC ●</span>
                         <span>CAM_01 [LIVE]</span>
                     </div>
                     <div class="video-frame">
-    <iframe 
-        src="https://www.youtube.com/embed/Uym3MRaJ3PE" 
-        title="Обо мне" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        referrerpolicy="strict-origin-when-cross-origin" 
-        allowfullscreen>
-    </iframe>
-    <!-- Сетка поверх видео -->
-    <div class="screen-grid"></div>
-</div>
+                        <iframe 
+                            src="https://www.youtube.com/embed/Uym3MRaJ3PE" 
+                            title="Обо мне" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen>
+                        </iframe>
+                        <div class="screen-grid"></div>
+                    </div>
                     <div class="monitor-footer">
                         <span>SIGNAL: STRONG</span>
                         <span>1080p / 60FPS</span>
                     </div>
                 </div>
 
-                <!-- Текст описания -->
                 <div class="dossier-text">
                     <h3><i class="fas fa-terminal"></i> БИОГРАФИЯ</h3>
                     <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
@@ -199,138 +188,112 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ СТАТИСТИКИ (BENTO GRID) -->
-    <section id="stats" class="stats-section-redesigned">
-        <div class="stats-bg-grid"></div>
+    <!-- =========================================
+         СЕКЦИЯ 3: КОМАНДНЫЙ ЦЕНТР (HUD STYLE)
+         Объединяет статистику и расписание
+         ========================================= -->
+    <section id="command-center" class="command-center-section">
+        <!-- Фоновая сетка -->
+        <div class="hud-grid-bg"></div>
+        
         <div class="container">
-            <div class="stats-header">
-                <h2 class="section-title">АНАЛИТИКА СИСТЕМЫ</h2>
-                <div class="stats-decor-line"></div>
-                <p class="stats-subtitle">Данные трансляции в реальном времени</p>
-            </div>
             
-            <div class="bento-grid">
-                <!-- Блок 1: Основной график (Большой) -->
-                <div class="bento-item chart-item">
-                    <div class="item-header">
-                        <i class="fas fa-chart-radar"></i>
-                        <span>ПРОФИЛЬ СТРИМЕРА</span>
+            <!-- Заголовок в стиле терминала -->
+            <div class="command-header">
+                <h2 class="section-title glitch-effect" data-text="КОМАНДНЫЙ ЦЕНТР">КОМАНДНЫЙ ЦЕНТР</h2>
+                <div class="system-status-bar">
+                    <div class="status-module">
+                        <span class="pulse-indicator"></span> СИСТЕМА: <span class="neon-text">ОНЛАЙН</span>
                     </div>
-                    <div class="radar-chart-wrapper">
+                    <div class="status-decor-line"></div>
+                    <div class="status-module">
+                        <i class="fas fa-signal"></i> СИГНАЛ: <span class="neon-text">100%</span>
+                    </div>
+                    <div class="status-decor-line"></div>
+                    <div class="status-module decoration">
+                        [ROOT_ACCESS_GRANTED]
+                    </div>
+                </div>
+            </div>
+    
+            <!-- ЕДИНАЯ СЕТКА -->
+            <div class="command-grid">
+                
+                <!-- БЛОК 1: РАСПИСАНИЕ (Левый HUD) -->
+                <div class="cmd-panel schedule-panel">
+                    <!-- Декоративные углы как в Hero -->
+                    <div class="hud-bracket top-left"></div>
+                    <div class="hud-bracket bottom-right"></div>
+                    
+                    <div class="cmd-panel-header">
+                        <span class="header-tag">LOGS</span>
+                        <h3><i class="far fa-calendar-alt"></i> ГРАФИК МИССИЙ</h3>
+                        <div class="header-line"></div>
+                    </div>
+    
+                    <div class="schedule-timeline-container" id="schedule-container">
+                        <div class="loading-scanline">INITIATING SCAN...</div>
+                    </div>
+                </div>
+    
+                <!-- БЛОК 2: РАДАР (Центр верх) -->
+                <div class="cmd-panel stats-radar-panel">
+                    <div class="hud-bracket top-right"></div>
+                    <div class="hud-bracket bottom-left"></div>
+                    
+                    <div class="cmd-panel-header">
+                        <span class="header-tag">ANALYSIS</span>
+                        <h3>ПАРАМЕТРЫ</h3>
+                    </div>
+                    <!-- Прицел поверх радара -->
+                    <div class="radar-crosshair"></div>
+                    <div class="radar-wrapper-compact">
                         <canvas id="radarChart"></canvas>
-                        <div class="chart-overlay-value">
-                            <span class="glitch-text">3+</span>
-                            <small>ГОДА</small>
-                        </div>
                     </div>
                 </div>
     
-                <!-- Блок 2: Подписчики (Высокий) -->
-                <div class="bento-item followers-item">
-                    <div class="stats-glow-bg green"></div>
-                    <i class="fas fa-users stats-icon-bg"></i>
-                    <div class="stat-main-value">5.2K</div>
-                    <div class="stat-label">Подписчиков</div>
-                    <div class="stat-progress-bar">
-                        <div class="progress-fill" style="width: 85%"></div>
+                <!-- БЛОК 3: МЕТРИКИ (Центр низ) -->
+                <div class="cmd-panel stats-metrics-panel">
+                    <!-- Технический фон -->
+                    <div class="tech-bg-lines"></div>
+                    
+                    <div class="metric-slot">
+                        <div class="slot-label">АГЕНТЫ</div>
+                        <div class="slot-value followers-val">0</div>
+                        <div class="slot-bar"></div>
                     </div>
-                    <div class="stat-footer">
-                        <span class="trend positive"><i class="fas fa-arrow-up"></i> +12%</span>
-                        <span class="period">за месяц</span>
-                    </div>
-                </div>
-    
-                <!-- Блок 3: Стримы (Широкий) -->
-                <div class="bento-item streams-item">
-                    <div class="item-row">
-                        <div class="icon-box pink">
-                            <i class="fas fa-satellite-dish"></i>
-                        </div>
-                        <div>
-                            <div class="stat-value-medium">154</div>
-                            <div class="stat-label-small">Всего стримов</div>
-                        </div>
-                        <div class="separator-vertical"></div>
-                        <div>
-                            <div class="stat-value-medium">1,000+</div>
-                            <div class="stat-label-small">Часов в эфире</div>
-                        </div>
+                    <div class="metric-slot">
+                        <div class="slot-label">ЭФИР (Ч)</div>
+                        <div class="slot-value hours-val">0</div>
+                        <div class="slot-bar"></div>
                     </div>
                 </div>
     
-                <!-- Блок 4: Чат (Квадрат) -->
-                <div class="bento-item chat-item">
-                    <div class="stats-glow-bg pink"></div>
-                    <div class="item-header">
-                        <i class="fas fa-comments"></i>
-                        <span>ЧАТ</span>
+                <!-- БЛОК 4: ЛОЯЛЬНОСТЬ (Право низ) -->
+                <div class="cmd-panel stats-circle-panel">
+                    <div class="cmd-panel-header simple">
+                        <span>LOYALTY</span>
                     </div>
-                    <div class="stat-center-box">
-                        <div class="stat-value-large">280</div>
-                        <div class="stat-unit">сообщ/час</div>
-                    </div>
-                    <div class="activity-dots">
-                        <span></span><span></span><span></span><span></span>
-                    </div>
-                </div>
-    
-                <!-- Блок 5: Лояльность (Квадрат) -->
-                <div class="bento-item loyalty-item">
-                    <div class="circular-chart" style="--percentage: 95">
-                        <svg viewBox="0 0 36 36" class="circular-svg">
+                    <div class="circular-chart-wrapper">
+                        <!-- Вращающееся кольцо -->
+                        <div class="rotating-ring"></div>
+                        <svg viewBox="0 0 36 36" class="circular-svg-compact">
                             <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="circle" stroke-dasharray="95, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                         </svg>
-                        <div class="percentage-text">
-                            95%
-                            <span>Лояльность</span>
+                        <div class="circle-inner-content">
+                            <span class="loyalty-val">0%</span>
                         </div>
                     </div>
                 </div>
     
-                <!-- Блок 6: Игры (Длинный) -->
-                <div class="bento-item games-item">
-                    <div class="item-content-flex">
-                        <div class="game-icon-stack">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <div class="game-text-info">
-                            <div class="stat-value-medium">25+</div>
-                            <div class="stat-label">Игр пройдено</div>
-                        </div>
-                        <div class="game-genre-tags">
-                            <span>Horror</span>
-                            <span>RPG</span>
-                            <span>Co-op</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- СЕКЦИЯ РАСПИСАНИЯ -->
-    <section id="schedule">
-        <div class="container">
-            <h2 class="section-title">Расписание стримов</h2>
-            <p class="schedule-subtitle">🕓 Начало в <span class="neon-text">16:00 по МСК</span>, длительность 3+ часа</p>
-            
-            <div class="schedule-list" id="schedule-list">
-                <div class="schedule-item">
-                    <div class="schedule-content">
-                        <div class="schedule-game">Загрузка расписания...</div>
-                        <div class="schedule-desc">Данные загружаются</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="schedule-footer">
-                <p>✨ Расписание может меняться! Актуальные анонсы в <a href="https://t.me/pizdeckakoi_to" target="_blank" class="neon-link">Телеграм-канале</a></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- СЕКЦИЯ ИГР И КИНО -->
+    <!-- =========================================
+         СЕКЦИЯ 4: ИГРЫ И КИНО
+         ========================================= -->
     <section id="games">
         <div class="container">
             <h2 class="section-title">Игры и кино</h2>
@@ -418,7 +381,9 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ ЖЕЛЕЗА -->
+    <!-- =========================================
+         СЕКЦИЯ 5: ЖЕЛЕЗО
+         ========================================= -->
     <section id="specs">
         <div class="container">
             <h2 class="section-title">Мое железо</h2>
@@ -447,7 +412,9 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ ДОНАТОВ -->
+    <!-- =========================================
+         СЕКЦИЯ 6: ДОНАТЫ
+         ========================================= -->
     <section id="donation">
         <div class="container">
             <h2 class="section-title">Поддержать</h2>

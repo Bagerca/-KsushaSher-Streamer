@@ -1,5 +1,4 @@
-/* css/style.css - ТОЛЬКО ИМПОРТЫ */
-@import "global.css";   /* Переменные и база */
-@import "hero.css";     /* Первый экран (HUD) - СЕЙЧАС ОБНОВИМ */
-@import "stats.css";    /* Статистика (Bento) */
-@import "content.css";  /* Игры, расписание, футер */
+@import "global.css";
+@import "hero.css";
+@import "command-center.css"; /* <-- НОВЫЙ ФАЙЛ */
+@import "content.css";
