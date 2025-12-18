@@ -1,13 +1,12 @@
 // Main application entry point
 import { initializeUI } from './ui-components.js';
 import { initializeDataManager } from './data-manager.js';
+// Импортируем новый менеджер для секции "Архив"
+import { initMediaArchive } from './media-manager.js';
 
 // Application state
 const AppState = {
-    initialized: false,
-    currentTab: 'games',
-    gamesData: [],
-    moviesData: []
+    initialized: false
 };
 
 // Initialize application
@@ -17,9 +16,16 @@ async function initializeApplication() {
     try {
         console.log('🚀 Starting Ksusha Sher website initialization...');
         
-        // Initialize all modules
+        // 1. Инициализация общего UI (Скролл, Копирование номера карты, Навигация)
+        // Примечание: Старые фильтры игр из ui-components.js просто не найдут своих элементов и пропустят выполнение, это нормально.
         initializeUI();
+        
+        // 2. Загрузка данных для Hero, Command Center и About
+        // (Статистика, Расписание, Подписчики)
         await initializeDataManager();
+        
+        // 3. Инициализация нового блока "Цифровой Архив" (Игры и Кино)
+        await initMediaArchive();
         
         console.log('✅ Ksusha Sher website initialized successfully!');
         AppState.initialized = true;

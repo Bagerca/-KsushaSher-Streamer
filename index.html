@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Стили -->
-    <!-- Убедитесь, что в style.css подключен @import "command-center.css"; -->
+    <!-- В style.css должны быть подключены: global.css, hero.css, command-center.css, content.css, media-archive.css -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -190,7 +190,6 @@
 
     <!-- =========================================
          СЕКЦИЯ 3: КОМАНДНЫЙ ЦЕНТР (HUD STYLE)
-         Объединяет статистику и расписание
          ========================================= -->
     <section id="command-center" class="command-center-section">
         <!-- Фоновая сетка -->
@@ -221,7 +220,6 @@
                 
                 <!-- БЛОК 1: РАСПИСАНИЕ (Левый HUD) -->
                 <div class="cmd-panel schedule-panel">
-                    <!-- Декоративные углы как в Hero -->
                     <div class="hud-bracket top-left"></div>
                     <div class="hud-bracket bottom-right"></div>
                     
@@ -245,7 +243,6 @@
                         <span class="header-tag">ANALYSIS</span>
                         <h3>ПАРАМЕТРЫ</h3>
                     </div>
-                    <!-- Прицел поверх радара -->
                     <div class="radar-crosshair"></div>
                     <div class="radar-wrapper-compact">
                         <canvas id="radarChart"></canvas>
@@ -254,7 +251,6 @@
     
                 <!-- БЛОК 3: МЕТРИКИ (Центр низ) -->
                 <div class="cmd-panel stats-metrics-panel">
-                    <!-- Технический фон -->
                     <div class="tech-bg-lines"></div>
                     
                     <div class="metric-slot">
@@ -275,7 +271,6 @@
                         <span>LOYALTY</span>
                     </div>
                     <div class="circular-chart-wrapper">
-                        <!-- Вращающееся кольцо -->
                         <div class="rotating-ring"></div>
                         <svg viewBox="0 0 36 36" class="circular-svg-compact">
                             <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -292,92 +287,75 @@
     </section>
 
     <!-- =========================================
-         СЕКЦИЯ 4: ИГРЫ И КИНО
+         СЕКЦИЯ 4: ЦИФРОВОЙ АРХИВ (MEDIA ARCHIVE)
          ========================================= -->
-    <section id="games">
+    <section id="media-archive" class="media-archive-section">
         <div class="container">
-            <h2 class="section-title">Игры и кино</h2>
-            <div class="games-controls">
-                <div class="controls-section">
-                    <div class="games-tabs">
-                        <div class="games-tab active" data-tab="games"><i class="fas fa-gamepad"></i></div>
-                        <div class="games-tab" data-tab="movies"><i class="fas fa-film"></i></div>
-                        <div class="tab-slider"></div>
-                    </div>
+            <!-- 1. Заголовок и Верхняя панель управления -->
+            <div class="archive-header">
+                <h2 class="section-title" data-text="MEDIA_DATABASE">БАЗА ДАННЫХ</h2>
+                
+                <!-- Панель: Сортировка слева и справа, по центру Табы -->
+                <div class="header-control-bar">
                     
-                    <div class="filter-container">
-                        <div class="filter-toggle" id="filter-toggle">
-                            <i class="fas fa-filter"></i>
-                        </div>
-                        <div class="filter-dropdown" id="filter-dropdown">
-                            <div class="filter-group games-filters">
-                                <div class="filter-group-title">Статус</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="games" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="completed" data-type="games"> Пройдено</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="playing" data-type="games"> Проходим</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="games"> Брошено</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="games"> Под вопросом</label>
-                                
-                                <div class="filter-divider"></div>
-                                
-                                <div class="filter-group-title">Жанры игр</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="games" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="games"> Хоррор</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="adventure" data-type="games"> Приключения</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="shooter" data-type="games"> Шутер</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="simulator" data-type="games"> Симулятор</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="puzzle" data-type="games"> Головоломка</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="coop" data-type="games"> Кооператив</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="platformer" data-type="games"> Платформер</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="rpg" data-type="games"> RPG</label>
-                            </div>
-                            <div class="filter-group movies-filters" style="display:none">
-                                <div class="filter-group-title">Статус</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="status-all" data-type="movies" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="watched" data-type="movies"> Посмотрено</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="watching" data-type="movies"> Смотрим</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="dropped" data-type="movies"> Бросили</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="on-hold" data-type="movies"> Под вопросом</label>
-                                
-                                <div class="filter-divider"></div>
-                                
-                                <div class="filter-group-title">Жанры фильмов</div>
-                                <label class="filter-option"><input type="checkbox" data-filter="all" data-type="movies" checked> Все</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="animation" data-type="movies"> Анимация</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="fantasy" data-type="movies"> Фэнтези</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="crossover" data-type="movies"> Кроссовер</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="horror" data-type="movies"> Хоррор</label>
-                                <label class="filter-option"><input type="checkbox" data-filter="family" data-type="movies"> Семейный</label>
-                            </div>
-                        </div>
+                    <!-- Сортировка по Имени (Слева) -->
+                    <button class="sort-side-btn active" data-sort="name" title="Сортировка по названию">
+                        <span class="btn-label">А-Я</span>
+                        <i class="fas fa-sort-alpha-down sort-icon"></i>
+                    </button>
+
+                    <!-- Переключатель Типов (Центр) -->
+                    <div class="type-switcher">
+                        <div class="switcher-bg"></div> <!-- Анимированный фон -->
+                        <button class="switcher-btn active" data-type="games">
+                            <i class="fas fa-gamepad"></i> ИГРЫ
+                        </button>
+                        <button class="switcher-btn" data-type="movies">
+                            <i class="fas fa-film"></i> КИНО
+                        </button>
                     </div>
-                    
-                    <div class="sort-tabs">
-                        <div class="sort-tab active" data-sort="name"><i class="fas fa-sort-alpha-down"></i></div>
-                        <div class="sort-tab" data-sort="rating"><i class="fas fa-star"></i></div>
-                        <div class="sort-slider"></div>
-                    </div>
+
+                    <!-- Сортировка по Рейтингу (Справа) -->
+                    <button class="sort-side-btn" data-sort="rating" title="Сортировка по рейтингу">
+                        <span class="btn-label">РЕЙТИНГ</span>
+                        <i class="fas fa-sort-amount-down sort-icon"></i>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- 2. Панель управления (Поиск, Фильтры, Легенда) -->
+            <div class="archive-controls">
+                
+                <!-- Поиск -->
+                <div class="search-module">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
                 </div>
                 
-                <div class="legend-section">
-                    <div class="status-legend">
-                        <span class="legend-item"><span class="status-badge completed"></span> Пройдено/Посмотрено</span>
-                        <span class="legend-item"><span class="status-badge playing"></span> Проходим/Смотрим</span>
-                        <span class="legend-item"><span class="status-badge dropped"></span> Брошено/Бросили</span>
-                        <span class="legend-item"><span class="status-badge on-hold"></span> Под вопросом</span>
-                    </div>
+                <!-- Фильтры (Разделены на 2 строки) -->
+                <div class="filters-wrapper">
+                    <!-- Строка 1: Статусы -->
+                    <div class="filter-row status-row" id="archive-filters-status"></div>
+                    <!-- Строка 2: Жанры -->
+                    <div class="filter-row genre-row" id="archive-filters-genre"></div>
+                </div>
+
+                <!-- Легенда (Шпора) -->
+                <div class="archive-legend">
+                    <div class="legend-item"><span class="legend-dot dot-completed"></span><span>ПРОЙДЕНО</span></div>
+                    <div class="legend-item"><span class="legend-dot dot-playing"></span><span>В ПРОЦЕССЕ</span></div>
+                    <div class="legend-item"><span class="legend-dot dot-on-hold"></span><span>ПОД ВОПРОСОМ</span></div>
+                    <div class="legend-item"><span class="legend-dot dot-dropped"></span><span>БРОШЕНО</span></div>
                 </div>
             </div>
-            
-            <div class="games-content-container">
-                <div class="games-content active" id="games-content">
-                    <div class="games-grid"></div>
-                </div>
-                <div class="games-content" id="movies-content">
-                    <div class="games-grid movies"></div>
+
+            <!-- 3. Сетка карточек -->
+            <div class="archive-full-grid-wrapper">
+                <div class="archive-grid" id="archive-grid">
+                    <!-- Карточки генерируются JS -->
                 </div>
             </div>
-            <button class="toggle-games" id="toggle-games">Развернуть</button>
         </div>
     </section>
 

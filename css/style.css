@@ -1,4 +1,5 @@
 @import "global.css";
 @import "hero.css";
-@import "command-center.css"; /* <-- НОВЫЙ ФАЙЛ */
+@import "command-center.css";
 @import "content.css";
+@import "media-archive.css";

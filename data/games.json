@@ -1,57 +1,102 @@
 [
   {
-    "id": "cyberpunk",
-    "title": "Тест 5",
-    "rating": 1,
-    "description": "RPG",
-    "image": "https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png",
-    "genres": [
-      "rpg"
-    ],
-    "status": "dropped",
-    "videoId": "dQw4w9WgXcQ",
-    "customColor": "#79c5ce"
-  },
-  {
-    "id": "тест-3",
-    "title": "Тест 3",
-    "rating": 4.5,
-    "description": "Ляляляляляляляляля",
-    "image": "https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp",
-    "genres": [
-      "coop",
-      "horror",
-      "platformer"
-    ],
-    "status": "on-hold",
-    "videoId": "dQw4w9WgXcQ",
+    "id": "bendy-dark-revival",
+    "title": "Bendy and the Dark Revival",
+    "rating": 4.8,
+    "description": "Возвращение в чернильную бездну. Более мрачное и глубокое продолжение истории Одри.",
+    "image": "https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png",
+    "genres": ["horror", "adventure", "puzzle"],
+    "status": "completed",
     "customColor": "#ffd700"
   },
   {
-    "id": "чикатило",
-    "title": "Чикатило",
-    "rating": 1,
-    "description": "Лабубу",
+    "id": "bendy-ink-machine",
+    "title": "Bendy and the Ink Machine",
+    "rating": 4.7,
+    "description": "Классический хоррор от первого лица. Разгадываем тайны старой студии анимации.",
     "image": "https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png",
-    "genres": [
-      "coop",
-      "shooter"
-    ],
+    "genres": ["horror", "puzzle"],
     "status": "completed",
-    "videoId": "dQw4w9WgXcQ",
+    "customColor": "#f4d03f"
+  },
+  {
+    "id": "gris",
+    "title": "GRIS",
+    "rating": 5.0,
+    "description": "Медитативное путешествие по миру скорби. Невероятно красивый визуал и музыка.",
+    "image": "https://cdn2.steamgriddb.com/grid/28c3c3e591be4d57567ec7830f7b3b46.webp",
+    "genres": ["platformer", "adventure", "puzzle"],
+    "status": "completed",
+    "customColor": "#79c5ce"
+  },
+  {
+    "id": "hollow-knight",
+    "title": "Hollow Knight",
+    "rating": 5.0,
+    "description": "Хардкорная метроидвания о приключениях в заброшенном королевстве насекомых Халлоунест.",
+    "image": "https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp",
+    "genres": ["platformer", "action", "adventure"],
+    "status": "playing",
+    "customColor": "#aab7b8"
+  },
+  {
+    "id": "lethal-company",
+    "title": "Lethal Company",
+    "rating": 4.5,
+    "description": "Кооперативный хоррор. Собираем металлолом на лунах, убегаем от монстров и выполняем квоту.",
+    "image": "https://cdn2.steamgriddb.com/grid/fd729ccc51bbb0d182ac464d2f34e4f2.webp",
+    "genres": ["horror", "coop", "survival"],
+    "status": "playing",
+    "customColor": "#ff4444"
+  },
+  {
+    "id": "content-warning",
+    "title": "Content Warning",
+    "rating": 4.2,
+    "description": "Снимаем вирусные видео с призраками ради просмотров на SpookTube. Очень весело и страшно.",
+    "image": "https://cdn2.steamgriddb.com/grid/ec6fbf0d38ffc435686348723a08c839.png",
+    "genres": ["coop", "horror", "simulator"],
+    "status": "playing",
+    "customColor": "#e1ff00"
+  },
+  {
+    "id": "minecraft",
+    "title": "Minecraft",
+    "rating": 5.0,
+    "description": "Строим, копаем, выживаем. Творчество и приключения в бесконечном кубическом мире.",
+    "image": "https://cdn2.steamgriddb.com/grid/53344d4d9596276b9b7f70158bf95779.webp",
+    "genres": ["simulator", "survival", "coop"],
+    "status": "playing",
     "customColor": "#39ff14"
   },
   {
-    "id": "тест-6",
-    "title": "Тест 6",
-    "rating": 2.5,
-    "description": "пвпквпавк",
-    "image": "https://cdn2.steamgriddb.com/grid/28c3c3e591be4d57567ec7830f7b3b46.webp",
-    "genres": [
-      "shooter"
-    ],
-    "status": "dropped",
-    "videoId": "dQw4w9WgXcQ",
-    "customColor": "#ff6464"
+    "id": "portal-2",
+    "title": "Portal 2",
+    "rating": 5.0,
+    "description": "Шедевральная головоломка с порталами. Проходим кооператив и смеемся над ГЛэДОС.",
+    "image": "https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png",
+    "genres": ["puzzle", "coop", "adventure"],
+    "status": "completed",
+    "customColor": "#00a2ff"
+  },
+  {
+    "id": "cs2",
+    "title": "Counter-Strike 2",
+    "rating": 4.0,
+    "description": "Тактический командный шутер. Раскидки, тактики и напряженные матчи.",
+    "image": "https://cdn2.steamgriddb.com/grid/0662aa1719017e0efa5fa8daf0880c6e.png",
+    "genres": ["shooter", "action", "coop"],
+    "status": "playing",
+    "customColor": "#orange"
+  },
+  {
+    "id": "sally-face",
+    "title": "Sally Face",
+    "rating": 4.9,
+    "description": "Мрачная приключенческая игра о мальчике с протезом на лице и темных тайнах.",
+    "image": "https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png",
+    "genres": ["horror", "adventure", "puzzle"],
+    "status": "completed",
+    "customColor": "#79c5ce"
   }
 ]
