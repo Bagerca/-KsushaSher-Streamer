@@ -33,7 +33,8 @@
                     
                     <div class="ally-container">
                         <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar main-photo tetla" data-character="tetla">
-                        <h3 class="panel-name">TETLA <span class="bot-version">v2.4</span></h3>
+                        <!-- Версия бота v4.2 -->
+                        <h3 class="panel-name">TETLA <span class="bot-version">v4.2</span></h3>
                     </div>
 
                     <!-- Описание в стиле терминала -->
@@ -66,7 +67,7 @@
             <div class="hud-main-display">
                 <!-- Контейнер аватара СОДЕРЖИТ КОЛЬЦА для идеальной центровки -->
                 <div class="main-avatar-container">
-                    <!-- Кольца -->
+                    <!-- Кольца (цвета настроены в CSS) -->
                     <div class="main-display-rings">
                         <div class="ring ring-1"></div>
                         <div class="ring ring-2"></div>
@@ -129,21 +130,62 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ ОБО МНЕ -->
-    <section id="about">
+    <!-- СЕКЦИЯ ОБО МНЕ (ДИНАМИЧЕСКАЯ) -->
+    <section id="about" class="about-cyber-section">
         <div class="container">
-            <h2 class="section-title">Обо мне</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>Привет! Я Ksusha Sher - стример на Twitch, который специализируется на играх и общении с комьюнити. Я создаю уютное и welcoming сообщество, где каждый чувствует себя как дома.</p>
-                    <p>Мои стримы - это не только игровой контент, но и общение, шутки, и просто хорошее времяпрепровождение вместе с комьюнити.</p>
-                    <p>Присоединяйся к нашему уютному сообществу и стань часть нашей цифровой семьи!</p>
-                </div>
-                <div class="about-image">
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/LYtMQlY8Qlk" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <!-- Заголовок с глитч-эффектом -->
+            <h2 class="section-title" data-text="ОБО МНЕ">ОБО МНЕ</h2>
+            
+            <div class="about-grid-layout">
+                
+                <!-- ЛЕВАЯ КОЛОНКА: Карусель подписчиков -->
+                <div class="subs-marquee-wrapper">
+                    <div class="marquee-header">
+                        <span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ
+                    </div>
+                    
+                    <!-- Обертка для анимации -->
+                    <div class="marquee-track-container">
+                        <!-- Контейнер для карточек (заполняется из JSON через JS) -->
+                        <div class="marquee-track" id="subscribers-track">
+                            <div style="color: rgba(255,255,255,0.5); padding: 20px; font-family: 'Exo 2';">Загрузка данных...</div>
+                        </div>
                     </div>
                 </div>
+    
+                <!-- ПРАВАЯ КОЛОНКА: Видео и текст -->
+                <div class="streamer-dossier">
+                    <!-- Видео-монитор -->
+                    <div class="cyber-monitor">
+                        <div class="monitor-header">
+                            <span>REC ●</span>
+                            <span>CAM_01 [LIVE]</span>
+                        </div>
+                        <div class="video-frame">
+                            <iframe src="https://www.twitch.tv/videos/2450069899" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <!-- Сетка поверх видео -->
+                            <div class="screen-grid"></div>
+                        </div>
+                        <div class="monitor-footer">
+                            <span>SIGNAL: STRONG</span>
+                            <span>1080p / 60FPS</span>
+                        </div>
+                    </div>
+    
+                    <!-- Текст описания -->
+                    <div class="dossier-text">
+                        <h3><i class="fas fa-terminal"></i> БИОГРАФИЯ</h3>
+                        <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
+                        <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на Twitch.</p>
+                        
+                        <div class="dossier-stats">
+                            <div class="stat-tag">🎮 Variety</div>
+                            <div class="stat-tag">💬 Just Chatting</div>
+                            <div class="stat-tag">👻 Horror</div>
+                        </div>
+                    </div>
+                </div>
+    
             </div>
         </div>
     </section>

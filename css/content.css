@@ -1,13 +1,333 @@
-/* --- ABOUT SECTION --- */
-#about { background: rgba(15, 15, 25, 0.5); border-top: 1px solid rgba(255, 45, 149, 0.3); border-bottom: 1px solid rgba(57, 255, 20, 0.3); }
-.about-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
-.about-text { flex: 1; min-width: 300px; }
-.about-text p { margin-bottom: 20px; font-size: 1.1rem; line-height: 1.8; color: #ddd; }
-.about-image { flex: 1; min-width: 300px; }
-.video-container { position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 10px; overflow: hidden; border: 2px solid var(--neon-pink); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
-.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+/* --- ABOUT SECTION (MAX WIDTH FIX) --- */
+#about {
+    background: radial-gradient(circle at 0% 50%, rgba(57, 255, 20, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 50%, rgba(255, 45, 149, 0.05) 0%, transparent 50%),
+                #0b0c15;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    padding: 100px 0;
+}
 
-/* --- SCHEDULE SECTION --- */
+.about-grid-layout {
+    display: grid;
+    /* ГЛАВНОЕ ИЗМЕНЕНИЕ: 
+       1fr - левая колонка забирает ВСЕ свободное место.
+       500px - правая колонка имеет фиксированный размер (достаточный для видео).
+    */
+    grid-template-columns: 1fr 500px;
+    gap: 40px;
+    align-items: stretch; 
+}
+
+/* --- ЛЕВАЯ КОЛОНКА: КАРУСЕЛЬ --- */
+.subs-marquee-wrapper {
+    position: relative;
+    border: 1px solid rgba(57, 255, 20, 0.3);
+    border-radius: 15px; 
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+    min-height: 550px; /* Увеличили минимальную высоту */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    overflow: hidden;
+    
+    /* УБРАЛИ padding-left/right, чтобы карточки ездили от стенки до стенки */
+    padding: 20px 0; 
+}
+
+.marquee-header {
+    flex-shrink: 0;
+    /* Отступы только у заголовка */
+    padding: 0 30px 20px 30px; 
+    color: var(--neon-green);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* Убрали фон заголовка для чистоты */
+    background: transparent;
+}
+
+.pulse-dot {
+    width: 10px; height: 10px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--neon-green);
+    animation: pulse 1s infinite;
+}
+
+.marquee-track-container {
+    width: 100%;
+    flex-grow: 1; 
+    display: flex;
+    align-items: center; 
+    overflow: hidden;
+    position: relative;
+    /* Маска совсем тонкая, только чтобы не было резкого обрыва пикселей */
+    mask-image: linear-gradient(to right, transparent, black 1%, black 99%, transparent);
+}
+
+.marquee-track {
+    display: flex;
+    gap: 50px; /* Большой зазор для "воздуха" */
+    width: max-content;
+    animation: scrollLeft 45s linear infinite; /* Плавное медленное движение */
+    padding: 0 25px; /* Небольшой отступ контента от края */
+    align-items: center;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused; 
+}
+
+/* === ВЕРТИКАЛЬНЫЕ КАРТОЧКИ (МАКСИМАЛЬНЫЙ РАЗМЕР) === */
+.holo-card {
+    /* Сделали их широкими и высокими */
+    width: 260px;
+    height: 380px;
+    padding: 30px 20px; /* Больше отступа внутри */
+    
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px; /* Скругление больше */
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-top-deco {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 15px;
+}
+
+.holo-avatar-container {
+    position: relative;
+    width: 120px; /* Аватар крупнее */
+    height: 120px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.holo-avatar {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: #000;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem; 
+    color: #fff;
+    overflow: hidden;
+    z-index: 2;
+    border: 3px solid rgba(255,255,255,0.2);
+}
+
+.holo-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.avatar-ring {
+    position: absolute;
+    top: -10px; left: -10px; right: -10px; bottom: -10px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255,255,255,0.3);
+    animation: rotate 12s linear infinite;
+    z-index: 1;
+}
+
+.holo-info { text-align: center; z-index: 2; width: 100%; }
+
+.holo-name {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem; /* Имя крупно */
+    color: #fff;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.holo-role {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.card-stat-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+.card-stat-bar .fill { height: 100%; background: #fff; box-shadow: 0 0 10px currentColor; }
+
+/* ЦВЕТОВЫЕ ТЕМЫ */
+.holo-card.green { border-color: var(--neon-green); box-shadow: inset 0 0 30px rgba(57, 255, 20, 0.1); }
+.holo-card.green .holo-role, .holo-card.green .card-top-deco i { color: var(--neon-green); }
+.holo-card.green .card-stat-bar .fill { background: var(--neon-green); color: var(--neon-green); }
+.holo-card.green:hover { box-shadow: 0 0 40px rgba(57, 255, 20, 0.3); border-color: var(--neon-green); transform: translateY(-5px) scale(1.02); }
+
+.holo-card.red { border-color: var(--bagerka-color); box-shadow: inset 0 0 30px rgba(255, 68, 68, 0.1); }
+.holo-card.red .holo-role, .holo-card.red .card-top-deco i { color: var(--bagerka-color); }
+.holo-card.red .card-stat-bar .fill { background: var(--bagerka-color); color: var(--bagerka-color); }
+.holo-card.red:hover { box-shadow: 0 0 40px rgba(255, 68, 68, 0.3); border-color: var(--bagerka-color); transform: translateY(-5px) scale(1.02); }
+
+.holo-card.orange { border-color: var(--angel-color); box-shadow: inset 0 0 30px rgba(255, 140, 0, 0.1); }
+.holo-card.orange .holo-role, .holo-card.orange .card-top-deco i { color: var(--angel-color); }
+.holo-card.orange .card-stat-bar .fill { background: var(--angel-color); color: var(--angel-color); }
+.holo-card.orange:hover { box-shadow: 0 0 40px rgba(255, 140, 0, 0.3); border-color: var(--angel-color); transform: translateY(-5px) scale(1.02); }
+
+.holo-card.blue { border-color: var(--kiriki-color); box-shadow: inset 0 0 30px rgba(0, 123, 255, 0.1); }
+.holo-card.blue .holo-role, .holo-card.blue .card-top-deco i { color: var(--kiriki-color); }
+.holo-card.blue .card-stat-bar .fill { background: var(--kiriki-color); color: var(--kiriki-color); }
+.holo-card.blue:hover { box-shadow: 0 0 40px rgba(0, 123, 255, 0.3); border-color: var(--kiriki-color); transform: translateY(-5px) scale(1.02); }
+
+.holo-card.pink { border-color: var(--neon-pink); box-shadow: inset 0 0 30px rgba(255, 45, 149, 0.1); }
+.holo-card.pink .holo-role, .holo-card.pink .card-top-deco i { color: var(--neon-pink); }
+.holo-card.pink .card-stat-bar .fill { background: var(--neon-pink); color: var(--neon-pink); }
+.holo-card.pink:hover { box-shadow: 0 0 40px rgba(255, 45, 149, 0.3); border-color: var(--neon-pink); transform: translateY(-5px) scale(1.02); }
+
+.holo-card.cyan { border-color: #00ffff; box-shadow: inset 0 0 30px rgba(0, 255, 255, 0.1); }
+.holo-card.cyan .holo-role, .holo-card.cyan .card-top-deco i { color: #00ffff; }
+.holo-card.cyan .card-stat-bar .fill { background: #00ffff; color: #00ffff; }
+.holo-card.cyan:hover { box-shadow: 0 0 40px rgba(0, 255, 255, 0.3); border-color: #00ffff; transform: translateY(-5px) scale(1.02); }
+
+.holo-card.purple { border-color: #bd00ff; box-shadow: inset 0 0 30px rgba(189, 0, 255, 0.1); }
+.holo-card.purple .holo-role, .holo-card.purple .card-top-deco i { color: #bd00ff; }
+.holo-card.purple .card-stat-bar .fill { background: #bd00ff; color: #bd00ff; }
+.holo-card.purple:hover { box-shadow: 0 0 40px rgba(189, 0, 255, 0.3); border-color: #bd00ff; transform: translateY(-5px) scale(1.02); }
+
+
+/* --- ПРАВАЯ КОЛОНКА: ДОСЬЕ --- */
+.streamer-dossier {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    height: 100%; 
+}
+
+/* Монитор видео */
+.cyber-monitor {
+    border: 2px solid #333;
+    border-radius: 5px;
+    background: #000;
+    padding: 5px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.monitor-header, .monitor-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    font-family: 'monospace';
+    font-size: 0.7rem;
+    color: var(--neon-pink);
+    opacity: 0.8;
+}
+
+.video-frame {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 */
+    background: #111;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.video-frame iframe {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    border: none;
+}
+
+.screen-grid {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+/* Текст досье */
+.dossier-text {
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid var(--neon-pink);
+    padding: 30px;
+    font-family: 'Exo 2', sans-serif;
+    border-radius: 0 10px 10px 0;
+    
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.dossier-text h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dossier-text p {
+    color: #ccc;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.neon-highlight { color: var(--neon-green); font-weight: 700; text-shadow: 0 0 5px rgba(57,255,20,0.3); }
+.pink-highlight { color: var(--neon-pink); font-weight: 700; }
+
+.dossier-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.stat-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+}
+
+@keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } 
+}
+
+/* --- SCHEDULE SECTION (остальное без изменений) --- */
 #schedule { background: var(--dark-bg); position: relative; }
 .schedule-subtitle { text-align: center; margin-top: -30px; margin-bottom: 40px; color: var(--light-text); }
 .neon-text { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
@@ -109,9 +429,18 @@ footer { background: #000; padding: 40px 0; text-align: center; border-top: 1px 
 footer p { color: #555; font-size: 0.9rem; }
 
 /* Адаптив Content */
+@media (max-width: 1024px) {
+    .about-grid-layout {
+        grid-template-columns: 1fr;
+    }
+    .subs-marquee-wrapper {
+        min-height: 450px;
+        order: 2;
+    }
+}
+
 @media (max-width: 768px) {
     .section-title { font-size: 2rem; }
-    .about-content { flex-direction: column; }
     .games-controls { flex-direction: column; align-items: flex-start; }
     .controls-section { width: 100%; justify-content: space-between; }
     .legend-section { justify-content: center; }

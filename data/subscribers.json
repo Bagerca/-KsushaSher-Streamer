@@ -1,0 +1,68 @@
+[
+  {
+    "name": "TETLA",
+    "role": "SYSTEM BOT",
+    "level": 99,
+    "color": "green",
+    "mainIcon": "fas fa-robot",
+    "typeIcon": "fas fa-microchip",
+    "stats": 100
+  },
+  {
+    "name": "BAGERca",
+    "role": "DEV / TECH",
+    "level": 80,
+    "color": "red",
+    "image": "assets/images/bagerca.jpg",
+    "mainIcon": "fas fa-laptop-code",
+    "typeIcon": "fas fa-code",
+    "stats": 95
+  },
+  {
+    "name": "Angel",
+    "role": "SUPPORT",
+    "level": 75,
+    "color": "orange",
+    "image": "assets/images/angel.jpg",
+    "mainIcon": "fas fa-wings",
+    "typeIcon": "fas fa-star",
+    "stats": 90
+  },
+  {
+    "name": "Kiriki",
+    "role": "MEME LORD",
+    "level": 70,
+    "color": "blue",
+    "image": "assets/images/kiriki.jpg",
+    "mainIcon": "fas fa-mask",
+    "typeIcon": "fas fa-laugh-beam",
+    "stats": 85
+  },
+  {
+    "name": "Nikitakgc",
+    "role": "AGENT",
+    "level": 50,
+    "color": "pink",
+    "mainIcon": "fas fa-headset",
+    "typeIcon": "fas fa-gamepad",
+    "stats": 70
+  },
+  {
+    "name": "Roma99...",
+    "role": "OPERATIVE",
+    "level": 45,
+    "color": "cyan",
+    "mainIcon": "fas fa-user-astronaut",
+    "typeIcon": "fas fa-bolt",
+    "stats": 65
+  },
+  {
+    "name": "Darkl1us",
+    "role": "SCOUT",
+    "level": 40,
+    "color": "purple",
+    "mainIcon": "fas fa-dungeon",
+    "typeIcon": "fas fa-ghost",
+    "stats": 60
+  }
+]

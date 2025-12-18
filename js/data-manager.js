@@ -35,7 +35,8 @@ async function loadAllData() {
         loadStats(),
         loadSchedule(),
         loadGames(),
-        loadMovies()
+        loadMovies(),
+        loadSubscribers() // <-- Загрузка подписчиков
     ]);
 }
 
@@ -234,7 +235,6 @@ function highlightCurrentDay() {
     if (today === 0 || today === 6) return; // Optional: skip weekends
 
     const scheduleItems = document.querySelectorAll('.schedule-item');
-    // Поправка на то, что getDay() возвращает 1 для Пн, а массив с 0
     const scheduleIndex = today - 1;
     
     if (scheduleItems[scheduleIndex]) {
@@ -246,17 +246,14 @@ function highlightCurrentDay() {
 }
 
 
-// --- STATS & CHARTS (UPDATED FOR BENTO GRID) ---
+// --- STATS & CHARTS ---
 
 export async function loadStats() {
     try {
         await loadChartJS();
         const stats = await loadData('stats.json', getDefaultStats());
         
-        // 1. Рисуем график
         createRadarChart(stats);
-        
-        // 2. Обновляем цифры в Bento Grid
         updateBentoGrid(stats);
         
     } catch (error) {
@@ -279,42 +276,32 @@ function getDefaultStats() {
     };
 }
 
-// Новая функция для обновления значений в Bento Grid
 function updateBentoGrid(stats) {
-    // 1. Подписчики
     const followersEl = document.querySelector('.followers-item .stat-main-value');
     if (followersEl) followersEl.textContent = formatNumber(stats.followers);
     
-    // 2. Стримы и Часы (в блоке streams-item)
-    // Находим все средние значения в этом блоке
     const streamsItem = document.querySelector('.streams-item');
     if (streamsItem) {
         const values = streamsItem.querySelectorAll('.stat-value-medium');
         if (values.length >= 2) {
-            values[0].textContent = stats.streams; // Всего стримов
-            values[1].textContent = formatNumber(stats.hours) + '+'; // Часов
+            values[0].textContent = stats.streams;
+            values[1].textContent = formatNumber(stats.hours) + '+';
         }
     }
     
-    // 3. Чат
     const chatEl = document.querySelector('.chat-item .stat-value-large');
     if (chatEl) chatEl.textContent = stats.chatActivity;
     
-    // 4. Лояльность (Круг)
     const loyaltyChart = document.querySelector('.circular-chart');
     if (loyaltyChart) {
-        // Обновляем CSS переменную для анимации
         loyaltyChart.style.setProperty('--percentage', stats.loyalty);
-        // Обновляем текст
         const textEl = loyaltyChart.querySelector('.percentage-text');
         if (textEl) textEl.innerHTML = `${stats.loyalty}%<span>Лояльность</span>`;
     }
     
-    // 5. Игры
     const gamesEl = document.querySelector('.games-item .stat-value-medium');
     if (gamesEl) gamesEl.textContent = stats.gamesVariety + '+';
     
-    // 6. Центр графика (Годы опыта)
     const chartCenterVal = document.querySelector('.chart-overlay-value span');
     if (chartCenterVal) chartCenterVal.textContent = stats.years + '+';
 }
@@ -347,7 +334,6 @@ function loadChartJS() {
     });
 }
 
-// Обновленная конфигурация графика для Bento дизайна
 function createRadarChart(stats) {
     const ctx = document.getElementById('radarChart');
     if (!ctx || !window.Chart) return;
@@ -372,8 +358,8 @@ function createRadarChart(stats) {
                     normalizedData.loyalty,
                     normalizedData.gamesVariety
                 ],
-                backgroundColor: 'rgba(57, 255, 20, 0.15)', // Полупрозрачный зеленый
-                borderColor: '#39ff14', // Неоновый зеленый
+                backgroundColor: 'rgba(57, 255, 20, 0.15)',
+                borderColor: '#39ff14',
                 borderWidth: 2,
                 pointBackgroundColor: '#39ff14',
                 pointBorderColor: '#fff',
@@ -385,28 +371,17 @@ function createRadarChart(stats) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Важно для вписывания в контейнер
+            maintainAspectRatio: false,
             scales: {
                 r: {
                     beginAtZero: true,
                     max: 100,
-                    ticks: {
-                        display: false // Скрываем цифры шкалы
-                    },
-                    angleLines: {
-                        color: 'rgba(255, 255, 255, 0.05)' // Очень тусклые лучи
-                    },
-                    grid: {
-                        color: 'rgba(57, 255, 20, 0.1)', // Тусклая зеленая сетка
-                        circular: true
-                    },
+                    ticks: { display: false },
+                    angleLines: { color: 'rgba(255, 255, 255, 0.05)' },
+                    grid: { color: 'rgba(57, 255, 20, 0.1)', circular: true },
                     pointLabels: {
                         color: '#ccc',
-                        font: {
-                            size: 10,
-                            family: "'Rajdhani', sans-serif",
-                            weight: '600'
-                        },
+                        font: { size: 10, family: "'Rajdhani', sans-serif", weight: '600' },
                         backdropColor: 'transparent'
                     }
                 }
@@ -420,17 +395,10 @@ function createRadarChart(stats) {
                     borderColor: '#39ff14',
                     borderWidth: 1,
                     displayColors: false,
-                    callbacks: {
-                        label: function(context) {
-                            return context.raw + '%'; // Показываем как проценты
-                        }
-                    }
+                    callbacks: { label: function(context) { return context.raw + '%'; } }
                 }
             },
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart'
-            }
+            animation: { duration: 2000, easing: 'easeOutQuart' }
         }
     });
 }
@@ -450,6 +418,55 @@ function normalizeStats(stats) {
         loyalty: Math.min((stats.loyalty / maxValues.loyalty) * 100, 100),
         gamesVariety: Math.min((stats.gamesVariety / maxValues.gamesVariety) * 100, 100)
     };
+}
+
+
+// --- SUBSCRIBERS (NEW) ---
+
+export async function loadSubscribers() {
+    const container = document.getElementById('subscribers-track');
+    if (!container) return;
+
+    try {
+        const subscribers = await loadData('subscribers.json', []);
+        
+        if (subscribers.length > 0) {
+            const cardsHtml = subscribers.map(sub => createSubscriberCard(sub)).join('');
+            
+            // ВАЖНО: Дублируем контент для бесшовной анимации
+            container.innerHTML = cardsHtml + cardsHtml;
+        } else {
+            container.innerHTML = '<div style="color: rgba(255,255,255,0.5); padding: 20px; font-family: \'Exo 2\';">Нет данных об агентах</div>';
+        }
+    } catch (error) {
+        console.error('❌ Error loading subscribers:', error);
+        container.innerHTML = '<div style="color: rgba(255,68,68,0.7); padding: 20px; font-family: \'Exo 2\';">Ошибка связи с базой данных</div>';
+    }
+}
+
+function createSubscriberCard(sub) {
+    // Если есть картинка - используем её с фоллбэком на иконку
+    let avatarHtml;
+    if (sub.image) {
+        avatarHtml = `<img src="${sub.image}" alt="${sub.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><i class="${sub.mainIcon}" style="display:none"></i>`;
+    } else {
+        avatarHtml = `<i class="${sub.mainIcon}"></i>`;
+    }
+
+    return `
+        <div class="holo-card ${sub.color}">
+            <div class="card-top-deco"><span>LVL.${sub.level}</span> <i class="${sub.typeIcon}"></i></div>
+            <div class="holo-avatar-container">
+                <div class="holo-avatar">${avatarHtml}</div>
+                <div class="avatar-ring"></div>
+            </div>
+            <div class="holo-info">
+                <div class="holo-name">${sub.name}</div>
+                <div class="holo-role">${sub.role}</div>
+            </div>
+            <div class="card-stat-bar"><div class="fill" style="width: ${sub.stats}%"></div></div>
+        </div>
+    `;
 }
 
 export { currentGamesData, currentMoviesData };

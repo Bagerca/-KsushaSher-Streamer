@@ -6,37 +6,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const scanline = heroSection.querySelector('.hud-scanline');
     const dataTicker = heroSection.querySelector('#data-ticker');
     
-    // 1. Анимация сканирующей линии
-    let lastScanTime = 0;
-    const scanSpeed = 0.05;
-    function animateScanline(timestamp) {
-        if (!lastScanTime) lastScanTime = timestamp;
-        const deltaTime = timestamp - lastScanTime;
-        lastScanTime = timestamp;
-        let currentTop = parseFloat(getComputedStyle(scanline).top) || 0;
-        currentTop += scanSpeed * deltaTime;
-        if (currentTop > heroSection.offsetHeight) currentTop = -scanline.offsetHeight;
-        scanline.style.top = `${currentTop}px`;
+    // 1. Анимация сканирующей линии (Запускаем только если элемент есть)
+    if (scanline) {
+        let lastScanTime = 0;
+        const scanSpeed = 0.05;
+        function animateScanline(timestamp) {
+            if (!lastScanTime) lastScanTime = timestamp;
+            const deltaTime = timestamp - lastScanTime;
+            lastScanTime = timestamp;
+            
+            // Проверка на случай удаления элемента во время работы
+            if (!scanline) return;
+
+            let currentTop = parseFloat(getComputedStyle(scanline).top) || 0;
+            currentTop += scanSpeed * deltaTime;
+            if (currentTop > heroSection.offsetHeight) currentTop = -scanline.offsetHeight;
+            scanline.style.top = `${currentTop}px`;
+            requestAnimationFrame(animateScanline);
+        }
         requestAnimationFrame(animateScanline);
     }
-    requestAnimationFrame(animateScanline);
 
     // 2. Анимация "бегущей строки" с данными
-    const dataMessages = ["АНАЛИЗ СТАТИСТИКИ КАНАЛА...", "ПОДПИСЧИКОВ: 5.2K+", "ЛОЯЛЬНОСТЬ АУДИТОРИИ: 95%", "АКТИВНОСТЬ ЧАТА: ВЫСОКАЯ", "СИСТЕМЫ В НОРМЕ."];
-    let messageIndex = 0, charIndex = 0, isDeleting = false;
-    let typingTimeout;
-    function typeData() {
-        if (!dataTicker) return;
-        clearTimeout(typingTimeout);
-        const fullMessage = dataMessages[messageIndex];
-        let currentMessage = isDeleting ? fullMessage.substring(0, charIndex--) : fullMessage.substring(0, charIndex++);
-        dataTicker.textContent = currentMessage + '|';
-        let typeSpeed = isDeleting ? 30 : 80;
-        if (!isDeleting && charIndex === fullMessage.length + 1) { isDeleting = true; typeSpeed = 2000; }
-        else if (isDeleting && charIndex === -1) { isDeleting = false; messageIndex = (messageIndex + 1) % dataMessages.length; }
-        typingTimeout = setTimeout(typeData, typeSpeed);
+    if (dataTicker) {
+        const dataMessages = ["АНАЛИЗ СТАТИСТИКИ КАНАЛА...", "ПОДПИСЧИКОВ: 5.2K+", "ЛОЯЛЬНОСТЬ АУДИТОРИИ: 95%", "АКТИВНОСТЬ ЧАТА: ВЫСОКАЯ", "СИСТЕМЫ В НОРМЕ."];
+        let messageIndex = 0, charIndex = 0, isDeleting = false;
+        let typingTimeout;
+        
+        function typeData() {
+            clearTimeout(typingTimeout);
+            const fullMessage = dataMessages[messageIndex];
+            let currentMessage = isDeleting ? fullMessage.substring(0, charIndex--) : fullMessage.substring(0, charIndex++);
+            
+            dataTicker.textContent = currentMessage + '|';
+            
+            let typeSpeed = isDeleting ? 30 : 80;
+            
+            if (!isDeleting && charIndex === fullMessage.length + 1) { 
+                isDeleting = true; 
+                typeSpeed = 2000; 
+            } else if (isDeleting && charIndex === -1) { 
+                isDeleting = false; 
+                messageIndex = (messageIndex + 1) % dataMessages.length; 
+            }
+            
+            typingTimeout = setTimeout(typeData, typeSpeed);
+        }
+        
+        // Задержка перед стартом
+        setTimeout(typeData, 1000);
     }
-    setTimeout(typeData, 1000);
 
     // --- ЛОГИКА ПАНЕЛИ ОТРЯДА ---
     const squadPanel = document.getElementById('squad-panel');
@@ -44,9 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const squadMembers = squadPanel.querySelectorAll('.squad-member');
         const closeDetailBtn = squadPanel.querySelector('.close-detail-btn');
         const detailView = squadPanel.querySelector('.squad-detail-view');
-        const detailAvatar = detailView.querySelector('.detail-avatar');
-        const detailName = detailView.querySelector('.detail-name');
-        const detailDescription = detailView.querySelector('.detail-description');
+        
+        // Элементы внутри детального вида (проверяем их наличие)
+        const detailAvatar = detailView ? detailView.querySelector('.detail-avatar') : null;
+        const detailName = detailView ? detailView.querySelector('.detail-name') : null;
+        const detailDescription = detailView ? detailView.querySelector('.detail-description') : null;
+        
         let typewriterTimeout;
 
         // Данные об участниках
@@ -73,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Функция эффекта "пишущей машинки"
         function typewriter(element, text, speed = 40) {
+            if (!element) return;
             clearTimeout(typewriterTimeout);
             let i = 0;
             element.innerHTML = "";
@@ -82,40 +105,47 @@ document.addEventListener('DOMContentLoaded', () => {
                     i++;
                     typewriterTimeout = setTimeout(type, speed);
                 } else {
-                    element.innerHTML = element.innerHTML.replace('|', ''); // Убираем курсор в конце
+                    element.innerHTML = element.innerHTML.replace('|', ''); 
                 }
             }
             type();
         }
         
         // Открытие детального вида
-        squadMembers.forEach(member => {
-            member.addEventListener('click', () => {
-                const memberId = member.dataset.member;
-                const data = squadData[memberId];
-                
-                if (data) {
-                    // Заполняем данными
-                    detailAvatar.src = data.avatar;
-                    detailAvatar.style.borderColor = data.color;
-                    detailAvatar.style.boxShadow = `0 0 15px ${data.color}`;
-                    detailName.textContent = data.name;
-                    detailName.style.color = data.color;
+        if (squadMembers.length > 0 && detailView) {
+            squadMembers.forEach(member => {
+                member.addEventListener('click', () => {
+                    const memberId = member.dataset.member;
+                    const data = squadData[memberId];
                     
-                    // Запускаем анимацию текста
-                    typewriter(detailDescription, data.description);
-                    
-                    // Показываем панель
-                    squadPanel.classList.add('expanded');
-                }
+                    if (data) {
+                        // Заполняем данными
+                        if (detailAvatar) {
+                            detailAvatar.src = data.avatar;
+                            detailAvatar.style.borderColor = data.color;
+                            detailAvatar.style.boxShadow = `0 0 15px ${data.color}`;
+                        }
+                        if (detailName) {
+                            detailName.textContent = data.name;
+                            detailName.style.color = data.color;
+                        }
+                        
+                        // Запускаем анимацию текста
+                        typewriter(detailDescription, data.description);
+                        
+                        // Показываем панель
+                        squadPanel.classList.add('expanded');
+                    }
+                });
             });
-        });
+        }
 
         // Закрытие детального вида
-        closeDetailBtn.addEventListener('click', () => {
-            squadPanel.classList.remove('expanded');
-            // Прерываем анимацию текста при закрытии
-            clearTimeout(typewriterTimeout);
-        });
+        if (closeDetailBtn) {
+            closeDetailBtn.addEventListener('click', () => {
+                squadPanel.classList.remove('expanded');
+                clearTimeout(typewriterTimeout);
+            });
+        }
     }
 });
