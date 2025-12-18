@@ -1,4 +1,4 @@
-/* --- ABOUT SECTION (MAX WIDTH FIX) --- */
+/* --- ABOUT SECTION (FULL WIDTH LAYOUT) --- */
 #about {
     background: radial-gradient(circle at 0% 50%, rgba(57, 255, 20, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 100% 50%, rgba(255, 45, 149, 0.05) 0%, transparent 50%),
@@ -6,41 +6,55 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     overflow: hidden;
-    padding: 100px 0;
+    
+    /* Уменьшенные отступы секции */
+    padding: 40px 0;
+}
+
+/* Уменьшаем отступ у заголовка внутри этой секции */
+#about .section-title {
+    margin-bottom: 30px;
 }
 
 .about-grid-layout {
     display: grid;
-    /* ГЛАВНОЕ ИЗМЕНЕНИЕ: 
-       1fr - левая колонка забирает ВСЕ свободное место.
-       500px - правая колонка имеет фиксированный размер (достаточный для видео).
-    */
-    grid-template-columns: 1fr 500px;
-    gap: 40px;
-    align-items: stretch; 
+    /* 1fr - левая часть, 650px - правая */
+    grid-template-columns: 1fr 650px;
+    
+    /* Отступ между конвейером и видео */
+    gap: 30px;
+    
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
 }
 
 /* --- ЛЕВАЯ КОЛОНКА: КАРУСЕЛЬ --- */
 .subs-marquee-wrapper {
     position: relative;
     border: 1px solid rgba(57, 255, 20, 0.3);
-    border-radius: 15px; 
+    border-left: 1px solid rgba(57, 255, 20, 0.3); 
+    
     background: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     height: 100%; 
-    min-height: 550px; /* Увеличили минимальную высоту */
+    min-height: 600px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     overflow: hidden;
     
-    /* УБРАЛИ padding-left/right, чтобы карточки ездили от стенки до стенки */
-    padding: 20px 0; 
+    padding: 20px 0 20px 20px;
+    
+    /* ОТСТУП ОТ ЛЕВОГО КРАЯ ЭКРАНА */
+    margin-left: 50px; 
+    
+    /* Скругление всех углов */
+    border-radius: 20px;
 }
 
 .marquee-header {
     flex-shrink: 0;
-    /* Отступы только у заголовка */
-    padding: 0 30px 20px 30px; 
+    padding: 0 30px 20px 0;
     color: var(--neon-green);
     font-family: 'Orbitron', sans-serif;
     font-size: 1.1rem;
@@ -49,7 +63,6 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    /* Убрали фон заголовка для чистоты */
     background: transparent;
 }
 
@@ -68,16 +81,15 @@
     align-items: center; 
     overflow: hidden;
     position: relative;
-    /* Маска совсем тонкая, только чтобы не было резкого обрыва пикселей */
     mask-image: linear-gradient(to right, transparent, black 1%, black 99%, transparent);
 }
 
 .marquee-track {
     display: flex;
-    gap: 50px; /* Большой зазор для "воздуха" */
+    gap: 50px; 
     width: max-content;
-    animation: scrollLeft 45s linear infinite; /* Плавное медленное движение */
-    padding: 0 25px; /* Небольшой отступ контента от края */
+    animation: scrollLeft 45s linear infinite; 
+    padding: 0 25px; 
     align-items: center;
 }
 
@@ -85,17 +97,19 @@
     animation-play-state: paused; 
 }
 
-/* === ВЕРТИКАЛЬНЫЕ КАРТОЧКИ (МАКСИМАЛЬНЫЙ РАЗМЕР) === */
+/* === ВЕРТИКАЛЬНЫЕ КАРТОЧКИ (UPGRADED) === */
 .holo-card {
-    /* Сделали их широкими и высокими */
-    width: 260px;
-    height: 380px;
-    padding: 30px 20px; /* Больше отступа внутри */
+    /* УВЕЛИЧЕННЫЕ РАЗМЕРЫ */
+    width: 300px;
+    height: 480px;
+    padding: 40px 25px;
     
-    background: rgba(20, 20, 30, 0.6);
+    /* Градиентный фон */
+    background: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.5) 100%);
     backdrop-filter: blur(10px);
+    
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px; /* Скругление больше */
+    border-radius: 20px;
     
     display: flex;
     flex-direction: column;
@@ -121,8 +135,9 @@
 
 .holo-avatar-container {
     position: relative;
-    width: 120px; /* Аватар крупнее */
-    height: 120px;
+    /* УВЕЛИЧЕННЫЙ КОНТЕЙНЕР */
+    width: 150px;
+    height: 150px;
     display: flex; 
     align-items: center; 
     justify-content: center;
@@ -143,13 +158,21 @@
 
 .holo-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
+/* --- РАМКА АВАТАРА (Центровка + Увеличение + Transition) --- */
 .avatar-ring {
     position: absolute;
-    top: -10px; left: -10px; right: -10px; bottom: -10px;
+    top: 50%; 
+    left: 50%;
+    
+    /* УВЕЛИЧЕННОЕ КОЛЬЦО */
+    width: 180px;
+    height: 180px;
+    
     border-radius: 50%;
     border: 1px dashed rgba(255,255,255,0.3);
     animation: rotate 12s linear infinite;
     z-index: 1;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .holo-info { text-align: center; z-index: 2; width: 100%; }
@@ -157,7 +180,8 @@
 .holo-name {
     font-family: 'Orbitron', sans-serif;
     font-weight: 700;
-    font-size: 1.5rem; /* Имя крупно */
+    /* УВЕЛИЧЕННЫЙ ШРИФТ */
+    font-size: 1.8rem;
     color: #fff;
     margin-bottom: 5px;
     white-space: nowrap;
@@ -183,7 +207,7 @@
 }
 .card-stat-bar .fill { height: 100%; background: #fff; box-shadow: 0 0 10px currentColor; }
 
-/* ЦВЕТОВЫЕ ТЕМЫ */
+/* ЦВЕТОВЫЕ ТЕМЫ КАРТОЧЕК */
 .holo-card.green { border-color: var(--neon-green); box-shadow: inset 0 0 30px rgba(57, 255, 20, 0.1); }
 .holo-card.green .holo-role, .holo-card.green .card-top-deco i { color: var(--neon-green); }
 .holo-card.green .card-stat-bar .fill { background: var(--neon-green); color: var(--neon-green); }
@@ -224,8 +248,19 @@
 .streamer-dossier {
     display: flex;
     flex-direction: column;
+    
+    /* Отступ между видео и биографией */
     gap: 25px;
+    
     height: 100%; 
+    
+    /* Убрали "табличку" */
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    
+    /* Отступ от правого края экрана */
+    margin-right: 50px; 
 }
 
 /* Монитор видео */
@@ -236,6 +271,7 @@
     padding: 5px;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin-bottom: 0;
 }
 
 .monitor-header, .monitor-footer {
@@ -280,7 +316,9 @@
     border-left: 3px solid var(--neon-pink);
     padding: 30px;
     font-family: 'Exo 2', sans-serif;
-    border-radius: 0 10px 10px 0;
+    
+    /* Скругляем все углы */
+    border-radius: 10px;
     
     flex-grow: 1;
     display: flex;
@@ -327,7 +365,7 @@
     100% { transform: translateX(-50%); } 
 }
 
-/* --- SCHEDULE SECTION (остальное без изменений) --- */
+/* --- SCHEDULE SECTION (и далее без изменений) --- */
 #schedule { background: var(--dark-bg); position: relative; }
 .schedule-subtitle { text-align: center; margin-top: -30px; margin-bottom: 40px; color: var(--light-text); }
 .neon-text { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
@@ -428,14 +466,42 @@ footer { background: #000; padding: 40px 0; text-align: center; border-top: 1px 
 .social-links a:hover { background: var(--neon-green); color: black; transform: scale(1.1); }
 footer p { color: #555; font-size: 0.9rem; }
 
-/* Адаптив Content */
-@media (max-width: 1024px) {
+/* --- АДАПТИВ (MEDIA QUERIES) --- */
+
+/* 1. Возврат к коробочному виду на экранах меньше 1200px */
+@media (max-width: 1200px) {
     .about-grid-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Одна колонка */
+        gap: 30px;
+        padding: 0 15px; 
+        width: auto;
     }
+
     .subs-marquee-wrapper {
         min-height: 450px;
-        order: 2;
+        order: 2; 
+        
+        /* Возвращаем скругления и границы */
+        border-radius: 15px;
+        border-left: 1px solid rgba(57, 255, 20, 0.3);
+        padding: 20px 0;
+        
+        /* Убираем отступ */
+        margin-left: 0;
+    }
+    
+    .marquee-header {
+        padding: 0 30px 20px 30px; 
+    }
+
+    .streamer-dossier {
+        background: transparent; 
+        padding: 0;
+        margin-right: 0; /* Убираем правый отступ */
+    }
+    
+    .dossier-text {
+        border-radius: 10px; 
     }
 }
 
@@ -447,4 +513,48 @@ footer p { color: #555; font-size: 0.9rem; }
     .schedule-item { flex-direction: column; text-align: center; }
     .schedule-day-wrapper { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin: 0 0 15px 0; padding: 0 0 10px 0; width: 100%; }
     .schedule-status { margin: 15px auto 0; }
+}
+
+/* --- СВЕЧЕНИЕ КОЛЬЦА ПРИ НАВЕДЕНИИ --- */
+
+/* Зеленая карточка */
+.holo-card.green:hover .avatar-ring {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 15px var(--neon-green), inset 0 0 10px rgba(57, 255, 20, 0.2);
+}
+
+/* Красная карточка */
+.holo-card.red:hover .avatar-ring {
+    border-color: var(--bagerka-color);
+    box-shadow: 0 0 15px var(--bagerka-color), inset 0 0 10px rgba(255, 68, 68, 0.2);
+}
+
+/* Оранжевая карточка */
+.holo-card.orange:hover .avatar-ring {
+    border-color: var(--angel-color);
+    box-shadow: 0 0 15px var(--angel-color), inset 0 0 10px rgba(255, 140, 0, 0.2);
+}
+
+/* Синяя карточка */
+.holo-card.blue:hover .avatar-ring {
+    border-color: var(--kiriki-color);
+    box-shadow: 0 0 15px var(--kiriki-color), inset 0 0 10px rgba(0, 123, 255, 0.2);
+}
+
+/* Розовая карточка */
+.holo-card.pink:hover .avatar-ring {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 15px var(--neon-pink), inset 0 0 10px rgba(255, 45, 149, 0.2);
+}
+
+/* Голубая (Cyan) карточка */
+.holo-card.cyan:hover .avatar-ring {
+    border-color: #00ffff;
+    box-shadow: 0 0 15px #00ffff, inset 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+/* Фиолетовая карточка */
+.holo-card.purple:hover .avatar-ring {
+    border-color: #bd00ff;
+    box-shadow: 0 0 15px #bd00ff, inset 0 0 10px rgba(189, 0, 255, 0.2);
 }

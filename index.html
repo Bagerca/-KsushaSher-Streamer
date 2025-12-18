@@ -132,61 +132,70 @@
 
     <!-- СЕКЦИЯ ОБО МНЕ (ДИНАМИЧЕСКАЯ) -->
     <section id="about" class="about-cyber-section">
+        <!-- Контейнер теперь закрывается ПОСЛЕ заголовка, чтобы заголовок был по центру, а сетка на всю ширину -->
         <div class="container">
             <!-- Заголовок с глитч-эффектом -->
             <h2 class="section-title" data-text="ОБО МНЕ">ОБО МНЕ</h2>
+        </div>
+        
+        <!-- Сетка вынесена из контейнера для растягивания на весь экран -->
+        <div class="about-grid-layout">
             
-            <div class="about-grid-layout">
+            <!-- ЛЕВАЯ КОЛОНКА: Карусель подписчиков -->
+            <div class="subs-marquee-wrapper">
+                <div class="marquee-header">
+                    <span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ
+                </div>
                 
-                <!-- ЛЕВАЯ КОЛОНКА: Карусель подписчиков -->
-                <div class="subs-marquee-wrapper">
-                    <div class="marquee-header">
-                        <span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ
-                    </div>
-                    
-                    <!-- Обертка для анимации -->
-                    <div class="marquee-track-container">
-                        <!-- Контейнер для карточек (заполняется из JSON через JS) -->
-                        <div class="marquee-track" id="subscribers-track">
-                            <div style="color: rgba(255,255,255,0.5); padding: 20px; font-family: 'Exo 2';">Загрузка данных...</div>
-                        </div>
+                <!-- Обертка для анимации -->
+                <div class="marquee-track-container">
+                    <!-- Контейнер для карточек (заполняется из JSON через JS) -->
+                    <div class="marquee-track" id="subscribers-track">
+                        <div style="color: rgba(255,255,255,0.5); padding: 20px; font-family: 'Exo 2';">Загрузка данных...</div>
                     </div>
                 </div>
-    
-                <!-- ПРАВАЯ КОЛОНКА: Видео и текст -->
-                <div class="streamer-dossier">
-                    <!-- Видео-монитор -->
-                    <div class="cyber-monitor">
-                        <div class="monitor-header">
-                            <span>REC ●</span>
-                            <span>CAM_01 [LIVE]</span>
-                        </div>
-                        <div class="video-frame">
-                            <iframe src="https://www.twitch.tv/videos/2450069899" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <!-- Сетка поверх видео -->
-                            <div class="screen-grid"></div>
-                        </div>
-                        <div class="monitor-footer">
-                            <span>SIGNAL: STRONG</span>
-                            <span>1080p / 60FPS</span>
-                        </div>
-                    </div>
-    
-                    <!-- Текст описания -->
-                    <div class="dossier-text">
-                        <h3><i class="fas fa-terminal"></i> БИОГРАФИЯ</h3>
-                        <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
-                        <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на Twitch.</p>
-                        
-                        <div class="dossier-stats">
-                            <div class="stat-tag">🎮 Variety</div>
-                            <div class="stat-tag">💬 Just Chatting</div>
-                            <div class="stat-tag">👻 Horror</div>
-                        </div>
-                    </div>
-                </div>
-    
             </div>
+
+            <!-- ПРАВАЯ КОЛОНКА: Видео и текст -->
+            <div class="streamer-dossier">
+                <!-- Видео-монитор -->
+                <div class="cyber-monitor">
+                    <div class="monitor-header">
+                        <span>REC ●</span>
+                        <span>CAM_01 [LIVE]</span>
+                    </div>
+                    <div class="video-frame">
+    <iframe 
+        src="https://www.youtube.com/embed/Uym3MRaJ3PE" 
+        title="Обо мне" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen>
+    </iframe>
+    <!-- Сетка поверх видео -->
+    <div class="screen-grid"></div>
+</div>
+                    <div class="monitor-footer">
+                        <span>SIGNAL: STRONG</span>
+                        <span>1080p / 60FPS</span>
+                    </div>
+                </div>
+
+                <!-- Текст описания -->
+                <div class="dossier-text">
+                    <h3><i class="fas fa-terminal"></i> БИОГРАФИЯ</h3>
+                    <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
+                    <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на Twitch.</p>
+                    
+                    <div class="dossier-stats">
+                        <div class="stat-tag">🎮 Variety</div>
+                        <div class="stat-tag">💬 Just Chatting</div>
+                        <div class="stat-tag">👻 Horror</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
