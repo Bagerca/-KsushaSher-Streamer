@@ -101,84 +101,7 @@ function updateTabUI(type) {
 }
 
 /**
- * Слушатели для табов
- */
-function setupTabs() {
-    document.querySelectorAll('.switcher-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (ArchiveState.currentType !== btn.dataset.type) {
-                switchArchiveType(btn.dataset.type);
-            }
-        });
-    });
-}
-
-/**
- * Слушатель поиска
- */
-function setupSearch() {
-    const input = document.getElementById('archive-search');
-    if(!input) return;
-
-    input.addEventListener('input', (e) => {
-        ArchiveState.searchQuery = e.target.value.toLowerCase();
-        renderGrid();
-    });
-}
-
-/**
- * Слушатели сортировки (Двунаправленная)
- */
-function setupSort() {
-    const sortBtns = document.querySelectorAll('.sort-side-btn');
-    
-    sortBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const sortType = btn.dataset.sort;
-            
-            // Если кликнули на активную -> меняем направление
-            if (ArchiveState.sort === sortType) {
-                ArchiveState.sortDirection = ArchiveState.sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                // Если новая -> ставим дефолтное направление
-                ArchiveState.sort = sortType;
-                // Для рейтинга логичнее сначала высокий (desc), для имени А-Я (asc)
-                ArchiveState.sortDirection = sortType === 'rating' ? 'desc' : 'asc';
-            }
-            
-            updateSortUI();
-            renderGrid();
-        });
-    });
-    
-    updateSortUI(); // Инит иконок
-}
-
-/**
- * Обновление иконок сортировки
- */
-function updateSortUI() {
-    document.querySelectorAll('.sort-side-btn').forEach(btn => {
-        const isActive = btn.dataset.sort === ArchiveState.sort;
-        btn.classList.toggle('active', isActive);
-        
-        const icon = btn.querySelector('.sort-icon');
-        if (isActive && icon) {
-            if (btn.dataset.sort === 'name') {
-                icon.className = ArchiveState.sortDirection === 'asc' 
-                    ? 'fas fa-sort-alpha-down sort-icon' 
-                    : 'fas fa-sort-alpha-up sort-icon';
-            } else {
-                icon.className = ArchiveState.sortDirection === 'desc' 
-                    ? 'fas fa-sort-amount-down sort-icon' 
-                    : 'fas fa-sort-amount-up sort-icon';
-            }
-        }
-    });
-}
-
-/**
- * Рендер фильтров (Статусы + Жанры в разные строки)
+ * Рендер фильтров (Статусы с "ВСЕ" посередине + Жанры)
  */
 function renderFilters() {
     const statusContainer = document.getElementById('archive-filters-status');
@@ -192,16 +115,33 @@ function renderFilters() {
         if (item.genres) item.genres.forEach(g => allGenres.add(g));
     });
 
-    // 1. СТРОКА СТАТУСОВ
-    let statusHtml = `<div class="filter-chip active" data-filter="all">ВСЕ</div>`;
+    // 1. СТРОКА СТАТУСОВ (Разделение массива для вставки "ВСЕ" в центр)
     const statuses = ArchiveState.currentType === 'games' 
         ? ['completed', 'playing', 'on-hold', 'dropped'] 
         : ['watched', 'watching', 'on-hold', 'dropped'];
-        
-    statuses.forEach(s => {
-        // Добавляем класс is-status и специфичный класс для цвета
+    
+    // Вычисляем середину
+    const middleIndex = Math.floor(statuses.length / 2);
+    const leftPart = statuses.slice(0, middleIndex);
+    const rightPart = statuses.slice(middleIndex);
+
+    let statusHtml = '';
+    
+    // Левая часть
+    leftPart.forEach(s => {
         statusHtml += `<div class="filter-chip is-status status-${s}" data-filter="${s}">${statusMap[s] || s}</div>`;
     });
+
+    // Центральная кнопка "ВСЕ"
+    // Проверяем, активна ли она сейчас
+    const allActiveClass = ArchiveState.filter === 'all' ? 'active' : '';
+    statusHtml += `<div class="filter-chip is-status ${allActiveClass}" data-filter="all">ВСЕ</div>`;
+
+    // Правая часть
+    rightPart.forEach(s => {
+        statusHtml += `<div class="filter-chip is-status status-${s}" data-filter="${s}">${statusMap[s] || s}</div>`;
+    });
+
     statusContainer.innerHTML = statusHtml;
 
     // 2. СТРОКА ЖАНРОВ
@@ -269,22 +209,6 @@ function getFilteredAndSortedData() {
 }
 
 /**
- * Генерация звезд (HTML)
- */
-function generateStars(rating) {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
-    let html = '';
-    for(let i=0; i < fullStars; i++) html += '<i class="fas fa-star"></i>';
-    if(hasHalfStar) html += '<i class="fas fa-star-half-alt"></i>';
-    for(let i=0; i < emptyStars; i++) html += '<i class="far fa-star" style="opacity: 0.3;"></i>';
-    
-    return html;
-}
-
-/**
  * Рендер сетки
  */
 function renderGrid() {
@@ -298,12 +222,17 @@ function renderGrid() {
         return;
     }
 
+    // Генерируем HTML
     container.innerHTML = filtered.map(item => {
         const genresHtml = item.genres 
             ? item.genres.slice(0, 3).map(g => `<span class="genre-tag">${genreMap[g] || g}</span>`).join('') 
             : '';
             
-        const starsHtml = generateStars(item.rating);
+        const fullStars = Math.floor(item.rating);
+        let starsHtml = '';
+        for(let i=0; i < 5; i++) {
+            starsHtml += i < fullStars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star" style="opacity: 0.3;"></i>';
+        }
 
         return `
             <div class="archive-card" data-status="${item.status}" data-id="${item.id}">
@@ -318,9 +247,121 @@ function renderGrid() {
                 <div class="card-info">
                     <div class="card-title" title="${item.title}">${item.title}</div>
                     <div class="card-genres">${genresHtml}</div>
-                    <p class="card-desc">${item.description || 'Нет описания'}</p>
+                    <p class="card-desc">${item.description || ''}</p>
                 </div>
             </div>
         `;
     }).join('');
+
+    // Применяем каскадную анимацию (Staggered Animation)
+    const cards = container.querySelectorAll('.archive-card');
+    cards.forEach((card, index) => {
+        // Добавляем класс анимации
+        card.classList.add('animate-entry');
+        
+        // Рассчитываем задержку: 30мс на каждую следующую карточку
+        // Ограничиваем индекс 30-ю, чтобы на огромных списках не ждать слишком долго
+        const delay = Math.min(index, 30) * 30;
+        card.style.animationDelay = `${delay}ms`;
+    });
+}
+
+/**
+ * Слушатели для табов
+ */
+function setupTabs() {
+    document.querySelectorAll('.switcher-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (ArchiveState.currentType !== btn.dataset.type) {
+                switchArchiveType(btn.dataset.type);
+            }
+        });
+    });
+}
+
+/**
+ * Слушатель поиска
+ */
+function setupSearch() {
+    const input = document.getElementById('archive-search');
+    if(!input) return;
+
+    input.addEventListener('input', (e) => {
+        ArchiveState.searchQuery = e.target.value.toLowerCase();
+        renderGrid();
+    });
+}
+
+/**
+ * Настройка кнопок сортировки с Flip-анимацией
+ */
+function setupSort() {
+    const sortBtns = document.querySelectorAll('.sort-side-btn');
+    
+    // Функция обновления иконок
+    function updateSortIcons(clickedBtn = null) {
+        sortBtns.forEach(btn => {
+            const isActive = btn.dataset.sort === ArchiveState.sort;
+            const icon = btn.querySelector('.sort-icon');
+            
+            // Если это не нажатая кнопка, просто переключаем класс активности
+            if (btn !== clickedBtn) {
+                btn.classList.toggle('active', isActive);
+                if (!isActive && icon) {
+                    // Возврат к дефолтной иконке
+                    if (btn.dataset.sort === 'name') icon.className = 'fas fa-sort-alpha-down sort-icon';
+                    else if (btn.dataset.sort === 'rating') icon.className = 'fas fa-sort-amount-down sort-icon';
+                }
+                return;
+            }
+
+            // Если это нажатая кнопка - запускаем анимацию
+            btn.classList.add('active');
+            
+            if (icon) {
+                // 1. Старт анимации (поворот на 90 градусов)
+                icon.classList.add('flipping');
+
+                // 2. Ждем половину времени анимации (150ms), меняем иконку и возвращаем
+                setTimeout(() => {
+                    if (btn.dataset.sort === 'name') {
+                        icon.className = ArchiveState.sortDirection === 'asc' 
+                            ? 'fas fa-sort-alpha-down sort-icon flipping' 
+                            : 'fas fa-sort-alpha-up sort-icon flipping';
+                    } else if (btn.dataset.sort === 'rating') {
+                        icon.className = ArchiveState.sortDirection === 'desc' 
+                            ? 'fas fa-sort-amount-down sort-icon flipping' 
+                            : 'fas fa-sort-amount-up sort-icon flipping';
+                    }
+                    
+                    requestAnimationFrame(() => {
+                        icon.classList.remove('flipping');
+                    });
+                }, 150); 
+            }
+        });
+    }
+
+    sortBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const sortType = btn.dataset.sort;
+            
+            // Смена направления
+            if (ArchiveState.sort === sortType) {
+                ArchiveState.sortDirection = ArchiveState.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                ArchiveState.sort = sortType;
+                // Для имени A-Z, для рейтинга 5-1 (High to Low)
+                ArchiveState.sortDirection = sortType === 'rating' ? 'desc' : 'asc';
+            }
+            
+            updateSortIcons(btn);
+            renderGrid();
+        });
+    });
+    
+    // Инициализация иконок при загрузке
+    sortBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === ArchiveState.sort);
+    });
 }

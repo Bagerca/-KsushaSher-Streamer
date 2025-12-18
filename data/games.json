@@ -98,5 +98,155 @@
     "genres": ["horror", "adventure", "puzzle"],
     "status": "completed",
     "customColor": "#79c5ce"
+  },
+  {
+    "id": "bendy-lone-wolf",
+    "title": "Bendy: Lone Wolf",
+    "rating": 4.5,
+    "description": "Мрачное выживание в заброшенной студии от лица Бориса. Собираем ресурсы и прячемся от чернильного демона.",
+    "image": "https://cdn2.steamgriddb.com/grid/29eae898bbf4086376aa8fd60007aaaa.png",
+    "genres": ["horror", "survival", "adventure"],
+    "status": "completed",
+    "customColor": "#f4d03f"
+  },
+  {
+    "id": "bioshock-infinite",
+    "title": "BioShock Infinite",
+    "rating": 5.0,
+    "description": "Путешествие в парящий город Колумбия. Потрясающий сюжет о квантовых мирах и спасении Элизабет.",
+    "image": "https://cdn2.steamgriddb.com/grid/374ad92e28ff7e130fb88205d8f49384.png",
+    "genres": ["shooter", "action", "adventure"],
+    "status": "completed",
+    "customColor": "#3498db"
+  },
+  {
+    "id": "portal-2",
+    "title": "Portal 2",
+    "rating": 5.0,
+    "description": "Головоломки с порталами, юмор ГлэДОС и невероятный кооперативный режим.",
+    "image": "https://cdn2.steamgriddb.com/grid/9ebc0e97da8e0e5083fea7203f194d2b.png",
+    "genres": ["puzzle", "adventure", "coop"],
+    "status": "completed",
+    "customColor": "#e67e22"
+  },
+  {
+    "id": "beholder",
+    "title": "Beholder",
+    "rating": 4.2,
+    "description": "Симулятор управляющего домом в тоталитарном государстве. Следим за жильцами и делаем сложный моральный выбор.",
+    "image": "https://cdn2.steamgriddb.com/grid/5ea7aaa4eaff9e67e37e174ccf82b56b.jpg",
+    "genres": ["simulator", "strategy"],
+    "status": "on-hold",
+    "customColor": "#2c3e50"
+  },
+  {
+    "id": "mouthwashing",
+    "title": "Mouthwashing",
+    "rating": 4.8,
+    "description": "Сюрреалистичный хоррор о экипаже космического грузовика после крушения. Психологическое безумие гарантировано.",
+    "image": "https://cdn2.steamgriddb.com/grid/20b9686ae90039dd7216f07c6bdd3211.png",
+    "genres": ["horror", "adventure"],
+    "status": "playing",
+    "customColor": "#ff2d95"
+  },
+  {
+    "id": "cuphead",
+    "title": "Cuphead",
+    "rating": 4.7,
+    "description": "Хардкорный платформер в стиле мультфильмов 30-х годов. Боссы заставят тебя страдать.",
+    "image": "https://cdn2.steamgriddb.com/grid/23d2d7ff1a670a1ac0f181516bd58520.png",
+    "genres": ["platformer", "action"],
+    "status": "dropped",
+    "customColor": "#c0392b"
+  },
+  {
+    "id": "buckshot-roulette",
+    "title": "Buckshot Roulette",
+    "rating": 4.9,
+    "description": "Смертельная игра в русскую рулетку с дробовиком против Дилера в подпольном клубе.",
+    "image": "https://cdn2.steamgriddb.com/grid/15dedec079bd674cc309564d63c8db2c.png",
+    "genres": ["horror", "strategy", "simulator"],
+    "status": "completed",
+    "customColor": "#27ae60"
+  },
+  {
+    "id": "bendy-secrets-of-the-machine",
+    "title": "Bendy: Secrets of the Machine",
+    "rating": 4.0,
+    "description": "Загадочный тизер-проект, скрывающий тайны будущего вселенной Bendy.",
+    "image": "https://cdn2.steamgriddb.com/grid/419f51a7b50c04bb38fd5870da376a5a.jpg",
+    "genres": ["horror", "puzzle"],
+    "status": "playing",
+    "customColor": "#f1c40f"
+  },
+  {
+    "id": "undertale",
+    "title": "Undertale",
+    "rating": 5.0,
+    "description": "RPG, где не обязательно никого убивать. Твои решения меняют мир навсегда.",
+    "image": "https://cdn2.steamgriddb.com/grid/bbd30950ec6c745947d21a08d002f782.png",
+    "genres": ["rpg", "adventure"],
+    "status": "completed",
+    "customColor": "#9b59b6"
+  },
+  {
+    "id": "vrchat",
+    "title": "VRChat",
+    "rating": 4.1,
+    "description": "Бесконечные миры и общение. Место, где можно стать кем угодно и встретить кого угодно.",
+    "image": "https://cdn2.steamgriddb.com/grid/295b5d1a1f98d2c6c64569ed889378d7.png",
+    "genres": ["simulator", "coop"],
+    "status": "playing",
+    "customColor": "#1abc9c"
+  },
+  {
+    "id": "alice-madness-returns",
+    "title": "Alice: Madness Returns",
+    "rating": 4.6,
+    "description": "Мрачное переосмысление Страны Чудес. Алиса борется со своими внутренними демонами.",
+    "image": "https://cdn2.steamgriddb.com/grid/18c1932d87fb2d0250f2b3235f3802c9.png",
+    "genres": ["action", "adventure", "horror"],
+    "status": "on-hold",
+    "customColor": "#8e44ad"
+  },
+  {
+    "id": "boris-and-the-dark-survival",
+    "title": "Boris and the Dark Survival",
+    "rating": 4.3,
+    "description": "Каждый уровень генерируется случайно. Сможешь ли ты найти выход раньше чернильного монстра?",
+    "image": "https://cdn2.steamgriddb.com/grid/216085f7b9a7e1484e2b0802bc4f1bb8.png",
+    "genres": ["horror", "survival"],
+    "status": "completed",
+    "customColor": "#7f8c8d"
+  },
+  {
+    "id": "abyssus",
+    "title": "Abyssus",
+    "rating": 3.9,
+    "description": "Динамичный шутер в сеттинге подводной цивилизации с элементами стимпанка.",
+    "image": "https://cdn2.steamgriddb.com/grid/ad65411e5914ebe1d688874f6f9f865a.jpg",
+    "genres": ["shooter", "action"],
+    "status": "on-hold",
+    "customColor": "#16a085"
+  },
+  {
+    "id": "awaria",
+    "title": "Awaria",
+    "rating": 4.0,
+    "description": "Короткая инди-история о технической катастрофе и выживании в замкнутом пространстве.",
+    "image": "https://cdn2.steamgriddb.com/grid/00b1f760f5b1831e2495c8bb1e99c38e.png",
+    "genres": ["adventure", "puzzle"],
+    "status": "playing",
+    "customColor": "#d35400"
+  },
+  {
+    "id": "helltaker",
+    "title": "Helltaker",
+    "rating": 4.9,
+    "description": "Короткая игра про демонических девчонок, блины и решение головоломок в аду.",
+    "image": "https://cdn2.steamgriddb.com/grid/8ca2ddca9fd5b429152341f9c56cde20.png",
+    "genres": ["puzzle", "adventure"],
+    "status": "completed",
+    "customColor": "#bdc3c7"
   }
 ]
