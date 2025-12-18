@@ -1,18 +1,19 @@
 /* =========================================
-   SPECS SECTION V2 (Cyberpunk Style)
+   SECTION: HARDWARE (TECH SPECS V2)
    ========================================= */
 
 .specs-section {
     background-color: #07070a;
     position: relative;
-    padding: 80px 0;
+    padding: 40px 0; 
     overflow: hidden;
     border-top: 1px solid rgba(57, 255, 20, 0.1);
 }
 
-/* Фоновая сетка для объема */
+/* Фоновая сетка */
 .specs-bg-grid {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    position: absolute; 
+    top: 0; left: 0; width: 100%; height: 100%;
     background-image: 
         linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -22,35 +23,34 @@
     pointer-events: none;
 }
 
+.specs-section .section-title {
+    margin-bottom: 25px; 
+}
+
+/* --- СЕТКА: ИСПРАВЛЕНО ДЛЯ ОДНОЙ СТРОКИ --- */
 .specs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    position: relative; z-index: 2;
+    /* Явно задаем 4 колонки одинаковой ширины */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px;
+    position: relative; 
+    z-index: 2;
 }
 
 /* --- КАРТОЧКА --- */
 .spec-card {
     position: relative;
-    height: 180px;
+    height: 170px;
     background: rgba(20, 20, 25, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px; /* Угловатый стиль */
+    border-radius: 20px;
+    clip-path: none; 
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: default;
-    
-    /* Срезанный угол справа снизу */
-    clip-path: polygon(
-        0 0, 
-        100% 0, 
-        100% calc(100% - 20px), 
-        calc(100% - 20px) 100%, 
-        0 100%
-    );
+    backdrop-filter: blur(5px);
 }
 
-/* Эффект стекла при наведении */
 .card-glass {
     position: absolute; inset: 0;
     background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
@@ -62,119 +62,132 @@
     border-color: var(--neon-green);
     box-shadow: 0 10px 30px rgba(57, 255, 20, 0.15);
 }
+
 .spec-card:hover .card-glass { opacity: 1; }
 
-/* Внутренний контент */
 .spec-content {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 25px;
+    gap: 15px; /* Чуть уменьшил отступ, чтобы текст не теснился */
+    padding: 15px 20px;
     height: 100%;
-    position: relative; z-index: 2;
+    position: relative; 
+    z-index: 2;
 }
 
 /* --- ИКОНКА --- */
 .spec-icon-box {
-    width: 60px; height: 60px;
+    width: 50px; height: 50px; /* Слегка уменьшил иконку для узких экранов */
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(57, 255, 20, 0.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.8rem;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 1.4rem;
     color: var(--neon-green);
-    border-radius: 8px;
+    border-radius: 12px;
     transition: 0.3s;
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
 }
 
 .spec-card:hover .spec-icon-box {
     background: var(--neon-green);
     color: #000;
     box-shadow: 0 0 20px var(--neon-green);
-    transform: scale(1.1) rotate(-5deg);
 }
 
 /* --- ТЕКСТ --- */
-.spec-info { flex-grow: 1; }
+.spec-info { 
+    flex-grow: 1; 
+    min-width: 0; /* Чтобы текст мог сокращаться, а не распирать карточку */
+}
 
 .spec-label {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 0.8rem;
-    color: #666;
-    letter-spacing: 2px;
-    margin-bottom: 5px;
+    font-size: 0.7rem;
+    color: #777;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
 }
 
 .spec-value {
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1rem; /* Уменьшил шрифт, чтобы влезало в узкие колонки */
     font-weight: 700;
     color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     line-height: 1.2;
+    white-space: nowrap; /* Запрет переноса, чтобы не ломать высоту */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Три точки, если название очень длинное */
 }
 
-/* Теги (Cores, GHz и т.д.) */
-.spec-meta { display: flex; gap: 8px; }
+.spec-meta { display: flex; gap: 5px; }
 
 .meta-tag {
     font-family: 'Exo 2', sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     background: rgba(255, 255, 255, 0.05);
     padding: 2px 6px;
-    border-radius: 3px;
+    border-radius: 5px;
     color: #aaa;
     border: 1px solid transparent;
-    transition: 0.3s;
-}
-
-.spec-card:hover .meta-tag {
-    border-color: rgba(57, 255, 20, 0.3);
-    color: var(--neon-green);
-    background: rgba(57, 255, 20, 0.05);
 }
 
 /* --- ДЕКОРАТИВНЫЕ УГЛЫ --- */
 .tech-corner {
     position: absolute;
-    width: 10px; height: 10px;
+    width: 20px; height: 20px;
     border: 2px solid transparent;
     transition: 0.3s;
+    pointer-events: none;
 }
 
 .tech-corner.top-right {
     top: 0; right: 0;
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
-    border-right: 2px solid rgba(255, 255, 255, 0.2);
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    border-right: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 20px 0 0;
 }
 
 .tech-corner.bottom-left {
     bottom: 0; left: 0;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 0 20px;
 }
 
 .spec-card:hover .tech-corner {
-    width: 20px; height: 20px;
     border-color: var(--neon-green);
 }
 
-/* --- АНИМИРОВАННАЯ ПОЛОСКА СНИЗУ --- */
 .spec-bar-loader {
     position: absolute;
     bottom: 0; left: 0;
     height: 3px;
     width: 0%;
     background: var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green);
     transition: width 0.5s ease;
 }
 
 .spec-card:hover .spec-bar-loader { width: 100%; }
 
-/* --- RESPONSIVE --- */
+/* --- АДАПТИВНОСТЬ --- */
+
+/* Планшеты: 2 в ряд */
+@media (max-width: 1024px) {
+    .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Мобилки: 1 в ряд */
 @media (max-width: 600px) {
+    .specs-section { padding: 30px 0; }
+    .specs-grid {
+        grid-template-columns: 1fr;
+    }
     .spec-card { height: auto; }
-    .spec-content { flex-direction: column; text-align: center; }
+    .spec-content { flex-direction: column; text-align: center; padding: 20px; }
     .spec-meta { justify-content: center; }
 }
