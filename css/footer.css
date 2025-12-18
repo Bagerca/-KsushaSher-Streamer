@@ -1,0 +1,128 @@
+/* =========================================
+   FOOTER (SYSTEM HUD STYLE)
+   ========================================= */
+
+.cyber-footer {
+    background-color: #000000;
+    position: relative;
+    padding: 40px 0;
+    overflow: hidden;
+    z-index: 10; /* Чтобы быть поверх градиента от донатов */
+}
+
+/* Светящаяся линия-разделитель сверху */
+.footer-line {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--neon-green) 50%, transparent 100%);
+    opacity: 0.5;
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+/* --- ЛЕВАЯ ЧАСТЬ (ТЕКСТ) --- */
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.footer-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: #fff;
+    letter-spacing: 2px;
+}
+
+.brand-ver {
+    font-size: 0.6rem;
+    background: var(--neon-pink);
+    padding: 2px 5px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 5px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.copyright {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.dev-credits {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 5px;
+}
+
+.dev-name {
+    color: var(--bagerka-color, #ff4444);
+    font-weight: 700;
+}
+
+/* --- ПРАВАЯ ЧАСТЬ (СОЦСЕТИ) --- */
+.social-hud {
+    display: flex;
+    gap: 15px;
+}
+
+.hud-btn {
+    width: 45px; height: 45px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: #aaa;
+    font-size: 1.2rem;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    overflow: hidden;
+    /* Скошенные углы (Cyber style) */
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.hud-btn::before {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    opacity: 0; transition: 0.3s;
+}
+
+/* Hover эффекты */
+.hud-btn:hover {
+    transform: translateY(-3px);
+    color: #fff;
+}
+
+.hud-btn:hover::before { opacity: 1; }
+
+/* Индивидуальные цвета при наведении */
+.hud-btn.twitch:hover { background: #9146ff; border-color: #9146ff; box-shadow: 0 0 15px #9146ff; }
+.hud-btn.youtube:hover { background: #ff0000; border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+.hud-btn.telegram:hover { background: #0088cc; border-color: #0088cc; box-shadow: 0 0 15px #0088cc; }
+.hud-btn.discord:hover { background: #5865F2; border-color: #5865F2; box-shadow: 0 0 15px #5865F2; }
+.hud-btn.tiktok:hover { background: #ff2d95; border-color: #ff2d95; box-shadow: 0 0 15px #ff2d95; }
+
+/* АДАПТИВ */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .social-hud {
+        justify-content: center;
+    }
+}

@@ -170,22 +170,6 @@
     box-shadow: 0 0 5px rgba(57, 255, 20, 0.2);
 }
 
-/* Терминал */
-.ally-terminal {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(57, 255, 20, 0.2);
-    padding: 15px;
-    font-family: 'monospace';
-    font-size: 0.9rem;
-    color: #aaa;
-    margin-bottom: auto;
-    border-radius: 4px;
-}
-.ally-terminal p { margin-bottom: 5px; }
-.terminal-ok { color: var(--neon-green); }
-.terminal-load { color: var(--neon-pink); animation: blink 1s infinite; }
-.terminal-cursor { display: inline-block; width: 8px; height: 14px; background: var(--neon-green); animation: blink 1s infinite step-end; }
-
 /* Статистика внизу панели */
 .ally-stats-grid { 
     display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; 
@@ -274,14 +258,13 @@
 
 /* 
    ==================================================
-   КОЛЬЦА (RINGS) - ИСПРАВЛЕННАЯ ВЕРСИЯ
+   КОЛЬЦА (RINGS) - GRADIENT ARCS VERSION
    ================================================== 
 */
 .main-display-rings {
     position: absolute;
     top: 50%;
     left: 50%;
-    /* Нулевой размер контейнера, чтобы он был точкой в центре */
     width: 0;
     height: 0;
     pointer-events: none;
@@ -289,46 +272,119 @@
     justify-content: center;
     align-items: center;
     z-index: 1;
-    /* Анимация "дыхания" (пульсация) */
     animation: ring-breathing 6s ease-in-out infinite;
 }
 
 .main-display-rings .ring {
     position: absolute; 
     border-radius: 50%; 
-    top: 50%; 
-    left: 50%; 
+    top: 50%; left: 50%; 
     transform-origin: center center;
+    background: transparent;
 }
 
-/* КОЛЬЦО 1 - ЗЕЛЕНОЕ */
+/* ============================
+   КОЛЬЦО 1 - ЗЕЛЕНОЕ (Внутреннее)
+   ============================ */
 .ring-1 { 
     width: 340px; height: 340px; 
-    /* Центровка через отрицательный margin (половина размера) */
     margin-left: -170px; margin-top: -170px;
-    border: 2px solid rgba(57, 255, 20, 0.5);
-    border-top-color: var(--neon-green);
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); 
+    border: 1px solid rgba(57, 255, 20, 0.1); /* Тонкая основа */
     animation: rotate-only 20s linear infinite; 
 }
 
-/* КОЛЬЦО 2 - КРАСНОЕ */
+/* Плавный светящийся сегмент */
+.ring-1::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 50%;
+    
+    /* Конический градиент: Прозрачный -> Яркий -> Прозрачный */
+    background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        transparent 20%,
+        rgba(57, 255, 20, 0) 30%,
+        var(--neon-green) 50%, 
+        rgba(57, 255, 20, 0) 70%,
+        transparent 80%,
+        transparent 100%
+    );
+
+    /* Маска для вырезания центра */
+    -webkit-mask: radial-gradient(transparent 68%, black 69%);
+    mask: radial-gradient(transparent 68%, black 69%);
+    
+    filter: drop-shadow(0 0 8px var(--neon-green));
+}
+
+
+/* ============================
+   КОЛЬЦО 2 - КРАСНОЕ (Среднее)
+   ============================ */
 .ring-2 { 
     width: 440px; height: 440px; 
     margin-left: -220px; margin-top: -220px;
-    border: 2px solid rgba(255, 68, 68, 0.5);
-    border-bottom-color: var(--bagerka-color);
-    box-shadow: 0 0 15px rgba(255, 68, 68, 0.2); 
+    border: 1px solid rgba(255, 68, 68, 0.1); 
     animation: rotate-only 30s linear infinite reverse; 
 }
 
-/* КОЛЬЦО 3 - СИНЕЕ */
+.ring-2::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 50%;
+    
+    background: conic-gradient(
+        from 180deg,
+        transparent 0%,
+        transparent 25%,
+        rgba(255, 68, 68, 0) 35%,
+        var(--bagerka-color) 55%, 
+        rgba(255, 68, 68, 0) 75%,
+        transparent 100%
+    );
+
+    -webkit-mask: radial-gradient(transparent 69%, black 70%);
+    mask: radial-gradient(transparent 69%, black 70%);
+    
+    filter: drop-shadow(0 0 8px var(--bagerka-color));
+}
+
+
+/* ============================
+   КОЛЬЦО 3 - СИНЕЕ (Внешнее)
+   ============================ */
 .ring-3 { 
     width: 580px; height: 580px; 
     margin-left: -290px; margin-top: -290px;
-    border: 2px dashed rgba(0, 123, 255, 0.6);
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.2); 
-    animation: rotate-only 45s linear infinite; 
+    border: 1px dashed rgba(0, 123, 255, 0.2); /* Пунктирная основа */
+    animation: rotate-only 60s linear infinite; 
+}
+
+.ring-3::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 50%;
+    
+    /* Две мягкие дуги */
+    background: conic-gradient(
+        from 90deg,
+        transparent 0%,
+        var(--kiriki-color) 25%,
+        transparent 50%,
+        var(--kiriki-color) 75%,
+        transparent 100%
+    );
+    
+    opacity: 0.6;
+
+    -webkit-mask: radial-gradient(transparent 69%, black 70%);
+    mask: radial-gradient(transparent 69%, black 70%);
+    
+    filter: drop-shadow(0 0 10px var(--kiriki-color));
 }
 
 .main-display-status {

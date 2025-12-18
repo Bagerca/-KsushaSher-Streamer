@@ -326,3 +326,84 @@
     .stats-radar-panel { height: 350px; }
     .stats-metrics-panel, .stats-circle-panel { height: 220px; }
 }
+
+
+/* =========================================
+   TERMINAL (Для левой панели Hero-секции)
+   ========================================= */
+.ally-terminal {
+    position: relative;
+    overflow: hidden;
+    cursor: text; /* Чтобы было понятно, что можно кликать */
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    padding: 15px;
+    font-family: 'monospace';
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: auto;
+    border-radius: 4px;
+    /* Ограничиваем высоту и добавляем скролл, если история команд длинная */
+    max-height: 150px; 
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Стилизация скроллбара внутри терминала */
+.ally-terminal::-webkit-scrollbar { width: 4px; }
+.ally-terminal::-webkit-scrollbar-thumb { background: rgba(57, 255, 20, 0.3); }
+
+/* История команд */
+#terminal-history p {
+    margin: 0 0 5px 0;
+    line-height: 1.2;
+    word-break: break-all;
+}
+
+/* Строка ввода */
+.command-line {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-top: 5px;
+}
+
+.prompt {
+    margin-right: 8px;
+    color: var(--neon-green);
+    font-weight: bold;
+}
+
+/* Скрываем стандартный стиль инпута */
+#cmd-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'monospace';
+    font-size: 0.9rem;
+    flex-grow: 1;
+    caret-color: transparent; /* Скрываем стандартный курсор */
+    text-transform: uppercase;
+}
+
+/* Квадратный мигающий курсор */
+.terminal-block-cursor {
+    width: 8px;
+    height: 14px;
+    background: var(--neon-green);
+    margin-left: 2px;
+    animation: blink 1s steps(2, start) infinite;
+}
+
+/* Если инпут не в фокусе, делаем курсор пустым */
+#cmd-input:not(:focus) + .terminal-block-cursor {
+    background: transparent;
+    border: 1px solid var(--neon-green);
+    animation: none;
+    opacity: 0.5;
+}
+
+.terminal-ok { color: var(--neon-green); }
+.terminal-load { color: var(--neon-pink); animation: blink 1s infinite; }

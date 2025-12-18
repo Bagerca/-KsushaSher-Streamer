@@ -13,9 +13,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Стили -->
-    <!-- В style.css должны быть подключены: global.css, hero.css, command-center.css, content.css, media-archive.css -->
+    <!-- СТИЛИ -->
+    <!-- Основные стили -->
     <link rel="stylesheet" href="css/style.css">
+    <!-- Стили секции Железа -->
+    <link rel="stylesheet" href="css/specs.css">
+    <!-- Стили секции Донатов -->
+    <link rel="stylesheet" href="css/donations.css">
+    <!-- Стили Футера -->
+    <link rel="stylesheet" href="css/footer.css">
 </head>
 <body>
     
@@ -39,11 +45,19 @@
                         <h3 class="panel-name">TETLA <span class="bot-version">v4.2</span></h3>
                     </div>
 
-                    <div class="ally-terminal">
-                        <p>> Запуск протоколов защиты...</p>
-                        <p>> Модерация чата: <span class="terminal-ok">АКТИВНА</span></p>
-                        <p>> Генерация мемов: <span class="terminal-load">ЗАГРУЗКА</span></p>
-                        <div class="terminal-cursor"></div>
+                    <!-- Интерактивный терминал (Пасхалка с рептилией) -->
+                    <div class="ally-terminal" id="terminal-box">
+                        <div id="terminal-history">
+                            <p>> Запуск протоколов защиты...</p>
+                            <p>> Модерация чата: <span class="terminal-ok">АКТИВНА</span></p>
+                            <p>> Введите 'help' для списка команд...</p>
+                        </div>
+                        
+                        <div class="command-line">
+                            <span class="prompt">></span>
+                            <input type="text" id="cmd-input" autocomplete="off" spellcheck="false">
+                            <div class="terminal-block-cursor"></div>
+                        </div>
                     </div>
 
                     <div class="ally-stats-grid">
@@ -197,7 +211,6 @@
         
         <div class="container">
             
-            <!-- Заголовок в стиле терминала -->
             <div class="command-header">
                 <h2 class="section-title glitch-effect" data-text="КОМАНДНЫЙ ЦЕНТР">КОМАНДНЫЙ ЦЕНТР</h2>
                 <div class="system-status-bar">
@@ -215,10 +228,9 @@
                 </div>
             </div>
     
-            <!-- ЕДИНАЯ СЕТКА -->
             <div class="command-grid">
                 
-                <!-- БЛОК 1: РАСПИСАНИЕ (Левый HUD) -->
+                <!-- БЛОК 1: РАСПИСАНИЕ -->
                 <div class="cmd-panel schedule-panel">
                     <div class="hud-bracket top-left"></div>
                     <div class="hud-bracket bottom-right"></div>
@@ -234,7 +246,7 @@
                     </div>
                 </div>
     
-                <!-- БЛОК 2: РАДАР (Центр верх) -->
+                <!-- БЛОК 2: РАДАР -->
                 <div class="cmd-panel stats-radar-panel">
                     <div class="hud-bracket top-right"></div>
                     <div class="hud-bracket bottom-left"></div>
@@ -249,7 +261,7 @@
                     </div>
                 </div>
     
-                <!-- БЛОК 3: МЕТРИКИ (Центр низ) -->
+                <!-- БЛОК 3: МЕТРИКИ -->
                 <div class="cmd-panel stats-metrics-panel">
                     <div class="tech-bg-lines"></div>
                     
@@ -265,7 +277,7 @@
                     </div>
                 </div>
     
-                <!-- БЛОК 4: ЛОЯЛЬНОСТЬ (Право низ) -->
+                <!-- БЛОК 4: ЛОЯЛЬНОСТЬ -->
                 <div class="cmd-panel stats-circle-panel">
                     <div class="cmd-panel-header simple">
                         <span>LOYALTY</span>
@@ -291,22 +303,17 @@
          ========================================= -->
     <section id="media-archive" class="media-archive-section">
         <div class="container">
-            <!-- 1. Заголовок и Верхняя панель управления -->
             <div class="archive-header">
                 <h2 class="section-title" data-text="MEDIA_DATABASE">БАЗА ДАННЫХ</h2>
                 
-                <!-- Панель: Сортировка слева и справа, по центру Табы -->
                 <div class="header-control-bar">
-                    
-                    <!-- Сортировка по Имени (Слева) -->
                     <button class="sort-side-btn active" data-sort="name" title="Сортировка по названию">
                         <span class="btn-label">А-Я</span>
                         <i class="fas fa-sort-alpha-down sort-icon"></i>
                     </button>
 
-                    <!-- Переключатель Типов (Центр) -->
                     <div class="type-switcher">
-                        <div class="switcher-bg"></div> <!-- Анимированный фон -->
+                        <div class="switcher-bg"></div> 
                         <button class="switcher-btn active" data-type="games">
                             <i class="fas fa-gamepad"></i> ИГРЫ
                         </button>
@@ -315,33 +322,24 @@
                         </button>
                     </div>
 
-                    <!-- Сортировка по Рейтингу (Справа) -->
                     <button class="sort-side-btn" data-sort="rating" title="Сортировка по рейтингу">
                         <span class="btn-label">РЕЙТИНГ</span>
                         <i class="fas fa-sort-amount-down sort-icon"></i>
                     </button>
-
                 </div>
             </div>
 
-            <!-- 2. Панель управления (Поиск, Фильтры, Легенда) -->
             <div class="archive-controls">
-                
-                <!-- Поиск -->
                 <div class="search-module">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
                 </div>
                 
-                <!-- Фильтры (Разделены на 2 строки) -->
                 <div class="filters-wrapper">
-                    <!-- Строка 1: Статусы -->
                     <div class="filter-row status-row" id="archive-filters-status"></div>
-                    <!-- Строка 2: Жанры -->
                     <div class="filter-row genre-row" id="archive-filters-genre"></div>
                 </div>
 
-                <!-- Легенда (Шпора) -->
                 <div class="archive-legend">
                     <div class="legend-item"><span class="legend-dot dot-completed"></span><span>ПРОЙДЕНО</span></div>
                     <div class="legend-item"><span class="legend-dot dot-playing"></span><span>В ПРОЦЕССЕ</span></div>
@@ -350,7 +348,6 @@
                 </div>
             </div>
 
-            <!-- 3. Сетка карточек -->
             <div class="archive-full-grid-wrapper">
                 <div class="archive-grid" id="archive-grid">
                     <!-- Карточки генерируются JS -->
@@ -360,75 +357,234 @@
     </section>
 
     <!-- =========================================
-         СЕКЦИЯ 5: ЖЕЛЕЗО
+         СЕКЦИЯ 5: ЖЕЛЕЗО (TECH SPECS V2)
          ========================================= -->
-    <section id="specs">
+    <section id="specs" class="specs-section">
+        <div class="specs-bg-grid"></div>
+        
         <div class="container">
-            <h2 class="section-title">Мое железо</h2>
+            <h2 class="section-title" data-text="SYSTEM_SPECS">МОЕ ЖЕЛЕЗО</h2>
+            
             <div class="specs-grid">
-                <div class="spec-item">
-                    <i class="fas fa-microchip"></i>
-                    <h3>Процессор</h3>
-                    <p>Intel Core i7-12700H</p>
+                
+                <!-- CPU -->
+                <div class="spec-card">
+                    <div class="card-glass"></div>
+                    <div class="spec-content">
+                        <div class="spec-icon-box">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="spec-info">
+                            <h3 class="spec-label">PROCESSOR</h3>
+                            <p class="spec-value">Intel Core i7-12700H</p>
+                            <div class="spec-meta">
+                                <span class="meta-tag">14 CORES</span>
+                                <span class="meta-tag">4.7 GHz</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-corner top-right"></div>
+                    <div class="tech-corner bottom-left"></div>
+                    <div class="spec-bar-loader"></div>
                 </div>
-                <div class="spec-item">
-                    <i class="fas fa-laptop"></i>
-                    <h3>Видеокарта</h3>
-                    <p>NVIDIA GeForce RTX 3060</p>
+
+                <!-- GPU -->
+                <div class="spec-card">
+                    <div class="card-glass"></div>
+                    <div class="spec-content">
+                        <div class="spec-icon-box">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="spec-info">
+                            <h3 class="spec-label">GRAPHICS</h3>
+                            <p class="spec-value">NVIDIA GeForce RTX 3060</p>
+                            <div class="spec-meta">
+                                <span class="meta-tag">6GB GDDR6</span>
+                                <span class="meta-tag">RTX ON</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-corner top-right"></div>
+                    <div class="tech-corner bottom-left"></div>
+                    <div class="spec-bar-loader"></div>
                 </div>
-                <div class="spec-item">
-                    <i class="fas fa-memory"></i>
-                    <h3>Память</h3>
-                    <p>16GB RAM</p>
+
+                <!-- RAM -->
+                <div class="spec-card">
+                    <div class="card-glass"></div>
+                    <div class="spec-content">
+                        <div class="spec-icon-box">
+                            <i class="fas fa-memory"></i>
+                        </div>
+                        <div class="spec-info">
+                            <h3 class="spec-label">MEMORY</h3>
+                            <p class="spec-value">16GB RAM</p>
+                            <div class="spec-meta">
+                                <span class="meta-tag">DDR5</span>
+                                <span class="meta-tag">4800 MHz</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-corner top-right"></div>
+                    <div class="tech-corner bottom-left"></div>
+                    <div class="spec-bar-loader"></div>
                 </div>
-                <div class="spec-item">
-                    <i class="fas fa-microphone"></i>
-                    <h3>Микрофон</h3>
-                    <p>Shure SM7B</p>
+
+                <!-- MIC -->
+                <div class="spec-card">
+                    <div class="card-glass"></div>
+                    <div class="spec-content">
+                        <div class="spec-icon-box">
+                            <i class="fas fa-microphone-lines"></i>
+                        </div>
+                        <div class="spec-info">
+                            <h3 class="spec-label">MICROPHONE</h3>
+                            <p class="spec-value">Shure SM7B</p>
+                            <div class="spec-meta">
+                                <span class="meta-tag">STUDIO</span>
+                                <span class="meta-tag">XLR</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-corner top-right"></div>
+                    <div class="tech-corner bottom-left"></div>
+                    <div class="spec-bar-loader"></div>
                 </div>
+
             </div>
         </div>
     </section>
 
     <!-- =========================================
-         СЕКЦИЯ 6: ДОНАТЫ
+         СЕКЦИЯ 6: ДОНАТЫ (CYBER BANKING)
          ========================================= -->
-    <section id="donation">
+    <section id="donation" class="donation-section">
+        
         <div class="container">
-            <h2 class="section-title">Поддержать</h2>
-            <p>Если тебе нравится мой контент, ты можешь поддержать меня финансово</p>
-            <div class="donation-options">
-                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>DonationAlerts</h3>
-                    <p>Прямые донаты</p>
+            <h2 class="section-title" data-text="SUPPORT_CHANNEL">ПОДДЕРЖАТЬ</h2>
+            <p class="section-subtitle">Внеси свой вклад в развитие трансляции и улучшение качества контента</p>
+            
+            <div class="donation-grid">
+                
+                <!-- DonationAlerts -->
+                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" class="donate-card" style="--card-color: #ff8c00;">
+                    <div class="card-glow"></div>
+                    <div class="card-inner">
+                        <div class="donate-icon">
+                            <i class="fas fa-sack-dollar"></i>
+                        </div>
+                        <div class="donate-info">
+                            <h3>DonationAlerts</h3>
+                            <p>Отправить сообщение</p>
+                        </div>
+                        <div class="donate-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
                 </a>
-                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>MemeAlerts</h3>
-                    <p>Альтернативные донаты</p>
+
+                <!-- MemeAlerts -->
+                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" class="donate-card" style="--card-color: #ff2d95;">
+                    <div class="card-glow"></div>
+                    <div class="card-inner">
+                        <div class="donate-icon">
+                            <i class="fas fa-ghost"></i>
+                        </div>
+                        <div class="donate-info">
+                            <h3>MemeAlerts</h3>
+                            <p>Напугать стримера</p>
+                        </div>
+                        <div class="donate-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
                 </a>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer" class="donation-option">
-                    <h3>Twitch Подписка</h3>
-                    <p>Подписка на канале</p>
+
+                <!-- Twitch -->
+                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="donate-card" style="--card-color: #9146ff;">
+                    <div class="card-glow"></div>
+                    <div class="card-inner">
+                        <div class="donate-icon">
+                            <i class="fab fa-twitch"></i>
+                        </div>
+                        <div class="donate-info">
+                            <h3>Twitch Sub</h3>
+                            <p>Оформить подписку</p>
+                        </div>
+                        <div class="donate-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
                 </a>
+
             </div>
-            <div class="card-number" id="card-number">
-                <i class="fas fa-credit-card"></i> 4276 1805 5058 1960
-                <span id="copy-tooltip">Нажмите чтобы скопировать</span>
+
+            <!-- Терминал с картой -->
+            <div class="crypto-terminal-wrapper">
+                <div class="terminal-label">DIRECT_TRANSFER_PROTOCOL // SBER</div>
+                <div class="card-number-box" id="card-number">
+                    <div class="card-chip"></div>
+                    <div class="card-digits">
+                        <span>4276</span>
+                        <span>1805</span>
+                        <span>5058</span>
+                        <span>1960</span>
+                    </div>
+                    <div class="copy-icon">
+                        <i class="far fa-copy"></i>
+                    </div>
+                    <div class="scan-line"></div>
+                    <span id="copy-tooltip">Скопировать</span>
+                </div>
+                <div class="secure-badge">
+                    <i class="fas fa-lock"></i> SECURE CONNECTION
+                </div>
             </div>
         </div>
+        
+        <!-- ГРАДИЕНТ ВЫНЕСЕН ИЗ КОНТЕЙНЕРА (для фикса бага) -->
+        <div class="space-fade-bottom"></div>
     </section>
 
-    <!-- FOOTER -->
-    <footer>
+    <!-- =========================================
+         FOOTER (SYSTEM HUD STYLE)
+         ========================================= -->
+    <footer class="cyber-footer">
+        <!-- Декоративная линия сверху -->
+        <div class="footer-line"></div>
+        
         <div class="container">
-            <div class="social-links">
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitch"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-                <a href="https://t.me/pizdeckakoi_to" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+            <div class="footer-content">
+                
+                <!-- Левая часть: Лого/Копирайт -->
+                <div class="footer-left">
+                    <h3 class="footer-brand">KSUSHA SHER <span class="brand-ver">LIVE</span></h3>
+                    <p class="copyright">&copy; 2025. Все права защищены.</p>
+                    <p class="dev-credits">SYSTEM ARCHITECT: <span class="dev-name">BAGERca</span></p>
+                </div>
+
+                <!-- Правая часть: Соцсети -->
+                <div class="footer-right">
+                    <div class="social-hud">
+                        <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="hud-btn twitch" title="Twitch">
+                            <i class="fab fa-twitch"></i>
+                        </a>
+                        <a href="#" target="_blank" class="hud-btn youtube" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://t.me/pizdeckakoi_to" target="_blank" class="hud-btn telegram" title="Telegram">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="#" target="_blank" class="hud-btn discord" title="Discord">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="#" target="_blank" class="hud-btn tiktok" title="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+                
             </div>
-            <p>&copy; 2025 Ksusha Sher. Все права защищены. Сайт создан BAGERca.</p>
         </div>
     </footer>
 
