@@ -37,45 +37,68 @@ function initSmoothScroll() {
 }
 
 /**
- * 2. Логика копирования номера карты
+ * 2. Логика копирования номера карты (ЦИФРЫ -> ТЕКСТ)
  */
 function initCardCopy() {
     const cardElement = document.getElementById('card-number');
-    const tooltip = document.getElementById('copy-tooltip');
     
+    // Номер для буфера обмена (чистый)
     const rawNumber = '4276 1805 5058 1960';
     const cleanNumber = rawNumber.replace(/\s/g, '');
+    
+    // HTML с исходными цифрами (чтобы вернуть их обратно)
+    // Структура должна совпадать с версткой
+    const originalDigitsHTML = `<span>4276</span><span>1805</span><span>5058</span><span>1960</span>`;
 
     if (!cardElement) return;
 
+    // Находим контейнер с цифрами
+    const digitsContainer = cardElement.querySelector('.card-digits');
+    let isAnimating = false; // Флаг, чтобы не спамить кликами
+
     cardElement.addEventListener('click', () => {
+        if (isAnimating) return; 
+
         navigator.clipboard.writeText(cleanNumber)
             .then(() => {
-                cardElement.classList.add('copied');
+                isAnimating = true;
                 
-                if (tooltip) {
-                    // Визуальный фидбек
-                    const originalText = tooltip.textContent; // Сохраняем "Скопировать" (не обязательно, но хорошая практика)
-                    tooltip.textContent = 'СКОПИРОВАНО!';
-                    tooltip.style.color = 'var(--neon-green)';
-                    tooltip.style.fontWeight = 'bold';
+                // 1. Добавляем классы стиля (зеленый цвет, неон)
+                cardElement.classList.add('copied');
+                if (digitsContainer) {
+                    digitsContainer.classList.add('success-mode');
                     
+                    // 2. Подменяем содержимое на текст
+                    digitsContainer.innerHTML = 'СКОПИРОВАНО!';
+                    
+                    // 3. Через 2 секунды возвращаем всё как было
                     setTimeout(() => {
-                        cardElement.classList.remove('copied');
-                        tooltip.textContent = 'Скопировать';
-                        tooltip.style.color = '';
-                        tooltip.style.fontWeight = '';
+                        // Эффект затухания перед возвратом
+                        digitsContainer.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            // Сброс классов и возврат HTML
+                            digitsContainer.classList.remove('success-mode');
+                            cardElement.classList.remove('copied');
+                            digitsContainer.innerHTML = originalDigitsHTML;
+                            
+                            // Возврат видимости
+                            digitsContainer.style.opacity = '1';
+                            isAnimating = false;
+                        }, 200); // Короткая пауза для анимации opacity
+                        
                     }, 2000);
                 }
             })
             .catch(err => {
                 console.error('Ошибка при копировании: ', err);
-                if (tooltip) {
-                    tooltip.textContent = 'ОШИБКА!';
-                    tooltip.style.color = '#ff4444';
+                if (digitsContainer) {
+                    digitsContainer.innerHTML = 'ОШИБКА!';
+                    digitsContainer.style.color = '#ff4444';
                     setTimeout(() => {
-                        tooltip.textContent = 'Скопировать';
-                        tooltip.style.color = '';
+                        digitsContainer.innerHTML = originalDigitsHTML;
+                        digitsContainer.style.color = '';
+                        isAnimating = false;
                     }, 2000);
                 }
             });

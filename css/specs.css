@@ -154,6 +154,7 @@
 .spec-card:hover {
     transform: translateY(-5px);
     border-color: var(--neon-green);
+    /* Здесь тень только для самой карточки */
     box-shadow: 0 10px 30px rgba(57, 255, 20, 0.15);
 }
 .spec-card:hover .card-glass { opacity: 1; }
@@ -218,26 +219,51 @@
     color: #ccc; border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* --- ДЕКОРАТИВНЫЕ УГЛЫ --- */
+/* --- ДЕКОРАТИВНЫЕ УГЛЫ (ИСПРАВЛЕНО) --- */
 .tech-corner {
     position: absolute;
-    width: 20px; height: 20px;
+    width: 20px;
+    height: 20px;
+    
+    /* Рамка по умолчанию прозрачная */
     border: 2px solid transparent;
-    transition: 0.3s; pointer-events: none;
+    
+    /* ГАРАНТИЯ: Убираем box-shadow и фон, чтобы не было "квадратов" */
+    background: transparent !important;
+    box-shadow: none !important;
+    
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 5;
 }
+
 .tech-corner.top-right {
     top: 0; right: 0;
     border-top: 2px solid rgba(255, 255, 255, 0.1);
     border-right: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 0 16px 0 0;
 }
+
 .tech-corner.bottom-left {
     bottom: 0; left: 0;
     border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     border-left: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 0 0 0 16px;
 }
-.spec-card:hover .tech-corner { border-color: var(--neon-green); }
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.spec-card:hover .tech-corner {
+    border-color: var(--neon-green);
+    
+    /* 
+       Используем двойной drop-shadow:
+       1. Маленький радиус (2px) для четкости.
+       2. Средний радиус (5px) для свечения.
+       Это создает эффект неона только вокруг линии, без заливки внутри.
+    */
+    filter: drop-shadow(0 0 2px var(--neon-green)) drop-shadow(0 0 5px var(--neon-green));
+}
+
 
 /* Зеленая линия загрузки */
 .spec-bar-loader {
