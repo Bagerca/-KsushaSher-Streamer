@@ -25,7 +25,8 @@ const genreMap = {
     'puzzle': 'Головоломка', 'adventure': 'Приключения', 'simulator': 'Симулятор',
     'horror': 'Хоррор', 'coop': 'Кооператив', 'shooter': 'Шутер', 'platformer': 'Платформер',
     'rpg': 'RPG', 'animation': 'Анимация', 'fantasy': 'Фэнтези', 'action': 'Экшен',
-    'strategy': 'Стратегия', 'survival': 'Выживание'
+    'strategy': 'Стратегия', 'survival': 'Выживание', 'scifi': 'Sci-Fi', 
+    'mystery': 'Мистика', 'comedy': 'Комедия'
 };
 
 const statusMap = {
@@ -351,10 +352,26 @@ function renderNextBatch() {
 
         const delay = (index % ArchiveState.batchSize) * 50; 
 
+        // ЛОГИКА ДЛЯ КАРТИНОК (ОДНА ИЛИ СТОПКА)
+        let imageHtml = '';
+        // Если есть массив images и там больше 1 элемента
+        if (item.images && item.images.length > 1) {
+            imageHtml = `
+                <div class="stack-wrapper">
+                    <img src="${item.images[1]}" class="stack-back" alt="Season Previous">
+                    <img src="${item.images[0]}" class="card-thumb stack-front" alt="${item.title}" loading="lazy">
+                </div>
+            `;
+        } else {
+            // Обычный режим (одна картинка) - берем или image, или первый элемент массива
+            const imgSrc = item.image || (item.images ? item.images[0] : '');
+            imageHtml = `<img src="${imgSrc}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">`;
+        }
+
         return `
             <div class="archive-card animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
                 <div class="card-thumb-container">
-                    <img src="${item.image}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
+                    ${imageHtml}
                     <div class="card-rating-badge"><span class="stars-visual">${starsHtml}</span><span class="rating-number">${item.rating}</span></div>
                 </div>
                 <div class="card-info">
@@ -445,7 +462,7 @@ function setupSearch() {
         if (matches.length > 0) {
             suggestionsBox.innerHTML = matches.map(item => `
                 <div class="suggestion-item" data-title="${item.title}">
-                    <img src="${item.image}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/40x50'">
+                    <img src="${item.image || (item.images ? item.images[0] : '')}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/40x50'">
                     <div class="sugg-info">
                         <span class="sugg-title">${item.title}</span>
                         <div class="sugg-meta">
