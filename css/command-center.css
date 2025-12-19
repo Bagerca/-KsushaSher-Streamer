@@ -1,39 +1,36 @@
 /* css/command-center.css */
 
 /* =========================================
-   COMMAND CENTER (FINAL FIX)
+   COMMAND CENTER (FINAL CLEAN + TIMELINE)
    ========================================= */
 
 .command-center-section {
-    /* 
-       ПЛОТНЫЙ ТОНИРОВАННЫЙ ФОН (96% непрозрачности).
-       Мы убрали blur, поэтому кометы останутся тонкими линиями.
-       Но из-за высокой плотности черного цвета они будут очень тусклыми,
-       будто за тонированным стеклом автомобиля.
-    */
-    background-color: rgba(5, 5, 8, 0.96);
+    /* ПРИГЛУШЕННЫЙ ФОН: 85% непрозрачности + размытие */
+    background-color: rgba(5, 5, 8, 0.85);
     
-    /* УБРАЛИ backdrop-filter, чтобы кометы не "жирнели" */
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     
-    /* Секция выше комет */
     position: relative;
     z-index: 10; 
     
-    padding: 100px 0;
+    padding: 60px 0 100px 0;
+    
     overflow: hidden;
     border-top: 1px solid rgba(57, 255, 20, 0.1);
     border-bottom: 1px solid rgba(57, 255, 255, 0.1);
 }
 
-/* ФОНОВАЯ СЕТКА (Внутри секции) */
+/* ФОНОВАЯ СЕТКА */
 .hud-grid-bg {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: 
         linear-gradient(rgba(57, 255, 20, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(57, 255, 20, 0.05) 1px, transparent 1px);
-    background-size: 60px 60px;
+    
+    /* Размер клеток 40px для синхронизации с блоком Железо */
+    background-size: 40px 40px;
+    
     mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
     -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
     pointer-events: none;
@@ -47,13 +44,17 @@
     width: 95%;
 }
 
-/* --- HEADER --- */
-.command-header { text-align: center; margin-bottom: 60px; }
+/* --- HEADER (CLEAN STYLE) --- */
+.command-header { 
+    text-align: center; 
+    margin-bottom: 40px; 
+}
 
 .cyber-header-wrapper {
     text-align: center;
     position: relative;
     z-index: 5;
+    margin-bottom: 20px;
 }
 
 .cyber-header-sub {
@@ -77,28 +78,29 @@
     margin: 0;
     position: relative;
     display: inline-block;
+    
+    /* Чистая статичная тень */
     text-shadow: 
         0 0 10px rgba(57, 255, 20, 0.5),
         0 0 20px rgba(57, 255, 20, 0.3),
         2px 2px 0px #000;
 }
 
-.cyber-header-main::before {
-    content: attr(data-text);
-    position: absolute; left: 2px; top: 0;
-    color: var(--neon-green);
-    overflow: hidden; clip: rect(0, 900px, 0, 0);
-    animation: none; opacity: 0;
-}
-
-.cyber-header-wrapper:hover .cyber-header-main::before {
-    opacity: 0.5;
-    animation: glitch-anim 2s infinite linear alternate-reverse;
+/* Гарантированно отключаем анимации глитча */
+.cyber-header-main::before,
+.cyber-header-main::after {
+    content: none !important;
+    display: none !important;
+    animation: none !important;
 }
 
 .cyber-header-lines {
-    display: flex; align-items: center; justify-content: center;
-    gap: 15px; margin-top: 10px; opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    opacity: 0.6;
 }
 
 .cyber-header-lines .line {
@@ -113,6 +115,7 @@
     transform: rotate(45deg); box-shadow: 0 0 10px var(--neon-green);
 }
 
+/* Статус бар под заголовком */
 .system-status-bar {
     display: inline-flex;
     align-items: center;
@@ -142,6 +145,7 @@
 .status-decor-line { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.2); }
 .pulse-indicator { width: 10px; height: 10px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 5px var(--neon-green); animation: blink 2s infinite; }
 
+/* --- GRID LAYOUT --- */
 .command-grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr 0.8fr;
@@ -149,6 +153,9 @@
     gap: 30px; 
 }
 
+/* ==================================================
+   БАЗОВЫЙ СТИЛЬ ПАНЕЛЕЙ
+   ================================================== */
 .cmd-panel {
     position: relative;
     padding: 30px;
@@ -209,65 +216,173 @@
     background: repeating-linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 2px, transparent 2px, transparent 6px);
 }
 
-.schedule-panel { grid-column: 1 / 2; grid-row: 1 / 3; }
-.schedule-panel::before { background: linear-gradient(135deg, var(--neon-green) 0%, rgba(57, 255, 20, 0.1) 50%, var(--neon-green) 100%); }
+/* ==================================================
+   1. SCHEDULE (NEW: SYSTEM LOG TIMELINE)
+   ================================================== */
+.schedule-panel { 
+    grid-column: 1 / 2; 
+    grid-row: 1 / 3; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* Градиентная подложка для всей панели */
+.schedule-panel::before { 
+    background: linear-gradient(180deg, rgba(57, 255, 20, 0.05) 0%, transparent 100%); 
+}
 
 .schedule-timeline-container {
-    overflow-y: auto; padding-right: 10px;
-    display: flex; flex-direction: column; gap: 12px; height: 100%;
+    overflow-y: auto; 
+    padding: 10px 15px 10px 5px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0; 
+    height: 100%;
+    position: relative;
 }
-.schedule-timeline-container::-webkit-scrollbar { width: 6px; }
-.schedule-timeline-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-.schedule-timeline-container::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 3px; }
 
-.cmd-schedule-item {
-    display: flex; align-items: stretch;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 6px; transition: all 0.2s ease;
-    min-height: 85px;
+/* Тонкая вертикальная линия таймлайна слева */
+.schedule-timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 24px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 0;
 }
+
+/* Скроллбар */
+.schedule-timeline-container::-webkit-scrollbar { width: 4px; }
+.schedule-timeline-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+.schedule-timeline-container::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+/* --- ЭЛЕМЕНТ СПИСКА --- */
+.cmd-schedule-item {
+    display: flex; 
+    align-items: flex-start;
+    position: relative;
+    padding: 20px 0 20px 45px; /* Отступ слева под линию */
+    border: none;
+    background: transparent;
+    transition: all 0.3s ease;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.cmd-schedule-item:last-child { border-bottom: none; }
+
+/* УЗЕЛ (Точка на линии) */
+.cmd-schedule-item::before {
+    content: '';
+    position: absolute;
+    left: 19px; 
+    top: 28px;
+    width: 12px;
+    height: 12px;
+    background: #000;
+    border: 2px solid #555;
+    border-radius: 50%;
+    z-index: 2;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* HOVER ЭФФЕКТ */
 .cmd-schedule-item:hover {
-    background: rgba(57, 255, 20, 0.03); border-color: rgba(57, 255, 20, 0.4);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+}
+.cmd-schedule-item:hover::before {
+    border-color: var(--neon-green);
+    background: var(--neon-green);
+    box-shadow: 0 0 15px var(--neon-green);
+}
+
+/* --- АКТИВНЫЙ ЭЛЕМЕНТ (ТЕКУЩИЙ ДЕНЬ) --- */
+.cmd-schedule-item.active {
+    background: linear-gradient(90deg, rgba(57, 255, 20, 0.1) 0%, transparent 100%);
+    border-left: 2px solid var(--neon-green);
+    padding-left: 43px; 
+}
+
+/* Активный узел пульсирует */
+.cmd-schedule-item.active::before {
+    width: 16px; height: 16px; left: 17px; top: 26px;
+    background: var(--neon-green);
+    border-color: #fff;
+    box-shadow: 0 0 20px var(--neon-green);
+    animation: node-pulse 2s infinite;
+}
+
+@keyframes node-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(57, 255, 20, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
+}
+
+/* --- КОНТЕНТ ВНУТРИ --- */
+.sch-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.sch-day { 
+    color: var(--neon-green); 
+    font-weight: 700; 
+    font-size: 0.9rem;
+    font-family: 'Rajdhani', sans-serif; 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+}
+
+.sch-time-badge {
+    font-family: 'monospace';
+    font-size: 0.8rem;
+    color: #000;
+    background: #666;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+.cmd-schedule-item.active .sch-time-badge {
+    background: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+.cmd-sch-info { width: 100%; }
+
+.sch-game { 
+    color: #fff; 
+    font-size: 1.3rem;
+    font-weight: 700; 
+    font-family: 'Orbitron', sans-serif; 
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+.cmd-schedule-item:hover .sch-game {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     transform: translateX(5px);
 }
-.cmd-schedule-item.active {
-    border: 1px solid var(--neon-green);
-    background: linear-gradient(90deg, rgba(57, 255, 20, 0.1) 0%, transparent 100%);
-    box-shadow: inset 4px 0 0 var(--neon-green);
+
+.sch-desc { 
+    color: #888; 
+    font-size: 0.9rem; 
+    font-family: 'Exo 2', sans-serif; 
+    line-height: 1.4; 
+    border-left: 2px solid rgba(255,255,255,0.1);
+    padding-left: 10px;
+    margin-top: 5px;
 }
 
-.cmd-sch-time {
-    width: 170px;
-    flex-shrink: 0; 
-    display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
-    padding: 15px 20px; border-right: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.2); text-align: right;
-}
-.sch-day { 
-    color: #fff; font-weight: 700; font-size: 1.1rem;
-    font-family: 'Rajdhani', sans-serif; text-transform: uppercase; 
-    letter-spacing: 1px; margin-bottom: 6px;
-}
-.cmd-schedule-item.active .sch-day { color: var(--neon-green); text-shadow: 0 0 10px rgba(57, 255, 20, 0.4); }
-.sch-hour { 
-    color: #666; font-family: 'monospace'; font-size: 0.9rem;
-    background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 4px;
-}
-.cmd-schedule-item.active .sch-hour { color: var(--neon-green); background: rgba(57, 255, 20, 0.1); }
-
-.cmd-sch-info { 
-    flex-grow: 1; padding: 15px 20px;
-    display: flex; flex-direction: column; justify-content: center; overflow: hidden;
-}
-.sch-game { 
-    color: #eee; font-size: 1.25rem;
-    font-weight: 700; font-family: 'Orbitron', sans-serif; margin-bottom: 6px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.sch-desc { color: #888; font-size: 0.95rem; font-family: 'Exo 2', sans-serif; line-height: 1.4; }
 .loading-scanline { padding: 30px; font-size: 1.2rem; }
 
+/* ==================================================
+   2. RADAR CHART
+   ================================================== */
 .stats-radar-panel { grid-column: 2 / 4; grid-row: 1 / 2; overflow: hidden; }
 .stats-radar-panel::before { background: linear-gradient(135deg, var(--neon-pink) 0%, rgba(255, 45, 149, 0.1) 50%, var(--neon-pink) 100%); }
 
@@ -286,6 +401,9 @@
     width: 100%; height: 100%; min-height: 0; padding: 15px;
 }
 
+/* ==================================================
+   3. METRICS
+   ================================================== */
 .stats-metrics-panel {
     grid-column: 2 / 3; grid-row: 2 / 3; overflow: hidden;
     display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
@@ -313,6 +431,9 @@
 .metric-slot:nth-child(2) .slot-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 70%; background: var(--neon-pink); box-shadow: 0 0 5px var(--neon-pink); }
 .metric-slot:nth-child(3) .slot-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 45%; background: #ffd700; box-shadow: 0 0 5px #ffd700; }
 
+/* ==================================================
+   4. CIRCLE PANEL
+   ================================================== */
 .stats-circle-panel {
     grid-column: 3 / 4; grid-row: 2 / 3;
     align-items: center; justify-content: center; padding-top: 0;
@@ -345,17 +466,13 @@
 }
 .loyalty-val { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 700; color: #fff; }
 
+/* АНИМАЦИИ */
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 @keyframes rotate-hud { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes glitch-anim {
-    0% { clip: rect(44px, 9999px, 56px, 0); transform: skew(0.5deg); }
-    10% { clip: rect(33px, 9999px, 11px, 0); transform: skew(-0.5deg); }
-    20% { clip: rect(88px, 9999px, 99px, 0); }
-    30% { clip: rect(11px, 9999px, 33px, 0); }
-    40% { clip: rect(55px, 9999px, 2px, 0); transform: skew(0.5deg); }
-    100% { clip: rect(66px, 9999px, 88px, 0); }
-}
 
+/* =========================================
+   АДАПТИВНОСТЬ
+   ========================================= */
 @media (max-width: 1400px) {
     .command-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
     .schedule-panel { grid-column: 1 / 3; height: 500px; }

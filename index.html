@@ -30,8 +30,11 @@
 </head>
 <body>
     
-    <!-- ГЛОБАЛЬНЫЙ ФОН (КОМЕТЫ) -->
+    <!-- ГЛОБАЛЬНЫЙ ФОН (КОМЕТЫ - ЗАДНИЙ ПЛАН) -->
     <div id="comet-system"></div>
+    
+    <!-- НОВЫЙ СЛОЙ (КОМЕТЫ - ПЕРЕДНИЙ ПЛАН / 3D ЭФФЕКТ) -->
+    <div id="comet-system-fg"></div>
 
     <!-- =========================================
          СЕКЦИЯ 1: HERO (HUD ИНТЕРФЕЙС)
@@ -108,7 +111,7 @@
                         <!-- СПИСОК УЧАСТНИКОВ -->
                         <div class="squad-list">
                             
-                            <!-- BAGERca (Аватарка) -->
+                            <!-- BAGERca -->
                             <div class="squad-member" data-member="bagerka">
                                 <div class="avatar-wrapper">
                                     <div class="squad-avatar bagerka-avatar orbital-photo bagerka">
@@ -119,7 +122,7 @@
                                 <span class="squad-name">BAGERca</span>
                             </div>
 
-                            <!-- Angel (Аватарка) -->
+                            <!-- Angel -->
                             <div class="squad-member" data-member="angel">
                                 <div class="avatar-wrapper">
                                     <div class="squad-avatar angel-avatar orbital-photo angel">
@@ -130,7 +133,7 @@
                                 <span class="squad-name">Angel</span>
                             </div>
 
-                            <!-- Kiriki (Аватарка) -->
+                            <!-- Kiriki -->
                             <div class="squad-member" data-member="kiriki">
                                 <div class="avatar-wrapper">
                                     <div class="squad-avatar kiriki-avatar orbital-photo kiriki">
@@ -160,7 +163,6 @@
                     <!-- Детальный вид -->
                     <div class="squad-detail-view">
                         <button class="close-detail-btn">&times;</button>
-                        <!-- Контейнер будет заполнен через JS -->
                         <div class="detail-avatar-container"></div>
                         <h3 class="detail-name"></h3>
                         <p class="detail-description"></p>
@@ -242,6 +244,7 @@
                 </div>
             </div>
             <div class="command-grid">
+                <!-- SCHEDULE PANEL -->
                 <div class="cmd-panel schedule-panel">
                     <div class="hud-bracket top-left"></div><div class="hud-bracket bottom-right"></div>
                     <div class="cmd-panel-header">
@@ -249,17 +252,20 @@
                     </div>
                     <div class="schedule-timeline-container" id="schedule-container"><div class="loading-scanline">INITIATING SCAN...</div></div>
                 </div>
+                <!-- RADAR PANEL -->
                 <div class="cmd-panel stats-radar-panel">
                     <div class="hud-bracket top-right"></div><div class="hud-bracket bottom-left"></div>
                     <div class="cmd-panel-header"><span class="header-tag">ANALYSIS</span><h3>ПАРАМЕТРЫ</h3></div>
                     <div class="radar-crosshair"></div>
                     <div class="radar-wrapper-compact"><canvas id="radarChart"></canvas></div>
                 </div>
+                <!-- METRICS PANEL -->
                 <div class="cmd-panel stats-metrics-panel">
                     <div class="tech-bg-lines"></div>
                     <div class="metric-slot"><div class="slot-label">АГЕНТЫ</div><div class="slot-value followers-val">0</div><div class="slot-bar"></div></div>
                     <div class="metric-slot"><div class="slot-label">ЭФИР (Ч)</div><div class="slot-value hours-val">0</div><div class="slot-bar"></div></div>
                 </div>
+                <!-- CIRCLE PANEL -->
                 <div class="cmd-panel stats-circle-panel">
                     <div class="cmd-panel-header simple"><span>LOYALTY</span></div>
                     <div class="circular-chart-wrapper">
@@ -418,7 +424,23 @@
         </div>
     </footer>
 
+    <!-- NAVIGATION RAIL -->
     <div id="cyber-nav-rail" class="cyber-nav-rail"></div>
+
+    <!-- LIQUID SCROLLBAR (CUSTOM PHYSICS) -->
+    <div id="liquid-scrollbar-track">
+        <div id="liquid-scrollbar-thumb">
+            <div class="tube-glass"></div>
+            <div class="liquid-inner">
+                <div class="liquid-surface"></div>
+                <div class="bubble b1"></div>
+                <div class="bubble b2"></div>
+                <div class="bubble b3"></div>
+            </div>
+            <div class="tube-cap top"></div>
+            <div class="tube-cap bottom"></div>
+        </div>
+    </div>
 
     <script type="module" src="js/app.js"></script>
     <script src="js/hud-script.js"></script>

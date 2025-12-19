@@ -8,7 +8,8 @@ export function initializeUI() {
     
     initSmoothScroll();
     initCardCopy();
-    initNavRail(); 
+    initNavRail();
+    initLiquidScrollbar(); // Запуск физики скроллбара
 }
 
 /**
@@ -37,9 +38,7 @@ function initSmoothScroll() {
 }
 
 /**
- * 2. Логика копирования номера карты (CYBER DECODE EFFECT - ADVANCED)
- * - Интерполяция длины (сжатие/растяжение)
- * - Зеркальное направление открытия (Right-to-Left)
+ * 2. Логика копирования номера карты (CYBER DECODE EFFECT)
  */
 function initCardCopy() {
     const cardElement = document.getElementById('card-number');
@@ -62,14 +61,7 @@ function initCardCopy() {
     const digitsContainer = cardElement.querySelector('.card-digits');
     let isAnimating = false; 
 
-    /**
-     * Продвинутая функция анимации текста
-     * @param {string} targetText - Целевой текст
-     * @param {boolean} reverseDirection - true для открытия Справа-Налево (восстановление)
-     * @param {function} onComplete - Коллбек
-     */
     function runCyberTextEffect(targetText, reverseDirection, onComplete) {
-        // Фиксируем начальную длину и конечную
         const startText = digitsContainer.innerText;
         const startLen = startText.length;
         const endLen = targetText.length;
@@ -79,25 +71,15 @@ function initCardCopy() {
         if (digitsContainer.dataset.interval) clearInterval(digitsContainer.dataset.interval);
 
         const interval = setInterval(() => {
-            // Расчет прогресса (от 0.0 до 1.0)
-            // Используем длину целевого текста как базу для скорости
             const totalSteps = targetText.length;
             const progress = Math.min(iterations / totalSteps, 1);
-            
-            // 1. ИНТЕРПОЛЯЦИЯ ДЛИНЫ
-            // Плавно меняем длину текущей строки от startLen до endLen
             const currentLen = Math.floor(startLen + (endLen - startLen) * progress);
             
-            // 2. ГЕНЕРАЦИЯ СТРОКИ
             let displayText = "";
             const revealCount = Math.floor(iterations);
 
             if (!reverseDirection) {
-                // --- ЛОГИКА "СЛЕВА-НАПРАВО" (Сжатие в "СКОПИРОВАНО") ---
-                // Открываем символы с начала строки
                 const revealedPart = targetText.substring(0, revealCount);
-                
-                // Остальное заполняем мусором до currentLen
                 let randomCount = currentLen - revealedPart.length;
                 if (randomCount < 0) randomCount = 0;
                 
@@ -105,17 +87,10 @@ function initCardCopy() {
                 for (let i = 0; i < randomCount; i++) {
                     randomPart += chars[Math.floor(Math.random() * chars.length)];
                 }
-                
                 displayText = revealedPart + randomPart;
-
             } else {
-                // --- ЛОГИКА "СПРАВА-НАЛЕВО" (Рост в Цифры) ---
-                // Открываем символы с КОНЦА строки
-                // Если targetText = "4276...", берем подстроку с конца
                 const startIdx = Math.max(0, targetText.length - revealCount);
                 const revealedPart = targetText.substring(startIdx);
-                
-                // Начало заполняем мусором
                 let randomCount = currentLen - revealedPart.length;
                 if (randomCount < 0) randomCount = 0;
                 
@@ -123,28 +98,24 @@ function initCardCopy() {
                 for (let i = 0; i < randomCount; i++) {
                     randomPart += chars[Math.floor(Math.random() * chars.length)];
                 }
-                
-                // Сначала мусор, потом восстановленный хвост
                 displayText = randomPart + revealedPart;
             }
             
             digitsContainer.innerText = displayText;
 
-            // Условие завершения
             if (iterations >= targetText.length) { 
                 clearInterval(interval);
-                digitsContainer.innerText = targetText; // Финализируем чистовой текст
+                digitsContainer.innerText = targetText; 
                 if (onComplete) onComplete();
             }
 
-            iterations += 1 / 2; // Скорость анимации
+            iterations += 1 / 2; 
 
-        }, 30); // 30ms на кадр
+        }, 30); 
 
         digitsContainer.dataset.interval = interval;
     }
 
-    // --- ОБРАБОТЧИК КЛИКА ---
     cardElement.addEventListener('click', () => {
         if (isAnimating) return; 
         isAnimating = true;
@@ -154,24 +125,16 @@ function initCardCopy() {
                 cardElement.classList.add('copied');
                 if (digitsContainer) digitsContainer.classList.add('success-mode');
 
-                // 1. ПРЯМАЯ АНИМАЦИЯ (Цифры -> Слово)
-                // reverseDirection = false (Слева-Направо)
                 runCyberTextEffect(successText, false, () => {
-                    
                     setTimeout(() => {
-                        
-                        // 2. ОБРАТНАЯ АНИМАЦИЯ (Слово -> Цифры)
-                        // reverseDirection = true (Справа-Налево, Зеркально)
                         runCyberTextEffect(originalText, true, () => {
-                            
                             if (digitsContainer) {
                                 digitsContainer.classList.remove('success-mode');
-                                digitsContainer.innerHTML = originalHTML; // Возвращаем спаны
+                                digitsContainer.innerHTML = originalHTML; 
                             }
                             cardElement.classList.remove('copied');
                             isAnimating = false;
                         });
-
                     }, 2000);
                 });
             })
@@ -263,4 +226,75 @@ function initNavRail() {
         const el = document.getElementById(sec.id);
         if (el) sectionObserver.observe(el);
     });
+}
+
+/**
+ * 4. Кастомный скроллбар с физикой жидкости
+ */
+function initLiquidScrollbar() {
+    const track = document.getElementById('liquid-scrollbar-track');
+    const thumb = document.getElementById('liquid-scrollbar-thumb');
+    
+    // Если элементов нет, выходим
+    if (!track || !thumb) return;
+    
+    const liquid = thumb.querySelector('.liquid-inner');
+
+    let lastScrollTop = 0;
+    
+    // Функция обновления (Game Loop)
+    function update() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        
+        // 1. Расчет высоты и позиции ползунка
+        // Если контента мало, высота ползунка может быть равна высоте окна
+        const scrollableDistance = docHeight - winHeight;
+        
+        // Защита от деления на ноль, если контента мало
+        if (scrollableDistance <= 0) {
+            thumb.style.display = 'none';
+            requestAnimationFrame(update);
+            return;
+        } else {
+            thumb.style.display = 'block';
+        }
+
+        const scrollPercent = scrollTop / scrollableDistance;
+        const trackHeight = winHeight;
+        
+        // Высота ползунка (пропорционально, но не меньше 80px)
+        let thumbHeight = Math.max((winHeight / docHeight) * trackHeight, 80);
+        thumb.style.height = `${thumbHeight}px`;
+
+        // Доступное место для движения ползунка
+        const availableSpace = trackHeight - thumbHeight;
+        const thumbTop = scrollPercent * availableSpace;
+        
+        thumb.style.transform = `translateY(${thumbTop}px)`;
+
+        // 2. Физика жидкости (Наклон)
+        const velocity = scrollTop - lastScrollTop;
+        lastScrollTop = scrollTop;
+
+        // Ограничиваем угол наклона
+        const maxSkew = 20; 
+        
+        // Коэффициент чувствительности
+        let skew = -velocity * 0.5; 
+        
+        if (skew > maxSkew) skew = maxSkew;
+        if (skew < -maxSkew) skew = -maxSkew;
+
+        // Применяем наклон к жидкости
+        if (liquid) {
+            liquid.style.transform = `skewY(${skew}deg)`;
+        }
+
+        requestAnimationFrame(update);
+    }
+
+    // Запускаем цикл анимации
+    requestAnimationFrame(update);
 }

@@ -1,7 +1,8 @@
 /* js/comets.js */
 
-// Основной контейнер
-let container = null;
+// Контейнеры
+let containerBg = null;
+let containerFg = null;
 
 // Цвета
 const cometColors = [
@@ -18,10 +19,12 @@ const cometColors = [
  * Инициализация системы комет
  */
 export function initCometSystem() {
-    container = document.getElementById('comet-system');
-    if (!container) return;
+    containerBg = document.getElementById('comet-system');
+    containerFg = document.getElementById('comet-system-fg');
+    
+    if (!containerBg) return;
 
-    console.log('🌠 Comet system initialized. Waiting for cycle...');
+    console.log('🌠 Comet system initialized (3D Mode). Waiting for cycle...');
     
     // Запускаем бесконечный цикл редкого появления
     scheduleNextIdleCycle();
@@ -31,76 +34,76 @@ export function initCometSystem() {
  * Планировщик редких событий (1-2 кометы раз в 30-60 сек)
  */
 function scheduleNextIdleCycle() {
-    // Рандомная задержка от 30 до 60 секунд
     const delay = Math.random() * 30000 + 30000; 
     
     setTimeout(() => {
-        // Решаем, сколько комет запустить: 1 (70%) или 2 (30%)
         const count = Math.random() > 0.7 ? 2 : 1;
-        
-        // Чтобы если их 2, они летели примерно с одной стороны,
-        // передаем фиксированную сторону (side) в spawnComet
         const side = Math.floor(Math.random() * 4);
         
         for (let i = 0; i < count; i++) {
-            // Небольшая задержка между парой комет (0 - 500мс)
             setTimeout(() => {
                 spawnComet(side);
             }, i * 300); 
         }
 
-        // Планируем следующий цикл
         scheduleNextIdleCycle();
     }, delay);
 }
 
 /**
- * ЭКСПОРТ: Функция для вызова из консоли (Метеоритный дождь)
- * Запускает много комет за короткое время
+ * ЭКСПОРТ: Метеоритный дождь
  */
 export function triggerCometShower() {
-    if (!container) return;
+    if (!containerBg) return;
     
-    // Количество комет в залпе (20-30 штук)
     const count = 30;
     
     for (let i = 0; i < count; i++) {
-        // Разбрасываем их старт на протяжении 3 секунд
         const delay = Math.random() * 3000;
-        
         setTimeout(() => {
-            // В дожде кометы летят отовсюду (side = null -> рандом внутри функции)
-            spawnComet(null, true); // true = быстрый режим
+            spawnComet(null, true); 
         }, delay);
     }
 }
 
 /**
  * Создание одной кометы
- * @param {number|null} forcedSide - Принудительная сторона (0-3) или null
- * @param {boolean} isFast - Если true, комета летит быстрее (для дождя)
  */
 function spawnComet(forcedSide = null, isFast = false) {
-    if (!container) return;
+    // 1. РЕШАЕМ, ГДЕ ЛЕТИТ КОМЕТА (Сзади или Спереди)
+    // 30% шанс пролететь перед лицом (над кольцами)
+    const isForeground = Math.random() < 0.3;
+    
+    // Выбираем нужный контейнер
+    const targetContainer = isForeground ? containerFg : containerBg;
+    
+    if (!targetContainer) return;
 
     const comet = document.createElement('div');
     comet.className = 'comet';
     
+    // Если комета летит спереди, делаем её чуть ярче и толще (эффект перспективы)
+    const scaleModifier = isForeground ? 1.5 : 1;
+    
     const color = cometColors[Math.floor(Math.random() * cometColors.length)];
     comet.style.color = color;
     comet.style.background = `linear-gradient(90deg, transparent, ${color}, #fff)`;
+    
+    // Если спереди - добавляем размытие, типа "расфокус" от близость
+    if (isForeground) {
+        comet.style.filter = `drop-shadow(0 0 8px ${color}) blur(1px)`;
+        comet.style.zIndex = "20"; // На всякий случай
+    }
 
     // Геометрия экрана
     const w = window.innerWidth;
     const h = window.innerHeight;
     const offset = 150;
 
-    // Выбор стороны: 0-Top, 1-Right, 2-Bottom, 3-Left
     const side = forcedSide !== null ? forcedSide : Math.floor(Math.random() * 4);
     
     let startX, startY, endX, endY;
 
-    // Логика координат (немного рандома в конечной точке)
     switch(side) {
         case 0: // Top -> Down
             startX = Math.random() * w; startY = -offset;
@@ -120,28 +123,28 @@ function spawnComet(forcedSide = null, isFast = false) {
             break;
     }
 
-    // Векторная математика
     const deltaX = endX - startX;
     const deltaY = endY - startY;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
     // Скорость
-    // Если "дождь" (isFast), то скорость выше (0.8 - 1.5 px/ms)
-    // Если обычно, то медленнее (0.2 - 0.5 px/ms) для красоты
-    const speedBase = isFast ? (Math.random() * 0.7 + 0.8) : (Math.random() * 0.3 + 0.2);
+    let speedBase = isFast ? (Math.random() * 0.7 + 0.8) : (Math.random() * 0.3 + 0.2);
+    
+    // Кометы на переднем плане визуально должны лететь быстрее (параллакс)
+    if (isForeground) speedBase *= 1.5;
+
     const duration = distance / speedBase;
 
-    // Размеры
-    const length = Math.min(Math.max(speedBase * 300, 150), 600);
-    const thickness = Math.random() * 2 + 1;
+    // Размеры с учетом перспективы
+    const length = Math.min(Math.max(speedBase * 300, 150), 600) * scaleModifier;
+    const thickness = (Math.random() * 2 + 1) * scaleModifier;
 
     comet.style.width = `${length}px`;
     comet.style.height = `${thickness}px`;
 
-    container.appendChild(comet);
+    targetContainer.appendChild(comet);
 
-    // Анимация
     const animation = comet.animate([
         { transform: `translate(${startX}px, ${startY}px) rotate(${angle}deg)`, opacity: 0 },
         { transform: `translate(${startX + deltaX * 0.15}px, ${startY + deltaY * 0.15}px) rotate(${angle}deg)`, opacity: 1, offset: 0.1 },

@@ -34,18 +34,31 @@
 
 html {
     scroll-behavior: smooth;
+    /* ФИКС: Скрываем скроллбар тут тоже */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
 }
 
 body {
-    /* ФУНДАМЕНТ: Глубокий черный цвет.
-       Если секция прозрачная — мы видим кометы на этом фоне.
-       Если секция плотная — она перекрывает это. */
-    background-color: #050508;
+    background-color: #050508; 
     color: var(--white);
     line-height: 1.6;
     font-family: 'Exo 2', sans-serif;
-    overflow-x: hidden;
+    overflow-x: hidden; 
     min-height: 100vh;
+    
+    /* Скрываем скроллбар для Firefox/IE */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+}
+
+/* ФИКС: Скрываем стандартный скроллбар (Chrome/Safari/Edge) ВЕЗДЕ */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+    display: none; /* Полное скрытие */
 }
 
 a { text-decoration: none; color: inherit; transition: 0.3s; }
@@ -61,15 +74,14 @@ img { max-width: 100%; display: block; }
     margin: 0 auto;
     padding: 0 15px;
     position: relative;
-    z-index: 10; /* Контент всегда выше фона секции */
+    z-index: 10;
 }
 
 section {
     padding: 80px 0;
     position: relative;
-    /* СЛОЙ 1: Секции лежат выше комет (у комет z-index: 0).
-       Прозрачность фона регулируется в файлах конкретных секций. */
-    z-index: 1; 
+    /* СРЕДНИЙ СЛОЙ: Выше задних комет (0), ниже передних (15) */
+    z-index: 10; 
 }
 
 /* =========================================
@@ -95,16 +107,6 @@ section {
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
     transform: translate(-2px, -2px); display: none; 
 }
-
-/* =========================================
-   CUSTOM SCROLLBAR
-   ========================================= */
-::-webkit-scrollbar { width: 10px; height: 10px; background-color: #050508; }
-::-webkit-scrollbar-track { background: #0a0b10; border-left: 1px solid rgba(255, 255, 255, 0.05); }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; border: 2px solid #0a0b10; transition: all 0.3s ease; }
-::-webkit-scrollbar-thumb:hover { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
-::-webkit-scrollbar-thumb:active { background: #2cb810; }
-* { scrollbar-width: thin; scrollbar-color: #333 #0a0b10; }
 
 /* =========================================
    CYBER NAV RAIL (Навигация справа)
@@ -135,24 +137,28 @@ section {
 .nav-marker:hover .nav-tooltip { opacity: 1; transform: translateY(-50%) translateX(-5px); }
 
 /* =========================================
-   COMET SYSTEM (BACKGROUND LAYER)
+   COMET SYSTEMS (LAYERS)
    ========================================= */
+
+/* СЛОЙ 0: ЗАДНИЙ ПЛАН (Под секциями) */
 #comet-system {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; 
     overflow: hidden;
-    
-    /* СЛОЙ 0:
-       Это самый нижний слой. Он лежит НАД body, но ПОД section.
-       Чтобы его увидеть, у section не должно быть сплошного цвета фона.
-    */
     z-index: 0; 
 }
 
+/* СЛОЙ 15: ПЕРЕДНИЙ ПЛАН (3D Эффект - Над секциями) */
+#comet-system-fg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; 
+    overflow: hidden;
+    z-index: 15; 
+}
+
+/* Общий стиль кометы */
 .comet {
     position: absolute;
     top: 0; left: 0;
@@ -161,4 +167,89 @@ section {
     transform-origin: right center;
     filter: drop-shadow(0 0 4px currentColor);
     will-change: transform, opacity;
+}
+
+/* =========================================
+   LIQUID SCROLLBAR (КАСТОМНЫЙ СКРОЛЛ)
+   ========================================= */
+
+/* Трек (Рельса) */
+#liquid-scrollbar-track {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 14px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 9999; /* Поверх всего интерфейса */
+    pointer-events: none; /* Пропускает клики (чтобы можно было скроллить колесом) */
+}
+
+/* Ползунок (Колба) */
+#liquid-scrollbar-thumb {
+    position: absolute;
+    right: 2px;
+    width: 10px;
+    min-height: 80px; /* Минимальная высота */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+    /* Позиция top и height задаются через JS */
+}
+
+/* Стекло колбы */
+.tube-glass {
+    position: absolute; inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 5;
+    box-shadow: inset 2px 0 5px rgba(255,255,255,0.1), inset -2px 0 5px rgba(0,0,0,0.5);
+}
+
+/* Крышки колбы */
+.tube-cap {
+    position: absolute; left: 0; width: 100%; height: 6px;
+    background: #444; border: 1px solid #777; z-index: 6;
+}
+.tube-cap.top { top: 0; border-radius: 5px 5px 0 0; }
+.tube-cap.bottom { bottom: 0; border-radius: 0 0 5px 5px; }
+
+/* Жидкость */
+.liquid-inner {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 95%;
+    background: var(--neon-green);
+    box-shadow: 0 0 15px var(--neon-green);
+    border-radius: 0 0 10px 10px;
+    /* Плавность для возврата в спокойное состояние */
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center bottom;
+    z-index: 2;
+}
+
+/* Поверхность жидкости */
+.liquid-surface {
+    position: absolute; top: 0; left: -50%; width: 200%; height: 10px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: translateY(-5px);
+}
+
+/* Пузырьки */
+.bubble {
+    position: absolute; bottom: -10px; left: 50%;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    animation: bubble-rise 2s infinite linear;
+}
+.bubble.b1 { left: 30%; animation-duration: 1.5s; animation-delay: 0s; }
+.bubble.b2 { left: 70%; animation-duration: 2.2s; animation-delay: 0.5s; }
+.bubble.b3 { left: 50%; animation-duration: 1.8s; animation-delay: 1s; }
+
+@keyframes bubble-rise {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-60px) scale(1.2); opacity: 0; }
 }

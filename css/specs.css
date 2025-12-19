@@ -1,25 +1,19 @@
 /* css/specs.css */
 
 /* =========================================
-   SECTION: HARDWARE (FINAL FIX)
+   SECTION: HARDWARE (FINAL CLEAN)
    ========================================= */
 
 .specs-section {
-    /* ПРИГЛУШЕННЫЙ ФОН:
-       96% непрозрачности. Кометы видны тонкими темными линиями.
-       Мы убрали размытие, чтобы они не становились "толстыми".
-    */
     background-color: rgba(7, 7, 10, 0.96); 
-    
-    /* УБРАЛИ backdrop-filter */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    
-    /* Секция выше комет */
     position: relative;
     z-index: 10;
     
-    padding: 40px 0; 
+    /* БЫЛО: 40px 0 -> СТАЛО: 20px 0 (Меньше отступ сверху) */
+    padding: 20px 0 40px 0; 
+    
     overflow: hidden;
     border-top: 1px solid rgba(57, 255, 20, 0.1);
 }
@@ -38,9 +32,16 @@
     z-index: 1;
 }
 
+/* =========================================
+   NEW CYBER HEADER STYLE (COMPACT)
+   ========================================= */
+
 .cyber-header-wrapper {
     text-align: center;
-    margin-bottom: 50px;
+    
+    /* БЫЛО: 50px -> СТАЛО: 30px (Меньше отступ до карточек) */
+    margin-bottom: 30px;
+    
     position: relative;
     z-index: 5;
 }
@@ -66,28 +67,22 @@
     margin: 0;
     position: relative;
     display: inline-block;
+    
     text-shadow: 
         0 0 10px rgba(57, 255, 20, 0.5),
         0 0 20px rgba(57, 255, 20, 0.3),
         2px 2px 0px #000;
 }
 
-.cyber-header-main::before {
-    content: attr(data-text);
-    position: absolute;
-    left: 2px; top: 0;
-    color: var(--neon-green);
-    overflow: hidden;
-    clip: rect(0, 900px, 0, 0);
-    animation: none;
-    opacity: 0;
+/* Гарантия отсутствия глитча */
+.cyber-header-main::before,
+.cyber-header-main::after {
+    content: none !important;
+    display: none !important;
+    animation: none !important;
 }
 
-.cyber-header-wrapper:hover .cyber-header-main::before {
-    opacity: 0.5;
-    animation: glitch-anim 2s infinite linear alternate-reverse;
-}
-
+/* Декоративные линии снизу */
 .cyber-header-lines {
     display: flex;
     align-items: center;
@@ -112,14 +107,9 @@
     box-shadow: 0 0 10px var(--neon-green);
 }
 
-@keyframes glitch-anim {
-    0% { clip: rect(44px, 9999px, 56px, 0); transform: skew(0.5deg); }
-    10% { clip: rect(33px, 9999px, 11px, 0); transform: skew(-0.5deg); }
-    20% { clip: rect(88px, 9999px, 99px, 0); }
-    30% { clip: rect(11px, 9999px, 33px, 0); }
-    40% { clip: rect(55px, 9999px, 2px, 0); transform: skew(0.5deg); }
-    100% { clip: rect(66px, 9999px, 88px, 0); }
-}
+/* =========================================
+   GRID & CARDS (WIDE LAYOUT)
+   ========================================= */
 
 .specs-grid {
     display: grid;
@@ -249,6 +239,8 @@
     transition: width 0.5s ease;
 }
 .spec-card:hover .spec-bar-loader { width: 100%; }
+
+/* --- АДАПТИВНОСТЬ --- */
 
 @media (max-width: 1024px) {
     .specs-grid { gap: 15px; }

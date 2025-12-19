@@ -1,13 +1,17 @@
 /* js/app.js */
 
-// Main application entry point
+// UI & Components
 import { initializeUI } from './ui-components.js';
-import { initializeDataManager } from './data-manager.js';
 import { initMediaArchive } from './media-manager.js';
-// Импортируем движок пасхалки (Ящерица)
+
+// Visual Effects
 import { startReptileProtocol } from './reptile-engine.js';
-// Импортируем систему комет и функцию для вызова "дождя"
 import { initCometSystem, triggerCometShower } from './comets.js';
+
+// Data Modules (New Architecture)
+import { initSchedule } from './schedule.js';
+import { initStats } from './stats.js';
+import { initSubscribers } from './subscribers.js';
 
 // Application state
 const AppState = {
@@ -28,16 +32,24 @@ async function initializeApplication() {
         // 1. Инициализация UI (Скролл, Навигация, Копирование)
         initializeUI();
         
-        // 2. Загрузка данных (Статистика, Расписание)
-        await initializeDataManager();
+        // 2. Параллельная загрузка данных из модулей
+        await Promise.all([
+            initSchedule(),
+            initStats(),
+            initSubscribers(),
+            initMediaArchive()
+        ]);
         
-        // 3. Инициализация архива (Игры и Кино)
-        await initMediaArchive();
+        // Автообновление данных каждые 5 минут
+        setInterval(() => {
+            initSchedule();
+            initStats();
+        }, 300000);
         
-        // 4. Запуск системы комет (Фон)
+        // 3. Запуск визуальных эффектов
         initCometSystem();
         
-        // 5. Инициализация терминала
+        // 4. Инициализация терминала
         initTerminalInput();
         runTerminalBoot();
         
@@ -172,7 +184,7 @@ function initTerminalInput() {
                 startReptileProtocol();
                 
             } else if (command === 'comet' || command === 'comets' || command === 'meteor') {
-                // НОВАЯ ПАСХАЛКА: КОМЕТЫ
+                // ПАСХАЛКА: МЕТЕОРИТНЫЙ ДОЖДЬ
                 responseText = '<span style="color:var(--neon-pink)">ВНИМАНИЕ: ОБНАРУЖЕН МЕТЕОРИТНЫЙ ПОТОК!</span>';
                 triggerCometShower();
                 
@@ -233,11 +245,9 @@ function monitorPerformance() {
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initializeApplication();
-        monitorPerformance();
     });
 } else {
     initializeApplication();
-    monitorPerformance();
 }
 
 // Export for debugging

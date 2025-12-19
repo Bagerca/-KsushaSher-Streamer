@@ -1,6 +1,6 @@
 /* js/media-manager.js */
 
-import { loadGames, loadMovies } from './data-manager.js';
+import { loadData } from './api.js';
 
 const ArchiveState = {
     currentType: 'games', // 'games' или 'movies'
@@ -77,7 +77,11 @@ async function switchArchiveType(type) {
         }
         if (searchModule) searchModule.classList.remove('suggestions-open');
         
-        const rawData = type === 'games' ? await loadGames() : await loadMovies();
+        // ЗАГРУЗКА ДАННЫХ ЧЕРЕЗ API
+        const rawData = type === 'games' 
+            ? await loadData('games.json', []) 
+            : await loadData('movies.json', []);
+
         ArchiveState.data = Array.isArray(rawData) ? rawData : [];
         
         renderFilters();
