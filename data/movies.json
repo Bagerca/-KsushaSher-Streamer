@@ -1,16 +1,62 @@
 [
   {
-    "id": "тест-1-я-ебал-козу",
-    "title": "Тест 1 я ебал козу",
-    "rating": 2,
-    "description": "Первый тест фильма я и бал принесс",
-    "image": "https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png",
-    "genres": [
-      "horror",
-      "family"
-    ],
+    "id": "arcane",
+    "title": "Arcane / Аркейн",
+    "rating": 5.0,
+    "description": "Шедевр анимации от Riot. История двух сестер Вай и Джинкс по разные стороны баррикад Пилтовера и Зауна. Невероятный стиль и музыка.",
+    "image": "assets/images/movies/arcane.jpg",
+    "genres": ["animation", "fantasy", "action"],
     "status": "watched",
-    "videoId": "dQw4w9WgXcQ",
-    "customColor": "#39ff14"
+    "customColor": "#00a8ff"
+  },
+  {
+    "id": "wild-robot",
+    "title": "The Wild Robot / Дикий робот",
+    "rating": 4.9,
+    "description": "Очень трогательная и красивая история о роботе ROZZUM 7134, который учится выживать в дикой природе и становится приемной мамой для гусенка.",
+    "image": "assets/images/movies/wild-robot.jpg",
+    "genres": ["animation", "scifi", "adventure"],
+    "status": "watched",
+    "customColor": "#2ecc71"
+  },
+  {
+    "id": "gravity-falls",
+    "title": "Gravity Falls / Гравити Фолз",
+    "rating": 5.0,
+    "description": "Легендарное лето Диппера и Мэйбл в хижине чудес. Тайны, шифры, гномы и Билл Шифр. Классика, которую можно пересматривать бесконечно.",
+    "image": "assets/images/movies/gravity-falls.jpg",
+    "genres": ["animation", "mystery", "comedy"],
+    "status": "watched",
+    "customColor": "#9b59b6"
+  },
+  {
+    "id": "heroes-of-envell",
+    "title": "Heroes of Envell / Герои Энвелла",
+    "rating": 4.7,
+    "description": "Четверо школьников-геймеров находят ноутбук, который открывает портал в мир игры. Отличный сюжет, прокачка и реальные опасности.",
+    "image": "assets/images/movies/heroes-of-envell.jpg",
+    "genres": ["animation", "adventure", "fantasy"],
+    "status": "watched",
+    "customColor": "#8e44ad"
+  },
+  {
+    "id": "indie-cross",
+    "title": "Indie Cross",
+    "rating": 4.8,
+    "description": "Эпичный кроссовер легендарных инди-вселенных (Cuphead, Undertale, Bendy) в формате анимации. Стильно, музыкально и ностальгично.",
+    "image": "assets/images/movies/indie-cross.jpg",
+    "genres": ["animation", "action", "fantasy"],
+    "status": "watched",
+    "customColor": "#ffffff"
+  },
+  {
+    "id": "nine",
+    "title": "9 / Девять",
+    "rating": 4.6,
+    "description": "Мрачный стимпанк-постапокалипсис про тряпичных кукол, в которых живет душа человечества. Страшная машина и борьба за выживание.",
+    "image": "assets/images/movies/nine.jpg",
+    "genres": ["animation", "scifi", "horror"],
+    "status": "watched",
+    "customColor": "#d35400"
   }
 ]
