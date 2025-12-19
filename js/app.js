@@ -4,8 +4,10 @@
 import { initializeUI } from './ui-components.js';
 import { initializeDataManager } from './data-manager.js';
 import { initMediaArchive } from './media-manager.js';
-// Импортируем движок пасхалки
+// Импортируем движок пасхалки (Ящерица)
 import { startReptileProtocol } from './reptile-engine.js';
+// Импортируем систему комет
+import { initCometSystem } from './comets.js';
 
 // Application state
 const AppState = {
@@ -23,19 +25,20 @@ async function initializeApplication() {
     try {
         console.log('🚀 Starting Ksusha Sher website initialization...');
         
-        // 1. Инициализация общего UI (Скролл, Копирование номера карты)
+        // 1. Инициализация UI (Скролл, Навигация, Копирование)
         initializeUI();
         
-        // 2. Загрузка данных для Hero, Command Center (Статистика, Расписание)
+        // 2. Загрузка данных (Статистика, Расписание)
         await initializeDataManager();
         
-        // 3. Инициализация блока "Цифровой Архив" (Игры и Кино)
+        // 3. Инициализация архива (Игры и Кино)
         await initMediaArchive();
         
-        // 4. Инициализация ввода в терминал (Обработка команд)
+        // 4. Запуск системы комет (Фон)
+        initCometSystem();
+        
+        // 5. Инициализация терминала
         initTerminalInput();
-
-        // 5. ЗАПУСК БУТ-АНИМАЦИИ ТЕРМИНАЛА
         runTerminalBoot();
         
         console.log('✅ Ksusha Sher website initialized successfully!');
@@ -80,7 +83,7 @@ function addLogLine(html, isTyping = false) {
 async function runTerminalBoot() {
     if (!terminalHistory) return;
     
-    // Очистка перед стартом (удаляем старый статический текст)
+    // Очистка перед стартом
     terminalHistory.innerHTML = '';
     
     // Сценарий загрузки
@@ -121,12 +124,12 @@ function startSystemNoise() {
     ];
 
     setInterval(() => {
-        // 30% шанс появления сообщения каждые 8 секунд, если терминал существует
+        // 30% шанс появления сообщения каждые 8 секунд
         if (Math.random() > 0.7 && terminalHistory) {
             const msg = messages[Math.floor(Math.random() * messages.length)];
             addLogLine(msg);
             
-            // Если строк слишком много - удаляем верхнюю, чтобы не забивать память и DOM
+            // Если строк слишком много - удаляем верхнюю
             if (terminalHistory.children.length > 50) {
                 terminalHistory.removeChild(terminalHistory.firstChild);
             }
@@ -140,10 +143,9 @@ function startSystemNoise() {
 function initTerminalInput() {
     const input = document.getElementById('cmd-input');
 
-    // Если элементов нет, выходим
     if (!input || !terminalBox || !terminalHistory) return;
 
-    // Фокус на инпут при клике в любое место блока терминала
+    // Фокус на инпут при клике в любое место терминала
     terminalBox.addEventListener('click', () => {
         input.focus();
     });
@@ -154,7 +156,7 @@ function initTerminalInput() {
             const rawValue = input.value;
             const command = rawValue.trim().toLowerCase();
             
-            // 1. Добавляем введенную команду в историю (Белым цветом)
+            // 1. Добавляем введенную команду в историю
             const cmdLine = document.createElement('p');
             cmdLine.innerHTML = `> ${rawValue}`;
             cmdLine.style.color = '#fff'; 
@@ -165,7 +167,7 @@ function initTerminalInput() {
             let responseText = '';
             
             if (command === 'lizard' || command === 'protocol 66' || command === 'run creature') {
-                // ЗАПУСК ПАСХАЛКИ
+                // ПАСХАЛКА: ЯЩЕРИЦА
                 responseText = '<span style="color:var(--neon-green)">ЗАПУСК ПРОТОКОЛА "РЕПТИЛИЯ"...</span>';
                 startReptileProtocol();
                 
@@ -177,7 +179,7 @@ function initTerminalInput() {
                 
             } else if (command === 'clear') {
                 terminalHistory.innerHTML = '';
-                responseText = ''; // Ничего не пишем после очистки
+                responseText = ''; 
                 
             } else if (command === '') {
                 responseText = ''; 
@@ -186,12 +188,12 @@ function initTerminalInput() {
                 responseText = `<span style="color:#ff4444">ОШИБКА: КОМАНДА "${command}" НЕ РАСПОЗНАНА</span>`;
             }
 
-            // 3. Вывод ответа системы
+            // 3. Вывод ответа
             if (responseText) {
                 addLogLine(responseText);
             }
 
-            // 4. Очистка поля и автоскролл вниз
+            // 4. Очистка и скролл
             input.value = '';
             requestAnimationFrame(() => {
                 terminalBox.scrollTop = terminalBox.scrollHeight;
@@ -200,7 +202,7 @@ function initTerminalInput() {
     });
 }
 
-// Enhanced error handling
+// Error handling
 window.addEventListener('error', function(e) {
     console.error('🚨 Global error caught:', e.error);
 });
@@ -222,7 +224,7 @@ function monitorPerformance() {
     }
 }
 
-// Wait for complete page load
+// Start app
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initializeApplication();

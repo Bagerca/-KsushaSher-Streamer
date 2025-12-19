@@ -14,24 +14,28 @@
     <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- СТИЛИ -->
-    <link rel="stylesheet" href="css/style.css">          <!-- Общие стили -->
-    <link rel="stylesheet" href="css/hero.css">           <!-- Hero секция -->
-    <link rel="stylesheet" href="css/content.css">        <!-- Обо мне (Dashboard + Marquee) -->
-    <link rel="stylesheet" href="css/command-center.css"> <!-- Командный центр -->
-    <link rel="stylesheet" href="css/media-archive.css">  <!-- База Данных -->
-    <link rel="stylesheet" href="css/specs.css">          <!-- Железо -->
-    <link rel="stylesheet" href="css/donations.css">      <!-- Донаты -->
-    <link rel="stylesheet" href="css/footer.css">         <!-- Футер -->
+    <link rel="stylesheet" href="css/global.css">           <!-- Глобальные стили (Vars, Scroll, NavRail, Comets) -->
+    <link rel="stylesheet" href="css/style.css">            <!-- Общие стили сборки -->
+    <link rel="stylesheet" href="css/hero.css">             <!-- Hero секция -->
+    <link rel="stylesheet" href="css/content.css">          <!-- Обо мне (Dashboard + Marquee) -->
+    <link rel="stylesheet" href="css/command-center.css">   <!-- Командный центр -->
+    <link rel="stylesheet" href="css/media-archive.css">    <!-- База Данных -->
+    <link rel="stylesheet" href="css/specs.css">            <!-- Железо -->
+    <link rel="stylesheet" href="css/donations.css">        <!-- Донаты -->
+    <link rel="stylesheet" href="css/footer.css">           <!-- Футер -->
 </head>
 <body>
     
+    <!-- ГЛОБАЛЬНЫЙ ФОН (КОМЕТЫ) -->
+    <div id="comet-system"></div>
+
     <!-- =========================================
          СЕКЦИЯ 1: HERO (HUD ИНТЕРФЕЙС)
          ======================================== -->
-    <section class="hero-section-hud">
+    <section class="hero-section-hud" id="hero">
         
         <div class="hud-container">
             
@@ -48,7 +52,7 @@
                         <h3 class="panel-name">TETLA <span class="bot-version">v5.6</span></h3>
                     </div>
 
-                    <!-- Интерактивный терминал (JS заполнит его) -->
+                    <!-- Интерактивный терминал -->
                     <div class="ally-terminal" id="terminal-box">
                         <div id="terminal-history"></div>
                         
@@ -160,27 +164,20 @@
     </section>
 
     <!-- =========================================
-         СЕКЦИЯ 2: ОБО МНЕ (UNIFIED DASHBOARD)
+         СЕКЦИЯ 2: ОБО МНЕ
          ========================================= -->
     <section id="about" class="about-cyber-section">
-        
-        <!-- КОНТЕЙНЕР: Верхний блок (Единая панель) -->
         <div class="container">
-            
             <div class="about-layout-wrapper">
-                <!-- ЕДИНАЯ ПАНЕЛЬ: БИО + ВИДЕО -->
                 <div class="about-top-row">
-                    <!-- БИОГРАФИЯ (ЛЕВАЯ ЧАСТЬ) -->
+                    <!-- БИОГРАФИЯ -->
                     <div class="dossier-text">
-                        
-                        <!-- НОВЫЙ ЧИСТЫЙ ЗАГОЛОВОК -->
                         <div class="bio-header">
                             <span class="bio-icon"><i class="fas fa-terminal"></i></span>
                             <h3 class="bio-title">БИОГРАФИЯ</h3>
                         </div>
                         
                         <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
-                        
                         <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="twitch-link">Twitch</a>.</p>
                         
                         <div class="dossier-stats">
@@ -190,7 +187,7 @@
                         </div>
                     </div>
 
-                    <!-- ВИДЕО (ПРАВАЯ ЧАСТЬ) -->
+                    <!-- ВИДЕО -->
                     <div class="cyber-monitor">
                         <div class="video-wrapper">
                             <div class="monitor-header">
@@ -218,19 +215,17 @@
             </div>
         </div> 
 
-        <!-- КОНВЕЙЕР (На всю ширину экрана) -->
+        <!-- КОНВЕЙЕР -->
         <div class="subs-marquee-wrapper full-width-mode">
             <div class="marquee-header-centered">
                 <span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ
             </div>
-            
             <div class="marquee-track-container">
                 <div class="marquee-track" id="subscribers-track">
-                    <!-- JS загрузит вертикальные карточки сюда -->
+                    <!-- JS загрузит карточки -->
                 </div>
             </div>
         </div>
-
     </section>
 
     <!-- =========================================
@@ -327,8 +322,11 @@
          ========================================= -->
     <section id="media-archive" class="media-archive-section">
         <div class="container">
+            
+            <!-- ЗАГОЛОВОК (НОВЫЙ СТИЛЬ: CRYSTAL NEON) -->
             <div class="archive-header">
-                <h2 class="section-title" data-text="MEDIA_DATABASE">БАЗА ДАННЫХ</h2>
+                <h2 class="section-title">БАЗА ДАННЫХ</h2>
+                <div class="archive-header-sub">SYSTEM LIBRARY // ACCESS GRANTED</div>
                 
                 <div class="header-control-bar">
                     <button class="sort-side-btn active" data-sort="name"><span class="btn-label">А-Я</span><i class="fas fa-sort-alpha-down sort-icon"></i></button>
@@ -507,6 +505,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- NAV RAIL (Навигация справа) -->
+    <div id="cyber-nav-rail" class="cyber-nav-rail"></div>
 
     <!-- СКРИПТЫ -->
     <script type="module" src="js/app.js"></script>

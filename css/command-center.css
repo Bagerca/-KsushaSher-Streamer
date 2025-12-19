@@ -23,12 +23,14 @@
     mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
     -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
     pointer-events: none;
-    z-index: 0;
+    
+    /* FIX: Подняли слой сетки, чтобы кометы (z-index: 0) летали ПОД ней */
+    z-index: 1; 
 }
 
 .command-center-section .container { 
     position: relative; 
-    z-index: 2;
+    z-index: 5; /* Контент выше сетки */
     max-width: 1600px;
     width: 95%;
 }
@@ -36,7 +38,7 @@
 /* --- HEADER --- */
 .command-header { text-align: center; margin-bottom: 60px; }
 
-/* НОВЫЙ СТИЛЬ ЗАГОЛОВКА (Как в Specs) */
+/* СТИЛЬ ЗАГОЛОВКА */
 .cyber-header-wrapper {
     text-align: center;
     position: relative;
@@ -113,7 +115,7 @@
     font-size: 1.1rem;
     color: #888;
     gap: 25px;
-    margin-top: 20px; /* Отступ от нового заголовка */
+    margin-top: 20px; 
     border: 1px solid rgba(57, 255, 20, 0.1);
     border-radius: 4px;
 }

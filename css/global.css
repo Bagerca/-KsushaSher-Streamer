@@ -1,22 +1,285 @@
+/* css/global.css */
+
+/* =========================================
+   VARIABLES & THEME
+   ========================================= */
 :root {
+    /* Основные неоновые цвета */
     --neon-green: #39ff14;
     --neon-pink: #ff2d95;
-    --dark-bg: #070711;
-    --medium-bg: #0f0f1b;
+    
+    /* Цвета фона */
+    --dark-bg: #050508;
+    --medium-bg: #0a0b10;
+    
+    /* Текст */
     --light-text: #ccc;
     --white: #ffffff;
+    
+    /* Статусы (для архива) */
     --completed-color: #39ff14;
     --playing-color: #ff2d95;
     --dropped-color: #ff6464;
     --on-hold-color: #ffd700;
+    
+    /* Цвета участников отряда */
     --bagerka-color: #ff4444;
     --angel-color: #ff8c00;
     --kiriki-color: #007bff;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--dark-bg); color: var(--white); line-height: 1.6; font-family: 'Exo 2', sans-serif; overflow-x: hidden; }
-.container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-a { text-decoration: none; color: inherit; transition: 0.3s; }
-ul { list-style: none; }
-.section-title { text-align: center; font-size: 2.5rem; margin-bottom: 50px; position: relative; color: var(--neon-green); text-shadow: 0 0 10px rgba(57, 255, 20, 0.5); font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 1px; }
-section { padding: 80px 0; position: relative; }
+
+/* =========================================
+   RESET & BASE STYLES
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth; /* Плавный скролл для браузера */
+}
+
+body {
+    background: var(--dark-bg);
+    color: var(--white);
+    line-height: 1.6;
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden; /* Скрываем горизонтальный скролл */
+    min-height: 100vh;
+}
+
+/* Ссылки */
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+/* Списки */
+ul {
+    list-style: none;
+}
+
+/* Картинки */
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* =========================================
+   LAYOUT UTILITIES
+   ========================================= */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+}
+
+section {
+    padding: 80px 0;
+    position: relative;
+}
+
+/* =========================================
+   TYPOGRAPHY
+   ========================================= */
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    position: relative;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Эффект глитча для заголовков (декоративный, опционально) */
+.section-title::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0; width: 100%; height: 100%;
+    color: var(--neon-pink);
+    z-index: -1;
+    opacity: 0.4;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(-2px, -2px);
+    display: none; 
+}
+
+/* =========================================
+   CUSTOM SCROLLBAR (WEBKIT & FIREFOX)
+   ========================================= */
+
+/* 1. Для Chrome, Edge, Safari, Opera (WebKit) */
+::-webkit-scrollbar {
+    width: 10px;               /* Ширина вертикального скролла */
+    height: 10px;              /* Высота горизонтального скролла */
+    background-color: #050508; /* Цвет фона под скроллом */
+}
+
+/* "Рельса" (фон скроллбара) */
+::-webkit-scrollbar-track {
+    background: #0a0b10;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* "Ползунок" (сам бегунок) */
+::-webkit-scrollbar-thumb {
+    background: #333;          /* Темно-серый цвет в покое */
+    border-radius: 2px;        /* Техно-стиль */
+    border: 2px solid #0a0b10; /* Отступ от краев */
+    transition: all 0.3s ease;
+}
+
+/* Ползунок при наведении мыши */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-green); 
+    box-shadow: 0 0 10px var(--neon-green); 
+}
+
+/* Ползунок при нажатии */
+::-webkit-scrollbar-thumb:active {
+    background: #2cb810; 
+}
+
+/* 2. Для Firefox */
+* {
+    scrollbar-width: thin;          
+    scrollbar-color: #333 #0a0b10;  
+}
+
+/* =========================================
+   CYBER NAV RAIL (Навигация справа)
+   ========================================= */
+.cyber-nav-rail {
+    position: fixed;
+    top: 0;
+    right: 2px; /* Чуть левее скролла */
+    width: 20px;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none; /* Пропускаем клики сквозь контейнер */
+}
+
+/* Маркер (черточка) */
+.nav-marker {
+    position: absolute;
+    right: 0;
+    width: 12px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    pointer-events: auto; /* Маркеры кликабельны */
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+/* 
+   UX FIX: Невидимая область нажатия.
+   Делает кликабельную зону вокруг черточки больше.
+*/
+.nav-marker::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    bottom: -15px;
+    left: -30px;
+    right: -10px;
+    background: transparent;
+    z-index: 1;
+}
+
+/* При наведении маркер становится шире */
+.nav-marker:hover {
+    width: 25px;
+    right: 5px; 
+    background-color: #fff;
+    box-shadow: 0 0 10px #fff;
+}
+
+/* Активный маркер (текущая секция) */
+.nav-marker.active {
+    background-color: var(--neon-green);
+    width: 20px;
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+/* Всплывающая подсказка с названием секции */
+.nav-tooltip {
+    position: absolute;
+    right: 35px; /* Слева от маркера */
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--neon-green);
+    padding: 4px 8px;
+    border: 1px solid var(--neon-green);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Показываем подсказку при наведении на маркер */
+.nav-marker:hover .nav-tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-5px);
+}
+
+/* =========================================
+   COMET SYSTEM (Global Background FX)
+   ========================================= */
+#comet-system {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Пропускаем клики */
+    overflow: hidden;
+    z-index: 0; /* Базовый уровень: над фоном, но под сетками (z-index 1) */
+}
+
+.comet {
+    position: absolute;
+    height: 2px;
+    /* Градиент хвоста */
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.5), #fff);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 5px var(--neon-green));
+    opacity: 0;
+    transform: rotate(-15deg); /* Легкий наклон */
+    animation: shootComet linear forwards;
+}
+
+/* Анимация пролета */
+@keyframes shootComet {
+    0% {
+        transform: translate3d(100vw, -100px, 0) rotate(-15deg);
+        opacity: 1;
+        width: 10px;
+    }
+    10% {
+        width: 150px; /* Растягиваем хвост */
+    }
+    100% {
+        transform: translate3d(-100vw, 200px, 0) rotate(-15deg);
+        opacity: 0;
+        width: 10px;
+    }
+}

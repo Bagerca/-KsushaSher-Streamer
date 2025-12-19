@@ -4,18 +4,23 @@ import { loadGames, loadMovies } from './data-manager.js';
 
 const ArchiveState = {
     currentType: 'games', // 'games' или 'movies'
-    data: [],
-    filter: 'all',
-    searchQuery: '',
-    sort: 'name',         // 'name' или 'rating'
-    sortDirection: 'asc',  // 'asc' или 'desc'
+    data: [],             // Полные данные из JSON
+    filteredData: [],     // Данные после фильтрации
     
-    // --- ПАРАМЕТРЫ ОТОБРАЖЕНИЯ ---
-    isExpanded: false,    // Развернут ли список полностью
-    limit: 12             // Лимит отображения по умолчанию
+    // Множественный выбор фильтров
+    activeFilters: new Set(['all']), 
+    
+    searchQuery: '',
+    sort: 'name',
+    sortDirection: 'asc',
+    
+    // --- ПАРАМЕТРЫ SCROLL & UI ---
+    renderedCount: 0,
+    batchSize: 12,        // Размер пачки подгрузки
+    observer: null,       // Ссылка на IntersectionObserver
+    isExpanded: false     // Флаг: развернут список или нет
 };
 
-// Перевод жанров
 const genreMap = {
     'puzzle': 'Головоломка', 'adventure': 'Приключения', 'simulator': 'Симулятор',
     'horror': 'Хоррор', 'coop': 'Кооператив', 'shooter': 'Шутер', 'platformer': 'Платформер',
@@ -23,253 +28,330 @@ const genreMap = {
     'strategy': 'Стратегия', 'survival': 'Выживание'
 };
 
-// Перевод статусов
 const statusMap = {
     'completed': 'ПРОЙДЕНО', 'watched': 'ПОСМОТРЕНО',
     'playing': 'В ПРОЦЕССЕ', 'watching': 'СМОТРИМ',
-    'dropped': 'БРОШЕНО', 
-    'on-hold': 'ПОД ВОПРОСОМ'
+    'dropped': 'БРОШЕНО', 'on-hold': 'ПОД ВОПРОСОМ'
 };
+
+// Список статусов для логики пересечения групп
+const VALID_STATUSES = ['completed', 'playing', 'watched', 'watching', 'dropped', 'on-hold'];
 
 /**
  * Инициализация модуля архива
  */
 export async function initMediaArchive() {
-    console.log('📼 Initializing Media Grid...');
-    
     setupTabs();
-    setupSearch();
+    setupSearch(); 
     setupSort();
-    
-    // Загружаем игры по умолчанию
     await switchArchiveType('games');
 }
 
 /**
- * Переключение между Играми и Кино (С Анимацией)
+ * Переключение типа контента
  */
 async function switchArchiveType(type) {
     const gridContainer = document.getElementById('archive-grid');
-    
-    // 1. Анимация исчезновения
-    if (gridContainer) {
-        gridContainer.classList.add('switching');
-    }
-
-    // Обновляем UI табов мгновенно
+    if (gridContainer) gridContainer.classList.add('switching');
     updateTabUI(type);
 
-    // 2. Ждем завершения анимации CSS (400ms)
     setTimeout(async () => {
         ArchiveState.currentType = type;
-        ArchiveState.filter = 'all';
-        ArchiveState.searchQuery = '';
-        ArchiveState.isExpanded = false; // Сбрасываем раскрытие списка
         
-        // Сброс поиска
+        // Сброс состояния
+        ArchiveState.activeFilters = new Set(['all']);
+        ArchiveState.searchQuery = '';
+        ArchiveState.renderedCount = 0;
+        ArchiveState.isExpanded = false;
+        
+        // Очистка поиска
         const searchInput = document.getElementById('archive-search');
         if (searchInput) searchInput.value = '';
         
-        // Загрузка данных
+        // Закрытие подсказок
+        const suggestionsBox = document.querySelector('.search-suggestions');
+        const searchModule = document.querySelector('.search-module');
+        if (suggestionsBox) {
+            suggestionsBox.classList.remove('active');
+            suggestionsBox.innerHTML = '';
+        }
+        if (searchModule) searchModule.classList.remove('suggestions-open');
+        
         const rawData = type === 'games' ? await loadGames() : await loadMovies();
         ArchiveState.data = Array.isArray(rawData) ? rawData : [];
         
-        // Рендер нового контента
         renderFilters();
+        processData();
         renderGrid();
         
-        // 3. Анимация появления
-        if (gridContainer) {
-            gridContainer.classList.remove('switching');
-        }
+        if (gridContainer) gridContainer.classList.remove('switching');
     }, 400);
 }
 
-/**
- * Обновление UI переключателя (Капсула)
- */
 function updateTabUI(type) {
     const switcher = document.querySelector('.type-switcher');
     const btns = document.querySelectorAll('.switcher-btn');
-    
-    // Двигаем фон (плашку)
     if(switcher) {
         if(type === 'movies') switcher.classList.add('movies-active');
         else switcher.classList.remove('movies-active');
     }
-
-    // Активность текста кнопок
-    btns.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.type === type);
-    });
+    btns.forEach(btn => btn.classList.toggle('active', btn.dataset.type === type));
 }
 
 /**
- * Рендер фильтров (Статусы с "ВСЕ" посередине + Жанры)
+ * Рендер фильтров и мульти-выбор
  */
 function renderFilters() {
     const statusContainer = document.getElementById('archive-filters-status');
     const genreContainer = document.getElementById('archive-filters-genre');
-    
     if (!statusContainer || !genreContainer) return;
 
-    // Сбор жанров
     const allGenres = new Set();
-    ArchiveState.data.forEach(item => {
-        if (item.genres) item.genres.forEach(g => allGenres.add(g));
-    });
+    ArchiveState.data.forEach(item => { if (item.genres) item.genres.forEach(g => allGenres.add(g)); });
 
-    // 1. СТРОКА СТАТУСОВ (Разделение массива для вставки "ВСЕ" в центр)
     const statuses = ArchiveState.currentType === 'games' 
         ? ['completed', 'playing', 'on-hold', 'dropped'] 
         : ['watched', 'watching', 'on-hold', 'dropped'];
     
-    // Вычисляем середину
     const middleIndex = Math.floor(statuses.length / 2);
-    const leftPart = statuses.slice(0, middleIndex);
-    const rightPart = statuses.slice(middleIndex);
-
     let statusHtml = '';
     
-    // Левая часть
-    leftPart.forEach(s => {
-        statusHtml += `<div class="filter-chip is-status status-${s}" data-filter="${s}">${statusMap[s] || s}</div>`;
+    const isActive = (val) => ArchiveState.activeFilters.has(val) ? 'active' : '';
+
+    statuses.slice(0, middleIndex).forEach(s => { 
+        statusHtml += `<div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">${statusMap[s] || s}</div>`; 
     });
-
-    // Центральная кнопка "ВСЕ"
-    const allActiveClass = ArchiveState.filter === 'all' ? 'active' : '';
-    statusHtml += `<div class="filter-chip is-status ${allActiveClass}" data-filter="all">ВСЕ</div>`;
-
-    // Правая часть
-    rightPart.forEach(s => {
-        statusHtml += `<div class="filter-chip is-status status-${s}" data-filter="${s}">${statusMap[s] || s}</div>`;
+    
+    statusHtml += `<div class="filter-chip is-status ${isActive('all')}" data-filter="all">ВСЕ</div>`;
+    
+    statuses.slice(middleIndex).forEach(s => { 
+        statusHtml += `<div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">${statusMap[s] || s}</div>`; 
     });
 
     statusContainer.innerHTML = statusHtml;
 
-    // 2. СТРОКА ЖАНРОВ
     let genreHtml = '';
-    const sortedGenres = Array.from(allGenres).sort((a, b) => {
-        return (genreMap[a] || a).localeCompare(genreMap[b] || b);
-    });
-
-    sortedGenres.forEach(g => {
-        genreHtml += `<div class="filter-chip" data-filter="${g}">${(genreMap[g] || g)}</div>`;
-    });
+    Array.from(allGenres).sort((a, b) => (genreMap[a] || a).localeCompare(genreMap[b] || b))
+        .forEach(g => { 
+            genreHtml += `<div class="filter-chip ${isActive(g)}" data-filter="${g}">${(genreMap[g] || g)}</div>`; 
+        });
     genreContainer.innerHTML = genreHtml;
 
-    // События клика для всех чипсов
-    const allChips = document.querySelectorAll('.filter-chip');
-    allChips.forEach(chip => {
+    document.querySelectorAll('.filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
-            // Снимаем активность со всех
-            allChips.forEach(c => c.classList.remove('active'));
-            // Ставим текущему
-            chip.classList.add('active');
+            const val = chip.dataset.filter;
+
+            if (val === 'all') {
+                ArchiveState.activeFilters.clear();
+                ArchiveState.activeFilters.add('all');
+            } else {
+                if (ArchiveState.activeFilters.has('all')) ArchiveState.activeFilters.delete('all');
+                
+                if (ArchiveState.activeFilters.has(val)) ArchiveState.activeFilters.delete(val);
+                else ArchiveState.activeFilters.add(val);
+                
+                if (ArchiveState.activeFilters.size === 0) ArchiveState.activeFilters.add('all');
+            }
             
-            ArchiveState.filter = chip.dataset.filter;
-            ArchiveState.isExpanded = false; // Сбрасываем раскрытие при смене фильтра
+            ArchiveState.isExpanded = false; 
+            
+            renderFilters();
+            processData();
             renderGrid();
         });
     });
 }
 
 /**
- * Фильтрация и Сортировка
+ * Логика фильтрации: (Статусы) И (Жанры)
  */
-function getFilteredAndSortedData() {
-    // 1. Фильтрация
+function processData() {
+    const activeStatuses = new Set();
+    const activeGenres = new Set();
+    let isAllSelected = false;
+
+    if (ArchiveState.activeFilters.has('all')) {
+        isAllSelected = true;
+    } else {
+        ArchiveState.activeFilters.forEach(filter => {
+            if (VALID_STATUSES.includes(filter)) activeStatuses.add(filter);
+            else activeGenres.add(filter);
+        });
+    }
+
     let result = ArchiveState.data.filter(item => {
+        // 1. Поиск по тексту
         const matchesSearch = item.title.toLowerCase().includes(ArchiveState.searchQuery);
-        let matchesFilter = true;
+        if (!matchesSearch) return false;
         
-        if (ArchiveState.filter !== 'all') {
-            const isStatus = ['completed', 'playing', 'watched', 'watching', 'dropped', 'on-hold'].includes(ArchiveState.filter);
-            
-            if (isStatus) {
-                matchesFilter = item.status === ArchiveState.filter;
-            } else {
-                matchesFilter = item.genres && item.genres.includes(ArchiveState.filter);
-            }
+        if (isAllSelected) return true;
+
+        // 2. Проверка статуса (ИЛИ)
+        let statusMatch = true;
+        if (activeStatuses.size > 0) {
+            statusMatch = activeStatuses.has(item.status);
         }
-        
-        return matchesSearch && matchesFilter;
+
+        // 3. Проверка жанра (ИЛИ)
+        let genreMatch = true;
+        if (activeGenres.size > 0) {
+            if (!item.genres || item.genres.length === 0) genreMatch = false;
+            else genreMatch = item.genres.some(g => activeGenres.has(g));
+        }
+
+        return statusMatch && genreMatch;
     });
 
-    // 2. Сортировка
+    // Сортировка
     const dir = ArchiveState.sortDirection === 'asc' ? 1 : -1;
-    
     result.sort((a, b) => {
         if (ArchiveState.sort === 'rating') {
-            const rA = parseFloat(a.rating) || 0;
-            const rB = parseFloat(b.rating) || 0;
-            return (rA - rB) * dir;
+            return ((parseFloat(a.rating) || 0) - (parseFloat(b.rating) || 0)) * dir;
         } else {
             return a.title.localeCompare(b.title) * dir;
         }
     });
 
-    return result;
+    ArchiveState.filteredData = result;
 }
 
 /**
- * Рендер сетки (ПЛАВНАЯ ВЕРСИЯ С ЗАДЕРЖКОЙ СВОРАЧИВАНИЯ)
+ * Отрисовка сетки
  */
 function renderGrid() {
     const container = document.getElementById('archive-grid');
     const wrapper = document.querySelector('.archive-full-grid-wrapper');
     
-    // Удаляем старую кнопку и оверлей, если есть
+    if (ArchiveState.observer) ArchiveState.observer.disconnect();
+    const oldSentinel = document.getElementById('scroll-sentinel');
+    if (oldSentinel) oldSentinel.remove();
     const oldBtn = document.querySelector('.archive-footer-controls');
     if (oldBtn) oldBtn.remove();
     
-    // Оверлей для затемнения
-    let overlay = wrapper.querySelector('.archive-fade-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.className = 'archive-fade-overlay';
-        wrapper.appendChild(overlay);
-    }
+    container.innerHTML = '';
+    ArchiveState.renderedCount = 0;
 
-    if (!container) return;
-
-    // 1. Получаем полные данные
-    const fullFilteredData = getFilteredAndSortedData();
-
-    if (fullFilteredData.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:50px; color:#666; font-family:\'Exo 2\';">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
+    if (ArchiveState.filteredData.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:50px; color:#666;">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
+        const overlay = wrapper.querySelector('.archive-fade-overlay');
+        if (overlay) overlay.remove();
         wrapper.classList.remove('has-more');
         return;
     }
 
-    // 2. Рендерим ВСЕ карточки, но лишним даем класс visually-hidden
-    container.innerHTML = fullFilteredData.map((item, index) => {
-        const genresHtml = item.genres 
-            ? item.genres.slice(0, 3).map(g => `<span class="genre-tag">${genreMap[g] || g}</span>`).join('') 
-            : '';
+    renderNextBatch();
+
+    // Логика кнопки
+    if (ArchiveState.filteredData.length > ArchiveState.batchSize) {
+        if (!ArchiveState.isExpanded) {
+            renderButton('expand');
+            let overlay = wrapper.querySelector('.archive-fade-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'archive-fade-overlay';
+                wrapper.appendChild(overlay);
+            }
+            wrapper.classList.add('has-more');
+        } else {
+            const overlay = wrapper.querySelector('.archive-fade-overlay');
+            if (overlay) overlay.remove();
+            wrapper.classList.remove('has-more');
+
+            const sentinel = document.createElement('div');
+            sentinel.id = 'scroll-sentinel';
+            sentinel.style.width = '100%';
+            sentinel.style.height = '50px';
+            wrapper.appendChild(sentinel);
             
+            setupInfiniteScroll();
+            renderButton('collapse');
+        }
+    } else {
+        const overlay = wrapper.querySelector('.archive-fade-overlay');
+        if (overlay) overlay.remove();
+        wrapper.classList.remove('has-more');
+    }
+}
+
+/**
+ * Кнопка и скролл-навигация
+ */
+function renderButton(mode) {
+    const wrapper = document.querySelector('.archive-full-grid-wrapper');
+    const controlsDiv = document.createElement('div');
+    controlsDiv.className = 'archive-footer-controls';
+    
+    const btnText = mode === 'expand' ? `РАЗВЕРНУТЬ БАЗУ (${ArchiveState.filteredData.length})` : 'СВЕРНУТЬ';
+    const btnIcon = mode === 'expand' ? '<i class="fas fa-chevron-down"></i>' : '<i class="fas fa-chevron-up"></i>';
+    const collapseClass = mode === 'collapse' ? 'collapse-mode' : '';
+
+    controlsDiv.innerHTML = `
+        <button class="cyber-load-btn ${collapseClass}" id="archive-toggle-btn">
+            <span>${btnText} ${btnIcon}</span>
+        </button>
+    `;
+
+    wrapper.after(controlsDiv);
+
+    document.getElementById('archive-toggle-btn').addEventListener('click', () => {
+        if (mode === 'expand') {
+            // Развернуть -> Скролл вверх (начало списка)
+            const sectionTop = document.getElementById('media-archive').offsetTop;
+            window.scrollTo({ top: sectionTop - 50, behavior: 'smooth' });
+            
+            ArchiveState.isExpanded = true;
+            renderGrid();
+        } else {
+            // Свернуть -> Скролл вниз (конец списка)
+            ArchiveState.isExpanded = false;
+            renderGrid();
+            
+            const section = document.getElementById('media-archive');
+            section.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+    });
+}
+
+function setupInfiniteScroll() {
+    if (ArchiveState.observer) ArchiveState.observer.disconnect();
+
+    const options = { root: null, rootMargin: '200px', threshold: 0.1 };
+
+    ArchiveState.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && ArchiveState.renderedCount < ArchiveState.filteredData.length) {
+                renderNextBatch();
+            }
+        });
+    }, options);
+
+    const sentinel = document.getElementById('scroll-sentinel');
+    if (sentinel) ArchiveState.observer.observe(sentinel);
+}
+
+function renderNextBatch() {
+    const container = document.getElementById('archive-grid');
+    const start = ArchiveState.renderedCount;
+    const limit = ArchiveState.isExpanded ? (start + ArchiveState.batchSize) : ArchiveState.batchSize;
+    const end = Math.min(limit, ArchiveState.filteredData.length);
+    
+    if (start >= end) return;
+
+    const itemsToRender = ArchiveState.filteredData.slice(start, end);
+
+    const newCardsHtml = itemsToRender.map((item, index) => {
+        const genresHtml = item.genres ? item.genres.slice(0, 3).map(g => `<span class="genre-tag">${genreMap[g] || g}</span>`).join('') : '';
         const fullStars = Math.floor(item.rating);
         let starsHtml = '';
-        for(let i=0; i < 5; i++) {
-            starsHtml += i < fullStars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star" style="opacity: 0.3;"></i>';
-        }
+        for(let i=0; i < 5; i++) starsHtml += i < fullStars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star" style="opacity: 0.3;"></i>';
 
-        // Логика скрытия: если индекс больше лимита И мы не в режиме "Показать все"
-        const isHidden = !ArchiveState.isExpanded && index >= ArchiveState.limit;
-        const hiddenClass = isHidden ? 'visually-hidden' : '';
-
-        // Анимация (delay) только для первых карточек, чтобы не тормозило
-        const delay = index < 20 ? index * 50 : 0;
-        const animationStyle = `style="animation-delay: ${delay}ms"`;
+        const delay = (index % ArchiveState.batchSize) * 50; 
 
         return `
-            <div class="archive-card animate-entry ${hiddenClass}" data-status="${item.status}" data-id="${item.id}" ${animationStyle}>
+            <div class="archive-card animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
                 <div class="card-thumb-container">
                     <img src="${item.image}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
-                    <div class="card-rating-badge">
-                        <span class="stars-visual">${starsHtml}</span>
-                        <span class="rating-number">${item.rating}</span>
-                    </div>
+                    <div class="card-rating-badge"><span class="stars-visual">${starsHtml}</span><span class="rating-number">${item.rating}</span></div>
                 </div>
                 <div class="card-info">
                     <div class="card-title" title="${item.title}">${item.title}</div>
@@ -280,171 +362,181 @@ function renderGrid() {
         `;
     }).join('');
 
-    // 3. Логика Кнопки и Оверлея
-    if (fullFilteredData.length > ArchiveState.limit) {
-        
-        // Управление затемнением
-        if (!ArchiveState.isExpanded) wrapper.classList.add('has-more');
-        else wrapper.classList.remove('has-more');
-
-        // Создаем кнопку
-        const controlsDiv = document.createElement('div');
-        controlsDiv.className = 'archive-footer-controls';
-        
-        const btnText = ArchiveState.isExpanded ? 'СВЕРНУТЬ БАЗУ' : `ПОКАЗАТЬ ВСЕ (${fullFilteredData.length})`;
-        const btnIcon = ArchiveState.isExpanded ? '<i class="fas fa-chevron-up"></i>' : '<i class="fas fa-chevron-down"></i>';
-        const collapseClass = ArchiveState.isExpanded ? 'collapse-mode' : '';
-
-        controlsDiv.innerHTML = `
-            <button class="cyber-load-btn ${collapseClass}" id="archive-toggle-btn">
-                <span>${btnText} ${btnIcon}</span>
-            </button>
-        `;
-
-        wrapper.after(controlsDiv);
-
-        // --- ЛОГИКА КЛИКА С ЗАДЕРЖКОЙ ---
-        const btnElement = document.getElementById('archive-toggle-btn');
-        
-        btnElement.addEventListener('click', () => {
-            if (ArchiveState.isExpanded) {
-                // == СВОРАЧИВАНИЕ ==
-                
-                // 1. Сначала плавно скроллим вверх к началу секции
-                const sectionTop = document.getElementById('media-archive').offsetTop;
-                // Небольшой отступ (80px), чтобы заголовок не прилипал к верху
-                window.scrollTo({ top: sectionTop - 80, behavior: 'smooth' });
-
-                // 2. Ждем, пока скролл завершится (600мс), и только потом скрываем карточки
-                // Это предотвращает "прыжок" экрана, так как мы скрываем элементы, когда они уже не видны
-                setTimeout(() => {
-                    ArchiveState.isExpanded = false;
-                    
-                    // Скрываем лишние карточки
-                    const cards = container.querySelectorAll('.archive-card');
-                    cards.forEach((card, idx) => {
-                        if (idx >= ArchiveState.limit) card.classList.add('visually-hidden');
-                    });
-                    
-                    // Обновляем кнопку и оверлей
-                    renderGrid(); 
-                }, 600);
-
-            } else {
-                // == РАЗВОРАЧИВАНИЕ ==
-                ArchiveState.isExpanded = true;
-                
-                // Сразу показываем все карточки
-                const cards = container.querySelectorAll('.archive-card');
-                cards.forEach(card => card.classList.remove('visually-hidden'));
-                
-                // Обновляем кнопку
-                renderGrid();
-            }
-        });
-
-    } else {
-        wrapper.classList.remove('has-more');
-    }
+    container.insertAdjacentHTML('beforeend', newCardsHtml);
+    ArchiveState.renderedCount = end;
 }
 
-/**
- * Слушатели для табов
- */
 function setupTabs() {
     document.querySelectorAll('.switcher-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            if (ArchiveState.currentType !== btn.dataset.type) {
-                switchArchiveType(btn.dataset.type);
-            }
+            if (ArchiveState.currentType !== btn.dataset.type) switchArchiveType(btn.dataset.type);
         });
     });
 }
 
 /**
- * Слушатель поиска
+ * УМНЫЙ ПОИСК (Сортировка по приоритету и подсказки)
  */
 function setupSearch() {
     const input = document.getElementById('archive-search');
-    if(!input) return;
+    const searchModule = document.querySelector('.search-module');
+    
+    if (!input || !searchModule) return;
+
+    let suggestionsBox = document.querySelector('.search-suggestions');
+    if (!suggestionsBox) {
+        suggestionsBox = document.createElement('div');
+        suggestionsBox.className = 'search-suggestions';
+        searchModule.appendChild(suggestionsBox);
+    }
+
+    const toggleSuggestions = (isOpen) => {
+        if (isOpen) {
+            suggestionsBox.classList.add('active');
+            searchModule.classList.add('suggestions-open');
+        } else {
+            suggestionsBox.classList.remove('active');
+            searchModule.classList.remove('suggestions-open');
+        }
+    };
 
     input.addEventListener('input', (e) => {
-        ArchiveState.searchQuery = e.target.value.toLowerCase();
-        ArchiveState.isExpanded = false; // Сбрасываем при поиске
-        renderGrid();
+        const query = e.target.value.toLowerCase();
+        
+        if (query.length < 1) {
+            toggleSuggestions(false);
+            suggestionsBox.innerHTML = '';
+            
+            // Если очистили поле - сбрасываем сетку к дефолту
+            if (ArchiveState.searchQuery !== '') {
+                 ArchiveState.searchQuery = '';
+                 processData();
+                 renderGrid();
+            }
+            return;
+        }
+
+        // 1. Находим все совпадения
+        let allMatches = ArchiveState.data.filter(item => 
+            item.title.toLowerCase().includes(query)
+        );
+
+        // 2. СОРТИРУЕМ: Сначала те, что начинаются с запроса, потом остальные
+        allMatches.sort((a, b) => {
+            const titleA = a.title.toLowerCase();
+            const titleB = b.title.toLowerCase();
+            
+            const startsA = titleA.startsWith(query);
+            const startsB = titleB.startsWith(query);
+
+            if (startsA && !startsB) return -1;
+            if (!startsA && startsB) return 1;
+
+            return titleA.localeCompare(titleB);
+        });
+
+        // 3. Берем топ-5
+        const matches = allMatches.slice(0, 5);
+
+        if (matches.length > 0) {
+            suggestionsBox.innerHTML = matches.map(item => `
+                <div class="suggestion-item" data-title="${item.title}">
+                    <img src="${item.image}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/40x50'">
+                    <div class="sugg-info">
+                        <span class="sugg-title">${item.title}</span>
+                        <div class="sugg-meta">
+                            <span class="sugg-status">${statusMap[item.status] || item.status}</span>
+                            <span class="sugg-rating"><i class="fas fa-star"></i> ${item.rating}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            suggestionsBox.innerHTML = `
+                <div class="suggestion-empty">
+                    <i class="far fa-sad-tear"></i>
+                    <span>По запросу "${e.target.value}" ничего не найдено</span>
+                </div>
+            `;
+        }
+        
+        toggleSuggestions(true);
+    });
+
+    suggestionsBox.addEventListener('click', (e) => {
+        const item = e.target.closest('.suggestion-item');
+        if (item) {
+            const title = item.dataset.title;
+            input.value = title;
+            ArchiveState.searchQuery = title.toLowerCase();
+            
+            toggleSuggestions(false);
+            
+            processData(); 
+            renderGrid();  
+        }
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            toggleSuggestions(false);
+            ArchiveState.searchQuery = input.value.toLowerCase();
+            processData();
+            renderGrid();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!searchModule.contains(e.target)) {
+            toggleSuggestions(false);
+        }
     });
 }
 
-/**
- * Настройка кнопок сортировки с Flip-анимацией
- */
 function setupSort() {
     const sortBtns = document.querySelectorAll('.sort-side-btn');
-    
-    // Функция обновления иконок
-    function updateSortIcons(clickedBtn = null) {
+    const updateIcons = (clickedBtn, shouldAnimate) => {
         sortBtns.forEach(btn => {
-            const isActive = btn.dataset.sort === ArchiveState.sort;
             const icon = btn.querySelector('.sort-icon');
-            
-            // Если это не нажатая кнопка, просто переключаем класс активности
-            if (btn !== clickedBtn) {
-                btn.classList.toggle('active', isActive);
-                if (!isActive && icon) {
-                    // Возврат к дефолтной иконке
-                    if (btn.dataset.sort === 'name') icon.className = 'fas fa-sort-alpha-down sort-icon';
-                    else if (btn.dataset.sort === 'rating') icon.className = 'fas fa-sort-amount-down sort-icon';
+            const isTarget = btn === clickedBtn;
+            if (!isTarget) {
+                btn.classList.remove('active');
+                if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-sort-amount-down sort-icon';
+            } else {
+                btn.classList.add('active');
+                let newIconClass = '';
+                if (btn.dataset.sort === 'name') newIconClass = ArchiveState.sortDirection === 'asc' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-sort-alpha-up sort-icon';
+                else if (btn.dataset.sort === 'rating') newIconClass = ArchiveState.sortDirection === 'desc' ? 'fas fa-sort-amount-down sort-icon' : 'fas fa-sort-amount-up sort-icon';
+
+                if (icon) {
+                    if (shouldAnimate) {
+                        icon.classList.add('flipping');
+                        setTimeout(() => {
+                            icon.className = newIconClass + ' flipping'; 
+                            requestAnimationFrame(() => icon.classList.remove('flipping'));
+                        }, 150);
+                    } else icon.className = newIconClass;
                 }
-                return;
-            }
-
-            // Если это нажатая кнопка - запускаем анимацию
-            btn.classList.add('active');
-            
-            if (icon) {
-                // 1. Старт анимации (поворот на 90 градусов)
-                icon.classList.add('flipping');
-
-                // 2. Ждем половину времени анимации (150ms), меняем иконку и возвращаем
-                setTimeout(() => {
-                    if (btn.dataset.sort === 'name') {
-                        icon.className = ArchiveState.sortDirection === 'asc' 
-                            ? 'fas fa-sort-alpha-down sort-icon flipping' 
-                            : 'fas fa-sort-alpha-up sort-icon flipping';
-                    } else if (btn.dataset.sort === 'rating') {
-                        icon.className = ArchiveState.sortDirection === 'desc' 
-                            ? 'fas fa-sort-amount-down sort-icon flipping' 
-                            : 'fas fa-sort-amount-up sort-icon flipping';
-                    }
-                    
-                    requestAnimationFrame(() => {
-                        icon.classList.remove('flipping');
-                    });
-                }, 150); 
             }
         });
-    }
+    };
 
     sortBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const sortType = btn.dataset.sort;
-            
-            // Смена направления
+            let shouldAnimate = false;
             if (ArchiveState.sort === sortType) {
                 ArchiveState.sortDirection = ArchiveState.sortDirection === 'asc' ? 'desc' : 'asc';
+                shouldAnimate = true;
             } else {
                 ArchiveState.sort = sortType;
-                // Для имени A-Z, для рейтинга 5-1 (High to Low)
                 ArchiveState.sortDirection = sortType === 'rating' ? 'desc' : 'asc';
+                shouldAnimate = false;
             }
-            
-            updateSortIcons(btn);
+            updateIcons(btn, shouldAnimate);
+            processData();
             renderGrid();
         });
-    });
-    
-    // Инициализация иконок при загрузке
-    sortBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.sort === ArchiveState.sort);
+        if (btn.dataset.sort === ArchiveState.sort) btn.classList.add('active');
     });
 }

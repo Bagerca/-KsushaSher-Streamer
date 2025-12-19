@@ -1,15 +1,14 @@
 /* css/media-archive.css */
 
 /* =========================================
-   MEDIA ARCHIVE: FINAL FULL VERSION
+   MEDIA ARCHIVE SECTION (FINAL FULL)
    ========================================= */
 
 .media-archive-section {
     background-color: #050508;
     position: relative;
-    /* Оптимизированные отступы */
-    padding: 10px 0 50px 0;
-    overflow: hidden;
+    padding: 10px 0 30px 0;
+    overflow: visible;
     border-top: 1px solid rgba(57, 255, 20, 0.1);
     
     background-image: 
@@ -17,7 +16,7 @@
         radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.04) 0%, transparent 40%);
 }
 
-/* --- КОСМИЧЕСКИЙ ФОН (ЗВЕЗДЫ) --- */
+/* --- КОСМИЧЕСКИЙ ФОН --- */
 .media-archive-section::before,
 .media-archive-section::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -44,18 +43,93 @@
 }
 
 /* =========================================
-   HEADER (TABS & SORTING)
+   HEADER (CRYSTAL NEON STYLE - ABSOLUTE FIX)
    ========================================= */
 .archive-header {
-    display: flex; flex-direction: column; align-items: center; margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px; 
+    position: relative;
+    z-index: 5;
+    text-align: center; /* Центруем inline-block внутри */
 }
 
-/* Уменьшаем отступ заголовка специально для этого блока */
+/* ЗАГОЛОВОК */
 .archive-header .section-title {
-    margin-bottom: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    
+    text-shadow: 
+        0 0 10px rgba(57, 255, 20, 0.8),
+        0 0 20px rgba(57, 255, 20, 0.4),
+        0 0 40px rgba(57, 255, 20, 0.2);
+    
+    /* FIX: Используем inline-block. Это заставляет контейнер сжаться до размера текста.
+       Теперь absolute позиционирование линий будет отсчитываться точно от краев букв. */
+    display: inline-block;
+    position: relative;
 }
 
+/* ЛИНИИ (АБСОЛЮТНОЕ ПОЗИЦИОНИРОВАНИЕ) */
+.archive-header .section-title::before,
+.archive-header .section-title::after {
+    content: '';
+    position: absolute;
+    width: 60px;    /* Длина линии */
+    height: 3px;    /* Толщина */
+    border-radius: 2px;
+    opacity: 0.8;
+    
+    /* Оптическая поправка центра. 50% - это мат. центр, 53% визуально лучше для Caps Lock */
+    top: 53%;       
+    transform: translateY(-50%); 
+}
+
+/* Левая линия */
+.archive-header .section-title::before {
+    /* Приклеиваем к левому краю контейнера текста и сдвигаем влево на 100% ширины линии + отступ */
+    right: 100%; 
+    margin-right: 25px; /* Отступ от текста */
+    
+    /* Градиент: Справа (у текста) зеленый -> Влево прозрачный */
+    background: linear-gradient(to left, var(--neon-green), transparent);
+    box-shadow: -5px 0 10px rgba(57, 255, 20, 0.5);
+}
+
+/* Правая линия */
+.archive-header .section-title::after {
+    /* Приклеиваем к правому краю контейнера текста */
+    left: 100%; 
+    margin-left: 25px; /* Отступ от текста */
+    
+    /* Градиент: Слева (у текста) зеленый -> Вправо прозрачный */
+    background: linear-gradient(to right, var(--neon-green), transparent);
+    box-shadow: 5px 0 10px rgba(57, 255, 20, 0.5);
+}
+
+/* ТЕХНИЧЕСКАЯ ПОДПИСЬ СНИЗУ */
+.archive-header-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    color: var(--neon-green);
+    letter-spacing: 6px;
+    margin-top: 8px;
+    opacity: 0.7;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+}
+
+/* ПАНЕЛЬ УПРАВЛЕНИЯ */
 .header-control-bar {
+    margin-top: 15px; 
     display: flex; align-items: center; gap: 15px;
     background: rgba(0, 0, 0, 0.7); padding: 6px 15px; border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
@@ -99,13 +173,14 @@
    ========================================= */
 .archive-controls {
     display: flex; flex-direction: column; align-items: center; gap: 15px;
-    margin-bottom: 30px; position: relative; z-index: 10;
+    margin-bottom: 30px; position: relative; z-index: 20; 
 }
 
 /* --- SEARCH MODULE --- */
 .search-module {
-    position: relative; width: 100%; max-width: 500px; margin: 0 auto;
+    position: relative; width: 100%; max-width: 600px; margin: 0 auto;
     display: flex; align-items: center;
+    transition: border-radius 0.2s;
 }
 
 .search-icon {
@@ -122,15 +197,16 @@
     transition: all 0.3s ease; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Плейсхолдер: Исправлена анимация */
+.search-module.suggestions-open input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-color: rgba(57, 255, 20, 0.1);
+}
+
 .search-module input::placeholder {
     color: rgba(255, 255, 255, 0.2);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 2px;
-    transition: all 0.3s ease; /* Плавный переход для всех свойств */
-    opacity: 1;
-    transform: translateX(0);
+    font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 2px;
+    transition: all 0.3s ease; opacity: 1; transform: translateX(0);
 }
 
 .search-module input:focus {
@@ -144,12 +220,7 @@
     text-shadow: 0 0 10px var(--neon-green);
 }
 
-/* При фокусе текст плавно исчезает и уезжает влево */
-.search-module input:focus::placeholder {
-    opacity: 0;
-    transform: translateX(-10px);
-    /* letter-spacing не меняем, чтобы не дергалось */
-}
+.search-module input:focus::placeholder { opacity: 0; transform: translateX(-10px); }
 
 .search-module::after {
     content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -159,6 +230,43 @@
 }
 .search-module:focus-within::after { width: 100%; }
 
+/* --- SEARCH SUGGESTIONS --- */
+.search-suggestions {
+    position: absolute; top: 100%; left: 0; width: 100%;
+    background: rgba(10, 11, 16, 0.98);
+    border: 1px solid rgba(57, 255, 20, 0.3); border-top: none;
+    border-radius: 0 0 12px 12px; z-index: 100;
+    backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+    opacity: 0; visibility: hidden; transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    max-height: 0; overflow: hidden; margin-top: -1px;
+}
+
+.search-suggestions.active {
+    opacity: 1; visibility: visible; transform: translateY(0);
+    max-height: 400px; padding: 5px 0; border-top: 1px solid rgba(57, 255, 20, 0.1);
+}
+
+.suggestion-item {
+    display: flex; align-items: center; gap: 15px; padding: 10px 20px;
+    cursor: pointer; transition: background 0.2s; border-left: 3px solid transparent;
+}
+.suggestion-item:hover { background: rgba(57, 255, 20, 0.05); border-left-color: var(--neon-green); }
+
+.sugg-thumb { width: 40px; height: 56px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.sugg-info { display: flex; flex-direction: column; justify-content: center; }
+.sugg-title { color: #fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem; line-height: 1.2; }
+.sugg-meta { font-size: 0.75rem; color: #888; margin-top: 4px; display: flex; align-items: center; gap: 10px; font-family: 'Exo 2', sans-serif; }
+.sugg-status { text-transform: uppercase; font-size: 0.65rem; padding: 1px 5px; background: rgba(255,255,255,0.05); border-radius: 3px; }
+.sugg-rating { color: #ffd700; font-weight: 700; }
+
+.suggestion-empty {
+    padding: 20px; text-align: center; color: #666;
+    font-family: 'Exo 2', sans-serif; font-size: 0.9rem; font-style: italic;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.suggestion-empty i { font-size: 1.5rem; color: #444; margin-bottom: 5px; }
+
 /* --- FILTERS --- */
 .filters-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .filter-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
@@ -167,7 +275,7 @@
     padding: 6px 16px; border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px; color: #888; cursor: pointer;
     font-size: 0.75rem; text-transform: uppercase; background: rgba(0,0,0,0.4);
-    transition: all 0.3s ease; font-weight: 700;
+    transition: all 0.3s ease; font-weight: 700; user-select: none;
 }
 .filter-chip:hover { transform: translateY(-2px); border-color: #fff; color: #fff; }
 
@@ -189,15 +297,15 @@
 .genre-row .filter-chip { border-color: rgba(255, 255, 255, 0.05); color: #666; font-weight: 600; padding: 5px 12px; }
 .genre-row .filter-chip.active { background: #333; color: #fff; border-color: #777; }
 
+
 /* =========================================
    GRID & CARDS
    ========================================= */
-.archive-full-grid-wrapper { width: 100%; position: relative; z-index: 5; }
-.archive-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; padding-bottom: 40px; transition: height 0.5s ease; }
+.archive-full-grid-wrapper { width: 100%; position: relative; z-index: 5; min-height: 400px; }
+.archive-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; padding-bottom: 10px; transition: height 0.5s ease; }
 
 @keyframes card-load { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 .archive-card.animate-entry { opacity: 0; animation: card-load 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-.archive-card.visually-hidden { display: none; }
 
 .archive-card {
     background: rgba(15, 15, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.08);
@@ -205,7 +313,8 @@
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     display: flex; flex-direction: column; height: 100%; z-index: 1;
 }
-.archive-card:hover { transform: translateY(-8px); z-index: 10; }
+
+.archive-card:hover { transform: translateY(-8px); z-index: 20; }
 
 .archive-card[data-status="completed"]:hover, .archive-card[data-status="watched"]:hover { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); }
 .archive-card[data-status="playing"]:hover, .archive-card[data-status="watching"]:hover { border-color: #007bff; box-shadow: 0 0 20px rgba(0, 123, 255, 0.2); }
@@ -233,10 +342,11 @@
 .genre-tag { font-size: 0.55rem; color: #777; background: rgba(255,255,255,0.05); padding: 2px 5px; border-radius: 3px; margin-right: 2px; text-transform: uppercase; }
 .card-desc { font-size: 0.75rem; color: #555; line-height: 1.3; margin-top: auto; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
+
 /* =========================================
-   CONTROLS (BUTTONS)
+   FOOTER CONTROLS & FADE MASK
    ========================================= */
-.archive-footer-controls { display: flex; justify-content: center; margin-top: 40px; position: relative; z-index: 20; }
+.archive-footer-controls { display: flex; justify-content: center; margin-top: 10px; position: relative; z-index: 20; }
 
 .cyber-load-btn {
     position: relative; background: rgba(0, 0, 0, 0.6); color: var(--neon-green);
@@ -257,21 +367,30 @@
 .cyber-load-btn.collapse-mode:hover { color: #fff; box-shadow: 0 0 20px rgba(255, 45, 149, 0.4); }
 .cyber-load-btn.collapse-mode:hover::after { background: var(--neon-pink); }
 
-.archive-fade-overlay {
-    position: absolute; bottom: 0; left: 0; width: 100%; height: 300px;
-    background: linear-gradient(to bottom, transparent 0%, #050508 100%);
-    pointer-events: none; z-index: 10; opacity: 0; transition: opacity 0.5s ease;
-}
-.archive-full-grid-wrapper.has-more .archive-fade-overlay { opacity: 1; }
+/* --- FIX: CSS MASKING ВМЕСТО ОВЕРЛЕЯ --- */
+.archive-fade-overlay { display: none !important; }
 
+.archive-full-grid-wrapper.has-more {
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    padding-bottom: 20px;
+}
+
+/* АДАПТИВ */
 @media (max-width: 1600px) { .archive-grid { grid-template-columns: repeat(5, 1fr); } }
 @media (max-width: 1400px) { .archive-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 1000px) { .archive-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) {
+    /* Скрываем линии на мобилках, чтобы не было наезда */
+    .archive-header .section-title::before, .archive-header .section-title::after { display: none; }
+    .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; }
+    
     .archive-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .header-control-bar { flex-wrap: wrap; justify-content: center; border-radius: 20px; }
     .type-switcher { order: 1; width: 100%; justify-content: center; }
     .sort-side-btn { order: 2; flex-grow: 1; justify-content: center; }
     .type-switcher::before { width: calc(50% - 6px); }
     .card-desc { display: none; }
+    
+    .search-suggestions { width: 95%; left: 2.5%; }
 }
