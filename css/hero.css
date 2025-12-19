@@ -1,3 +1,5 @@
+/* css/hero.css */
+
 /* =========================================
    HERO SECTION (HUD DESIGN - CLEAN TECH V3)
    ========================================= */
@@ -44,7 +46,7 @@
     padding: 0 20px;
 }
 
-/* ФИКС КАРТИНОК: Сбрасываем лишние стили, если они были */
+/* ФИКС КАРТИНОК */
 .hud-side-panel .main-photo, 
 .hud-side-panel .orbital-photo,
 .hud-main-display .main-photo {
@@ -56,7 +58,7 @@
 }
 
 /* --------------------------------------------------
-   БОКОВЫЕ ПАНЕЛИ (СКРУГЛЕННЫЕ СРЕЗЫ)
+   БОКОВЫЕ ПАНЕЛИ (CLEAN CUTS - 45 DEGREE)
    -------------------------------------------------- */
 .hud-side-panel {
     width: 400px;
@@ -64,60 +66,50 @@
     position: relative;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     
-    /* Новая форма: Смягченные срезы и скругленные углы */
+    /* Чистые углы для ровной обводки */
     clip-path: polygon(
-        0 25px,
-        3px 15px,
-        15px 3px,
-        25px 0,
-        calc(100% - 10px) 0,
-        100% 10px,
-        100% calc(100% - 25px),
-        calc(100% - 3px) calc(100% - 15px),
-        calc(100% - 15px) calc(100% - 3px),
-        calc(100% - 25px) 100%,
-        10px 100%,
-        0 calc(100% - 10px)
+        0 20px,
+        20px 0, 
+        calc(100% - 20px) 0, 
+        100% 20px,
+        100% calc(100% - 20px), 
+        calc(100% - 20px) 100%,
+        20px 100%,
+        0 calc(100% - 20px)
     );
     
     padding: 2px; /* Толщина рамки */
     
-    /* Градиентная рамка (Зеленая по умолчанию) */
     background: linear-gradient(
         to bottom, 
         var(--neon-green) 0%, 
-        var(--neon-green) 30px, 
-        transparent 30px, 
-        transparent calc(100% - 30px), 
-        var(--neon-green) calc(100% - 30px), 
+        var(--neon-green) 40px, 
+        transparent 40px, 
+        transparent calc(100% - 40px), 
+        var(--neon-green) calc(100% - 40px), 
         var(--neon-green) 100%
     );
     
     filter: drop-shadow(0 0 5px rgba(57, 255, 20, 0.3));
 }
 
-/* Внутренний контент панели */
 .panel-content {
     width: 100%;
     height: 100%;
-    background: 
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(57, 255, 20, 0.02) 3px),
-        rgba(0, 0, 0, 0.85);
     
-    /* Такая же форма как у родителя для ровной рамки */
+    /* Сплошной фон */
+    background: #0a0b10;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(57, 255, 20, 0.03) 3px);
+    
     clip-path: polygon(
-        0 25px,
-        3px 15px,
-        15px 3px,
-        25px 0,
-        calc(100% - 10px) 0,
-        100% 10px,
-        100% calc(100% - 25px),
-        calc(100% - 3px) calc(100% - 15px),
-        calc(100% - 15px) calc(100% - 3px),
-        calc(100% - 25px) 100%,
-        10px 100%,
-        0 calc(100% - 10px)
+        0 20px,
+        20px 0, 
+        calc(100% - 20px) 0, 
+        100% 20px,
+        100% calc(100% - 20px), 
+        calc(100% - 20px) 100%, 
+        20px 100%, 
+        0 calc(100% - 20px)
     );
     
     padding: 30px 25px;
@@ -126,7 +118,6 @@
     position: relative;
 }
 
-/* Заголовок панели */
 .panel-header {
     display: flex;
     align-items: center;
@@ -143,9 +134,8 @@
     padding: 4px 10px;
     font-weight: 800;
     letter-spacing: 1px;
-    /* Убрали skew для сочетания со скруглениями или оставили минимальный */
     transform: skewX(-10deg);
-    border-radius: 4px;
+    border-radius: 2px;
     transition: background 0.3s;
 }
 
@@ -158,7 +148,7 @@
     transition: background 0.3s;
 }
 
-/* --- ЛЕВАЯ ПАНЕЛЬ (ТЕРМИНАЛ / TETLA) --- */
+/* --- ЛЕВАЯ ПАНЕЛЬ (TETLA) --- */
 .ally-container { text-align: center; margin-bottom: 20px; }
 .panel-avatar { 
     width: 130px; height: 130px; 
@@ -173,10 +163,7 @@
     font-size: 1.8rem; 
     color: #fff; 
     text-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+    display: flex; justify-content: center; align-items: center; gap: 10px;
 }
 
 .bot-version { 
@@ -191,7 +178,6 @@
     box-shadow: 0 0 5px rgba(57, 255, 20, 0.2);
 }
 
-/* Статистика внизу панели */
 .ally-stats-grid { 
     display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; 
 }
@@ -205,49 +191,167 @@
 .a-value { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff; font-size: 1.1rem; }
 .a-value.status-ok { color: var(--neon-green); }
 
-/* --- ПРАВАЯ ПАНЕЛЬ (ОТРЯД) --- */
-.squad-list { display: flex; justify-content: space-around; margin-top: 30px; margin-bottom: auto; }
-.squad-member { text-align: center; cursor: pointer; transition: transform 0.2s; }
+/* --- ТЕРМИНАЛ (CRT MOD + SCANLINE) --- */
+.ally-terminal {
+    position: relative;
+    overflow: hidden;
+    cursor: text; 
+    
+    /* CRT ЭФФЕКТ ФОНА */
+    background-color: #050505;
+    background-image: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(57, 255, 20, 0.3);
+    padding: 15px;
+    font-family: 'monospace';
+    font-size: 0.9rem;
+    color: #aaa;
+    text-shadow: 0 0 2px rgba(57, 255, 20, 0.3);
+    
+    margin-bottom: auto; 
+    border-radius: 4px;
+    height: 160px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+/* СКАНЛАЙН (Бегущая полоса) */
+.ally-terminal::after {
+    content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px; z-index: 2; pointer-events: none;
+    animation: scanline 6s linear infinite; opacity: 0.4;
+}
+
+@keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
+
+.ally-terminal::-webkit-scrollbar { width: 4px; }
+.ally-terminal::-webkit-scrollbar-thumb { background: rgba(57, 255, 20, 0.3); border-radius: 2px; }
+
+#terminal-history p { margin: 0 0 5px 0; line-height: 1.2; word-break: break-all; }
+
+.command-line { display: flex; align-items: center; position: relative; margin-top: 5px; z-index: 5; }
+.prompt { margin-right: 8px; color: var(--neon-green); font-weight: bold; }
+
+/* ИНПУТ С РОДНЫМ КУРСОРОМ */
+#cmd-input {
+    background: transparent; border: none; outline: none; color: #fff;
+    font-family: 'monospace'; font-size: 0.9rem; flex-grow: 1;
+    caret-color: var(--neon-green); caret-shape: block;
+    text-transform: uppercase; padding: 0; margin: 0; z-index: 5;
+}
+.terminal-block-cursor { display: none; }
+.terminal-ok { color: var(--neon-green); }
+.terminal-err { color: var(--neon-pink); }
+
+
+/* --- ПРАВАЯ ПАНЕЛЬ (ОТРЯД - UPGRADED) --- */
+.squad-list {
+    position: relative;
+    display: flex; justify-content: space-around; margin-top: 30px; margin-bottom: auto;
+}
+
+/* Линии связи между аватарами */
+.squad-list::before {
+    content: ''; position: absolute; top: 40px; left: 15%; right: 15%; height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.2) 80%, transparent 100%);
+    z-index: 0;
+}
+
+.squad-member { text-align: center; cursor: pointer; transition: transform 0.2s; position: relative; }
 .squad-member:hover { transform: scale(1.1); }
-.squad-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid; margin-bottom: 10px; }
+
+.avatar-wrapper { position: relative; display: inline-block; margin-bottom: 10px; }
+
+.squad-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid; position: relative; z-index: 1; background: #000; }
 .squad-name { font-family: 'Rajdhani', sans-serif; font-size: 1rem; color: #ccc; }
 
+/* Цвета аватаров */
 .bagerka-avatar { border-color: var(--bagerka-color); box-shadow: 0 0 10px var(--bagerka-color); }
 .angel-avatar { border-color: var(--angel-color); box-shadow: 0 0 10px var(--angel-color); }
 .kiriki-avatar { border-color: var(--kiriki-color); box-shadow: 0 0 10px var(--kiriki-color); }
 
-.data-block { 
-    display: flex; justify-content: space-between; margin-top: 20px;
-    font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; 
-    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;
+/* Бейджи ролей */
+.role-badge {
+    position: absolute; bottom: -5px; right: -5px; width: 24px; height: 24px;
+    border-radius: 50%; background: #000; border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    transition: 0.3s;
+}
+
+.role-badge.tech { border-color: var(--bagerka-color); color: var(--bagerka-color); }
+.role-badge.support { border-color: var(--angel-color); color: var(--angel-color); }
+.role-badge.fun { border-color: var(--kiriki-color); color: var(--kiriki-color); }
+
+.squad-member:hover .role-badge { transform: scale(1.2); background: #fff; box-shadow: 0 0 10px currentColor; }
+.squad-member:hover .role-badge.tech { background: var(--bagerka-color); color: #000; }
+.squad-member:hover .role-badge.support { background: var(--angel-color); color: #000; }
+.squad-member:hover .role-badge.fun { background: var(--kiriki-color); color: #000; }
+
+/* НОВЫЙ ФУТЕР ПАНЕЛИ (WAVEFORM) */
+.squad-status-footer {
+    margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;
+}
+
+.footer-labels {
+    display: flex; justify-content: space-between; margin-bottom: 8px;
+    font-family: 'Rajdhani', sans-serif; font-size: 1rem;
 }
 .data-label { color: #888; } .data-value { font-weight: 700; color: #fff; }
 
-/* HOVER ЭФФЕКТЫ ДЛЯ ПАНЕЛЕЙ (Смена цвета на розовый) */
-.hud-side-panel.left:hover,
-.hud-side-panel.right:hover {
+.sync-waveform {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    height: 20px; gap: 2px;
+}
+
+.sync-waveform .bar {
+    width: 4px; background: var(--neon-green); opacity: 0.5; border-radius: 2px;
+    animation: wave-pulse 1.2s infinite ease-in-out;
+}
+
+.sync-waveform .bar:nth-child(odd) { animation-duration: 0.8s; }
+.sync-waveform .bar:nth-child(2n) { animation-duration: 1.1s; }
+.sync-waveform .bar:nth-child(3n) { animation-duration: 1.3s; }
+.sync-waveform .bar:nth-child(4n) { animation-duration: 0.9s; }
+
+@keyframes wave-pulse {
+    0%, 100% { height: 20%; opacity: 0.3; }
+    50% { height: 100%; opacity: 1; box-shadow: 0 0 5px var(--neon-green); }
+}
+
+/* HOVER ЭФФЕКТЫ */
+.hud-side-panel.left:hover, .hud-side-panel.right:hover {
     background: linear-gradient(
         to bottom, 
         var(--neon-pink) 0%, 
-        var(--neon-pink) 30px, 
-        transparent 30px, 
-        transparent calc(100% - 30px), 
-        var(--neon-pink) calc(100% - 30px), 
+        var(--neon-pink) 40px, 
+        transparent 40px, 
+        transparent calc(100% - 40px), 
+        var(--neon-pink) calc(100% - 40px), 
         var(--neon-pink) 100%
     );
     filter: drop-shadow(0 0 8px rgba(255, 45, 149, 0.4));
 }
 
 .hud-side-panel.right:hover .header-title,
-.hud-side-panel.left:hover .header-title { 
-    background: var(--neon-pink); 
-}
+.hud-side-panel.left:hover .header-title { background: var(--neon-pink); }
 .hud-side-panel.right:hover .header-deco-line,
 .hud-side-panel.left:hover .header-deco-line { 
     background: repeating-linear-gradient(90deg, var(--neon-pink), var(--neon-pink) 2px, transparent 2px, transparent 6px);
 }
 
-/* Детальный вид отряда (скрытый слой) */
+/* При наведении на панель отряда, волна тоже розовеет */
+.hud-side-panel.right:hover .sync-waveform .bar {
+    background: var(--neon-pink); box-shadow: 0 0 5px var(--neon-pink);
+}
+
 .squad-default-view { height: 100%; display: flex; flex-direction: column; transition: opacity 0.3s; }
 .squad-detail-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 30px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: all 0.3s ease; }
 .hud-side-panel.right.expanded .squad-default-view { opacity: 0; pointer-events: none; }
@@ -261,219 +365,36 @@
 /* --------------------------------------------------
    ЦЕНТРАЛЬНЫЙ ДИСПЛЕЙ 
    -------------------------------------------------- */
-.hud-main-display {
-    position: relative; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; z-index: 10;
-    width: 300px; height: 300px;
-}
-.main-avatar-container {
-    position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;
-}
-.main-display-avatar {
-    width: 250px; height: 250px; border-radius: 50%; object-fit: cover;
-    border: 3px solid var(--neon-pink); padding: 5px;
-    background-color: rgba(7, 7, 17, 0.8);
-    filter: drop-shadow(0 0 20px var(--neon-pink));
-    margin: 0 auto; position: relative; z-index: 2;
-}
+.hud-main-display { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; width: 300px; height: 300px; }
+.main-avatar-container { position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+.main-display-avatar { width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 3px solid var(--neon-pink); padding: 5px; background-color: rgba(7, 7, 17, 0.8); filter: drop-shadow(0 0 20px var(--neon-pink)); margin: 0 auto; position: relative; z-index: 2; }
 
-/* 
-   ==================================================
-   КОЛЬЦА (RINGS) - GRADIENT ARCS VERSION
-   ================================================== 
-*/
-.main-display-rings {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-    animation: ring-breathing 6s ease-in-out infinite;
-}
+.main-display-rings { position: absolute; top: 50%; left: 50%; width: 0; height: 0; pointer-events: none; display: flex; justify-content: center; align-items: center; z-index: 1; animation: ring-breathing 6s ease-in-out infinite; }
+.main-display-rings .ring { position: absolute; border-radius: 50%; top: 50%; left: 50%; transform-origin: center center; background: transparent; }
 
-.main-display-rings .ring {
-    position: absolute; 
-    border-radius: 50%; 
-    top: 50%; left: 50%; 
-    transform-origin: center center;
-    background: transparent;
-}
+.ring-1 { width: 340px; height: 340px; margin-left: -170px; margin-top: -170px; border: 1px solid rgba(57, 255, 20, 0.1); animation: rotate-only 20s linear infinite; }
+.ring-1::after { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0%, transparent 20%, rgba(57, 255, 20, 0) 30%, var(--neon-green) 50%, rgba(57, 255, 20, 0) 70%, transparent 80%, transparent 100%); -webkit-mask: radial-gradient(transparent 68%, black 69%); mask: radial-gradient(transparent 68%, black 69%); filter: drop-shadow(0 0 8px var(--neon-green)); }
 
-/* ============================
-   КОЛЬЦО 1 - ЗЕЛЕНОЕ (Внутреннее)
-   ============================ */
-.ring-1 { 
-    width: 340px; height: 340px; 
-    margin-left: -170px; margin-top: -170px;
-    border: 1px solid rgba(57, 255, 20, 0.1); /* Тонкая основа */
-    animation: rotate-only 20s linear infinite; 
-}
+.ring-2 { width: 440px; height: 440px; margin-left: -220px; margin-top: -220px; border: 1px solid rgba(255, 68, 68, 0.1); animation: rotate-only 30s linear infinite reverse; }
+.ring-2::after { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%; background: conic-gradient(from 180deg, transparent 0%, transparent 25%, rgba(255, 68, 68, 0) 35%, var(--bagerka-color) 55%, rgba(255, 68, 68, 0) 75%, transparent 100%); -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%); filter: drop-shadow(0 0 8px var(--bagerka-color)); }
 
-/* Плавный светящийся сегмент */
-.ring-1::after {
-    content: '';
-    position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
-    border-radius: 50%;
-    
-    /* Конический градиент: Прозрачный -> Яркий -> Прозрачный */
-    background: conic-gradient(
-        from 0deg,
-        transparent 0%,
-        transparent 20%,
-        rgba(57, 255, 20, 0) 30%,
-        var(--neon-green) 50%, 
-        rgba(57, 255, 20, 0) 70%,
-        transparent 80%,
-        transparent 100%
-    );
+.ring-3 { width: 580px; height: 580px; margin-left: -290px; margin-top: -290px; border: 1px dashed rgba(0, 123, 255, 0.2); animation: rotate-only 60s linear infinite; }
+.ring-3::after { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%; background: conic-gradient(from 90deg, transparent 0%, var(--kiriki-color) 25%, transparent 50%, var(--kiriki-color) 75%, transparent 100%); opacity: 0.6; -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%); filter: drop-shadow(0 0 10px var(--kiriki-color)); }
 
-    /* Маска для вырезания центра */
-    -webkit-mask: radial-gradient(transparent 68%, black 69%);
-    mask: radial-gradient(transparent 68%, black 69%);
-    
-    filter: drop-shadow(0 0 8px var(--neon-green));
-}
-
-
-/* ============================
-   КОЛЬЦО 2 - КРАСНОЕ (Среднее)
-   ============================ */
-.ring-2 { 
-    width: 440px; height: 440px; 
-    margin-left: -220px; margin-top: -220px;
-    border: 1px solid rgba(255, 68, 68, 0.1); 
-    animation: rotate-only 30s linear infinite reverse; 
-}
-
-.ring-2::after {
-    content: '';
-    position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
-    border-radius: 50%;
-    
-    background: conic-gradient(
-        from 180deg,
-        transparent 0%,
-        transparent 25%,
-        rgba(255, 68, 68, 0) 35%,
-        var(--bagerka-color) 55%, 
-        rgba(255, 68, 68, 0) 75%,
-        transparent 100%
-    );
-
-    -webkit-mask: radial-gradient(transparent 69%, black 70%);
-    mask: radial-gradient(transparent 69%, black 70%);
-    
-    filter: drop-shadow(0 0 8px var(--bagerka-color));
-}
-
-
-/* ============================
-   КОЛЬЦО 3 - СИНЕЕ (Внешнее)
-   ============================ */
-.ring-3 { 
-    width: 580px; height: 580px; 
-    margin-left: -290px; margin-top: -290px;
-    border: 1px dashed rgba(0, 123, 255, 0.2); /* Пунктирная основа */
-    animation: rotate-only 60s linear infinite; 
-}
-
-.ring-3::after {
-    content: '';
-    position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
-    border-radius: 50%;
-    
-    /* Две мягкие дуги */
-    background: conic-gradient(
-        from 90deg,
-        transparent 0%,
-        var(--kiriki-color) 25%,
-        transparent 50%,
-        var(--kiriki-color) 75%,
-        transparent 100%
-    );
-    
-    opacity: 0.6;
-
-    -webkit-mask: radial-gradient(transparent 69%, black 70%);
-    mask: radial-gradient(transparent 69%, black 70%);
-    
-    filter: drop-shadow(0 0 10px var(--kiriki-color));
-}
-
-.main-display-status {
-    position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%);
-    z-index: 12; display: flex; align-items: center; justify-content: center;
-    background: rgba(10, 11, 20, 0.95); padding: 8px 20px;
-    border: 1px solid var(--neon-pink);
-    font-family: 'Orbitron', sans-serif; color: var(--neon-pink); letter-spacing: 2px;
-    white-space: nowrap; width: auto; box-shadow: 0 0 15px rgba(255, 45, 149, 0.2);
-    border-radius: 6px;
-}
+.main-display-status { position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%); z-index: 12; display: flex; align-items: center; justify-content: center; background: rgba(10, 11, 20, 0.95); padding: 8px 20px; border: 1px solid var(--neon-pink); border-radius: 6px; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); letter-spacing: 2px; white-space: nowrap; width: auto; box-shadow: 0 0 15px rgba(255, 45, 149, 0.2); }
 .status-indicator { width: 8px; height: 8px; background: var(--neon-pink); border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; }
 
-/* Текст внизу Hero (Заголовок страницы) */
 .hero-content-hud { position: absolute; bottom: 2%; text-align: center; z-index: 51; width: 100%; }
 .hero-title-hud { font-family: 'Rajdhani', sans-serif; font-size: 4rem; font-weight: 700; letter-spacing: 5px; color: var(--white); text-shadow: 0 0 20px rgba(255, 45, 149, 0.6); margin-bottom: 5px; text-transform: uppercase; }
 .hero-subtitle-hud { font-family: 'Exo 2', sans-serif; font-size: 1.1rem; color: var(--neon-green); margin-bottom: 30px; letter-spacing: 3px; font-weight: 300; min-height: 1.5em; }
 
-/* АНИМАЦИИ */
 @keyframes rotate-only { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.9); } }
-@keyframes ring-breathing { 
-    0% { transform: scale(1); opacity: 0.8; } 
-    50% { transform: scale(1.05); opacity: 0.6; } 
-    100% { transform: scale(1); opacity: 0.8; } 
-}
+@keyframes ring-breathing { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 0.6; } 100% { transform: scale(1); opacity: 0.8; } }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* --------------------------------------------------
-   АДАПТИВНОСТЬ (MEDIA QUERIES)
-   -------------------------------------------------- */
-@media (max-width: 1200px) {
-    .hud-container { max-width: 1000px; }
-    .hud-side-panel { width: 320px; height: 500px; }
-    
-    /* Уменьшаем кольца для средних экранов */
-    .main-display-rings { transform: scale(0.8); }
-}
+.hero-section-hud::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to bottom, transparent 0%, #050508 100%); pointer-events: none; z-index: 20; }
 
-@media (max-width: 1024px) {
-    .hud-container { flex-direction: column; height: auto; margin-top: 50px; }
-    .hud-main-display { order: 1; margin-bottom: 80px; } /* Увеличили отступ, чтобы кольца не наезжали */
-    .hud-side-panel.left { order: 2; margin-bottom: 30px; }
-    .hud-side-panel.right { order: 3; }
-    
-    .hero-section-hud { height: auto; padding-top: 50px; padding-bottom: 100px; }
-}
-
-@media (max-width: 600px) {
-    .hud-side-panel { width: 100%; max-width: 350px; height: auto; min-height: 500px; }
-    .hero-title-hud { font-size: 2.5rem; }
-    
-    /* Сильное уменьшение колец для мобильных */
-    .main-display-rings { transform: scale(0.55); } 
-}
-
-/* Плавный переход (Gradient Fade) внизу Hero секции */
-.hero-section-hud::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 150px; /* Высота градиента */
-    
-    /* Плавный переход от прозрачного к цвету фона следующей секции (#050508) */
-    background: linear-gradient(to bottom, transparent 0%, #050508 100%);
-    
-    pointer-events: none; /* Чтобы можно было кликать сквозь градиент */
-    z-index: 20;
-}
+@media (max-width: 1200px) { .hud-container { max-width: 1000px; } .hud-side-panel { width: 320px; height: 500px; } .main-display-rings { transform: scale(0.8); } }
+@media (max-width: 1024px) { .hud-container { flex-direction: column; height: auto; margin-top: 50px; } .hud-main-display { order: 1; margin-bottom: 80px; } .hud-side-panel.left { order: 2; margin-bottom: 30px; } .hud-side-panel.right { order: 3; } .hero-section-hud { height: auto; padding-top: 50px; padding-bottom: 100px; } }
+@media (max-width: 600px) { .hud-side-panel { width: 100%; max-width: 350px; height: auto; min-height: 500px; } .hero-title-hud { font-size: 2.5rem; } .main-display-rings { transform: scale(0.55); } }

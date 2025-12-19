@@ -1,5 +1,7 @@
+/* css/footer.css */
+
 /* =========================================
-   FOOTER (SYSTEM HUD STYLE) - UPDATED BORDERS
+   FOOTER (SYSTEM HUD STYLE) - WIDE VERSION
    ========================================= */
 
 .cyber-footer {
@@ -8,6 +10,16 @@
     padding: 40px 0;
     overflow: hidden;
     z-index: 10;
+}
+
+/* 
+   ИЗМЕНЕНИЕ: Расширяем контейнер специально для футера,
+   чтобы развести контент по краям экрана.
+*/
+.cyber-footer .container {
+    max-width: 1900px; /* Почти на весь экран */
+    width: 95%;        /* Оставляем небольшие отступы по бокам */
+    margin: 0 auto;
 }
 
 .footer-line {
@@ -70,7 +82,7 @@
     font-weight: 700;
 }
 
-/* --- ОБНОВЛЕННЫЕ КНОПКИ СОЦСЕТЕЙ --- */
+/* --- КНОПКИ СОЦСЕТЕЙ --- */
 .social-hud {
     display: flex;
     gap: 15px;
@@ -83,23 +95,15 @@
     font-size: 1.2rem;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     position: relative;
-    
-    /* Убираем стандартную рамку */
     border: none;
-    
-    /* Цвет бренда по умолчанию (будет как рамка) */
     background-color: var(--btn-border-color, rgba(255, 255, 255, 0.15));
-    
-    /* Форма скошенных углов */
     --clip-shape: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
     clip-path: var(--clip-shape);
 }
 
-/* Внутренний темный слой, создающий эффект рамки */
 .hud-btn::before {
     content: '';
     position: absolute;
-    /* Оступаем на 1px для имитации толщины рамки */
     inset: 1px; 
     background: #0a0a0a;
     clip-path: var(--clip-shape);
@@ -109,26 +113,24 @@
 
 .hud-btn i {
     position: relative;
-    z-index: 2; /* Иконка поверх темного слоя */
+    z-index: 2; 
     transition: all 0.3s ease;
 }
 
-/* Индивидуальные цвета брендов */
+/* Брендовые цвета */
 .hud-btn.twitch   { --btn-border-color: #9146ff; }
 .hud-btn.youtube  { --btn-border-color: #ff0000; }
 .hud-btn.telegram { --btn-border-color: #0088cc; }
 .hud-btn.discord  { --btn-border-color: #5865F2; }
 .hud-btn.tiktok   { --btn-border-color: #ff2d95; }
 
-/* Эффект при наведении */
+/* Hover */
 .hud-btn:hover {
     transform: translateY(-3px);
     color: #fff;
-    /* Свечение */
     filter: drop-shadow(0 0 8px var(--btn-border-color));
 }
 
-/* При наведении темный фон окрашивается в цвет бренда (заливка) */
 .hud-btn:hover::before {
     background: var(--btn-border-color);
 }
@@ -146,5 +148,9 @@
     }
     .social-hud {
         justify-content: center;
+    }
+    /* На мобилках возвращаем отступы */
+    .cyber-footer .container {
+        width: 90%;
     }
 }

@@ -124,7 +124,7 @@ function formatNumber(num) {
     return num.toString();
 }
 
-// --- 4. ПОДПИСЧИКИ (Бегущая строка) ---
+// --- 4. ПОДПИСЧИКИ (ВЕРТИКАЛЬНЫЕ КАРТОЧКИ) ---
 export async function loadSubscribers() {
     const container = document.getElementById('subscribers-track');
     if (!container) return;
@@ -133,6 +133,7 @@ export async function loadSubscribers() {
         const subscribers = await loadData('subscribers.json', []);
         
         if (subscribers.length > 0) {
+            // Генерируем HTML для больших вертикальных карточек
             const cardsHtml = subscribers.map(sub => `
                 <div class="holo-card ${sub.color || 'green'}">
                     <div class="card-top-deco"><span>LVL.${sub.level}</span> <i class="${sub.typeIcon}"></i></div>
@@ -151,7 +152,7 @@ export async function loadSubscribers() {
                 </div>
             `).join('');
             
-            // Дублируем для бесконечной прокрутки
+            // Дублируем контент для бесконечной прокрутки (x2 достаточно для больших карточек)
             container.innerHTML = cardsHtml + cardsHtml;
         } else {
             container.innerHTML = '<div style="padding:20px;">Нет данных об агентах</div>';

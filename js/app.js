@@ -4,13 +4,17 @@
 import { initializeUI } from './ui-components.js';
 import { initializeDataManager } from './data-manager.js';
 import { initMediaArchive } from './media-manager.js';
-// Импортируем движок пасхалки (убедитесь, что файл reptile-engine.js создан)
+// Импортируем движок пасхалки
 import { startReptileProtocol } from './reptile-engine.js';
 
 // Application state
 const AppState = {
     initialized: false
 };
+
+// DOM Elements for Terminal
+const terminalHistory = document.getElementById('terminal-history');
+const terminalBox = document.getElementById('terminal-box');
 
 // Initialize application
 async function initializeApplication() {
@@ -25,11 +29,14 @@ async function initializeApplication() {
         // 2. Загрузка данных для Hero, Command Center (Статистика, Расписание)
         await initializeDataManager();
         
-        // 3. Инициализация нового блока "Цифровой Архив" (Игры и Кино)
+        // 3. Инициализация блока "Цифровой Архив" (Игры и Кино)
         await initMediaArchive();
         
-        // 4. Инициализация интерактивного терминала (Новая функция)
+        // 4. Инициализация ввода в терминал (Обработка команд)
         initTerminalInput();
+
+        // 5. ЗАПУСК БУТ-АНИМАЦИИ ТЕРМИНАЛА
+        runTerminalBoot();
         
         console.log('✅ Ksusha Sher website initialized successfully!');
         AppState.initialized = true;
@@ -40,15 +47,101 @@ async function initializeApplication() {
 }
 
 /**
- * Логика интерактивного терминала в левой панели HUD
+ * --- ЛОГИКА ТЕРМИНАЛА (BOOT & NOISE) ---
+ */
+
+// Функция задержки
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+// Функция добавления строки в лог
+function addLogLine(html, isTyping = false) {
+    if (!terminalHistory) return;
+    
+    const p = document.createElement('p');
+    p.innerHTML = html;
+    p.style.margin = '0 0 5px 0';
+    
+    // Эффект печатания (зеленая каретка справа от строки)
+    if (isTyping) {
+        p.style.borderRight = '7px solid var(--neon-green)';
+        p.style.width = 'fit-content';
+        p.style.animation = 'blink 0.5s step-end infinite';
+    }
+    
+    terminalHistory.appendChild(p);
+    
+    // Автоскролл вниз
+    if (terminalBox) terminalBox.scrollTop = terminalBox.scrollHeight;
+    
+    return p;
+}
+
+// 1. ЗАГРУЗКА СИСТЕМЫ (BOOT SEQUENCE)
+async function runTerminalBoot() {
+    if (!terminalHistory) return;
+    
+    // Очистка перед стартом (удаляем старый статический текст)
+    terminalHistory.innerHTML = '';
+    
+    // Сценарий загрузки
+    await delay(500);
+    let line = addLogLine("INITIALIZING TETLA_OS v5.6...", true);
+    await delay(800);
+    line.style.borderRight = 'none'; // Убираем курсор с прошлой строки
+    
+    line = addLogLine("CHECKING MEMORY... <span class='terminal-ok'>OK</span>");
+    await delay(400);
+    
+    line = addLogLine("LOADING CORE MODULES...");
+    await delay(600);
+    
+    line = addLogLine("CONNECTING TO TWITCH API... <span class='terminal-ok'>CONNECTED</span>");
+    await delay(600);
+    
+    line = addLogLine("> ПРОТОКОЛЫ ЗАЩИТЫ: <span class='terminal-ok'>АКТИВНЫ</span>");
+    await delay(400);
+    
+    line = addLogLine("> МОДЕРАЦИЯ ЧАТА: <span class='terminal-ok'>АКТИВНА</span>");
+    await delay(400);
+    
+    line = addLogLine("<span style='opacity:0.7'>Введите 'help' для списка команд...</span>");
+    
+    // Запуск фонового шума после загрузки
+    startSystemNoise();
+}
+
+// 2. СИСТЕМНЫЙ ШУМ (RANDOM LOGS)
+function startSystemNoise() {
+    const messages = [
+        "<span style='color:#666; font-size:0.8rem'>[SYS] Ping: 24ms check ok</span>",
+        "<span style='color:#666; font-size:0.8rem'>[BG] Garbage collection...</span>",
+        "<span style='color:#666; font-size:0.8rem'>[NET] Packet received from 127.0.0.1</span>",
+        "<span style='color:#666; font-size:0.8rem'>[TETLA] Scanning chat logs...</span>",
+        "<span style='color:#666; font-size:0.8rem'>[SYS] CPU Temp: 45°C</span>"
+    ];
+
+    setInterval(() => {
+        // 30% шанс появления сообщения каждые 8 секунд, если терминал существует
+        if (Math.random() > 0.7 && terminalHistory) {
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            addLogLine(msg);
+            
+            // Если строк слишком много - удаляем верхнюю, чтобы не забивать память и DOM
+            if (terminalHistory.children.length > 50) {
+                terminalHistory.removeChild(terminalHistory.firstChild);
+            }
+        }
+    }, 8000);
+}
+
+/**
+ * Логика интерактивного терминала (Ввод пользователя)
  */
 function initTerminalInput() {
     const input = document.getElementById('cmd-input');
-    const terminalBox = document.getElementById('terminal-box');
-    const history = document.getElementById('terminal-history');
 
-    // Если элементов нет, выходим (защита от ошибок)
-    if (!input || !terminalBox || !history) return;
+    // Если элементов нет, выходим
+    if (!input || !terminalBox || !terminalHistory) return;
 
     // Фокус на инпут при клике в любое место блока терминала
     terminalBox.addEventListener('click', () => {
@@ -61,12 +154,12 @@ function initTerminalInput() {
             const rawValue = input.value;
             const command = rawValue.trim().toLowerCase();
             
-            // 1. Добавляем введенную команду в историю
+            // 1. Добавляем введенную команду в историю (Белым цветом)
             const cmdLine = document.createElement('p');
             cmdLine.innerHTML = `> ${rawValue}`;
-            cmdLine.style.color = '#fff'; // Цвет пользовательского ввода
-            cmdLine.style.margin = '0';
-            history.appendChild(cmdLine);
+            cmdLine.style.color = '#fff'; 
+            cmdLine.style.margin = '0 0 5px 0';
+            terminalHistory.appendChild(cmdLine);
             
             // 2. Обработка команд
             let responseText = '';
@@ -80,10 +173,10 @@ function initTerminalInput() {
                 responseText = 'ДОСТУПНЫЕ КОМАНДЫ: HELP, CLEAR, LIZARD, STATUS';
                 
             } else if (command === 'status') {
-                responseText = 'СИСТЕМЫ В НОРМЕ. TETLA V4.2 АКТИВНА.';
+                responseText = 'СИСТЕМЫ В НОРМЕ. TETLA V5.6 АКТИВНА.';
                 
             } else if (command === 'clear') {
-                history.innerHTML = '';
+                terminalHistory.innerHTML = '';
                 responseText = ''; // Ничего не пишем после очистки
                 
             } else if (command === '') {
@@ -95,15 +188,11 @@ function initTerminalInput() {
 
             // 3. Вывод ответа системы
             if (responseText) {
-                const respLine = document.createElement('p');
-                respLine.innerHTML = `> ${responseText}`;
-                respLine.style.margin = '0 0 10px 0';
-                history.appendChild(respLine);
+                addLogLine(responseText);
             }
 
             // 4. Очистка поля и автоскролл вниз
             input.value = '';
-            // Небольшая задержка для корректного скролла после рендера
             requestAnimationFrame(() => {
                 terminalBox.scrollTop = terminalBox.scrollHeight;
             });
