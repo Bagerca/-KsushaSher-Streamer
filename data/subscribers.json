@@ -1,68 +1,92 @@
 [
   {
-    "name": "TETLA",
-    "role": "SYSTEM BOT",
+    "name": "Tetlabot",
+    "role": "fish",
     "level": 99,
-    "color": "green",
-    "mainIcon": "fas fa-robot",
-    "typeIcon": "fas fa-microchip",
+    "color": "#319a24",
+    "mainIcon": "fas fa-fish",
+    "typeIcon": "fas fa-water",
     "stats": 100
   },
   {
-    "name": "BAGERca",
+    "name": "BAGERcaa",
     "role": "DEV / TECH",
     "level": 80,
-    "color": "red",
-    "image": "assets/images/bagerca.jpg",
+    "color": "#ff4444",
     "mainIcon": "fas fa-laptop-code",
     "typeIcon": "fas fa-code",
     "stats": 95
   },
   {
     "name": "to_be_ang",
-    "role": "SUPPORT",
+    "role": "The Shining Angel",
     "level": 75,
-    "color": "orange",
-    "image": "assets/images/angel.jpg",
-    "mainIcon": "fas fa-wings",
+    "color": "#ff4504",
+    "mainIcon": "fas fa-sun",
     "typeIcon": "fas fa-star",
     "stats": 90
   },
   {
-    "name": "Kiriki",
-    "role": "MEME LORD",
+    "name": "kiriki_oni",
+    "role": "Neuro wave",
     "level": 70,
-    "color": "blue",
-    "image": "assets/images/kiriki.jpg",
-    "mainIcon": "fas fa-mask",
-    "typeIcon": "fas fa-laugh-beam",
+    "color": "#007bff",
+    "mainIcon": "fas fa-wave-square",
+    "typeIcon": "fas fa-music",
     "stats": 85
   },
   {
-    "name": "Nikitakgc",
-    "role": "AGENT",
-    "level": 50,
-    "color": "pink",
-    "mainIcon": "fas fa-headset",
-    "typeIcon": "fas fa-gamepad",
-    "stats": 70
-  },
-  {
-    "name": "Roma99...",
-    "role": "OPERATIVE",
-    "level": 45,
-    "color": "cyan",
-    "mainIcon": "fas fa-user-astronaut",
-    "typeIcon": "fas fa-bolt",
-    "stats": 65
+    "name": "dragonsmaddison",
+    "role": "DragonDildo",
+    "level": 69,
+    "color": "#ff000a",
+    "mainIcon": "fas fa-dragon",
+    "typeIcon": "fas fa-fire",
+    "stats": 80
   },
   {
     "name": "Darkl1us",
     "role": "Military Beer",
     "level": 40,
-    "color": "purple",
-    "mainIcon": "fas fa-dungeon",
-    "typeIcon": "fas fa-ghost",
+    "color": "#bd00ff",
+    "mainIcon": "fas fa-beer",
+    "typeIcon": "fas fa-medal",
     "stats": 60
+  },
+  {
+    "name": "Nikitakgc",
+    "role": "Forest Expert",
+    "level": 50,
+    "color": "#2e8b57",
+    "mainIcon": "fas fa-tree",
+    "typeIcon": "fas fa-campground",
+    "stats": 70
+  },
+  {
+    "name": "Roma99...",
+    "role": "Orenburg Brother",
+    "level": 45,
+    "color": "#00ffff",
+    "mainIcon": "fas fa-city",
+    "typeIcon": "fas fa-user-friends",
+    "stats": 65
+  },
+  {
+    "name": "raku6chka",
+    "role": "Orenburg Brother",
+    "level": 42,
+    "color": "#17a2b8",
+    "mainIcon": "far fa-handshake",
+    "typeIcon": "fas fa-map-marker-alt",
+    "stats": 62
+  },
+  {
+    "name": "h1rdwell",
+    "role": "Hard Worker",
+    "level": 35,
+    "color": "#e67e22",
+    "mainIcon": "fas fa-hammer",
+    "typeIcon": "fas fa-hard-hat",
+    "stats": 55
   }
 ]

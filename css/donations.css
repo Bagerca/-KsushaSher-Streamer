@@ -95,72 +95,45 @@
 .crypto-terminal-wrapper {
     max-width: 500px; margin: 0 auto;
     background: rgba(0, 0, 0, 0.6);
-    
-    /* Базовая тусклая рамка */
     border: 1px solid rgba(57, 255, 20, 0.2);
-    
-    /* Диагональная симметрия: верх-лево и низ-право скруглены */
+    /* Диагональная форма: Лево-Верх и Право-Низ скруглены */
     border-radius: 16px 0 16px 0;
-    
     padding: 30px;
     position: relative; backdrop-filter: blur(10px);
     transition: transform 0.3s ease;
 }
 
-/* При наведении блок чуть всплывает */
 .crypto-terminal-wrapper:hover {
     transform: translateY(-2px);
 }
 
 /* --- АНИМИРОВАННЫЕ УГОЛКИ --- */
 .crypto-terminal-wrapper::before, .crypto-terminal-wrapper::after {
-    content: ''; 
-    position: absolute; 
-    
-    /* Начальный размер */
-    width: 25px; 
-    height: 25px;
-    
-    /* Цвет контура */
+    content: ''; position: absolute; width: 25px; height: 25px;
     border: 2px solid var(--neon-green); 
-    
-    /* Плавная анимация роста */
     transition: width 0.4s ease-out, height 0.4s ease-out, filter 0.3s ease;
-    
-    pointer-events: none; 
-    box-sizing: border-box;
-    z-index: 10;
+    pointer-events: none; box-sizing: border-box; z-index: 10;
 }
 
-/* ЛЕВЫЙ ВЕРХНИЙ УГОЛ (Округлый) */
 .crypto-terminal-wrapper::before {
     top: -1px; left: -1px;
-    border-right: none; 
-    border-bottom: none; 
-    border-radius: 16px 0 0 0;
+    border-right: none; border-bottom: none; border-radius: 16px 0 0 0;
 }
 
-/* ПРАВЫЙ НИЖНИЙ УГОЛ (Округлый) */
 .crypto-terminal-wrapper::after {
     bottom: -1px; right: -1px;
-    border-left: none; 
-    border-top: none; 
-    border-radius: 0 0 16px 0;
+    border-left: none; border-top: none; border-radius: 0 0 16px 0;
 }
 
-/* ЗАПУСК АНИМАЦИИ УГЛОВ ПРИ НАВЕДЕНИИ */
 .crypto-terminal-wrapper:hover::before,
 .crypto-terminal-wrapper:hover::after {
-    /* Растягиваемся на всю ширину и высоту */
     width: calc(100% + 2px);
     height: calc(100% + 2px);
-    
-    /* Добавляем неоновое свечение */
     filter: drop-shadow(0 0 5px var(--neon-green));
 }
 
 
-/* ТЕКСТОВЫЕ ЭЛЕМЕНТЫ ТЕРМИНАЛА */
+/* ТЕКСТОВЫЕ ЭЛЕМЕНТЫ */
 .terminal-label {
     font-family: 'monospace'; color: var(--neon-green); font-size: 0.8rem;
     margin-bottom: 15px; letter-spacing: 2px; opacity: 0.7; transition: 0.3s;
@@ -173,18 +146,27 @@
 /* БЛОК С ЦИФРАМИ */
 .card-number-box {
     background: linear-gradient(135deg, #222 0%, #111 100%);
-    border: 1px solid #444; border-radius: 10px; padding: 20px;
+    border: 1px solid #444; border-radius: 10px; 
+    
+    /* УМЕНЬШИЛ ВНУТРЕННИЕ ОТСТУПЫ */
+    padding: 10px 15px;
+    
     display: flex; align-items: center; justify-content: space-between;
     cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-    min-height: 80px; /* Фиксируем высоту, чтобы не скакало при смене текста */
+    min-height: 80px;
 }
 
 .card-number-box:hover { border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
 
 .card-chip {
     width: 40px; height: 30px; background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
-    border-radius: 4px; margin-right: 20px; position: relative;
+    border-radius: 4px; 
+    
+    /* УМЕНЬШИЛ ОТСТУП ОТ ЧИПА */
+    margin-right: 10px; 
+    
+    position: relative;
     flex-shrink: 0;
 }
 .card-chip::before {
@@ -194,32 +176,46 @@
 
 /* КОНТЕЙНЕР ЦИФР */
 .card-digits {
-    font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700;
-    color: #fff; letter-spacing: 2px; text-shadow: 0 2px 2px rgba(0,0,0,0.5);
-    flex-grow: 1; display: flex; gap: 10px; justify-content: center;
-    transition: all 0.3s ease;
+    font-family: 'Orbitron', monospace; 
+    
+    /* ЕЩЕ ЧУТЬ МЕНЬШЕ ШРИФТ */
+    font-size: 1.25rem; 
+    
+    font-weight: 700;
+    color: #fff; 
+    
+    /* СУЗИЛ МЕЖБУКВЕННЫЙ ИНТЕРВАЛ */
+    letter-spacing: 0.5px; 
+    
+    text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+    flex-grow: 1; 
+    display: flex; 
+    
+    /* УМЕНЬШИЛ GAP МЕЖДУ ГРУППАМИ ЦИФР ДО 5px */
+    gap: 5px; 
+    
+    justify-content: center;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    white-space: nowrap;
 }
 
-/* СТИЛЬ ПРИ УСПЕШНОМ КОПИРОВАНИИ (ТЕКСТ "СКОПИРОВАНО") */
+/* СТИЛЬ ПРИ УСПЕХЕ ("СКОПИРОВАНО") */
 .card-digits.success-mode {
     color: var(--neon-green);
-    text-shadow: 0 0 15px var(--neon-green);
-    letter-spacing: 4px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.4rem;
-    animation: glitch-text 0.3s ease-in-out;
+    text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+    gap: 0; 
+    letter-spacing: 3px;
+    font-size: 1.2rem;
 }
 
-@keyframes glitch-text {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; letter-spacing: 6px; }
-    100% { transform: scale(1); opacity: 1; letter-spacing: 4px; }
+.copy-icon { 
+    color: #666; font-size: 1.2rem; transition: 0.3s; 
+    /* УМЕНЬШИЛ ОТСТУП ОТ ИКОНКИ */
+    margin-left: 10px; 
+    flex-shrink: 0;
 }
-
-.copy-icon { color: #666; font-size: 1.2rem; transition: 0.3s; margin-left: 15px; }
 .card-number-box:hover .copy-icon { color: var(--neon-green); }
 
-/* Иконка становится бледной, когда скопировано */
 .card-number-box.copied .copy-icon { color: var(--neon-green); opacity: 0.5; }
 
 .scan-line {
@@ -230,7 +226,6 @@
 }
 .card-number-box:hover .scan-line { left: 150%; transition: 0.7s ease-in-out; }
 
-/* СКРЫВАЕМ СТАРЫЙ ТУЛТИП */
 #copy-tooltip { display: none !important; }
 
 .secure-badge {
@@ -238,7 +233,6 @@
     display: flex; align-items: center; justify-content: center; gap: 5px; font-family: 'Exo 2';
 }
 
-/* Плавный переход в футер */
 .space-fade-bottom {
     position: absolute; bottom: 0; left: 0; width: 100%; height: 250px;
     background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 60%, #000000 100%);
@@ -247,8 +241,9 @@
 
 /* АДАПТИВ */
 @media (max-width: 600px) {
-    .card-digits { font-size: 1.1rem; gap: 5px; }
-    .card-digits.success-mode { font-size: 1rem; letter-spacing: 2px; }
+    .card-digits { font-size: 1rem; gap: 3px; letter-spacing: 0; }
+    .card-digits.success-mode { font-size: 0.9rem; letter-spacing: 1px; }
     .card-chip { display: none; }
     .donate-card { width: 100%; }
+    .card-number-box { padding: 15px 10px; }
 }

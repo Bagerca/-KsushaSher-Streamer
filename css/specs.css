@@ -5,7 +5,13 @@
    ========================================= */
 
 .specs-section {
-    background-color: #07070a;
+    /* 
+       Делаем фон полупрозрачным (0.9), чтобы сквозь него 
+       были видны кометы, летящие на заднем плане (z-index 0).
+       При этом сетка внутри этой секции будет НАД кометами.
+    */
+    background-color: rgba(7, 7, 10, 0.9); 
+    
     position: relative;
     padding: 40px 0; 
     overflow: hidden;
@@ -23,7 +29,10 @@
     mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
     -webkit-mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
     pointer-events: none;
+    /* Сетка лежит внутри секции, значит она выше комет */
 }
+
+/* ... (Далее весь остальной код css/specs.css без изменений) ... */
 
 /* =========================================
    NEW CYBER HEADER STYLE
@@ -219,7 +228,7 @@
     color: #ccc; border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* --- ДЕКОРАТИВНЫЕ УГЛЫ (ИСПРАВЛЕНО) --- */
+/* --- ДЕКОРАТИВНЫЕ УГЛЫ --- */
 .tech-corner {
     position: absolute;
     width: 20px;
@@ -254,13 +263,6 @@
 /* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
 .spec-card:hover .tech-corner {
     border-color: var(--neon-green);
-    
-    /* 
-       Используем двойной drop-shadow:
-       1. Маленький радиус (2px) для четкости.
-       2. Средний радиус (5px) для свечения.
-       Это создает эффект неона только вокруг линии, без заливки внутри.
-    */
     filter: drop-shadow(0 0 2px var(--neon-green)) drop-shadow(0 0 5px var(--neon-green));
 }
 

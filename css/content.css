@@ -54,8 +54,7 @@
     /* Убираем стандартные рамки */
     border: none;
     
-    /* ИСПРАВЛЕНИЕ: Используем border-radius для плавного угла */
-    /* 40px слева-сверху, 6px справа-сверху, 0 снизу */
+    /* Скругление: 40px слева-сверху, 6px справа-сверху, 0 снизу */
     border-radius: 40px 6px 0 0;
     
     box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.6);
@@ -63,8 +62,6 @@
     position: relative;
     overflow: hidden;
     z-index: 20; /* Выше конвейера */
-    
-    /* clip-path УБРАН, чтобы не ломать обводку */
     
     margin-bottom: -2px; /* Стык с нижней линией */
 }
@@ -253,23 +250,53 @@
 }
 .marquee-track:hover { animation-play-state: paused; }
 
-/* КАРТОЧКИ */
+/* =========================================
+   КАРТОЧКИ АГЕНТОВ (DYNAMIC COLOR SYSTEM)
+   ========================================= */
 .holo-card {
+    /* Дефолтный цвет, если в JS не передан */
+    --sub-color: #39ff14; 
+    
     width: 300px; height: 400px; padding: 40px 25px;
     background: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.5) 100%);
-    backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+    backdrop-filter: blur(10px); 
+    
+    /* Границы и тени используют переменную цвета */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-color: var(--sub-color);
+    
+    /* УБРАЛИ ВНУТРЕННЕЕ СВЕЧЕНИЕ СНИЗУ */
+    box-shadow: none; 
+    
+    border-radius: 20px;
     display: flex; flex-direction: column; align-items: center; justify-content: space-between;
     transition: all 0.3s ease; flex-shrink: 0; position: relative; transform: translateZ(0);
 }
-.card-top-deco { width: 100%; display: flex; justify-content: space-between; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-bottom: 15px; }
-.holo-avatar-container { position: relative; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
 
-/* Аватар (фикс) */
+/* Верхняя строка (Уровень и Тип) */
+.holo-card .card-top-deco { 
+    width: 100%; display: flex; justify-content: space-between; 
+    font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; 
+    color: rgba(255,255,255,0.5); margin-bottom: 15px; 
+}
+.holo-card .card-top-deco i { 
+    color: var(--sub-color); 
+    text-shadow: 0 0 5px var(--sub-color); 
+}
+
+/* Контейнер аватара */
+.holo-avatar-container { 
+    position: relative; width: 150px; height: 150px; 
+    display: flex; align-items: center; justify-content: center; 
+    margin-bottom: 15px; 
+}
+
+/* Аватар */
 .holo-avatar { 
     width: 100%; height: 100%; border-radius: 50%; background: #000; 
     display: flex; align-items: center; justify-content: center; 
-    font-size: 3.5rem; color: #fff; overflow: hidden; z-index: 2; border: 3px solid rgba(255,255,255,0.2); 
-    position: relative;
+    font-size: 3.5rem; color: #fff; overflow: hidden; z-index: 2; 
+    border: 3px solid rgba(255,255,255,0.2); position: relative;
 }
 .holo-avatar img { 
     position: absolute; top: 0; left: 0; 
@@ -277,55 +304,57 @@
     z-index: 5;
 }
 
-.avatar-ring { position: absolute; top: 50%; left: 50%; width: 180px; height: 180px; margin-left: -90px; margin-top: -90px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.3); animation: rotate-simple 12s linear infinite; z-index: 1; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+/* Вращающееся кольцо вокруг аватара */
+.avatar-ring { 
+    position: absolute; top: 50%; left: 50%; width: 180px; height: 180px; 
+    margin-left: -90px; margin-top: -90px; border-radius: 50%; 
+    border: 1px dashed rgba(255,255,255,0.3); 
+    animation: rotate-simple 12s linear infinite; z-index: 1; 
+    transition: all 0.3s ease; 
+}
+
+/* Информация (Имя и Роль) */
 .holo-info { text-align: center; z-index: 2; width: 100%; }
-.holo-name { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.8rem; color: #fff; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.holo-role { font-family: 'Exo 2', sans-serif; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; opacity: 0.8; }
-.card-stat-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 20px; overflow: hidden; }
-.card-stat-bar .fill { height: 100%; background: #fff; box-shadow: 0 0 10px currentColor; }
+.holo-name { 
+    font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.8rem; 
+    color: #fff; margin-bottom: 5px; 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+}
+.holo-role { 
+    font-family: 'Exo 2', sans-serif; font-size: 0.9rem; letter-spacing: 3px; 
+    text-transform: uppercase; opacity: 0.9; 
+    color: var(--sub-color); 
+    text-shadow: 0 0 5px var(--sub-color);
+}
 
-/* Colors */
-.holo-card.green { border-color: var(--neon-green); box-shadow: inset 0 0 30px rgba(57, 255, 20, 0.1); }
-.holo-card.green .holo-role, .holo-card.green .card-top-deco i { color: var(--neon-green); }
-.holo-card.green .card-stat-bar .fill { background: var(--neon-green); color: var(--neon-green); }
-.holo-card.green:hover { box-shadow: 0 0 40px rgba(57, 255, 20, 0.3); border-color: var(--neon-green); transform: translateY(-5px) scale(1.02); }
-.holo-card.green:hover .avatar-ring { border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+/* Полоска статистики внизу */
+.card-stat-bar { 
+    width: 100%; height: 6px; background: rgba(255,255,255,0.1); 
+    border-radius: 3px; margin-top: 20px; overflow: hidden; 
+}
+.card-stat-bar .fill { 
+    height: 100%; 
+    background: var(--sub-color); 
+    box-shadow: 0 0 10px var(--sub-color); 
+}
 
-.holo-card.red { border-color: var(--bagerka-color); box-shadow: inset 0 0 30px rgba(255, 68, 68, 0.1); }
-.holo-card.red .holo-role, .holo-card.red .card-top-deco i { color: var(--bagerka-color); }
-.holo-card.red .card-stat-bar .fill { background: var(--bagerka-color); color: var(--bagerka-color); }
-.holo-card.red:hover { box-shadow: 0 0 40px rgba(255, 68, 68, 0.3); border-color: var(--bagerka-color); transform: translateY(-5px) scale(1.02); }
-.holo-card.red:hover .avatar-ring { border-color: var(--bagerka-color); box-shadow: 0 0 15px var(--bagerka-color); }
+/* --- HOVER ЭФФЕКТЫ (ОСЛАБЛЕННЫЕ) --- */
+.holo-card:hover { 
+    /* Ослабили свечение: было 30px -> стало 18px */
+    box-shadow: 0 0 18px var(--sub-color); 
+    border-color: var(--sub-color); 
+    transform: translateY(-5px) scale(1.02); 
+    z-index: 10;
+}
 
-.holo-card.orange { border-color: var(--angel-color); box-shadow: inset 0 0 30px rgba(255, 140, 0, 0.1); }
-.holo-card.orange .holo-role, .holo-card.orange .card-top-deco i { color: var(--angel-color); }
-.holo-card.orange .card-stat-bar .fill { background: var(--angel-color); color: var(--angel-color); }
-.holo-card.orange:hover { box-shadow: 0 0 40px rgba(255, 140, 0, 0.3); border-color: var(--angel-color); transform: translateY(-5px) scale(1.02); }
-.holo-card.orange:hover .avatar-ring { border-color: var(--angel-color); box-shadow: 0 0 15px var(--angel-color); }
+.holo-card:hover .avatar-ring { 
+    border-color: var(--sub-color); 
+    /* Ослабили свечение кольца: было 15px -> стало 8px */
+    box-shadow: 0 0 8px var(--sub-color); 
+    border-style: solid; /* Делаем линию сплошной */
+    width: 190px; height: 190px; margin-left: -95px; margin-top: -95px; 
+}
 
-.holo-card.blue { border-color: var(--kiriki-color); box-shadow: inset 0 0 30px rgba(0, 123, 255, 0.1); }
-.holo-card.blue .holo-role, .holo-card.blue .card-top-deco i { color: var(--kiriki-color); }
-.holo-card.blue .card-stat-bar .fill { background: var(--kiriki-color); color: var(--kiriki-color); }
-.holo-card.blue:hover { box-shadow: 0 0 40px rgba(0, 123, 255, 0.3); border-color: var(--kiriki-color); transform: translateY(-5px) scale(1.02); }
-.holo-card.blue:hover .avatar-ring { border-color: var(--kiriki-color); box-shadow: 0 0 15px var(--kiriki-color); }
-
-.holo-card.pink { border-color: var(--neon-pink); box-shadow: inset 0 0 30px rgba(255, 45, 149, 0.1); }
-.holo-card.pink .holo-role, .holo-card.pink .card-top-deco i { color: var(--neon-pink); }
-.holo-card.pink .card-stat-bar .fill { background: var(--neon-pink); color: var(--neon-pink); }
-.holo-card.pink:hover { box-shadow: 0 0 40px rgba(255, 45, 149, 0.3); border-color: var(--neon-pink); transform: translateY(-5px) scale(1.02); }
-.holo-card.pink:hover .avatar-ring { border-color: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
-
-.holo-card.cyan { border-color: #00ffff; box-shadow: inset 0 0 30px rgba(0, 255, 255, 0.1); }
-.holo-card.cyan .holo-role, .holo-card.cyan .card-top-deco i { color: #00ffff; }
-.holo-card.cyan .card-stat-bar .fill { background: #00ffff; color: #00ffff; }
-.holo-card.cyan:hover { box-shadow: 0 0 40px rgba(0, 255, 255, 0.3); border-color: #00ffff; transform: translateY(-5px) scale(1.02); }
-.holo-card.cyan:hover .avatar-ring { border-color: #00ffff; box-shadow: 0 0 15px #00ffff; }
-
-.holo-card.purple { border-color: #bd00ff; box-shadow: inset 0 0 30px rgba(189, 0, 255, 0.1); }
-.holo-card.purple .holo-role, .holo-card.purple .card-top-deco i { color: #bd00ff; }
-.holo-card.purple .card-stat-bar .fill { background: #bd00ff; color: #bd00ff; }
-.holo-card.purple:hover { box-shadow: 0 0 40px rgba(189, 0, 255, 0.3); border-color: #bd00ff; transform: translateY(-5px) scale(1.02); }
-.holo-card.purple:hover .avatar-ring { border-color: #bd00ff; box-shadow: 0 0 15px #bd00ff; }
 
 /* ANIMATIONS */
 @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }

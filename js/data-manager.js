@@ -124,7 +124,7 @@ function formatNumber(num) {
     return num.toString();
 }
 
-// --- 4. ПОДПИСЧИКИ (ВЕРТИКАЛЬНЫЕ КАРТОЧКИ) ---
+// --- 4. ПОДПИСЧИКИ (ОБНОВЛЕННАЯ ВЕРСИЯ: HEX + SVG Support) ---
 export async function loadSubscribers() {
     const container = document.getElementById('subscribers-track');
     if (!container) return;
@@ -134,13 +134,34 @@ export async function loadSubscribers() {
         
         if (subscribers.length > 0) {
             // Генерируем HTML для больших вертикальных карточек
-            const cardsHtml = subscribers.map(sub => `
-                <div class="holo-card ${sub.color || 'green'}">
+            const cardsHtml = subscribers.map(sub => {
+                // 1. Логика цвета: HEX или маппинг старых названий
+                let colorVal = sub.color;
+                if (!colorVal) colorVal = '#39ff14'; // Default Neon Green
+                
+                const colorMap = {
+                    'green': '#39ff14', 'red': '#ff4444', 'orange': '#ff8c00',
+                    'blue': '#007bff', 'pink': '#ff2d95', 'cyan': '#00ffff', 'purple': '#bd00ff'
+                };
+                if (colorMap[colorVal]) colorVal = colorMap[colorVal];
+
+                // 2. Логика аватара: Картинка -> Кастомный HTML/SVG -> Иконка
+                let avatarContent;
+                if (sub.image) {
+                    avatarContent = `<img src="${sub.image}" onerror="this.style.display='none'">`;
+                } else if (sub.customHtml) {
+                    // Поддержка SVG, нарисованного кодом
+                    avatarContent = sub.customHtml;
+                } else {
+                    avatarContent = `<i class="${sub.mainIcon}"></i>`;
+                }
+
+                return `
+                <div class="holo-card" style="--sub-color: ${colorVal}">
                     <div class="card-top-deco"><span>LVL.${sub.level}</span> <i class="${sub.typeIcon}"></i></div>
                     <div class="holo-avatar-container">
                         <div class="holo-avatar">
-                            ${sub.image ? `<img src="${sub.image}" onerror="this.style.display='none'">` : ''}
-                            <i class="${sub.mainIcon}"></i>
+                            ${avatarContent}
                         </div>
                         <div class="avatar-ring"></div>
                     </div>
@@ -150,9 +171,9 @@ export async function loadSubscribers() {
                     </div>
                     <div class="card-stat-bar"><div class="fill" style="width: ${sub.stats}%"></div></div>
                 </div>
-            `).join('');
+            `}).join('');
             
-            // Дублируем контент для бесконечной прокрутки (x2 достаточно для больших карточек)
+            // Дублируем контент для бесконечной прокрутки
             container.innerHTML = cardsHtml + cardsHtml;
         } else {
             container.innerHTML = '<div style="padding:20px;">Нет данных об агентах</div>';

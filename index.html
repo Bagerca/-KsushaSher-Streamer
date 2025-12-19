@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,7 +9,7 @@
     <!-- ФАВИКОНКА -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
-    <!-- Иконки -->
+    <!-- Иконки FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Шрифты -->
@@ -17,15 +18,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- СТИЛИ -->
-    <link rel="stylesheet" href="css/global.css">           <!-- Глобальные стили (Vars, Scroll, NavRail, Comets) -->
-    <link rel="stylesheet" href="css/style.css">            <!-- Общие стили сборки -->
-    <link rel="stylesheet" href="css/hero.css">             <!-- Hero секция -->
-    <link rel="stylesheet" href="css/content.css">          <!-- Обо мне (Dashboard + Marquee) -->
-    <link rel="stylesheet" href="css/command-center.css">   <!-- Командный центр -->
-    <link rel="stylesheet" href="css/media-archive.css">    <!-- База Данных -->
-    <link rel="stylesheet" href="css/specs.css">            <!-- Железо -->
-    <link rel="stylesheet" href="css/donations.css">        <!-- Донаты -->
-    <link rel="stylesheet" href="css/footer.css">           <!-- Футер -->
+    <link rel="stylesheet" href="css/global.css">           
+    <link rel="stylesheet" href="css/style.css">            
+    <link rel="stylesheet" href="css/hero.css">             
+    <link rel="stylesheet" href="css/content.css">          
+    <link rel="stylesheet" href="css/command-center.css">   
+    <link rel="stylesheet" href="css/media-archive.css">    
+    <link rel="stylesheet" href="css/specs.css">            
+    <link rel="stylesheet" href="css/donations.css">        
+    <link rel="stylesheet" href="css/footer.css">           
 </head>
 <body>
     
@@ -39,7 +40,7 @@
         
         <div class="hud-container">
             
-            <!-- Левая панель: Бот (ТЕРМИНАЛ) -->
+            <!-- Левая панель: Бот -->
             <div class="hud-side-panel left">
                 <div class="panel-content">
                     <div class="panel-header">
@@ -52,10 +53,9 @@
                         <h3 class="panel-name">TETLA <span class="bot-version">v5.6</span></h3>
                     </div>
 
-                    <!-- Интерактивный терминал -->
+                    <!-- Терминал -->
                     <div class="ally-terminal" id="terminal-box">
                         <div id="terminal-history"></div>
-                        
                         <div class="command-line">
                             <span class="prompt">></span>
                             <input type="text" id="cmd-input" autocomplete="off" spellcheck="false">
@@ -87,10 +87,8 @@
                         <div class="ring ring-2"></div>
                         <div class="ring ring-3"></div>
                     </div>
-                    
                     <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar main-photo ksusha" data-character="ksusha">
                 </div>
-                
                 <div class="main-display-status">
                     <span class="status-indicator"></span>
                     <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
@@ -107,32 +105,44 @@
                         </div>
                         <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
                         
-                        <!-- Список с бейджами -->
+                        <!-- СПИСОК УЧАСТНИКОВ -->
                         <div class="squad-list">
+                            
+                            <!-- BAGERca (Аватарка) -->
                             <div class="squad-member" data-member="bagerka">
                                 <div class="avatar-wrapper">
-                                    <img src="assets/images/bagerca.jpg" alt="BAGERca" class="squad-avatar bagerka-avatar orbital-photo bagerka">
+                                    <div class="squad-avatar bagerka-avatar orbital-photo bagerka">
+                                        <img src="assets/images/bagerca.jpg" alt="BAGERca">
+                                    </div>
                                     <div class="role-badge tech" title="Tech Lead"><i class="fas fa-code"></i></div>
                                 </div>
                                 <span class="squad-name">BAGERca</span>
                             </div>
+
+                            <!-- Angel (Аватарка) -->
                             <div class="squad-member" data-member="angel">
                                 <div class="avatar-wrapper">
-                                    <img src="assets/images/angel.jpg" alt="Angel" class="squad-avatar angel-avatar orbital-photo angel">
-                                    <div class="role-badge support" title="Support"><i class="fas fa-shield-heart"></i></div>
+                                    <div class="squad-avatar angel-avatar orbital-photo angel">
+                                        <img src="assets/images/angel.jpg" alt="Angel">
+                                    </div>
+                                    <div class="role-badge support" title="Support"><i class="fas fa-star"></i></div>
                                 </div>
                                 <span class="squad-name">Angel</span>
                             </div>
+
+                            <!-- Kiriki (Аватарка) -->
                             <div class="squad-member" data-member="kiriki">
                                 <div class="avatar-wrapper">
-                                    <img src="assets/images/kiriki.jpg" alt="Kiriki" class="squad-avatar kiriki-avatar orbital-photo kiriki">
-                                    <div class="role-badge fun" title="Content"><i class="fas fa-theater-masks"></i></div>
+                                    <div class="squad-avatar kiriki-avatar orbital-photo kiriki">
+                                        <img src="assets/images/kiriki.jpg" alt="Kiriki">
+                                    </div>
+                                    <div class="role-badge fun" title="Content"><i class="fas fa-music"></i></div>
                                 </div>
                                 <span class="squad-name">Kiriki</span>
                             </div>
                         </div>
 
-                        <!-- Живой график внизу -->
+                        <!-- График синхронизации -->
                         <div class="squad-status-footer">
                             <div class="footer-labels">
                                 <span class="data-label">СИНХРОНИЗАЦИЯ</span>
@@ -147,9 +157,11 @@
                         </div>
                     </div>
                     
+                    <!-- Детальный вид -->
                     <div class="squad-detail-view">
                         <button class="close-detail-btn">&times;</button>
-                        <img src="" alt="" class="detail-avatar">
+                        <!-- Контейнер будет заполнен через JS -->
+                        <div class="detail-avatar-container"></div>
                         <h3 class="detail-name"></h3>
                         <p class="detail-description"></p>
                     </div>
@@ -163,30 +175,25 @@
         </div>
     </section>
 
-    <!-- =========================================
-         СЕКЦИЯ 2: ОБО МНЕ
-         ========================================= -->
+    <!-- СЕКЦИИ КОНТЕНТА -->
     <section id="about" class="about-cyber-section">
         <div class="container">
             <div class="about-layout-wrapper">
                 <div class="about-top-row">
-                    <!-- БИОГРАФИЯ -->
+                    <!-- БИО -->
                     <div class="dossier-text">
                         <div class="bio-header">
                             <span class="bio-icon"><i class="fas fa-terminal"></i></span>
                             <h3 class="bio-title">БИОГРАФИЯ</h3>
                         </div>
-                        
                         <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
                         <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="twitch-link">Twitch</a>.</p>
-                        
                         <div class="dossier-stats">
                             <div class="stat-tag">🎮 Variety</div>
                             <div class="stat-tag">💬 Just Chatting</div>
                             <div class="stat-tag">👻 Horror</div>
                         </div>
                     </div>
-
                     <!-- ВИДЕО -->
                     <div class="cyber-monitor">
                         <div class="video-wrapper">
@@ -195,14 +202,7 @@
                                 <span>CAM_01 [LIVE]</span>
                             </div>
                             <div class="video-frame">
-                                <iframe 
-                                    src="https://www.youtube.com/embed/Uym3MRaJ3PE" 
-                                    title="Обо мне" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                    referrerpolicy="strict-origin-when-cross-origin" 
-                                    allowfullscreen>
-                                </iframe>
+                                <iframe src="https://www.youtube.com/embed/Uym3MRaJ3PE" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                                 <div class="screen-grid"></div>
                             </div>
                             <div class="monitor-footer">
@@ -214,120 +214,70 @@
                 </div>
             </div>
         </div> 
-
         <!-- КОНВЕЙЕР -->
         <div class="subs-marquee-wrapper full-width-mode">
-            <div class="marquee-header-centered">
-                <span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ
-            </div>
+            <div class="marquee-header-centered"><span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ</div>
             <div class="marquee-track-container">
-                <div class="marquee-track" id="subscribers-track">
-                    <!-- JS загрузит карточки -->
-                </div>
+                <div class="marquee-track" id="subscribers-track"></div>
             </div>
         </div>
     </section>
 
-    <!-- =========================================
-         СЕКЦИЯ 3: КОМАНДНЫЙ ЦЕНТР
-         ========================================= -->
+    <!-- DASHBOARD -->
     <section id="command-center" class="command-center-section">
         <div class="hud-grid-bg"></div>
-        
         <div class="container">
             <div class="command-header">
                 <div class="cyber-header-wrapper" style="margin-bottom: 30px;">
                     <div class="cyber-header-sub">MISSION_CONTROL // STATUS_LIVE</div>
                     <h2 class="cyber-header-main" data-text="КОМАНДНЫЙ ЦЕНТР">КОМАНДНЫЙ ЦЕНТР</h2>
-                    <div class="cyber-header-lines">
-                        <span class="line"></span><span class="dot"></span><span class="line"></span>
-                    </div>
+                    <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
                 </div>
-
                 <div class="system-status-bar">
-                    <div class="status-module">
-                        <span class="pulse-indicator"></span> СИСТЕМА: <span class="neon-text">ОНЛАЙН</span>
-                    </div>
+                    <div class="status-module"><span class="pulse-indicator"></span> СИСТЕМА: <span class="neon-text">ОНЛАЙН</span></div>
                     <div class="status-decor-line"></div>
-                    <div class="status-module">
-                        <i class="fas fa-signal"></i> СИГНАЛ: <span class="neon-text">100%</span>
-                    </div>
+                    <div class="status-module"><i class="fas fa-signal"></i> СИГНАЛ: <span class="neon-text">100%</span></div>
                     <div class="status-decor-line"></div>
-                    <div class="status-module decoration">
-                        [ROOT_ACCESS_GRANTED]
-                    </div>
+                    <div class="status-module decoration">[ROOT_ACCESS_GRANTED]</div>
                 </div>
             </div>
-    
             <div class="command-grid">
                 <div class="cmd-panel schedule-panel">
-                    <div class="hud-bracket top-left"></div>
-                    <div class="hud-bracket bottom-right"></div>
+                    <div class="hud-bracket top-left"></div><div class="hud-bracket bottom-right"></div>
                     <div class="cmd-panel-header">
-                        <span class="header-tag">LOGS</span>
-                        <h3><i class="far fa-calendar-alt"></i> ГРАФИК МИССИЙ</h3>
-                        <div class="header-line"></div>
+                        <span class="header-tag">LOGS</span><h3><i class="far fa-calendar-alt"></i> ГРАФИК МИССИЙ</h3><div class="header-line"></div>
                     </div>
-                    <div class="schedule-timeline-container" id="schedule-container">
-                        <div class="loading-scanline">INITIATING SCAN...</div>
-                    </div>
+                    <div class="schedule-timeline-container" id="schedule-container"><div class="loading-scanline">INITIATING SCAN...</div></div>
                 </div>
-    
                 <div class="cmd-panel stats-radar-panel">
-                    <div class="hud-bracket top-right"></div>
-                    <div class="hud-bracket bottom-left"></div>
-                    <div class="cmd-panel-header">
-                        <span class="header-tag">ANALYSIS</span>
-                        <h3>ПАРАМЕТРЫ</h3>
-                    </div>
+                    <div class="hud-bracket top-right"></div><div class="hud-bracket bottom-left"></div>
+                    <div class="cmd-panel-header"><span class="header-tag">ANALYSIS</span><h3>ПАРАМЕТРЫ</h3></div>
                     <div class="radar-crosshair"></div>
-                    <div class="radar-wrapper-compact">
-                        <canvas id="radarChart"></canvas>
-                    </div>
+                    <div class="radar-wrapper-compact"><canvas id="radarChart"></canvas></div>
                 </div>
-    
                 <div class="cmd-panel stats-metrics-panel">
                     <div class="tech-bg-lines"></div>
-                    <div class="metric-slot">
-                        <div class="slot-label">АГЕНТЫ</div>
-                        <div class="slot-value followers-val">0</div>
-                        <div class="slot-bar"></div>
-                    </div>
-                    <div class="metric-slot">
-                        <div class="slot-label">ЭФИР (Ч)</div>
-                        <div class="slot-value hours-val">0</div>
-                        <div class="slot-bar"></div>
-                    </div>
+                    <div class="metric-slot"><div class="slot-label">АГЕНТЫ</div><div class="slot-value followers-val">0</div><div class="slot-bar"></div></div>
+                    <div class="metric-slot"><div class="slot-label">ЭФИР (Ч)</div><div class="slot-value hours-val">0</div><div class="slot-bar"></div></div>
                 </div>
-    
                 <div class="cmd-panel stats-circle-panel">
                     <div class="cmd-panel-header simple"><span>LOYALTY</span></div>
                     <div class="circular-chart-wrapper">
                         <div class="rotating-ring"></div>
-                        <svg viewBox="0 0 36 36" class="circular-svg-compact">
-                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        </svg>
-                        <div class="circle-inner-content">
-                            <span class="loyalty-val">0%</span>
-                        </div>
+                        <svg viewBox="0 0 36 36" class="circular-svg-compact"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
+                        <div class="circle-inner-content"><span class="loyalty-val">0%</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- =========================================
-         СЕКЦИЯ 4: ЦИФРОВОЙ АРХИВ
-         ========================================= -->
+    <!-- ARCHIVE -->
     <section id="media-archive" class="media-archive-section">
         <div class="container">
-            
-            <!-- ЗАГОЛОВОК (НОВЫЙ СТИЛЬ: CRYSTAL NEON) -->
             <div class="archive-header">
                 <h2 class="section-title">БАЗА ДАННЫХ</h2>
                 <div class="archive-header-sub">SYSTEM LIBRARY // ACCESS GRANTED</div>
-                
                 <div class="header-control-bar">
                     <button class="sort-side-btn active" data-sort="name"><span class="btn-label">А-Я</span><i class="fas fa-sort-alpha-down sort-icon"></i></button>
                     <div class="type-switcher">
@@ -338,107 +288,71 @@
                     <button class="sort-side-btn" data-sort="rating"><span class="btn-label">РЕЙТИНГ</span><i class="fas fa-sort-amount-down sort-icon"></i></button>
                 </div>
             </div>
-
             <div class="archive-controls">
                 <div class="search-module">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
                 </div>
-                
                 <div class="filters-wrapper">
                     <div class="filter-row status-row" id="archive-filters-status"></div>
                     <div class="filter-row genre-row" id="archive-filters-genre"></div>
                 </div>
             </div>
-
-            <div class="archive-full-grid-wrapper">
-                <div class="archive-grid" id="archive-grid"></div>
-            </div>
+            <div class="archive-full-grid-wrapper"><div class="archive-grid" id="archive-grid"></div></div>
         </div>
     </section>
 
-    <!-- =========================================
-         СЕКЦИЯ 5: ЖЕЛЕЗО
-         ========================================= -->
+    <!-- SPECS -->
     <section id="specs" class="specs-section">
         <div class="specs-bg-grid"></div>
         <div class="container">
             <div class="cyber-header-wrapper">
                 <div class="cyber-header-sub">SYSTEM_CONFIGURATION // V.2.0</div>
                 <h2 class="cyber-header-main" data-text="МОЕ ЖЕЛЕЗО">МОЕ ЖЕЛЕЗО</h2>
-                <div class="cyber-header-lines">
-                    <span class="line"></span><span class="dot"></span><span class="line"></span>
-                </div>
+                <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
             </div>
-            
             <div class="specs-grid">
                 <div class="spec-card">
                     <div class="card-glass"></div>
                     <div class="spec-content">
                         <div class="spec-icon-box"><i class="fas fa-microchip"></i></div>
-                        <div class="spec-info">
-                            <h3 class="spec-label">PROCESSOR</h3>
-                            <p class="spec-value">Intel Core i7-12700H</p>
-                            <div class="spec-meta"><span class="meta-tag">14 CORES</span><span class="meta-tag">4.7 GHz</span></div>
-                        </div>
+                        <div class="spec-info"><h3 class="spec-label">PROCESSOR</h3><p class="spec-value">Intel Core i7-12700H</p><div class="spec-meta"><span class="meta-tag">14 CORES</span><span class="meta-tag">4.7 GHz</span></div></div>
                     </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div>
-                    <div class="spec-bar-loader"></div>
+                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
                 </div>
-                
                 <div class="spec-card">
                     <div class="card-glass"></div>
                     <div class="spec-content">
                         <div class="spec-icon-box"><i class="fas fa-desktop"></i></div>
-                        <div class="spec-info">
-                            <h3 class="spec-label">GRAPHICS</h3>
-                            <p class="spec-value">NVIDIA GeForce RTX 3060</p>
-                            <div class="spec-meta"><span class="meta-tag">6GB GDDR6</span><span class="meta-tag">RTX ON</span></div>
-                        </div>
+                        <div class="spec-info"><h3 class="spec-label">GRAPHICS</h3><p class="spec-value">NVIDIA GeForce RTX 3060</p><div class="spec-meta"><span class="meta-tag">6GB GDDR6</span><span class="meta-tag">RTX ON</span></div></div>
                     </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div>
-                    <div class="spec-bar-loader"></div>
+                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
                 </div>
-
                 <div class="spec-card">
                     <div class="card-glass"></div>
                     <div class="spec-content">
                         <div class="spec-icon-box"><i class="fas fa-memory"></i></div>
-                        <div class="spec-info">
-                            <h3 class="spec-label">MEMORY</h3>
-                            <p class="spec-value">16GB RAM</p>
-                            <div class="spec-meta"><span class="meta-tag">DDR5</span><span class="meta-tag">4800 MHz</span></div>
-                        </div>
+                        <div class="spec-info"><h3 class="spec-label">MEMORY</h3><p class="spec-value">16GB RAM</p><div class="spec-meta"><span class="meta-tag">DDR5</span><span class="meta-tag">4800 MHz</span></div></div>
                     </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div>
-                    <div class="spec-bar-loader"></div>
+                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
                 </div>
-
                 <div class="spec-card">
                     <div class="card-glass"></div>
                     <div class="spec-content">
                         <div class="spec-icon-box"><i class="fas fa-microphone-lines"></i></div>
-                        <div class="spec-info">
-                            <h3 class="spec-label">MICROPHONE</h3>
-                            <p class="spec-value">Shure SM7B</p>
-                            <div class="spec-meta"><span class="meta-tag">STUDIO</span><span class="meta-tag">XLR</span></div>
-                        </div>
+                        <div class="spec-info"><h3 class="spec-label">MICROPHONE</h3><p class="spec-value">Shure SM7B</p><div class="spec-meta"><span class="meta-tag">STUDIO</span><span class="meta-tag">XLR</span></div></div>
                     </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div>
-                    <div class="spec-bar-loader"></div>
+                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- =========================================
-         СЕКЦИЯ 6: ДОНАТЫ
-         ========================================= -->
+    <!-- DONATION -->
     <section id="donation" class="donation-section">
         <div class="container">
             <h2 class="section-title" data-text="SUPPORT_CHANNEL">ПОДДЕРЖАТЬ</h2>
             <p class="section-subtitle">Внеси свой вклад в развитие трансляции и улучшение качества контента</p>
-            
             <div class="donation-grid">
                 <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" class="donate-card" style="--card-color: #ff8c00;">
                     <div class="card-glow"></div>
@@ -465,7 +379,7 @@
                     </div>
                 </a>
             </div>
-
+            <!-- ТЕРМИНАЛ -->
             <div class="crypto-terminal-wrapper">
                 <div class="terminal-label">DIRECT_TRANSFER_PROTOCOL // SBER</div>
                 <div class="card-number-box" id="card-number">
@@ -481,9 +395,7 @@
         <div class="space-fade-bottom"></div>
     </section>
 
-    <!-- =========================================
-         FOOTER
-         ========================================= -->
+    <!-- FOOTER -->
     <footer class="cyber-footer">
         <div class="footer-line"></div>
         <div class="container">
@@ -506,10 +418,8 @@
         </div>
     </footer>
 
-    <!-- NAV RAIL (Навигация справа) -->
     <div id="cyber-nav-rail" class="cyber-nav-rail"></div>
 
-    <!-- СКРИПТЫ -->
     <script type="module" src="js/app.js"></script>
     <script src="js/hud-script.js"></script>
 </body>

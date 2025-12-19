@@ -8,7 +8,7 @@ export function initializeUI() {
     
     initSmoothScroll();
     initCardCopy();
-    initNavRail(); // Запуск боковой навигации
+    initNavRail(); 
 }
 
 /**
@@ -37,67 +37,152 @@ function initSmoothScroll() {
 }
 
 /**
- * 2. Логика копирования номера карты (ЦИФРЫ -> ТЕКСТ)
+ * 2. Логика копирования номера карты (CYBER DECODE EFFECT - ADVANCED)
+ * - Интерполяция длины (сжатие/растяжение)
+ * - Зеркальное направление открытия (Right-to-Left)
  */
 function initCardCopy() {
     const cardElement = document.getElementById('card-number');
     
-    // Номер для буфера обмена (чистый)
+    // Данные карты
     const rawNumber = '4276 1805 5058 1960';
     const cleanNumber = rawNumber.replace(/\s/g, '');
     
-    // HTML с исходными цифрами (чтобы вернуть их обратно)
-    // Структура должна совпадать с версткой
-    const originalDigitsHTML = `<span>4276</span><span>1805</span><span>5058</span><span>1960</span>`;
+    // Исходный HTML (со спанами для красивых отступов в покое)
+    const originalHTML = `<span>4276</span><span>1805</span><span>5058</span><span>1960</span>`;
+    // Текст для анимации (монолитный)
+    const originalText = "4276 1805 5058 1960"; 
+    const successText = "СКОПИРОВАНО!";
+
+    // Набор символов для "шума"
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%&<>[]/\\";
 
     if (!cardElement) return;
 
-    // Находим контейнер с цифрами
     const digitsContainer = cardElement.querySelector('.card-digits');
-    let isAnimating = false; // Флаг, чтобы не спамить кликами
+    let isAnimating = false; 
 
+    /**
+     * Продвинутая функция анимации текста
+     * @param {string} targetText - Целевой текст
+     * @param {boolean} reverseDirection - true для открытия Справа-Налево (восстановление)
+     * @param {function} onComplete - Коллбек
+     */
+    function runCyberTextEffect(targetText, reverseDirection, onComplete) {
+        // Фиксируем начальную длину и конечную
+        const startText = digitsContainer.innerText;
+        const startLen = startText.length;
+        const endLen = targetText.length;
+        
+        let iterations = 0;
+        
+        if (digitsContainer.dataset.interval) clearInterval(digitsContainer.dataset.interval);
+
+        const interval = setInterval(() => {
+            // Расчет прогресса (от 0.0 до 1.0)
+            // Используем длину целевого текста как базу для скорости
+            const totalSteps = targetText.length;
+            const progress = Math.min(iterations / totalSteps, 1);
+            
+            // 1. ИНТЕРПОЛЯЦИЯ ДЛИНЫ
+            // Плавно меняем длину текущей строки от startLen до endLen
+            const currentLen = Math.floor(startLen + (endLen - startLen) * progress);
+            
+            // 2. ГЕНЕРАЦИЯ СТРОКИ
+            let displayText = "";
+            const revealCount = Math.floor(iterations);
+
+            if (!reverseDirection) {
+                // --- ЛОГИКА "СЛЕВА-НАПРАВО" (Сжатие в "СКОПИРОВАНО") ---
+                // Открываем символы с начала строки
+                const revealedPart = targetText.substring(0, revealCount);
+                
+                // Остальное заполняем мусором до currentLen
+                let randomCount = currentLen - revealedPart.length;
+                if (randomCount < 0) randomCount = 0;
+                
+                let randomPart = "";
+                for (let i = 0; i < randomCount; i++) {
+                    randomPart += chars[Math.floor(Math.random() * chars.length)];
+                }
+                
+                displayText = revealedPart + randomPart;
+
+            } else {
+                // --- ЛОГИКА "СПРАВА-НАЛЕВО" (Рост в Цифры) ---
+                // Открываем символы с КОНЦА строки
+                // Если targetText = "4276...", берем подстроку с конца
+                const startIdx = Math.max(0, targetText.length - revealCount);
+                const revealedPart = targetText.substring(startIdx);
+                
+                // Начало заполняем мусором
+                let randomCount = currentLen - revealedPart.length;
+                if (randomCount < 0) randomCount = 0;
+                
+                let randomPart = "";
+                for (let i = 0; i < randomCount; i++) {
+                    randomPart += chars[Math.floor(Math.random() * chars.length)];
+                }
+                
+                // Сначала мусор, потом восстановленный хвост
+                displayText = randomPart + revealedPart;
+            }
+            
+            digitsContainer.innerText = displayText;
+
+            // Условие завершения
+            if (iterations >= targetText.length) { 
+                clearInterval(interval);
+                digitsContainer.innerText = targetText; // Финализируем чистовой текст
+                if (onComplete) onComplete();
+            }
+
+            iterations += 1 / 2; // Скорость анимации
+
+        }, 30); // 30ms на кадр
+
+        digitsContainer.dataset.interval = interval;
+    }
+
+    // --- ОБРАБОТЧИК КЛИКА ---
     cardElement.addEventListener('click', () => {
         if (isAnimating) return; 
+        isAnimating = true;
 
         navigator.clipboard.writeText(cleanNumber)
             .then(() => {
-                isAnimating = true;
-                
-                // 1. Добавляем классы стиля (зеленый цвет, неон)
                 cardElement.classList.add('copied');
-                if (digitsContainer) {
-                    digitsContainer.classList.add('success-mode');
+                if (digitsContainer) digitsContainer.classList.add('success-mode');
+
+                // 1. ПРЯМАЯ АНИМАЦИЯ (Цифры -> Слово)
+                // reverseDirection = false (Слева-Направо)
+                runCyberTextEffect(successText, false, () => {
                     
-                    // 2. Подменяем содержимое на текст
-                    digitsContainer.innerHTML = 'СКОПИРОВАНО!';
-                    
-                    // 3. Через 2 секунды возвращаем всё как было
                     setTimeout(() => {
-                        // Эффект затухания перед возвратом
-                        digitsContainer.style.opacity = '0';
                         
-                        setTimeout(() => {
-                            // Сброс классов и возврат HTML
-                            digitsContainer.classList.remove('success-mode');
-                            cardElement.classList.remove('copied');
-                            digitsContainer.innerHTML = originalDigitsHTML;
+                        // 2. ОБРАТНАЯ АНИМАЦИЯ (Слово -> Цифры)
+                        // reverseDirection = true (Справа-Налево, Зеркально)
+                        runCyberTextEffect(originalText, true, () => {
                             
-                            // Возврат видимости
-                            digitsContainer.style.opacity = '1';
+                            if (digitsContainer) {
+                                digitsContainer.classList.remove('success-mode');
+                                digitsContainer.innerHTML = originalHTML; // Возвращаем спаны
+                            }
+                            cardElement.classList.remove('copied');
                             isAnimating = false;
-                        }, 200); // Короткая пауза для анимации opacity
-                        
+                        });
+
                     }, 2000);
-                }
+                });
             })
             .catch(err => {
-                console.error('Ошибка при копировании: ', err);
+                console.error('Copy failed', err);
                 if (digitsContainer) {
-                    digitsContainer.innerHTML = 'ОШИБКА!';
-                    digitsContainer.style.color = '#ff4444';
+                    digitsContainer.innerText = "ERROR";
+                    digitsContainer.style.color = "#ff4444";
                     setTimeout(() => {
-                        digitsContainer.innerHTML = originalDigitsHTML;
-                        digitsContainer.style.color = '';
+                        digitsContainer.innerHTML = originalHTML;
+                        digitsContainer.style.color = "";
                         isAnimating = false;
                     }, 2000);
                 }
@@ -112,7 +197,6 @@ function initNavRail() {
     const rail = document.getElementById('cyber-nav-rail');
     if (!rail) return;
 
-    // Список секций, к которым будем привязываться
     const sections = [
         { id: 'about', label: 'ОБО МНЕ' },
         { id: 'command-center', label: 'DASHBOARD' },
@@ -121,70 +205,43 @@ function initNavRail() {
         { id: 'donation', label: 'ДОНАТ' }
     ];
 
-    /**
-     * Функция создания/обновления маркеров.
-     * Вызывается при загрузке, ресайзе окна и изменении контента.
-     */
     function updateMarkers() {
-        rail.innerHTML = ''; // Очищаем, чтобы перерисовать заново
-        
-        // Полная высота документа
+        rail.innerHTML = ''; 
         const docHeight = document.documentElement.scrollHeight; 
         
         sections.forEach(sec => {
             const element = document.getElementById(sec.id);
             if (element) {
-                // Отступ элемента от самого верха страницы
                 const topPos = element.offsetTop;
-                
-                // Вычисляем процент положения (0% - верх, 100% - низ)
                 const percent = (topPos / docHeight) * 100;
-
-                // Создаем HTML элемента маркера
                 const marker = document.createElement('div');
                 marker.className = 'nav-marker';
                 marker.style.top = `${percent}%`; 
-                
-                // Сохраняем ID целевой секции для Observer'а
                 marker.dataset.targetId = sec.id;
-
-                // Создаем тултип (всплывашку)
                 const tooltip = document.createElement('div');
                 tooltip.className = 'nav-tooltip';
                 tooltip.textContent = sec.label;
                 marker.appendChild(tooltip);
-
-                // Обработка клика по черточке
                 marker.addEventListener('click', () => {
                     window.scrollTo({
-                        top: topPos - 50, // Небольшой отступ для заголовка
+                        top: topPos - 50,
                         behavior: 'smooth'
                     });
                 });
-
                 rail.appendChild(marker);
             }
         });
     }
 
-    // Первичный запуск
     updateMarkers();
-    
-    // Пересчет при ресайзе окна
     window.addEventListener('resize', updateMarkers);
-    
-    // ВАЖНО: Пересчет при изменении высоты страницы
-    // (например, когда загрузились картинки или развернулась "База данных")
     const resizeObserver = new ResizeObserver(() => {
         updateMarkers();
     });
     resizeObserver.observe(document.body);
-
-    // --- ПОДСВЕТКА АКТИВНОГО МАРКЕРА (Scroll Spy) ---
     
     const observerOptions = {
         root: null,
-        // Срабатывает, когда секция проходит через середину экрана
         rootMargin: '-45% 0px -45% 0px', 
         threshold: 0
     };
@@ -192,14 +249,9 @@ function initNavRail() {
     const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // 1. Убираем класс active у всех маркеров
                 document.querySelectorAll('.nav-marker').forEach(m => m.classList.remove('active'));
-                
-                // 2. Ищем маркер, соответствующий этой секции
                 const activeMarker = Array.from(document.querySelectorAll('.nav-marker'))
                     .find(m => m.dataset.targetId === entry.target.id);
-                
-                // 3. Добавляем класс active
                 if (activeMarker) {
                     activeMarker.classList.add('active');
                 }
@@ -207,7 +259,6 @@ function initNavRail() {
         });
     }, observerOptions);
 
-    // Начинаем следить за каждой секцией
     sections.forEach(sec => {
         const el = document.getElementById(sec.id);
         if (el) sectionObserver.observe(el);
