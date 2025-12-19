@@ -1,5 +1,35 @@
 [
   {
+    "id": "bad-cheese",
+    "title": "Bad Cheese",
+    "rating": 1.5,
+    "description": "Начало интригует, но дальше начинается сложная психоделика. Звук несбалансирован: скримеры громкие, действия тихие. Зато звуки шлепков приятные.",
+    "image": "assets/images/games/bad-cheese.jpg",
+    "genres": ["horror", "adventure"],
+    "status": "completed",
+    "customColor": "#f4d03f"
+  },
+  {
+    "id": "state-of-decay-2",
+    "title": "State of Decay 2",
+    "rating": 4.5,
+    "description": "Топовое выживание. Отличная графика, сочная разрушаемость зомби и затягивающий лутинг. В коопе роль гостя урезана до «мешка для ресов».",
+    "image": "assets/images/games/state-of-decay-2.jpg",
+    "genres": ["survival", "shooter", "coop"],
+    "status": "completed",
+    "customColor": "#d35400"
+  },
+  {
+    "id": "fuck-you-witch",
+    "title": "Fuck You Witch",
+    "rating": 2.5,
+    "description": "Мемный хоррор с понятным сюжетом. Техническая часть хромает: ведьма иногда игнорирует маты, а игра может вылететь в неподходящий момент.",
+    "image": "assets/images/games/fuck-you-witch.jpg",
+    "genres": ["horror", "simulator"],
+    "status": "completed",
+    "customColor": "#2ecc71"
+  },
+  {
     "id": "bendy-dark-revival",
     "title": "Bendy and the Dark Revival",
     "rating": 4.8,
@@ -120,16 +150,6 @@
     "customColor": "#3498db"
   },
   {
-    "id": "portal-2",
-    "title": "Portal 2",
-    "rating": 5.0,
-    "description": "Головоломки с порталами, юмор ГлэДОС и невероятный кооперативный режим.",
-    "image": "https://cdn2.steamgriddb.com/grid/9ebc0e97da8e0e5083fea7203f194d2b.png",
-    "genres": ["puzzle", "adventure", "coop"],
-    "status": "completed",
-    "customColor": "#e67e22"
-  },
-  {
     "id": "beholder",
     "title": "Beholder",
     "rating": 4.2,
@@ -183,7 +203,7 @@
     "id": "undertale",
     "title": "Undertale",
     "rating": 5.0,
-    "description": "RPG, где не обязательно никого убивать. Твои решения меняют мир навсегда.",
+    "description": "RPG, где не обязательно никого убивать. Творчество и приключения в бесконечном кубическом мире.",
     "image": "https://cdn2.steamgriddb.com/grid/bbd30950ec6c745947d21a08d002f782.png",
     "genres": ["rpg", "adventure"],
     "status": "completed",
