@@ -11,22 +11,36 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    
+    /* ВАЖНО: z-index: 1, чтобы лежать НАД кометами (у которых z-index: 0 в global.css) */
     position: relative;
+    z-index: 1;
+    
     overflow: hidden;
     padding: 20px;
-    background-color: #0a0b14;
     
-    /* Сложный фон: градиенты + сетка */
+    /* ПРОЗРАЧНОСТЬ:
+       Мы убираем сплошной цвет фона, чтобы видеть кометы.
+       Но оставляем градиенты для эффекта "Космоса/Туманности".
+    */
+    background-color: transparent;
+    
     background-image: 
-        radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 0.2) 0%, #050508 100%),
+        /* Центральное затемнение (виньетка), чтобы кометы были ярче в центре */
+        radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 0.2) 0%, rgba(5, 5, 8, 0.6) 100%),
+        /* Зеленое свечение справа */
         radial-gradient(circle at 80% 20%, rgba(57, 255, 20, 0.05) 0%, transparent 40%),
+        /* Розовое свечение слева */
         radial-gradient(circle at 20% 80%, rgba(255, 45, 149, 0.05) 0%, transparent 40%),
+        /* Статичные звезды (мелкие точки) */
         radial-gradient(1px 1px at 10% 10%, #fff 100%, transparent),
         radial-gradient(2px 2px at 80% 40%, rgba(255,255,255,0.3) 100%, transparent);
+        
     background-size: 100% 100%, 100% 100%, 100% 100%, 500px 500px, 600px 600px;
     animation: space-drift 60s linear infinite;
 }
 
+/* Плавное движение фона (звезд и туманностей) */
 @keyframes space-drift {
     0% { background-position: center, center, center, 0 0, 0 0; }
     100% { background-position: center, center, center, 500px 500px, -600px -600px; }
@@ -41,12 +55,12 @@
     width: 100%;
     max-width: 1700px;
     position: relative;
-    z-index: 5;
+    z-index: 5; /* Интерфейс выше фона секции */
     margin-bottom: 80px;
     padding: 0 20px;
 }
 
-/* ФИКС КАРТИНОК */
+/* ФИКС ПОЗИЦИОНИРОВАНИЯ ФОТО ВНУТРИ HUD */
 .hud-side-panel .main-photo, 
 .hud-side-panel .orbital-photo,
 .hud-main-display .main-photo {
@@ -66,7 +80,7 @@
     position: relative;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     
-    /* Чистые углы для ровной обводки */
+    /* Скошенные углы (Tech style) */
     clip-path: polygon(
         0 20px,
         20px 0, 
@@ -80,6 +94,7 @@
     
     padding: 2px; /* Толщина рамки */
     
+    /* Градиентная рамка */
     background: linear-gradient(
         to bottom, 
         var(--neon-green) 0%, 
@@ -97,8 +112,8 @@
     width: 100%;
     height: 100%;
     
-    /* Сплошной фон */
-    background: #0a0b10;
+    /* Внутренний фон панелей должен быть плотным, чтобы текст читался */
+    background: rgba(10, 11, 16, 0.95);
     background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(57, 255, 20, 0.03) 3px);
     
     clip-path: polygon(
@@ -248,7 +263,7 @@
 .terminal-err { color: var(--neon-pink); }
 
 
-/* --- ПРАВАЯ ПАНЕЛЬ (ОТРЯД - UPGRADED) --- */
+/* --- ПРАВАЯ ПАНЕЛЬ (ОТРЯД) --- */
 .squad-list {
     position: relative;
     display: flex; justify-content: space-around; margin-top: 30px; margin-bottom: auto;
@@ -266,7 +281,6 @@
 
 .avatar-wrapper { position: relative; display: inline-block; margin-bottom: 10px; }
 
-/* ОБНОВЛЕННЫЙ СТИЛЬ АВАТАРА (КОНТЕЙНЕР) */
 .squad-avatar { 
     width: 80px; height: 80px; 
     border-radius: 50%; 
@@ -274,8 +288,6 @@
     position: relative; 
     z-index: 1; 
     background: #000; 
-    
-    /* Flex для центрирования, если вдруг решим вернуть иконки */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -283,19 +295,16 @@
     overflow: hidden;
 }
 
-/* Картинка внутри аватара */
 .squad-avatar img {
     width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
 }
 
 .squad-name { font-family: 'Rajdhani', sans-serif; font-size: 1rem; color: #ccc; }
 
-/* Специфические стили участников (цвет рамки и тени) */
 .bagerka-avatar { border-color: var(--bagerka-color); box-shadow: 0 0 10px var(--bagerka-color); }
 .angel-avatar { border-color: var(--angel-color); box-shadow: 0 0 10px var(--angel-color); }
 .kiriki-avatar { border-color: var(--kiriki-color); box-shadow: 0 0 10px var(--kiriki-color); }
 
-/* Бейджи ролей */
 .role-badge {
     position: absolute; bottom: -5px; right: -5px; width: 24px; height: 24px;
     border-radius: 50%; background: #000; border: 1px solid rgba(255, 255, 255, 0.3);
@@ -313,7 +322,6 @@
 .squad-member:hover .role-badge.support { background: var(--angel-color); color: #000; }
 .squad-member:hover .role-badge.fun { background: var(--kiriki-color); color: #000; }
 
-/* НОВЫЙ ФУТЕР ПАНЕЛИ (WAVEFORM) */
 .squad-status-footer {
     margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;
 }
@@ -344,7 +352,7 @@
     50% { height: 100%; opacity: 1; box-shadow: 0 0 5px var(--neon-green); }
 }
 
-/* HOVER ЭФФЕКТЫ */
+/* HOVER ЭФФЕКТЫ ПАНЕЛЕЙ */
 .hud-side-panel.left:hover, .hud-side-panel.right:hover {
     background: linear-gradient(
         to bottom, 
@@ -374,7 +382,7 @@
 .hud-side-panel.right.expanded .squad-default-view { opacity: 0; pointer-events: none; }
 .hud-side-panel.right.expanded .squad-detail-view { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-/* СТИЛИ ДЛЯ ДЕТАЛЬНОГО АВАТАРА (ДИНАМИЧЕСКИЙ) */
+/* ДЕТАЛЬНЫЙ АВАТАР */
 .detail-avatar-container {
     width: 140px; height: 140px;
     border-radius: 50%;
@@ -384,15 +392,11 @@
     align-items: center;
     justify-content: center;
     background: #000;
-    font-size: 4rem; /* Крупная иконка (если будет) */
+    font-size: 4rem; 
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
     overflow: hidden;
 }
-
-.detail-avatar-container img {
-    width: 100%; height: 100%; object-fit: cover;
-}
-
+.detail-avatar-container img { width: 100%; height: 100%; object-fit: cover; }
 .detail-name { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 20px; }
 .detail-description { font-family: 'Exo 2', sans-serif; text-align: center; color: #ccc; line-height: 1.6; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; }
 .close-detail-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2.5rem; cursor: pointer; }
@@ -428,6 +432,7 @@
 @keyframes ring-breathing { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 0.6; } 100% { transform: scale(1); opacity: 0.8; } }
 @keyframes blink { 50% { opacity: 0; } }
 
+/* ГРАДИЕНТНЫЙ ПЕРЕХОД ВНИЗУ */
 .hero-section-hud::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to bottom, transparent 0%, #050508 100%); pointer-events: none; z-index: 20; }
 
 @media (max-width: 1200px) { .hud-container { max-width: 1000px; } .hud-side-panel { width: 320px; height: 500px; } .main-display-rings { transform: scale(0.8); } }

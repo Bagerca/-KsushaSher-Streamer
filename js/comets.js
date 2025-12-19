@@ -1,133 +1,155 @@
 /* js/comets.js */
 
+// Основной контейнер
+let container = null;
+
+// Цвета
+const cometColors = [
+    '#39ff14', // Neon Green
+    '#ff2d95', // Neon Pink
+    '#ff4444', // Red
+    '#ff8c00', // Orange
+    '#007bff', // Blue
+    '#00ffff', // Cyan
+    '#ffffff'  // White
+];
+
+/**
+ * Инициализация системы комет
+ */
 export function initCometSystem() {
-    const container = document.getElementById('comet-system');
+    container = document.getElementById('comet-system');
     if (!container) return;
 
-    // Цвета подписчиков (и общие неоновые)
-    const cometColors = [
-        '#39ff14', // Neon Green
-        '#ff2d95', // Neon Pink
-        '#ff4444', // BAGERca Red
-        '#ff8c00', // Angel Orange
-        '#007bff', // Kiriki Blue
-        '#ff000a', // Dragon Red
-        '#2e8b57', // Forest Green
-        '#00ffff', // Cyan
-        '#bd00ff', // Purple
-        '#ffffff'  // White (Classic)
-    ];
+    console.log('🌠 Comet system initialized. Waiting for cycle...');
+    
+    // Запускаем бесконечный цикл редкого появления
+    scheduleNextIdleCycle();
+}
 
-    function spawnComet() {
-        // Создаем элемент
-        const comet = document.createElement('div');
-        comet.className = 'comet';
+/**
+ * Планировщик редких событий (1-2 кометы раз в 30-60 сек)
+ */
+function scheduleNextIdleCycle() {
+    // Рандомная задержка от 30 до 60 секунд
+    const delay = Math.random() * 30000 + 30000; 
+    
+    setTimeout(() => {
+        // Решаем, сколько комет запустить: 1 (70%) или 2 (30%)
+        const count = Math.random() > 0.7 ? 2 : 1;
         
-        // 1. Выбор цвета
-        const color = cometColors[Math.floor(Math.random() * cometColors.length)];
-        comet.style.color = color; // Для drop-shadow через currentColor
-        
-        // Градиент: Прозрачный -> Цвет -> Белая голова
-        comet.style.background = `linear-gradient(90deg, transparent, ${color}, #fff)`;
-
-        // 2. Расчет координат (Откуда -> Куда)
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        
-        // Сторона появления: 0-Top, 1-Right, 2-Bottom, 3-Left
+        // Чтобы если их 2, они летели примерно с одной стороны,
+        // передаем фиксированную сторону (side) в spawnComet
         const side = Math.floor(Math.random() * 4);
         
-        let startX, startY, endX, endY;
-        const offset = 100; // Вылет за пределы экрана
-
-        switch(side) {
-            case 0: // Top -> летим вниз (и немного вбок)
-                startX = Math.random() * w;
-                startY = -offset;
-                endX = Math.random() * w; // Можно усовершенствовать, чтобы летело по диагонали
-                endY = h + offset;
-                break;
-            case 1: // Right -> летим влево
-                startX = w + offset;
-                startY = Math.random() * h;
-                endX = -offset;
-                endY = Math.random() * h; // Рандомная высота финиша
-                break;
-            case 2: // Bottom -> летим вверх
-                startX = Math.random() * w;
-                startY = h + offset;
-                endX = Math.random() * w;
-                endY = -offset;
-                break;
-            case 3: // Left -> летим вправо
-                startX = -offset;
-                startY = Math.random() * h;
-                endX = w + offset;
-                endY = Math.random() * h;
-                break;
+        for (let i = 0; i < count; i++) {
+            // Небольшая задержка между парой комет (0 - 500мс)
+            setTimeout(() => {
+                spawnComet(side);
+            }, i * 300); 
         }
 
-        // 3. Математика вектора и угла
-        const deltaX = endX - startX;
-        const deltaY = endY - startY;
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI); // Угол в градусах
+        // Планируем следующий цикл
+        scheduleNextIdleCycle();
+    }, delay);
+}
 
-        // 4. Скорость и Хвост
-        // Базовая скорость: чем больше экран, тем дольше лететь, плюс рандом
-        // Скорость (пикселей в мс)
-        const speedBase = Math.random() * 0.5 + 0.3; // 0.3 - 0.8 px/ms
-        const duration = distance / speedBase; // Время полета
-
-        // Длина хвоста зависит от скорости (быстрее = длиннее)
-        // size: 100px - 400px
-        const length = Math.min(Math.max(speedBase * 400, 100), 500);
-        const thickness = Math.random() * 2 + 1; // 1-3px
-
-        // Применяем стили
-        comet.style.width = `${length}px`;
-        comet.style.height = `${thickness}px`;
+/**
+ * ЭКСПОРТ: Функция для вызова из консоли (Метеоритный дождь)
+ * Запускает много комет за короткое время
+ */
+export function triggerCometShower() {
+    if (!container) return;
+    
+    // Количество комет в залпе (20-30 штук)
+    const count = 30;
+    
+    for (let i = 0; i < count; i++) {
+        // Разбрасываем их старт на протяжении 3 секунд
+        const delay = Math.random() * 3000;
         
-        // Позиционируем в 0,0 и двигаем через transform, чтобы не вызывать перерисовку layout
-        // ВАЖНО: transform-origin у нас right center (голова).
-        // Поэтому начальная позиция должна учитывать, что мы рисуем хвост ВЛЕВО от точки.
-        // Но проще использовать animate() API.
+        setTimeout(() => {
+            // В дожде кометы летят отовсюду (side = null -> рандом внутри функции)
+            spawnComet(null, true); // true = быстрый режим
+        }, delay);
+    }
+}
 
-        container.appendChild(comet);
+/**
+ * Создание одной кометы
+ * @param {number|null} forcedSide - Принудительная сторона (0-3) или null
+ * @param {boolean} isFast - Если true, комета летит быстрее (для дождя)
+ */
+function spawnComet(forcedSide = null, isFast = false) {
+    if (!container) return;
 
-        // 5. Запуск анимации через Web Animations API
-        const animation = comet.animate([
-            {
-                transform: `translate(${startX}px, ${startY}px) rotate(${angle}deg)`,
-                opacity: 0
-            },
-            {
-                transform: `translate(${startX + deltaX * 0.1}px, ${startY + deltaY * 0.1}px) rotate(${angle}deg)`,
-                opacity: 1,
-                offset: 0.1 // Быстрое появление
-            },
-            {
-                transform: `translate(${endX}px, ${endY}px) rotate(${angle}deg)`,
-                opacity: 0
-            }
-        ], {
-            duration: duration,
-            easing: 'linear'
-        });
+    const comet = document.createElement('div');
+    comet.className = 'comet';
+    
+    const color = cometColors[Math.floor(Math.random() * cometColors.length)];
+    comet.style.color = color;
+    comet.style.background = `linear-gradient(90deg, transparent, ${color}, #fff)`;
 
-        // Удаление после завершения
-        animation.onfinish = () => {
-            comet.remove();
-        };
+    // Геометрия экрана
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const offset = 150;
 
-        // 6. Планирование следующей кометы
-        // Рандомная задержка (чем чаще, тем динамичнее)
-        const nextDelay = Math.random() * 1000 + 500; // 0.5 - 1.5 сек
-        setTimeout(spawnComet, nextDelay);
+    // Выбор стороны: 0-Top, 1-Right, 2-Bottom, 3-Left
+    const side = forcedSide !== null ? forcedSide : Math.floor(Math.random() * 4);
+    
+    let startX, startY, endX, endY;
+
+    // Логика координат (немного рандома в конечной точке)
+    switch(side) {
+        case 0: // Top -> Down
+            startX = Math.random() * w; startY = -offset;
+            endX = Math.random() * w; endY = h + offset;
+            break;
+        case 1: // Right -> Left
+            startX = w + offset; startY = Math.random() * h;
+            endX = -offset; endY = Math.random() * h;
+            break;
+        case 2: // Bottom -> Up
+            startX = Math.random() * w; startY = h + offset;
+            endX = Math.random() * w; endY = -offset;
+            break;
+        case 3: // Left -> Right
+            startX = -offset; startY = Math.random() * h;
+            endX = w + offset; endY = Math.random() * h;
+            break;
     }
 
-    // Запускаем несколько потоков для плотности
-    spawnComet();
-    setTimeout(spawnComet, 1000);
-    setTimeout(spawnComet, 2000);
+    // Векторная математика
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+    // Скорость
+    // Если "дождь" (isFast), то скорость выше (0.8 - 1.5 px/ms)
+    // Если обычно, то медленнее (0.2 - 0.5 px/ms) для красоты
+    const speedBase = isFast ? (Math.random() * 0.7 + 0.8) : (Math.random() * 0.3 + 0.2);
+    const duration = distance / speedBase;
+
+    // Размеры
+    const length = Math.min(Math.max(speedBase * 300, 150), 600);
+    const thickness = Math.random() * 2 + 1;
+
+    comet.style.width = `${length}px`;
+    comet.style.height = `${thickness}px`;
+
+    container.appendChild(comet);
+
+    // Анимация
+    const animation = comet.animate([
+        { transform: `translate(${startX}px, ${startY}px) rotate(${angle}deg)`, opacity: 0 },
+        { transform: `translate(${startX + deltaX * 0.15}px, ${startY + deltaY * 0.15}px) rotate(${angle}deg)`, opacity: 1, offset: 0.1 },
+        { transform: `translate(${endX}px, ${endY}px) rotate(${angle}deg)`, opacity: 0 }
+    ], {
+        duration: duration,
+        easing: 'linear'
+    });
+
+    animation.onfinish = () => comet.remove();
 }

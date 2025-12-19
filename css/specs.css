@@ -1,18 +1,24 @@
 /* css/specs.css */
 
 /* =========================================
-   SECTION: HARDWARE (TECH SPECS - FINAL)
+   SECTION: HARDWARE (FINAL FIX)
    ========================================= */
 
 .specs-section {
-    /* 
-       Делаем фон полупрозрачным (0.9), чтобы сквозь него 
-       были видны кометы, летящие на заднем плане (z-index 0).
-       При этом сетка внутри этой секции будет НАД кометами.
+    /* ПРИГЛУШЕННЫЙ ФОН:
+       96% непрозрачности. Кометы видны тонкими темными линиями.
+       Мы убрали размытие, чтобы они не становились "толстыми".
     */
-    background-color: rgba(7, 7, 10, 0.9); 
+    background-color: rgba(7, 7, 10, 0.96); 
     
+    /* УБРАЛИ backdrop-filter */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    
+    /* Секция выше комет */
     position: relative;
+    z-index: 10;
+    
     padding: 40px 0; 
     overflow: hidden;
     border-top: 1px solid rgba(57, 255, 20, 0.1);
@@ -29,14 +35,8 @@
     mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
     -webkit-mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
     pointer-events: none;
-    /* Сетка лежит внутри секции, значит она выше комет */
+    z-index: 1;
 }
-
-/* ... (Далее весь остальной код css/specs.css без изменений) ... */
-
-/* =========================================
-   NEW CYBER HEADER STYLE
-   ========================================= */
 
 .cyber-header-wrapper {
     text-align: center;
@@ -45,7 +45,6 @@
     z-index: 5;
 }
 
-/* Маленький технический текст сверху */
 .cyber-header-sub {
     font-family: 'Rajdhani', sans-serif;
     color: var(--neon-green);
@@ -57,7 +56,6 @@
     text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
 }
 
-/* Главный заголовок */
 .cyber-header-main {
     font-family: 'Orbitron', sans-serif;
     font-size: 3.5rem;
@@ -68,15 +66,12 @@
     margin: 0;
     position: relative;
     display: inline-block;
-    
-    /* Неоновая тень */
     text-shadow: 
         0 0 10px rgba(57, 255, 20, 0.5),
         0 0 20px rgba(57, 255, 20, 0.3),
         2px 2px 0px #000;
 }
 
-/* Эффект глитча при наведении */
 .cyber-header-main::before {
     content: attr(data-text);
     position: absolute;
@@ -93,7 +88,6 @@
     animation: glitch-anim 2s infinite linear alternate-reverse;
 }
 
-/* Декоративные линии снизу */
 .cyber-header-lines {
     display: flex;
     align-items: center;
@@ -118,7 +112,6 @@
     box-shadow: 0 0 10px var(--neon-green);
 }
 
-/* Анимация глитча */
 @keyframes glitch-anim {
     0% { clip: rect(44px, 9999px, 56px, 0); transform: skew(0.5deg); }
     10% { clip: rect(33px, 9999px, 11px, 0); transform: skew(-0.5deg); }
@@ -128,20 +121,14 @@
     100% { clip: rect(66px, 9999px, 88px, 0); }
 }
 
-/* =========================================
-   GRID & CARDS (WIDE LAYOUT)
-   ========================================= */
-
 .specs-grid {
     display: grid;
-    /* 2 ШИРОКИЕ КОЛОНКИ */
     grid-template-columns: repeat(2, 1fr); 
     gap: 30px; 
     position: relative; 
     z-index: 2;
 }
 
-/* --- КАРТОЧКА --- */
 .spec-card {
     position: relative;
     height: 140px;
@@ -163,7 +150,6 @@
 .spec-card:hover {
     transform: translateY(-5px);
     border-color: var(--neon-green);
-    /* Здесь тень только для самой карточки */
     box-shadow: 0 10px 30px rgba(57, 255, 20, 0.15);
 }
 .spec-card:hover .card-glass { opacity: 1; }
@@ -171,14 +157,13 @@
 .spec-content {
     display: flex;
     align-items: center; 
-    gap: 25px; /* Отступ между иконкой и текстом */
+    gap: 25px; 
     padding: 20px 30px;
     height: 100%;
     position: relative; 
     z-index: 2;
 }
 
-/* --- ИКОНКА --- */
 .spec-icon-box {
     width: 65px; height: 65px;
     background: rgba(0, 0, 0, 0.4);
@@ -195,7 +180,6 @@
     box-shadow: 0 0 20px var(--neon-green);
 }
 
-/* --- ТЕКСТ --- */
 .spec-info { 
     flex-grow: 1; 
     display: flex; flex-direction: column; justify-content: center;
@@ -214,7 +198,6 @@
     font-size: 1.2rem;
     font-weight: 700; color: #fff;
     margin-bottom: 8px; line-height: 1.2;
-    /* Разрешаем перенос длинных слов */
     white-space: normal; 
 }
 
@@ -228,19 +211,13 @@
     color: #ccc; border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* --- ДЕКОРАТИВНЫЕ УГЛЫ --- */
 .tech-corner {
     position: absolute;
     width: 20px;
     height: 20px;
-    
-    /* Рамка по умолчанию прозрачная */
     border: 2px solid transparent;
-    
-    /* ГАРАНТИЯ: Убираем box-shadow и фон, чтобы не было "квадратов" */
     background: transparent !important;
     box-shadow: none !important;
-    
     transition: all 0.3s ease;
     pointer-events: none;
     z-index: 5;
@@ -260,14 +237,11 @@
     border-radius: 0 0 0 16px;
 }
 
-/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
 .spec-card:hover .tech-corner {
     border-color: var(--neon-green);
     filter: drop-shadow(0 0 2px var(--neon-green)) drop-shadow(0 0 5px var(--neon-green));
 }
 
-
-/* Зеленая линия загрузки */
 .spec-bar-loader {
     position: absolute; bottom: 0; left: 0;
     height: 3px; width: 0%;
@@ -275,8 +249,6 @@
     transition: width 0.5s ease;
 }
 .spec-card:hover .spec-bar-loader { width: 100%; }
-
-/* --- АДАПТИВНОСТЬ --- */
 
 @media (max-width: 1024px) {
     .specs-grid { gap: 15px; }

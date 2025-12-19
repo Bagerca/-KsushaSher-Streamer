@@ -6,8 +6,8 @@ import { initializeDataManager } from './data-manager.js';
 import { initMediaArchive } from './media-manager.js';
 // Импортируем движок пасхалки (Ящерица)
 import { startReptileProtocol } from './reptile-engine.js';
-// Импортируем систему комет
-import { initCometSystem } from './comets.js';
+// Импортируем систему комет и функцию для вызова "дождя"
+import { initCometSystem, triggerCometShower } from './comets.js';
 
 // Application state
 const AppState = {
@@ -171,8 +171,13 @@ function initTerminalInput() {
                 responseText = '<span style="color:var(--neon-green)">ЗАПУСК ПРОТОКОЛА "РЕПТИЛИЯ"...</span>';
                 startReptileProtocol();
                 
+            } else if (command === 'comet' || command === 'comets' || command === 'meteor') {
+                // НОВАЯ ПАСХАЛКА: КОМЕТЫ
+                responseText = '<span style="color:var(--neon-pink)">ВНИМАНИЕ: ОБНАРУЖЕН МЕТЕОРИТНЫЙ ПОТОК!</span>';
+                triggerCometShower();
+                
             } else if (command === 'help') {
-                responseText = 'ДОСТУПНЫЕ КОМАНДЫ: HELP, CLEAR, LIZARD, STATUS';
+                responseText = 'ДОСТУПНЫЕ КОМАНДЫ: HELP, CLEAR, STATUS, LIZARD, COMET';
                 
             } else if (command === 'status') {
                 responseText = 'СИСТЕМЫ В НОРМЕ. TETLA V5.6 АКТИВНА.';

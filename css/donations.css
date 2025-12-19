@@ -5,30 +5,39 @@
    ========================================= */
 
 .donation-section {
-    background-color: #050508; 
+    /* ПРОЗРАЧНОСТЬ:
+       Фон прозрачный, чтобы видеть кометы сзади.
+       Градиенты ниже создают легкую дымку/туманность.
+    */
+    background-color: transparent; 
+    
     position: relative;
+    z-index: 1; /* Секция выше слоя комет */
+    
     padding: 40px 0 60px 0;
     overflow: hidden;
     text-align: center;
     border-top: 1px solid rgba(57, 255, 20, 0.1);
     
+    /* Туманности (Зеленая и Розовая) */
     background-image: 
         radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.04) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.04) 0%, transparent 40%);
 }
 
-/* ЗВЕЗДЫ */
+/* ЗВЕЗДЫ (СЛОЙ 1 - Движение в одну сторону) */
 .donation-section::before {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: radial-gradient(white 1px, transparent 1px), radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
-    background-size: 550px 550px, 350px 350px; opacity: 0.6; pointer-events: none; z-index: 0;
+    background-size: 550px 550px, 350px 350px; opacity: 0.6; pointer-events: none; z-index: -1;
     animation: donate-stars 120s linear infinite;
 }
 
+/* ЗВЕЗДЫ (СЛОЙ 2 - Движение в обратную сторону) */
 .donation-section::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: radial-gradient(white 2px, transparent 2px), radial-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px);
-    background-size: 400px 400px, 200px 200px; opacity: 0.4; pointer-events: none; z-index: 0;
+    background-size: 400px 400px, 200px 200px; opacity: 0.4; pointer-events: none; z-index: -1;
     animation: donate-stars 180s linear infinite reverse;
 }
 
@@ -147,10 +156,7 @@
 .card-number-box {
     background: linear-gradient(135deg, #222 0%, #111 100%);
     border: 1px solid #444; border-radius: 10px; 
-    
-    /* УМЕНЬШИЛ ВНУТРЕННИЕ ОТСТУПЫ */
     padding: 10px 15px;
-    
     display: flex; align-items: center; justify-content: space-between;
     cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
@@ -162,10 +168,7 @@
 .card-chip {
     width: 40px; height: 30px; background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
     border-radius: 4px; 
-    
-    /* УМЕНЬШИЛ ОТСТУП ОТ ЧИПА */
     margin-right: 10px; 
-    
     position: relative;
     flex-shrink: 0;
 }
@@ -177,23 +180,14 @@
 /* КОНТЕЙНЕР ЦИФР */
 .card-digits {
     font-family: 'Orbitron', monospace; 
-    
-    /* ЕЩЕ ЧУТЬ МЕНЬШЕ ШРИФТ */
     font-size: 1.25rem; 
-    
     font-weight: 700;
     color: #fff; 
-    
-    /* СУЗИЛ МЕЖБУКВЕННЫЙ ИНТЕРВАЛ */
     letter-spacing: 0.5px; 
-    
     text-shadow: 0 2px 2px rgba(0,0,0,0.5);
     flex-grow: 1; 
     display: flex; 
-    
-    /* УМЕНЬШИЛ GAP МЕЖДУ ГРУППАМИ ЦИФР ДО 5px */
     gap: 5px; 
-    
     justify-content: center;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     white-space: nowrap;
@@ -210,7 +204,6 @@
 
 .copy-icon { 
     color: #666; font-size: 1.2rem; transition: 0.3s; 
-    /* УМЕНЬШИЛ ОТСТУП ОТ ИКОНКИ */
     margin-left: 10px; 
     flex-shrink: 0;
 }

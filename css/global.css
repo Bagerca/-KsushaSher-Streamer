@@ -10,10 +10,14 @@
     --medium-bg: #0a0b10;
     --light-text: #ccc;
     --white: #ffffff;
+    
+    /* Статусы */
     --completed-color: #39ff14;
     --playing-color: #ff2d95;
     --dropped-color: #ff6464;
     --on-hold-color: #ffd700;
+    
+    /* Участники */
     --bagerka-color: #ff4444;
     --angel-color: #ff8c00;
     --kiriki-color: #007bff;
@@ -28,10 +32,15 @@
     box-sizing: border-box;
 }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+}
 
 body {
-    background: var(--dark-bg);
+    /* ФУНДАМЕНТ: Глубокий черный цвет.
+       Если секция прозрачная — мы видим кометы на этом фоне.
+       Если секция плотная — она перекрывает это. */
+    background-color: #050508;
     color: var(--white);
     line-height: 1.6;
     font-family: 'Exo 2', sans-serif;
@@ -52,17 +61,14 @@ img { max-width: 100%; display: block; }
     margin: 0 auto;
     padding: 0 15px;
     position: relative;
-    /* Контент самый верхний */
-    z-index: 10; 
+    z-index: 10; /* Контент всегда выше фона секции */
 }
 
 section {
     padding: 80px 0;
     position: relative;
-    /* 
-       Секции выше комет (1 > 0). 
-       Теперь кометы будут летать ПОД сетками и фонами секций.
-    */
+    /* СЛОЙ 1: Секции лежат выше комет (у комет z-index: 0).
+       Прозрачность фона регулируется в файлах конкретных секций. */
     z-index: 1; 
 }
 
@@ -101,7 +107,7 @@ section {
 * { scrollbar-width: thin; scrollbar-color: #333 #0a0b10; }
 
 /* =========================================
-   CYBER NAV RAIL
+   CYBER NAV RAIL (Навигация справа)
    ========================================= */
 .cyber-nav-rail {
     position: fixed; top: 0; right: 2px; width: 20px; height: 100vh;
@@ -140,10 +146,9 @@ section {
     pointer-events: none; 
     overflow: hidden;
     
-    /* 
-       z-index: 0
-       Это самый нижний слой (над body, но ПОД секциями).
-       Чтобы их увидеть, фоны секций должны быть полупрозрачными.
+    /* СЛОЙ 0:
+       Это самый нижний слой. Он лежит НАД body, но ПОД section.
+       Чтобы его увидеть, у section не должно быть сплошного цвета фона.
     */
     z-index: 0; 
 }

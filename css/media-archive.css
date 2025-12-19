@@ -5,22 +5,30 @@
    ========================================= */
 
 .media-archive-section {
-    background-color: #050508;
+    /* ПРОЗРАЧНОСТЬ:
+       Фон прозрачный, чтобы сквозь него были видны кометы (z-index: 0).
+       Градиенты ниже создают атмосферу, не перекрывая кометы наглухо.
+    */
+    background-color: transparent;
+    
     position: relative;
+    z-index: 1; /* Секция выше слоя комет */
+    
     padding: 10px 0 30px 0;
     overflow: visible;
     border-top: 1px solid rgba(57, 255, 20, 0.1);
     
+    /* Затемнения по краям (виньетки) */
     background-image: 
         radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.04) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.04) 0%, transparent 40%);
 }
 
-/* --- КОСМИЧЕСКИЙ ФОН --- */
+/* --- ДОПОЛНИТЕЛЬНЫЕ СЛОИ ЗВЕЗД (АНИМИРОВАННЫЕ) --- */
 .media-archive-section::before,
 .media-archive-section::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 0;
+    pointer-events: none; z-index: -1; /* Лежат внутри секции, но под контентом */
 }
 
 .media-archive-section::before {
@@ -43,7 +51,7 @@
 }
 
 /* =========================================
-   HEADER (CRYSTAL NEON STYLE - ABSOLUTE FIX)
+   HEADER (CRYSTAL NEON STYLE)
    ========================================= */
 .archive-header {
     display: flex;
@@ -52,7 +60,7 @@
     margin-bottom: 15px; 
     position: relative;
     z-index: 5;
-    text-align: center; /* Центруем inline-block внутри */
+    text-align: center;
 }
 
 /* ЗАГОЛОВОК */
@@ -71,8 +79,6 @@
         0 0 20px rgba(57, 255, 20, 0.4),
         0 0 40px rgba(57, 255, 20, 0.2);
     
-    /* FIX: Используем inline-block. Это заставляет контейнер сжаться до размера текста.
-       Теперь absolute позиционирование линий будет отсчитываться точно от краев букв. */
     display: inline-block;
     position: relative;
 }
@@ -82,34 +88,24 @@
 .archive-header .section-title::after {
     content: '';
     position: absolute;
-    width: 60px;    /* Длина линии */
-    height: 3px;    /* Толщина */
+    width: 60px;
+    height: 3px;
     border-radius: 2px;
     opacity: 0.8;
-    
-    /* Оптическая поправка центра. 50% - это мат. центр, 53% визуально лучше для Caps Lock */
     top: 53%;       
     transform: translateY(-50%); 
 }
 
 /* Левая линия */
 .archive-header .section-title::before {
-    /* Приклеиваем к левому краю контейнера текста и сдвигаем влево на 100% ширины линии + отступ */
-    right: 100%; 
-    margin-right: 25px; /* Отступ от текста */
-    
-    /* Градиент: Справа (у текста) зеленый -> Влево прозрачный */
+    right: 100%; margin-right: 25px;
     background: linear-gradient(to left, var(--neon-green), transparent);
     box-shadow: -5px 0 10px rgba(57, 255, 20, 0.5);
 }
 
 /* Правая линия */
 .archive-header .section-title::after {
-    /* Приклеиваем к правому краю контейнера текста */
-    left: 100%; 
-    margin-left: 25px; /* Отступ от текста */
-    
-    /* Градиент: Слева (у текста) зеленый -> Вправо прозрачный */
+    left: 100%; margin-left: 25px;
     background: linear-gradient(to right, var(--neon-green), transparent);
     box-shadow: 5px 0 10px rgba(57, 255, 20, 0.5);
 }
@@ -367,7 +363,6 @@
 .cyber-load-btn.collapse-mode:hover { color: #fff; box-shadow: 0 0 20px rgba(255, 45, 149, 0.4); }
 .cyber-load-btn.collapse-mode:hover::after { background: var(--neon-pink); }
 
-/* --- FIX: CSS MASKING ВМЕСТО ОВЕРЛЕЯ --- */
 .archive-fade-overlay { display: none !important; }
 
 .archive-full-grid-wrapper.has-more {
@@ -381,7 +376,6 @@
 @media (max-width: 1400px) { .archive-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 1000px) { .archive-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) {
-    /* Скрываем линии на мобилках, чтобы не было наезда */
     .archive-header .section-title::before, .archive-header .section-title::after { display: none; }
     .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; }
     
