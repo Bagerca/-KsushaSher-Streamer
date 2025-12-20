@@ -46,7 +46,7 @@ export async function initMediaArchive() {
     setupTabs();
     setupSearch(); 
     setupSort();
-    setupGridClick(); // Подключаем клик для модального окна
+    setupGridClick(); // Слушатель кликов для модалки
     await switchArchiveType('games');
 }
 
@@ -316,6 +316,12 @@ function renderButton(mode) {
             const section = document.getElementById('media-archive');
             section.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
+
+        // === ВАЖНО: ОБНОВЛЕНИЕ NAV RAIL ПОСЛЕ ИЗМЕНЕНИЯ ВЫСОТЫ ===
+        // Ждем пока анимация CSS пройдет (обычно 300-500мс), потом обновляем
+        setTimeout(() => {
+            if (window.updateNavRail) window.updateNavRail();
+        }, 500);
     });
 }
 
@@ -359,18 +365,20 @@ function renderNextBatch() {
 
         if (isCollection) {
             // КОЛЛЕКЦИЯ (Стопка карточек)
-            // Картинка на ПЕРЕДНЕМ плане (Front) = Индекс 1 (1 сезон)
+            // ПЕРЕДНИЙ ПЛАН: 1 сезон (index 1)
             const frontImg = item.images[1];
-            // Картинка на ЗАДНЕМ плане (Back) = Индекс 0 (2 сезон / актуальный)
+            // ЗАДНИЙ ПЛАН: 2 сезон (index 0 - актуальный)
             const backImg = item.images[0];
 
+            // Важно: анимация задержки тоже нужна
             return `
             <div class="archive-card collection-wrapper animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
                 
-                <!-- ЗАДНЯЯ КАРТОЧКА -->
+                <!-- ЗАДНЯЯ КАРТОЧКА (СЛОЙ 1) -->
+                <!-- Передаем картинку через inline-style в переменную --stack-bg, чтобы CSS мог её подхватить -->
                 <div class="collection-back" style="background-image: url('${backImg}')"></div>
                 
-                <!-- ПЕРЕДНЯЯ КАРТОЧКА -->
+                <!-- ПЕРЕДНЯЯ КАРТОЧКА (СЛОЙ 2) -->
                 <div class="collection-front">
                     <div class="card-thumb-container">
                         <img src="${frontImg}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
@@ -384,7 +392,7 @@ function renderNextBatch() {
                 </div>
             </div>`;
         } else {
-            // ОБЫЧНАЯ ОДИНОЧНАЯ КАРТОЧКА
+            // ОБЫЧНАЯ КАРТОЧКА
             const imgSrc = item.image || (item.images ? item.images[0] : '');
             return `
             <div class="archive-card animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
@@ -406,15 +414,14 @@ function renderNextBatch() {
 }
 
 /**
- * Обработчик клика по карточке (для открытия модалки)
+ * Обработчик клика (для модалки)
  */
 function setupGridClick() {
     const grid = document.getElementById('archive-grid');
     if (!grid) return;
 
     grid.addEventListener('click', (e) => {
-        // Ищем ближайшего родителя - карточку
-        // Это может быть .archive-card (обычная) или .archive-card.collection-wrapper (коллекция)
+        // Поднимаемся до карточки (будь то обычная или коллекция)
         const card = e.target.closest('.archive-card');
         if (card) {
             const id = card.dataset.id;
@@ -435,9 +442,6 @@ function setupTabs() {
     });
 }
 
-/**
- * УМНЫЙ ПОИСК (Сортировка по приоритету и подсказки)
- */
 function setupSearch() {
     const input = document.getElementById('archive-search');
     const searchModule = document.querySelector('.search-module');
@@ -468,7 +472,6 @@ function setupSearch() {
             toggleSuggestions(false);
             suggestionsBox.innerHTML = '';
             
-            // Если очистили поле - сбрасываем сетку к дефолту
             if (ArchiveState.searchQuery !== '') {
                  ArchiveState.searchQuery = '';
                  processData();
@@ -477,26 +480,17 @@ function setupSearch() {
             return;
         }
 
-        // 1. Находим все совпадения
-        let allMatches = ArchiveState.data.filter(item => 
-            item.title.toLowerCase().includes(query)
-        );
-
-        // 2. СОРТИРУЕМ: Сначала те, что начинаются с запроса, потом остальные
+        let allMatches = ArchiveState.data.filter(item => item.title.toLowerCase().includes(query));
         allMatches.sort((a, b) => {
             const titleA = a.title.toLowerCase();
             const titleB = b.title.toLowerCase();
-            
             const startsA = titleA.startsWith(query);
             const startsB = titleB.startsWith(query);
-
             if (startsA && !startsB) return -1;
             if (!startsA && startsB) return 1;
-
             return titleA.localeCompare(titleB);
         });
 
-        // 3. Берем топ-5
         const matches = allMatches.slice(0, 5);
 
         if (matches.length > 0) {
@@ -530,9 +524,7 @@ function setupSearch() {
             const title = item.dataset.title;
             input.value = title;
             ArchiveState.searchQuery = title.toLowerCase();
-            
             toggleSuggestions(false);
-            
             processData(); 
             renderGrid();  
         }

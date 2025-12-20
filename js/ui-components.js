@@ -9,7 +9,7 @@ export function initializeUI() {
     initSmoothScroll();
     initCardCopy();
     initNavRail();
-    initLiquidScrollbar(); // Запуск физики скроллбара
+    // initLiquidScrollbar(); <--- ОТКЛЮЧЕНО (Используем нативный CSS скролл)
 }
 
 /**
@@ -24,7 +24,8 @@ function initSmoothScroll() {
             
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                const offset = 50; 
+                // Отступ сверху (чтобы заголовок не прилипал к краю экрана)
+                const offset = 80; 
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -38,22 +39,15 @@ function initSmoothScroll() {
 }
 
 /**
- * 2. Логика копирования номера карты (CYBER DECODE EFFECT)
+ * 2. Логика копирования номера карты
  */
 function initCardCopy() {
     const cardElement = document.getElementById('card-number');
-    
-    // Данные карты
     const rawNumber = '4276 1805 5058 1960';
     const cleanNumber = rawNumber.replace(/\s/g, '');
-    
-    // Исходный HTML (со спанами для красивых отступов в покое)
     const originalHTML = `<span>4276</span><span>1805</span><span>5058</span><span>1960</span>`;
-    // Текст для анимации (монолитный)
     const originalText = "4276 1805 5058 1960"; 
     const successText = "СКОПИРОВАНО!";
-
-    // Набор символов для "шума"
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%&<>[]/\\";
 
     if (!cardElement) return;
@@ -65,7 +59,6 @@ function initCardCopy() {
         const startText = digitsContainer.innerText;
         const startLen = startText.length;
         const endLen = targetText.length;
-        
         let iterations = 0;
         
         if (digitsContainer.dataset.interval) clearInterval(digitsContainer.dataset.interval);
@@ -82,7 +75,6 @@ function initCardCopy() {
                 const revealedPart = targetText.substring(0, revealCount);
                 let randomCount = currentLen - revealedPart.length;
                 if (randomCount < 0) randomCount = 0;
-                
                 let randomPart = "";
                 for (let i = 0; i < randomCount; i++) {
                     randomPart += chars[Math.floor(Math.random() * chars.length)];
@@ -93,7 +85,6 @@ function initCardCopy() {
                 const revealedPart = targetText.substring(startIdx);
                 let randomCount = currentLen - revealedPart.length;
                 if (randomCount < 0) randomCount = 0;
-                
                 let randomPart = "";
                 for (let i = 0; i < randomCount; i++) {
                     randomPart += chars[Math.floor(Math.random() * chars.length)];
@@ -108,11 +99,8 @@ function initCardCopy() {
                 digitsContainer.innerText = targetText; 
                 if (onComplete) onComplete();
             }
-
             iterations += 1 / 2; 
-
         }, 30); 
-
         digitsContainer.dataset.interval = interval;
     }
 
@@ -140,15 +128,6 @@ function initCardCopy() {
             })
             .catch(err => {
                 console.error('Copy failed', err);
-                if (digitsContainer) {
-                    digitsContainer.innerText = "ERROR";
-                    digitsContainer.style.color = "#ff4444";
-                    setTimeout(() => {
-                        digitsContainer.innerHTML = originalHTML;
-                        digitsContainer.style.color = "";
-                        isAnimating = false;
-                    }, 2000);
-                }
             });
     });
 }
@@ -168,133 +147,102 @@ function initNavRail() {
         { id: 'donation', label: 'ДОНАТ' }
     ];
 
-    function updateMarkers() {
+    // Функция обновления позиций маркеров (ГЛОБАЛЬНАЯ)
+    window.updateNavRail = function() {
         rail.innerHTML = ''; 
-        const docHeight = document.documentElement.scrollHeight; 
         
+        // Берем полную высоту страницы с учетом прокрутки
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        
+        // Доступная высота для маркеров (чтобы нижний не улетал за экран)
+        // Вычитаем немного (например, 10%), чтобы маркеры не прилипали к самому низу
+        const usableHeight = docHeight - winHeight * 0.1; 
+
         sections.forEach(sec => {
             const element = document.getElementById(sec.id);
             if (element) {
-                const topPos = element.offsetTop;
-                const percent = (topPos / docHeight) * 100;
+                // Точная позиция элемента от верха страницы
+                const topPos = element.getBoundingClientRect().top + window.scrollY;
+                
+                // Рассчитываем процентное положение на рейке
+                let percent = (topPos / docHeight) * 100;
+                
+                // Ограничиваем, чтобы не вылетало (от 2% до 95%)
+                percent = Math.max(2, Math.min(98, percent));
+                
                 const marker = document.createElement('div');
                 marker.className = 'nav-marker';
                 marker.style.top = `${percent}%`; 
                 marker.dataset.targetId = sec.id;
+                
                 const tooltip = document.createElement('div');
                 tooltip.className = 'nav-tooltip';
                 tooltip.textContent = sec.label;
+                
                 marker.appendChild(tooltip);
+                
+                // Клик по маркеру
                 marker.addEventListener('click', () => {
-                    window.scrollTo({
-                        top: topPos - 50,
-                        behavior: 'smooth'
-                    });
+                    const el = document.getElementById(sec.id);
+                    if(el) {
+                        const offset = 80; // Отступ сверху
+                        const elementPos = el.getBoundingClientRect().top;
+                        const offsetPos = elementPos + window.pageYOffset - offset;
+                        
+                        window.scrollTo({
+                            top: offsetPos,
+                            behavior: 'smooth'
+                        });
+                    }
                 });
                 rail.appendChild(marker);
             }
         });
-    }
 
-    updateMarkers();
-    window.addEventListener('resize', updateMarkers);
-    const resizeObserver = new ResizeObserver(() => {
-        updateMarkers();
-    });
-    resizeObserver.observe(document.body);
-    
-    const observerOptions = {
-        root: null,
-        rootMargin: '-45% 0px -45% 0px', 
-        threshold: 0
+        // Перезапускаем подсветку активного маркера
+        checkActiveSection();
     };
 
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                document.querySelectorAll('.nav-marker').forEach(m => m.classList.remove('active'));
-                const activeMarker = Array.from(document.querySelectorAll('.nav-marker'))
-                    .find(m => m.dataset.targetId === entry.target.id);
-                if (activeMarker) {
-                    activeMarker.classList.add('active');
+    // Функция проверки активной секции при скролле
+    function checkActiveSection() {
+        const scrollPos = window.scrollY + window.innerHeight / 3; // Точка срабатывания - треть экрана
+
+        let currentId = '';
+        sections.forEach(sec => {
+            const el = document.getElementById(sec.id);
+            if (el) {
+                const top = el.offsetTop;
+                const bottom = top + el.offsetHeight;
+                
+                if (scrollPos >= top && scrollPos < bottom) {
+                    currentId = sec.id;
                 }
             }
         });
-    }, observerOptions);
 
-    sections.forEach(sec => {
-        const el = document.getElementById(sec.id);
-        if (el) sectionObserver.observe(el);
-    });
-}
-
-/**
- * 4. Кастомный скроллбар с физикой жидкости
- */
-function initLiquidScrollbar() {
-    const track = document.getElementById('liquid-scrollbar-track');
-    const thumb = document.getElementById('liquid-scrollbar-thumb');
-    
-    // Если элементов нет, выходим
-    if (!track || !thumb) return;
-    
-    const liquid = thumb.querySelector('.liquid-inner');
-
-    let lastScrollTop = 0;
-    
-    // Функция обновления (Game Loop)
-    function update() {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
-        
-        // 1. Расчет высоты и позиции ползунка
-        // Если контента мало, высота ползунка может быть равна высоте окна
-        const scrollableDistance = docHeight - winHeight;
-        
-        // Защита от деления на ноль, если контента мало
-        if (scrollableDistance <= 0) {
-            thumb.style.display = 'none';
-            requestAnimationFrame(update);
-            return;
-        } else {
-            thumb.style.display = 'block';
-        }
-
-        const scrollPercent = scrollTop / scrollableDistance;
-        const trackHeight = winHeight;
-        
-        // Высота ползунка (пропорционально, но не меньше 80px)
-        let thumbHeight = Math.max((winHeight / docHeight) * trackHeight, 80);
-        thumb.style.height = `${thumbHeight}px`;
-
-        // Доступное место для движения ползунка
-        const availableSpace = trackHeight - thumbHeight;
-        const thumbTop = scrollPercent * availableSpace;
-        
-        thumb.style.transform = `translateY(${thumbTop}px)`;
-
-        // 2. Физика жидкости (Наклон)
-        const velocity = scrollTop - lastScrollTop;
-        lastScrollTop = scrollTop;
-
-        // Ограничиваем угол наклона
-        const maxSkew = 20; 
-        
-        // Коэффициент чувствительности
-        let skew = -velocity * 0.5; 
-        
-        if (skew > maxSkew) skew = maxSkew;
-        if (skew < -maxSkew) skew = -maxSkew;
-
-        // Применяем наклон к жидкости
-        if (liquid) {
-            liquid.style.transform = `skewY(${skew}deg)`;
-        }
-
-        requestAnimationFrame(update);
+        document.querySelectorAll('.nav-marker').forEach(m => {
+            m.classList.remove('active');
+            if (m.dataset.targetId === currentId) {
+                m.classList.add('active');
+            }
+        });
     }
 
-    // Запускаем цикл анимации
-    requestAnimationFrame(update);
+    // Запускаем
+    window.updateNavRail();
+    
+    // Слушаем скролл для подсветки
+    window.addEventListener('scroll', checkActiveSection);
+
+    // Слушаем ресайз окна и ДОМ-изменения
+    const resizeObserver = new ResizeObserver(() => {
+        // Debounce (ждем 100мс перед обновлением)
+        clearTimeout(window.navUpdateTimeout);
+        window.navUpdateTimeout = setTimeout(() => {
+            window.updateNavRail();
+        }, 100);
+    });
+    
+    resizeObserver.observe(document.body);
 }

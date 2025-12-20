@@ -9,7 +9,7 @@
     "status": "completed",
     "customColor": "#e3ea04",
     "videos": [
-      { "title": "мышиные бега 197", "url": "https://youtu.be/BVJIZ-ugBxs?si=yUkwC-GWPp0bX40c" }
+      { "title": "СыРнАя ПсИхОдЕлИкА", "url": "https://youtu.be/PIyCxvZzeDA?si=tP0kL84hsmKL8Kpj" }
     ]
   },
   {
@@ -35,7 +35,7 @@
     "status": "completed",
     "customColor": "#a43c2e",
     "videos": [
-      { "title": "почему же почему же стрима нет, когда он нужен? 195", "url": "https://youtu.be/cpHjztWDMCM?si=-Lu5sbN5oyKQ5Bl1" }
+      { "title": "почему же почему же стрима нет, когда он нужен? 195", "url": "https://youtu.be/07lzMJrVDjg?si=Pv9W52-LxTagbW9M" }
     ]
   },
   {
@@ -161,7 +161,14 @@
     "image": "https://cdn2.steamgriddb.com/grid/374ad92e28ff7e130fb88205d8f49384.png",
     "genres": ["shooter", "action", "adventure"],
     "status": "completed",
-    "customColor": "#3498db"
+    "customColor": "#dfc4ac",
+    "videos": [
+      { "title": "не разочаруй нас (часть 1)", "url": "https://youtu.be/wvlF0sBKpgA?si=RjUJY0zQgfyO5XK4" },
+      { "title": "а мы женщину нашли, а мы с женщиной пошли (часть 2)", "url": "https://youtu.be/KsBProOxvpY?si=Fi4NY89QZ7ZoGnGv" },
+      { "title": "поднебесный городок (часть 3)", "url": "https://youtu.be/mFQjB_5FQNs?si=cB1jEYdu7Yr1nqfF" },
+      { "title": "воздушные опи*дюливания", "url": "https://youtu.be/cXXcKHYQJ2c?si=lT6pkfaNIf7wVB7Q" },
+      { "title": "Я подкатывал к ней яйца, а оказалось что она моя...", "url": "https://youtu.be/jBobUycOKEM?si=TOVsx5ig8C9vG1XP" }
+    ]
   },
   {
     "id": "beholder",

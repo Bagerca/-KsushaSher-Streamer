@@ -30,7 +30,7 @@
     width: 95%;
     max-width: 1200px;
     max-height: 95vh; 
-    overflow-y: auto; /* Скролл контента */
+    overflow-y: auto; 
     
     background: #0a0b10;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -41,56 +41,63 @@
     transform: scale(0.95) translateY(30px);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     display: flex; flex-direction: column;
+
+    /* СКРЫВАЕМ СКРОЛЛБАР (Firefox + IE/Edge) */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
 }
 
 .media-modal-overlay.active .media-modal-content {
     transform: scale(1) translateY(0);
 }
 
-/* Скроллбар внутри модалки */
-.media-modal-content::-webkit-scrollbar { width: 8px; }
-.media-modal-content::-webkit-scrollbar-track { background: #050508; }
-.media-modal-content::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+/* СКРЫВАЕМ СКРОЛЛБАР (Chrome, Safari, Opera) */
+.media-modal-content::-webkit-scrollbar { 
+    width: 0; 
+    height: 0;
+    display: none; 
+}
 
-/* ДЕКОРАТИВНАЯ ЛИНИЯ СВЕРХУ (ИСПРАВЛЕНО) */
+/* ДЕКОРАТИВНАЯ ЛИНИЯ СВЕРХУ */
 .media-modal-content::before {
     content: ''; 
     position: absolute; 
     top: 0; left: 0; 
     width: 100%; 
     height: 4px;
-    
-    /* Сплошной цвет вместо градиента */
     background: var(--modal-color, #fff);
-    
-    /* Скругляем верхние углы, чтобы совпадало с окном */
     border-radius: 16px 16px 0 0;
-    
-    /* Равномерное свечение */
     box-shadow: 0 2px 20px var(--modal-color, #fff);
-    
     z-index: 10;
 }
 
-/* КНОПКА ЗАКРЫТИЯ */
+/* КНОПКА ЗАКРЫТИЯ (КРЕСТИК) */
 .modal-close-btn {
-    position: absolute; top: 20px; right: 25px;
-    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 50%; width: 40px; height: 40px;
-    font-size: 1.5rem; color: #fff;
+    position: absolute; 
+    top: 15px; 
+    right: 15px;
+    
+    background: rgba(0,0,0,0.6); 
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%; 
+    width: 36px; height: 36px;
+    
+    font-size: 1.2rem; color: #fff;
     cursor: pointer; transition: 0.3s;
-    z-index: 100;
+    
+    z-index: 200;
     display: flex; align-items: center; justify-content: center;
 }
+
 .modal-close-btn:hover { 
     background: var(--modal-color); 
     border-color: var(--modal-color); 
-    transform: rotate(90deg); 
     color: #000;
+    transform: rotate(90deg);
 }
 
 /* =========================================
-   LAYOUT (SIDEBAR + MAIN)
+   LAYOUT
    ========================================= */
 .modal-layout {
     display: grid;
@@ -123,34 +130,25 @@
 .modal-poster-glow {
     position: absolute; inset: 0;
     background: radial-gradient(circle at center, transparent 0%, var(--modal-color) 150%);
-    opacity: 0.2; pointer-events: none;
-    mix-blend-mode: overlay;
+    opacity: 0.2; pointer-events: none; mix-blend-mode: overlay;
 }
 
-/* РЕЙТИНГ */
 .modal-rating-box {
     display: flex; align-items: center; justify-content: space-between;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 15px 20px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0, 0, 0, 0.3); padding: 15px 20px;
+    border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
 }
 
 #modal-rating-val {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.2rem; font-weight: 700;
-    color: #ffd700;
-    line-height: 1;
+    font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700;
+    color: #ffd700; line-height: 1;
 }
-
 .modal-stars { color: #ffd700; font-size: 1.1rem; }
 
-/* ТЕХ ДАННЫЕ */
 .modal-tech-data {
     margin-top: auto;
     font-family: 'monospace'; font-size: 0.85rem; color: #555;
-    background: rgba(0,0,0,0.2);
-    padding: 15px; border-radius: 8px;
+    background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;
 }
 .tech-line { display: flex; justify-content: space-between; margin-bottom: 5px; }
 .tech-line:last-child { margin-bottom: 0; }
@@ -158,14 +156,11 @@
 .t-val { color: var(--modal-color); font-weight: bold; }
 .neon-pulse { animation: neon-text-pulse 2s infinite; }
 
-@keyframes neon-text-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
+@keyframes neon-text-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
 /* --- ПРАВАЯ КОЛОНКА (MAIN) --- */
 .modal-col-main {
-    padding: 40px 50px;
+    padding: 50px 50px 40px 50px;
     display: flex; flex-direction: column;
 }
 
@@ -190,7 +185,7 @@
     border-radius: 4px;
     box-shadow: 0 0 15px var(--modal-color);
     white-space: nowrap;
-    margin-top: 10px;
+    margin-top: 5px; 
     text-transform: uppercase;
 }
 
@@ -200,8 +195,7 @@
     border: 1px solid rgba(255,255,255,0.1);
     background: rgba(255,255,255,0.05);
     padding: 4px 12px; border-radius: 4px;
-    font-family: 'Exo 2', sans-serif;
-    text-transform: uppercase; letter-spacing: 1px;
+    font-family: 'Exo 2', sans-serif; text-transform: uppercase; letter-spacing: 1px;
 }
 
 .modal-desc {
@@ -211,7 +205,7 @@
 }
 
 /* =========================================
-   VIDEO SECTION (CINEMATIC)
+   VIDEO SECTION
    ========================================= */
 .modal-video-section {
     margin-top: 20px;
@@ -227,33 +221,21 @@
     display: flex; align-items: center; gap: 10px; opacity: 0.8;
 }
 
-/* Контейнер плеера (16:9) */
 .video-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-    background: #000;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
+    position: relative; width: 100%; padding-bottom: 56.25%;
+    background: #000; border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px; overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
     margin-bottom: 15px;
 }
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-.video-container iframe {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-}
-
-/* Плейлист */
+/* ПЛЕЙЛИСТ */
 .video-playlist {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: flex; flex-wrap: wrap; gap: 10px;
 }
 
-/* Кнопка плейлиста */
+/* КНОПКА (ОБЫЧНАЯ) */
 .playlist-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -261,8 +243,7 @@
     padding: 10px 16px;
     border-radius: 6px;
     cursor: pointer;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
     font-size: 0.95rem;
     transition: all 0.2s;
     display: flex; align-items: center; gap: 10px;
@@ -274,45 +255,36 @@
     border-color: rgba(255, 255, 255, 0.3);
 }
 
+/* КНОПКА (АКТИВНАЯ - ЗАЛИТАЯ) */
 .playlist-btn.active {
     background: var(--modal-color);
+    color: #000; 
     border-color: var(--modal-color);
-    color: #000;
-    box-shadow: 0 0 15px var(--modal-color);
+    box-shadow: 0 0 20px var(--modal-color);
 }
 
 .playlist-btn.active i {
     animation: icon-blink 1.5s infinite;
 }
 
-@keyframes icon-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
+@keyframes icon-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* Действия */
+/* ДЕЙСТВИЯ */
 .modal-actions { margin-top: 20px; }
 .cyber-btn-modal {
-    display: inline-block;
-    padding: 12px 30px;
-    background: transparent;
-    color: var(--modal-color);
+    display: inline-block; padding: 12px 30px;
+    background: transparent; color: var(--modal-color);
     border: 1px solid var(--modal-color);
-    font-family: 'Orbitron', sans-serif; font-weight: 700;
-    text-decoration: none; border-radius: 4px;
-    transition: 0.3s;
-    letter-spacing: 2px;
+    font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 2px;
+    text-decoration: none; border-radius: 4px; transition: 0.3s;
 }
 .cyber-btn-modal:hover {
-    background: var(--modal-color);
-    color: #000;
+    background: var(--modal-color); color: #000;
     box-shadow: 0 0 20px var(--modal-color);
     transform: translateY(-2px);
 }
 
-/* =========================================
-   ADAPTIVE (RESPONSIVE)
-   ========================================= */
+/* АДАПТИВНОСТЬ */
 @media (max-width: 1024px) {
     .modal-layout { grid-template-columns: 1fr; }
     .modal-col-sidebar { 
@@ -331,6 +303,6 @@
     .modal-poster-wrapper { width: 100%; aspect-ratio: 16/9; object-position: top; }
     #modal-img { object-position: 0 20%; }
     .modal-rating-box { width: 100%; margin: 15px 0 0 0; }
-    .modal-col-main { padding: 20px; }
+    .modal-col-main { padding: 20px; padding-top: 40px; }
     .modal-title { font-size: 1.8rem; }
 }
