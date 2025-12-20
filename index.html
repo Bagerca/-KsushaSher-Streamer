@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="css/content.css">          
     <link rel="stylesheet" href="css/command-center.css">   
     <link rel="stylesheet" href="css/media-archive.css">
-    <link rel="stylesheet" href="css/media-modal.css"> <!-- СТИЛИ МОДАЛЬНОГО ОКНА -->
+    <link rel="stylesheet" href="css/media-modal.css"> 
     <link rel="stylesheet" href="css/specs.css">            
     <link rel="stylesheet" href="css/donations.css">        
     <link rel="stylesheet" href="css/footer.css">           
@@ -93,16 +93,30 @@
                     </div>
                     <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar main-photo ksusha" data-character="ksusha">
                 </div>
+                
+                <!-- Статус бар (Стрим / Плеер) -->
                 <div class="main-display-status">
-                    <span class="status-indicator"></span>
-                    <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
+                    <!-- 1. Режим стрима (по умолчанию) -->
+                    <div id="live-status-container" style="display: flex; align-items: center;">
+                        <span class="status-indicator"></span>
+                        <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
+                    </div>
+
+                    <!-- 2. Режим плеера (скрыт по умолчанию) -->
+                    <div id="music-controls-container" style="display: none; align-items: center; gap: 15px;">
+                        <button class="music-btn" id="btn-prev"><i class="fas fa-backward"></i></button>
+                        <button class="music-btn play-btn" id="btn-play"><i class="fas fa-play"></i></button>
+                        <button class="music-btn" id="btn-next"><i class="fas fa-forward"></i></button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Правая панель: Отряд -->
+            <!-- Правая панель: Отряд / Музыка -->
             <div class="hud-side-panel right" id="squad-panel">
                 <div class="panel-content">
-                    <div class="squad-default-view">
+                    
+                    <!-- 1. РЕЖИМ ОТРЯДА (По умолчанию) -->
+                    <div class="squad-default-view" id="squad-view">
                         <div class="panel-header">
                             <span class="header-title">ОТРЯД</span>
                             <span class="header-deco-line"></span>
@@ -111,7 +125,6 @@
                         
                         <!-- СПИСОК УЧАСТНИКОВ -->
                         <div class="squad-list">
-                            
                             <!-- BAGERca -->
                             <div class="squad-member" data-member="bagerka">
                                 <div class="avatar-wrapper">
@@ -145,29 +158,56 @@
                                 <span class="squad-name">Kiriki</span>
                             </div>
                         </div>
-
-                        <!-- График синхронизации -->
-                        <div class="squad-status-footer">
-                            <div class="footer-labels">
-                                <span class="data-label">СИНХРОНИЗАЦИЯ</span>
-                                <span class="data-value status-ok">100%</span>
-                            </div>
-                            <div class="sync-waveform">
-                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                            </div>
-                        </div>
                     </div>
                     
-                    <!-- Детальный вид -->
+                    <!-- 2. ДЕТАЛЬНЫЙ ВИД (По клику на участника) -->
                     <div class="squad-detail-view">
                         <button class="close-detail-btn">&times;</button>
                         <div class="detail-avatar-container"></div>
                         <h3 class="detail-name"></h3>
                         <p class="detail-description"></p>
                     </div>
+
+                    <!-- 3. НОВЫЙ БЛОК: МУЗЫКАЛЬНЫЙ ПЛЕЕР (Скрыт) -->
+                    <div class="music-playlist-view" id="music-view" style="display: none;">
+                        <div class="panel-header">
+                            <span class="header-title" style="background: var(--neon-pink); color: #fff;">MUSIC</span>
+                            <span class="header-deco-line" style="background: repeating-linear-gradient(90deg, var(--neon-pink), var(--neon-pink) 2px, transparent 2px, transparent 6px);"></span>
+                        </div>
+                        
+                        <!-- РЕГУЛЯТОР ГРОМКОСТИ -->
+                        <div class="volume-control-area" id="volume-area">
+                            <div class="volume-fill" id="volume-fill"></div>
+                            <div class="volume-handle" id="volume-handle"></div>
+                        </div>
+
+                        <div class="playlist-container" id="playlist-list">
+                            <!-- Треки генерируются JS -->
+                        </div>
+                    </div>
+
+                    <!-- 4. ОБЩИЙ ПОДВАЛ (ВОЛНЫ + ПРОГРЕСС) -->
+                    <div class="squad-status-footer">
+                        
+                        <!-- ПРОГРЕСС-БАР ТРЕКА -->
+                        <div class="music-progress-area" id="progress-area">
+                            <div class="music-progress-fill" id="progress-fill"></div>
+                            <div class="music-progress-handle"></div> 
+                        </div>
+
+                        <div class="footer-labels">
+                            <span class="data-label">СИНХРОНИЗАЦИЯ</span>
+                            <span class="data-value status-ok">100%</span>
+                        </div>
+                        
+                        <div class="sync-waveform">
+                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

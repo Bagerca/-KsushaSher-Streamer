@@ -15,6 +15,9 @@ import { initSchedule } from './schedule.js';
 import { initStats } from './stats.js';
 import { initSubscribers } from './subscribers.js';
 
+// Music Player (NEW)
+import { initMusicPlayer, toggleMusicMode } from './music-player.js';
+
 // Application state
 const AppState = {
     initialized: false
@@ -51,8 +54,11 @@ async function initializeApplication() {
         
         // 3. Запуск визуальных эффектов (Кометы)
         initCometSystem();
+
+        // 4. Инициализация музыкального плеера
+        initMusicPlayer();
         
-        // 4. Инициализация терминала
+        // 5. Инициализация терминала
         initTerminalInput();
         runTerminalBoot();
         
@@ -271,6 +277,11 @@ function initTerminalInput() {
                 triggerCometShower();
                 responseText = '<span style="color:var(--neon-pink)">ВНИМАНИЕ: ОБНАРУЖЕН МЕТЕОРИТНЫЙ ПОТОК!</span>';
 
+            } else if (command === 'music' || command === 'player' || command === 'pod') {
+                // НОВАЯ КОМАНДА: МУЗЫКАЛЬНЫЙ ПЛЕЕР
+                const resultMsg = toggleMusicMode();
+                responseText = resultMsg;
+
             } else if (command === 'msu' || command === 'building') {
                 // ПАСХАЛКА: ЗДАНИЕ (Выровненное CSS)
                 const buildingArt = `
@@ -425,6 +436,7 @@ function initTerminalInput() {
                     { cmd: 'LIZARD', desc: 'Запуск симуляции' },
                     { cmd: 'DRAGON', desc: 'Призвать сущность' },
                     { cmd: 'COMET', desc: 'Метеоритный дождь' },
+                    { cmd: 'MUSIC', desc: 'Музыкальный модуль' },
                     { cmd: 'MSU', desc: 'Архитектура' },
                     { cmd: 'COFFEE', desc: 'Заправка' },
                     { cmd: 'CAT', desc: 'Meow' },
