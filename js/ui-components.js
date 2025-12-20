@@ -159,7 +159,9 @@ function initNavRail() {
     const rail = document.getElementById('cyber-nav-rail');
     if (!rail) return;
 
+    // ДОБАВЛЕН 'hero' В СПИСОК СЕКЦИЙ
     const sections = [
+        { id: 'hero', label: 'ГЛАВНАЯ' }, // <-- Новый квадрат
         { id: 'about', label: 'ОБО МНЕ' },
         { id: 'command-center', label: 'КОМАНДНЫЙ ЦЕНТР' },
         { id: 'media-archive', label: 'БАЗА ДАННЫХ' },
@@ -176,6 +178,7 @@ function initNavRail() {
             if (element) {
                 const topPos = element.getBoundingClientRect().top + window.scrollY;
                 let percent = (topPos / docHeight) * 100;
+                // Ограничиваем, чтобы не прилипало к самым краям
                 percent = Math.max(2, Math.min(98, percent));
                 
                 const marker = document.createElement('div');
@@ -183,16 +186,10 @@ function initNavRail() {
                 marker.style.top = `${percent}%`; 
                 marker.dataset.targetId = sec.id;
                 
-                // ВАЖНО: Создаем новую структуру DOM (shape отдельно от tooltip)
                 marker.innerHTML = `
                     <div class="nav-shape"></div>
                     <div class="nav-tooltip">${sec.label}</div>
                 `;
-                
-                marker.appendChild(document.createElement('div')).className = 'nav-shape'; 
-                // Ой, выше дубль, правильный код внутри innerHTML уже есть.
-                // marker.innerHTML перезаписывает всё, поэтому appendChild не нужен.
-                // Чистая версия innerHTML выше верна.
                 
                 marker.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -207,14 +204,21 @@ function initNavRail() {
     function checkActiveSection() {
         const scrollPos = window.scrollY + window.innerHeight / 3;
         let currentId = '';
-        sections.forEach(sec => {
-            const el = document.getElementById(sec.id);
-            if (el) {
-                const top = el.offsetTop;
-                const bottom = top + el.offsetHeight;
-                if (scrollPos >= top && scrollPos < bottom) currentId = sec.id;
-            }
-        });
+        
+        // Особая проверка для Hero (если мы в самом верху)
+        if (window.scrollY < 100) {
+            currentId = 'hero';
+        } else {
+            sections.forEach(sec => {
+                const el = document.getElementById(sec.id);
+                if (el) {
+                    const top = el.offsetTop;
+                    const bottom = top + el.offsetHeight;
+                    if (scrollPos >= top && scrollPos < bottom) currentId = sec.id;
+                }
+            });
+        }
+
         document.querySelectorAll('.nav-marker').forEach(m => {
             m.classList.toggle('active', m.dataset.targetId === currentId);
         });

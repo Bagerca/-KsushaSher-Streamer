@@ -27,6 +27,9 @@ const AppState = {
 const terminalHistory = document.getElementById('terminal-history');
 const terminalBox = document.getElementById('terminal-box');
 
+// Флаг для управления системным шумом (спамом)
+let isSystemNoiseAllowed = true;
+
 // Initialize application
 async function initializeApplication() {
     if (AppState.initialized) return;
@@ -78,11 +81,12 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 /**
  * Добавляет строку в лог.
+ * EXPORT добавлен, чтобы вызывать из music-player.js
  * @param {string} html - HTML контент строки (системный)
  * @param {boolean} isTyping - эффект печатания
  * @param {boolean} forceScroll - принудительно скроллить вниз (для ответов на команды)
  */
-function addLogLine(html, isTyping = false, forceScroll = false) {
+export function addLogLine(html, isTyping = false, forceScroll = false) {
     if (!terminalHistory) return;
     
     const p = document.createElement('p');
@@ -110,6 +114,14 @@ function addLogLine(html, isTyping = false, forceScroll = false) {
     }
     
     return p;
+}
+
+/**
+ * Управление состоянием системного шума.
+ * Вызывается из music-player при смене режима.
+ */
+export function setSystemNoiseState(isEnabled) {
+    isSystemNoiseAllowed = isEnabled;
 }
 
 // Загрузка системы (визуальный эффект)
@@ -190,7 +202,8 @@ function startSystemNoise() {
     const wrapLog = (text) => `<span style='color:#666; font-size:0.8rem'>${text}</span>`;
 
     setInterval(() => {
-        if (Math.random() > 0.7 && terminalHistory) {
+        // ПРОВЕРКА ФЛАГА: Если шум разрешен (не режим музыки), пишем логи
+        if (isSystemNoiseAllowed && Math.random() > 0.7 && terminalHistory) {
             let index;
             do {
                 index = Math.floor(Math.random() * messages.length);
@@ -279,6 +292,7 @@ function initTerminalInput() {
 
             } else if (command === 'music' || command === 'player' || command === 'pod') {
                 // НОВАЯ КОМАНДА: МУЗЫКАЛЬНЫЙ ПЛЕЕР
+                // Функция toggleMusicMode внутри себя вызывает setSystemNoiseState(false/true)
                 const resultMsg = toggleMusicMode();
                 responseText = resultMsg;
 
