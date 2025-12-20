@@ -241,7 +241,6 @@
 #terminal-history p { 
     margin: 0 0 5px 0; 
     line-height: 1.2; 
-    /* Заменили break-all на break-word, чтобы слова переносились целиком */
     word-break: normal; 
     overflow-wrap: break-word; 
     word-wrap: break-word;
@@ -329,13 +328,20 @@
 }
 .data-label { color: #888; } .data-value { font-weight: 700; color: #fff; }
 
+/* 
+   FIXED: Используем CSS-переменную для цвета волны,
+   чтобы анимация не перебивала ховер-эффект.
+*/
 .sync-waveform {
     display: flex; justify-content: space-between; align-items: flex-end;
     height: 20px; gap: 2px;
+    --wave-color: var(--neon-green); /* Цвет по умолчанию */
 }
 
 .sync-waveform .bar {
-    width: 4px; background: var(--neon-green); opacity: 0.5; border-radius: 2px;
+    width: 4px; 
+    background: var(--wave-color); 
+    opacity: 0.5; border-radius: 2px;
     animation: wave-pulse 1.2s infinite ease-in-out;
 }
 
@@ -346,7 +352,11 @@
 
 @keyframes wave-pulse {
     0%, 100% { height: 20%; opacity: 0.3; }
-    50% { height: 100%; opacity: 1; box-shadow: 0 0 5px var(--neon-green); }
+    50% { 
+        height: 100%; 
+        opacity: 1; 
+        box-shadow: 0 0 5px var(--wave-color); 
+    }
 }
 
 .hud-side-panel.left:hover, .hud-side-panel.right:hover {
@@ -369,8 +379,9 @@
     background: repeating-linear-gradient(90deg, var(--neon-pink), var(--neon-pink) 2px, transparent 2px, transparent 6px);
 }
 
-.hud-side-panel.right:hover .sync-waveform .bar {
-    background: var(--neon-pink); box-shadow: 0 0 5px var(--neon-pink);
+/* Меняем переменную цвета волны при наведении на панель */
+.hud-side-panel.right:hover .sync-waveform {
+    --wave-color: var(--neon-pink);
 }
 
 .squad-default-view { height: 100%; display: flex; flex-direction: column; transition: opacity 0.3s; }

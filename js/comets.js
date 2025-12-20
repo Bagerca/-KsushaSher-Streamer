@@ -24,19 +24,17 @@ export function initCometSystem() {
     if (!containerBg) return;
 
     // --- НАСТРОЙКА КОНТЕЙНЕРА ---
-    // Превращаем его из fixed (экран) в absolute (документ)
     Object.assign(containerBg.style, {
         position: 'absolute',
         top: '0',
         left: '0',
         width: '100%',
-        height: '100%', // Будет растягиваться CSS-ом, но лучше подстраховаться
-        zIndex: '0',    // Задний план
+        height: '100%', 
+        zIndex: '0',    
         pointerEvents: 'none',
         overflow: 'hidden'
     });
 
-    // Функция обновления высоты контейнера при ресайзе/скролле
     const updateContainerHeight = () => {
         const docHeight = Math.max(
             document.body.scrollHeight, document.documentElement.scrollHeight,
@@ -46,41 +44,35 @@ export function initCometSystem() {
         containerBg.style.height = `${docHeight}px`;
     };
 
-    // Обновляем высоту сразу и при изменении размера окна
     updateContainerHeight();
     window.addEventListener('resize', updateContainerHeight);
-    
-    // (Опционально) Обновляем высоту раз в пару секунд на случай динамической подгрузки контента
     setInterval(updateContainerHeight, 2000);
 
     console.log('🌠 Comet system initialized (Absolute Document Mode).');
-    
-    // Запускаем фоновый цикл
     scheduleNextIdleCycle();
 }
 
-/**
- * Планировщик редких событий (Фоновый режим)
- */
 function scheduleNextIdleCycle() {
     const delay = Math.random() * 30000 + 30000; 
     
     setTimeout(() => {
-        const count = Math.random() > 0.7 ? 2 : 1;
-        const side = Math.floor(Math.random() * 4);
-        
-        for (let i = 0; i < count; i++) {
-            setTimeout(() => {
-                spawnComet(side);
-            }, i * 300); 
+        // Проверяем, не идет ли сейчас активный шторм, чтобы не мешать
+        if (!showerInterval) {
+            const count = Math.random() > 0.7 ? 2 : 1;
+            const side = Math.floor(Math.random() * 4);
+            
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    spawnComet(side);
+                }, i * 300); 
+            }
         }
-
         scheduleNextIdleCycle();
     }, delay);
 }
 
 /**
- * ЭКСПОРТ: Метеоритный дождь (10 секунд активности)
+ * ЭКСПОРТ: Запуск метеоритного дождя
  */
 export function triggerCometShower() {
     if (!containerBg) return;
@@ -94,9 +86,7 @@ export function triggerCometShower() {
 
     showerInterval = setInterval(() => {
         if (Date.now() - startTime > duration) {
-            clearInterval(showerInterval);
-            showerInterval = null;
-            console.log("🌠 METEOR SHOWER ENDED");
+            stopCometShower(); // Используем функцию остановки для чистоты
             return;
         }
 
@@ -105,6 +95,25 @@ export function triggerCometShower() {
             spawnComet(null, true); 
         }
     }, 100);
+}
+
+/**
+ * ЭКСПОРТ: Остановка метеоритного дождя (NEW)
+ */
+export function stopCometShower() {
+    // 1. Останавливаем генерацию новых
+    if (showerInterval) {
+        clearInterval(showerInterval);
+        showerInterval = null;
+        console.log("🌠 METEOR SHOWER STOPPED");
+    }
+
+    // 2. Удаляем существующие кометы (мгновенная очистка)
+    if (containerBg) {
+        // Удаляем только элементы с классом comet
+        const activeComets = containerBg.querySelectorAll('.comet');
+        activeComets.forEach(el => el.remove());
+    }
 }
 
 /**
@@ -122,44 +131,34 @@ function spawnComet(forcedSide = null, isFast = false) {
     comet.style.color = color;
     comet.style.background = `linear-gradient(90deg, transparent, ${color}, #fff)`;
     
-    // --- РАСЧЕТ КООРДИНАТ (С УЧЕТОМ СКРОЛЛА) ---
     const w = window.innerWidth;
     const h = window.innerHeight;
-    
-    // Получаем текущую прокрутку страницы
     const scrollY = window.scrollY;
-    
-    const offset = 150; // Запас за границей экрана
+    const offset = 150; 
 
     const side = forcedSide !== null ? forcedSide : Math.floor(Math.random() * 4);
     
     let startX, startY, endX, endY;
 
-    // ВАЖНО: Во всех расчетах Y добавляем scrollY, чтобы координаты были относительно документа,
-    // но визуально начинались в области видимости пользователя.
-
     switch(side) {
         case 0: // Top -> Down
             startX = Math.random() * w; 
-            startY = scrollY - offset; // Чуть выше текущего экрана
+            startY = scrollY - offset; 
             endX = Math.random() * w; 
-            endY = scrollY + h + offset; // Чуть ниже текущего экрана
+            endY = scrollY + h + offset; 
             break;
-            
         case 1: // Right -> Left
             startX = w + offset; 
-            startY = scrollY + Math.random() * h; // Случайная высота в пределах текущего экрана
+            startY = scrollY + Math.random() * h;
             endX = -offset; 
             endY = scrollY + Math.random() * h;
             break;
-            
         case 2: // Bottom -> Up
             startX = Math.random() * w; 
-            startY = scrollY + h + offset; // Чуть ниже текущего экрана
+            startY = scrollY + h + offset;
             endX = Math.random() * w; 
-            endY = scrollY - offset; // Чуть выше текущего экрана
+            endY = scrollY - offset; 
             break;
-            
         case 3: // Left -> Right
             startX = -offset; 
             startY = scrollY + Math.random() * h;
@@ -170,10 +169,11 @@ function spawnComet(forcedSide = null, isFast = false) {
 
     const deltaX = endX - startX;
     const deltaY = endY - startY;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
     let speedBase = isFast ? (Math.random() * 0.8 + 1.2) : (Math.random() * 0.3 + 0.2);
+    // Расстояние для расчета времени
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     const duration = distance / speedBase;
 
     const length = Math.min(Math.max(speedBase * 300, 150), 600) * scaleModifier;
@@ -193,5 +193,7 @@ function spawnComet(forcedSide = null, isFast = false) {
         easing: 'linear'
     });
 
-    animation.onfinish = () => comet.remove();
+    animation.onfinish = () => {
+        if (comet.parentNode) comet.remove();
+    };
 }
