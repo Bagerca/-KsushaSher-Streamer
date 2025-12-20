@@ -6,11 +6,8 @@ import { initMediaArchive } from './media-manager.js';
 import { initModalSystem } from './media-modal.js';
 
 // Visual Effects
-// Импортируем управление Ящерицей
 import { startReptileProtocol, stopReptileProtocol } from './reptile-engine.js';
-// Импортируем управление Драконом
 import { startDragonProtocol, stopDragonProtocol } from './dragon-engine.js';
-// Импортируем Кометы
 import { initCometSystem, triggerCometShower } from './comets.js';
 
 // Data Modules
@@ -124,20 +121,63 @@ async function runTerminalBoot() {
     startSystemNoise();
 }
 
-// Случайные системные сообщения
+// Случайные системные сообщения (Расширенная версия без повторов)
 function startSystemNoise() {
+    let lastIndex = -1;
+
     const messages = [
-        "<span style='color:#666; font-size:0.8rem'>[SYS] Ping: 24ms check ok</span>",
-        "<span style='color:#666; font-size:0.8rem'>[BG] Garbage collection...</span>",
-        "<span style='color:#666; font-size:0.8rem'>[NET] Packet received from 127.0.0.1</span>",
-        "<span style='color:#666; font-size:0.8rem'>[TETLA] Scanning chat logs...</span>",
-        "<span style='color:#666; font-size:0.8rem'>[SYS] CPU Temp: 45°C</span>"
+        // --- СИСТЕМА И ЖЕЛЕЗО ---
+        "[SYS] Ping: 24ms check ok",
+        "[SYS] CPU Temp: 45°C",
+        "[SYS] CPU Temp: 52°C (Rising)",
+        "[SYS] GPU Load: 89% [Rendering]",
+        "[SYS] RAM Usage: 12.4GB / 16GB",
+        "[BG] Garbage collection...",
+        "[BG] Cooling fans: 2400 RPM",
+        "[PWR] Voltage stable: 1.2V",
+        "[DRV] NVIDIA Drivers: Up to date",
+        
+        // --- СЕТЬ И СТРИМ ---
+        "[NET] Packet received from 127.0.0.1",
+        "[NET] Upload bitrate: 6000 kbps",
+        "[OBS] Dropped frames: 0 (0%)",
+        "[OBS] Encoding profile: High",
+        "[OBS] Scene switched: 'Just Chatting'",
+        "[NET] Handshake established",
+        "[WARN] Bitrate fluctuation detected",
+        
+        // --- БОТ И ЧАТ ---
+        "[TETLA] Scanning chat logs...",
+        "[TETLA] Syncing BTTV/7TV emotes...",
+        "[TETLA] Moderation filter: ON",
+        "[TETLA] Analysing cringe levels...",
+        "[CHAT] Connecting to IRC...",
+        "[CHAT] Spam protection active",
+        
+        // --- ЛОР И ПРИКОЛЫ ---
+        "[SEC] Unauthorized access blocked",
+        "[SYS] Detecting coffee levels... LOW",
+        "[BIO] Streamer heart rate: Normal",
+        "[GAME] Injecting overlays...",
+        "[SYS] Protocol 'Horror' standing by",
+        "[WARN] Entity 'Lizard' dormant",
+        "[WARN] Entity 'Dragon' dormant"
     ];
+
+    const wrapLog = (text) => `<span style='color:#666; font-size:0.8rem'>${text}</span>`;
 
     setInterval(() => {
         if (Math.random() > 0.7 && terminalHistory) {
-            const msg = messages[Math.floor(Math.random() * messages.length)];
-            addLogLine(msg);
+            let index;
+            // Генерируем индекс пока он не станет отличаться от предыдущего
+            do {
+                index = Math.floor(Math.random() * messages.length);
+            } while (index === lastIndex && messages.length > 1);
+            
+            lastIndex = index;
+
+            addLogLine(wrapLog(messages[index]));
+            
             if (terminalHistory.children.length > 50) {
                 terminalHistory.removeChild(terminalHistory.firstChild);
             }
@@ -146,17 +186,50 @@ function startSystemNoise() {
 }
 
 /**
- * Обработка ввода команд
+ * Обработка ввода команд + Клик по командам
  */
 function initTerminalInput() {
     const input = document.getElementById('cmd-input');
 
     if (!input || !terminalBox || !terminalHistory) return;
 
-    terminalBox.addEventListener('click', () => {
-        input.focus();
+    // Фокус на инпут при клике на терминал
+    terminalBox.addEventListener('click', (e) => {
+        // Если кликнули не по интерактивной команде, фокусим инпут
+        if (!e.target.closest('.interactive-cmd')) {
+            input.focus();
+        }
     });
 
+    // --- ЛОГИКА КЛИКА ПО КОМАНДЕ (КОПИРОВАНИЕ) ---
+    terminalHistory.addEventListener('click', (e) => {
+        const cmdEl = e.target.closest('.interactive-cmd');
+        if (cmdEl) {
+            const commandText = cmdEl.dataset.cmd;
+            
+            // 1. Копируем в буфер обмена
+            navigator.clipboard.writeText(commandText).then(() => {
+                // 2. Визуальный эффект (подтверждение)
+                const originalText = cmdEl.innerText;
+                cmdEl.innerHTML = `${commandText} <span style="color:var(--neon-green); font-size:0.7em;">[OK]</span>`;
+                
+                // 3. Вставляем в поле ввода
+                input.value = commandText;
+                input.focus();
+
+                // Возвращаем текст обратно через 1 сек
+                setTimeout(() => {
+                    cmdEl.innerText = originalText;
+                }, 1000);
+            }).catch(err => {
+                console.error('Ошибка копирования:', err);
+                input.value = commandText;
+                input.focus();
+            });
+        }
+    });
+
+    // --- ОБРАБОТКА ВВОДА (ENTER) ---
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const rawValue = input.value;
@@ -174,16 +247,12 @@ function initTerminalInput() {
             // --- ОБРАБОТКА КОМАНД ---
             
             if (command === 'lizard' || command === 'protocol 66') {
-                // 1. Выключаем Дракона
                 stopDragonProtocol();
-                // 2. Включаем Ящерицу
                 startReptileProtocol();
                 responseText = '<span style="color:var(--neon-green)">ЗАПУСК ПРОТОКОЛА "РЕПТИЛИЯ"...</span>';
                 
             } else if (command === 'dragon' || command === 'dracarys') {
-                // 1. Выключаем Ящерицу
                 stopReptileProtocol();
-                // 2. Включаем Дракона
                 startDragonProtocol();
                 responseText = '<span style="color:var(--neon-pink); font-weight:bold; text-shadow:0 0 10px var(--neon-pink);">ВНИМАНИЕ: СУЩНОСТЬ "ДРАКОН" АКТИВИРОВАНА!</span>';
                 
@@ -192,14 +261,33 @@ function initTerminalInput() {
                 responseText = '<span style="color:var(--neon-pink)">ВНИМАНИЕ: ОБНАРУЖЕН МЕТЕОРИТНЫЙ ПОТОК!</span>';
                 
             } else if (command === 'help') {
-                responseText = 'ДОСТУПНЫЕ КОМАНДЫ: HELP, CLEAR, STATUS, LIZARD, DRAGON, COMET';
+                // --- ВЕРТИКАЛЬНЫЙ СПИСОК КОМАНД ---
+                const commands = [
+                    { cmd: 'HELP', desc: 'Список команд' },
+                    { cmd: 'CLEAR', desc: 'Очистить терминал' },
+                    { cmd: 'STATUS', desc: 'Состояние систем' },
+                    { cmd: 'LIZARD', desc: 'Запуск симуляции' },
+                    { cmd: 'DRAGON', desc: 'Призвать сущность' },
+                    { cmd: 'COMET', desc: 'Метеоритный дождь' }
+                ];
+
+                let html = '<div style="margin-bottom:5px; color:#888; border-bottom:1px dashed #444; padding-bottom:5px;">ДОСТУПНЫЕ КОМАНДЫ (Нажми чтобы скопировать):</div>';
+                
+                commands.forEach(item => {
+                    html += `
+                        <div class="cmd-list-row">
+                            <span class="interactive-cmd" data-cmd="${item.cmd}" title="Скопировать">${item.cmd}</span>
+                            <span class="cmd-desc">- ${item.desc}</span>
+                        </div>
+                    `;
+                });
+                responseText = html;
                 
             } else if (command === 'status') {
                 responseText = 'СИСТЕМЫ В НОРМЕ. TETLA V5.6 АКТИВНА.';
                 
             } else if (command === 'clear') {
                 terminalHistory.innerHTML = '';
-                // Очистка экрана от существ
                 stopReptileProtocol();
                 stopDragonProtocol();
                 responseText = ''; 
@@ -215,9 +303,10 @@ function initTerminalInput() {
             }
 
             input.value = '';
-            requestAnimationFrame(() => {
-                terminalBox.scrollTop = terminalBox.scrollHeight;
-            });
+            // Прокрутка вниз
+            setTimeout(() => {
+                if(terminalBox) terminalBox.scrollTop = terminalBox.scrollHeight;
+            }, 10);
         }
     });
 }

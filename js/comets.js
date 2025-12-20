@@ -2,7 +2,7 @@
 
 // Контейнеры
 let containerBg = null;
-let containerFg = null;
+let showerInterval = null;
 
 // Цвета
 const cometColors = [
@@ -20,18 +20,47 @@ const cometColors = [
  */
 export function initCometSystem() {
     containerBg = document.getElementById('comet-system');
-    containerFg = document.getElementById('comet-system-fg');
     
     if (!containerBg) return;
 
-    console.log('🌠 Comet system initialized (3D Mode). Waiting for cycle...');
+    // --- НАСТРОЙКА КОНТЕЙНЕРА ---
+    // Превращаем его из fixed (экран) в absolute (документ)
+    Object.assign(containerBg.style, {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%', // Будет растягиваться CSS-ом, но лучше подстраховаться
+        zIndex: '0',    // Задний план
+        pointerEvents: 'none',
+        overflow: 'hidden'
+    });
+
+    // Функция обновления высоты контейнера при ресайзе/скролле
+    const updateContainerHeight = () => {
+        const docHeight = Math.max(
+            document.body.scrollHeight, document.documentElement.scrollHeight,
+            document.body.offsetHeight, document.documentElement.offsetHeight,
+            document.body.clientHeight, document.documentElement.clientHeight
+        );
+        containerBg.style.height = `${docHeight}px`;
+    };
+
+    // Обновляем высоту сразу и при изменении размера окна
+    updateContainerHeight();
+    window.addEventListener('resize', updateContainerHeight);
     
-    // Запускаем бесконечный цикл редкого появления
+    // (Опционально) Обновляем высоту раз в пару секунд на случай динамической подгрузки контента
+    setInterval(updateContainerHeight, 2000);
+
+    console.log('🌠 Comet system initialized (Absolute Document Mode).');
+    
+    // Запускаем фоновый цикл
     scheduleNextIdleCycle();
 }
 
 /**
- * Планировщик редких событий (1-2 кометы раз в 30-60 сек)
+ * Планировщик редких событий (Фоновый режим)
  */
 function scheduleNextIdleCycle() {
     const delay = Math.random() * 30000 + 30000; 
@@ -51,75 +80,91 @@ function scheduleNextIdleCycle() {
 }
 
 /**
- * ЭКСПОРТ: Метеоритный дождь
+ * ЭКСПОРТ: Метеоритный дождь (10 секунд активности)
  */
 export function triggerCometShower() {
     if (!containerBg) return;
     
-    const count = 30;
-    
-    for (let i = 0; i < count; i++) {
-        const delay = Math.random() * 3000;
-        setTimeout(() => {
+    console.log("🌠 METEOR SHOWER STARTED (10s duration)");
+
+    if (showerInterval) clearInterval(showerInterval);
+
+    const startTime = Date.now();
+    const duration = 10000;
+
+    showerInterval = setInterval(() => {
+        if (Date.now() - startTime > duration) {
+            clearInterval(showerInterval);
+            showerInterval = null;
+            console.log("🌠 METEOR SHOWER ENDED");
+            return;
+        }
+
+        const batchSize = Math.floor(Math.random() * 3) + 1;
+        for (let i = 0; i < batchSize; i++) {
             spawnComet(null, true); 
-        }, delay);
-    }
+        }
+    }, 100);
 }
 
 /**
  * Создание одной кометы
  */
 function spawnComet(forcedSide = null, isFast = false) {
-    // 1. РЕШАЕМ, ГДЕ ЛЕТИТ КОМЕТА (Сзади или Спереди)
-    // 30% шанс пролететь перед лицом (над кольцами)
-    const isForeground = Math.random() < 0.3;
-    
-    // Выбираем нужный контейнер
-    const targetContainer = isForeground ? containerFg : containerBg;
-    
-    if (!targetContainer) return;
+    if (!containerBg) return;
 
     const comet = document.createElement('div');
     comet.className = 'comet';
     
-    // Если комета летит спереди, делаем её чуть ярче и толще (эффект перспективы)
-    const scaleModifier = isForeground ? 1.5 : 1;
-    
+    const scaleModifier = 1;
     const color = cometColors[Math.floor(Math.random() * cometColors.length)];
+    
     comet.style.color = color;
     comet.style.background = `linear-gradient(90deg, transparent, ${color}, #fff)`;
     
-    // Если спереди - добавляем размытие, типа "расфокус" от близость
-    if (isForeground) {
-        comet.style.filter = `drop-shadow(0 0 8px ${color}) blur(1px)`;
-        comet.style.zIndex = "20"; // На всякий случай
-    }
-
-    // Геометрия экрана
+    // --- РАСЧЕТ КООРДИНАТ (С УЧЕТОМ СКРОЛЛА) ---
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const offset = 150;
+    
+    // Получаем текущую прокрутку страницы
+    const scrollY = window.scrollY;
+    
+    const offset = 150; // Запас за границей экрана
 
     const side = forcedSide !== null ? forcedSide : Math.floor(Math.random() * 4);
     
     let startX, startY, endX, endY;
 
+    // ВАЖНО: Во всех расчетах Y добавляем scrollY, чтобы координаты были относительно документа,
+    // но визуально начинались в области видимости пользователя.
+
     switch(side) {
         case 0: // Top -> Down
-            startX = Math.random() * w; startY = -offset;
-            endX = Math.random() * w; endY = h + offset;
+            startX = Math.random() * w; 
+            startY = scrollY - offset; // Чуть выше текущего экрана
+            endX = Math.random() * w; 
+            endY = scrollY + h + offset; // Чуть ниже текущего экрана
             break;
+            
         case 1: // Right -> Left
-            startX = w + offset; startY = Math.random() * h;
-            endX = -offset; endY = Math.random() * h;
+            startX = w + offset; 
+            startY = scrollY + Math.random() * h; // Случайная высота в пределах текущего экрана
+            endX = -offset; 
+            endY = scrollY + Math.random() * h;
             break;
+            
         case 2: // Bottom -> Up
-            startX = Math.random() * w; startY = h + offset;
-            endX = Math.random() * w; endY = -offset;
+            startX = Math.random() * w; 
+            startY = scrollY + h + offset; // Чуть ниже текущего экрана
+            endX = Math.random() * w; 
+            endY = scrollY - offset; // Чуть выше текущего экрана
             break;
+            
         case 3: // Left -> Right
-            startX = -offset; startY = Math.random() * h;
-            endX = w + offset; endY = Math.random() * h;
+            startX = -offset; 
+            startY = scrollY + Math.random() * h;
+            endX = w + offset; 
+            endY = scrollY + Math.random() * h;
             break;
     }
 
@@ -128,22 +173,16 @@ function spawnComet(forcedSide = null, isFast = false) {
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
-    // Скорость
-    let speedBase = isFast ? (Math.random() * 0.7 + 0.8) : (Math.random() * 0.3 + 0.2);
-    
-    // Кометы на переднем плане визуально должны лететь быстрее (параллакс)
-    if (isForeground) speedBase *= 1.5;
-
+    let speedBase = isFast ? (Math.random() * 0.8 + 1.2) : (Math.random() * 0.3 + 0.2);
     const duration = distance / speedBase;
 
-    // Размеры с учетом перспективы
     const length = Math.min(Math.max(speedBase * 300, 150), 600) * scaleModifier;
     const thickness = (Math.random() * 2 + 1) * scaleModifier;
 
     comet.style.width = `${length}px`;
     comet.style.height = `${thickness}px`;
 
-    targetContainer.appendChild(comet);
+    containerBg.appendChild(comet);
 
     const animation = comet.animate([
         { transform: `translate(${startX}px, ${startY}px) rotate(${angle}deg)`, opacity: 0 },

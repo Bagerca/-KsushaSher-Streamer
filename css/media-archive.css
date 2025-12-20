@@ -44,7 +44,7 @@
 }
 
 /* =========================================
-   HEADER (CRYSTAL NEON STYLE)
+   HEADER (TECHNO HUD STYLE)
    ========================================= */
 .archive-header {
     display: flex;
@@ -63,29 +63,43 @@
     text-transform: uppercase;
     letter-spacing: 4px;
     margin: 0;
-    padding: 0;
+    
+    /* Отступы для скобок по бокам */
+    padding: 0 45px;
+    
     color: #ffffff;
     text-shadow: 0 0 10px rgba(57, 255, 20, 0.8), 0 0 20px rgba(57, 255, 20, 0.4);
     display: inline-block;
     position: relative;
 }
 
+/* СТРОГИЕ НЕОНОВЫЕ СКОБКИ */
 .archive-header .section-title::before,
 .archive-header .section-title::after {
-    content: ''; position: absolute; width: 60px; height: 3px; border-radius: 2px; opacity: 0.8;
-    top: 53%; transform: translateY(-50%); 
+    content: ''; 
+    position: absolute; 
+    top: 50%; 
+    transform: translateY(-50%);
+    
+    width: 12px;
+    height: 35px; /* Высота скобки */
+    
+    border: 3px solid var(--neon-green); 
+    box-shadow: 0 0 10px var(--neon-green);
+    background: transparent;
+    opacity: 0.8;
 }
 
+/* Левая скобка [ */
 .archive-header .section-title::before {
-    right: 100%; margin-right: 25px;
-    background: linear-gradient(to left, var(--neon-green), transparent);
-    box-shadow: -5px 0 10px rgba(57, 255, 20, 0.5);
+    left: 0; 
+    border-right: none; 
 }
 
+/* Правая скобка ] */
 .archive-header .section-title::after {
-    left: 100%; margin-left: 25px;
-    background: linear-gradient(to right, var(--neon-green), transparent);
-    box-shadow: 5px 0 10px rgba(57, 255, 20, 0.5);
+    right: 0; 
+    border-left: none;
 }
 
 .archive-header-sub {
@@ -447,8 +461,10 @@
 @media (max-width: 1400px) { .archive-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 1000px) { .archive-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) {
+    /* На мобилках убираем декоративные элементы заголовка, чтобы не ломать верстку */
     .archive-header .section-title::before, .archive-header .section-title::after { display: none; }
-    .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; }
+    .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; padding: 0; }
+    
     .archive-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .header-control-bar { flex-wrap: wrap; justify-content: center; border-radius: 20px; }
     .type-switcher { order: 1; width: 100%; justify-content: center; }
