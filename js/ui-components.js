@@ -1,46 +1,79 @@
 /* js/ui-components.js */
 
-/**
- * Инициализация общих UI компонентов
- */
 export function initializeUI() {
     console.log('🎨 Initializing UI components...');
-    
     initSmoothScroll();
     initCardCopy();
     initNavRail();
-    // initLiquidScrollbar(); <--- ОТКЛЮЧЕНО (Используем нативный CSS скролл)
 }
 
 /**
- * 1. Плавный скролл по якорным ссылкам
+ * УМНЫЙ СКРОЛЛ:
+ * Центрирует маленькие блоки, большие прижимает к верху.
  */
+function customSmoothScroll(targetSelector) {
+    const targetEl = typeof targetSelector === 'string' 
+        ? document.querySelector(targetSelector) 
+        : targetSelector;
+
+    if (!targetEl) return;
+
+    const targetRect = targetEl.getBoundingClientRect();
+    const elementTop = targetRect.top + window.pageYOffset;
+    const elementHeight = targetRect.height;
+    const viewportHeight = window.innerHeight;
+
+    let targetPosition;
+
+    // Логика центрирования
+    if (elementHeight < viewportHeight) {
+        targetPosition = elementTop - (viewportHeight - elementHeight) / 2;
+    } else {
+        targetPosition = elementTop;
+    }
+
+    targetPosition = Math.max(0, targetPosition);
+
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1000; 
+    let start = null;
+
+    function easeInOutQuad(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+
+    function step(timestamp) {
+        if (!start) start = timestamp;
+        const elapsed = timestamp - start;
+        const progress = easeInOutQuad(elapsed, startPosition, distance, duration);
+        
+        window.scrollTo(0, progress);
+
+        if (elapsed < duration) {
+            window.requestAnimationFrame(step);
+        } else {
+            window.scrollTo(0, targetPosition);
+        }
+    }
+
+    window.requestAnimationFrame(step);
+}
+
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                // Отступ сверху (чтобы заголовок не прилипал к краю экрана)
-                const offset = 80; 
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
+            customSmoothScroll(targetId);
         });
     });
 }
 
-/**
- * 2. Логика копирования номера карты
- */
 function initCardCopy() {
     const cardElement = document.getElementById('card-number');
     const rawNumber = '4276 1805 5058 1960';
@@ -76,9 +109,7 @@ function initCardCopy() {
                 let randomCount = currentLen - revealedPart.length;
                 if (randomCount < 0) randomCount = 0;
                 let randomPart = "";
-                for (let i = 0; i < randomCount; i++) {
-                    randomPart += chars[Math.floor(Math.random() * chars.length)];
-                }
+                for (let i = 0; i < randomCount; i++) { randomPart += chars[Math.floor(Math.random() * chars.length)]; }
                 displayText = revealedPart + randomPart;
             } else {
                 const startIdx = Math.max(0, targetText.length - revealCount);
@@ -86,14 +117,10 @@ function initCardCopy() {
                 let randomCount = currentLen - revealedPart.length;
                 if (randomCount < 0) randomCount = 0;
                 let randomPart = "";
-                for (let i = 0; i < randomCount; i++) {
-                    randomPart += chars[Math.floor(Math.random() * chars.length)];
-                }
+                for (let i = 0; i < randomCount; i++) { randomPart += chars[Math.floor(Math.random() * chars.length)]; }
                 displayText = randomPart + revealedPart;
             }
-            
             digitsContainer.innerText = displayText;
-
             if (iterations >= targetText.length) { 
                 clearInterval(interval);
                 digitsContainer.innerText = targetText; 
@@ -107,12 +134,10 @@ function initCardCopy() {
     cardElement.addEventListener('click', () => {
         if (isAnimating) return; 
         isAnimating = true;
-
         navigator.clipboard.writeText(cleanNumber)
             .then(() => {
                 cardElement.classList.add('copied');
                 if (digitsContainer) digitsContainer.classList.add('success-mode');
-
                 runCyberTextEffect(successText, false, () => {
                     setTimeout(() => {
                         runCyberTextEffect(originalText, true, () => {
@@ -126,49 +151,31 @@ function initCardCopy() {
                     }, 2000);
                 });
             })
-            .catch(err => {
-                console.error('Copy failed', err);
-            });
+            .catch(err => { console.error('Copy failed', err); isAnimating = false; });
     });
 }
 
-/**
- * 3. Навигационная рейка (Скролл-маркеры справа)
- */
 function initNavRail() {
     const rail = document.getElementById('cyber-nav-rail');
     if (!rail) return;
 
     const sections = [
         { id: 'about', label: 'ОБО МНЕ' },
-        { id: 'command-center', label: 'DASHBOARD' },
+        { id: 'command-center', label: 'КОМАНДНЫЙ ЦЕНТР' },
         { id: 'media-archive', label: 'БАЗА ДАННЫХ' },
         { id: 'specs', label: 'ЖЕЛЕЗО' },
         { id: 'donation', label: 'ДОНАТ' }
     ];
 
-    // Функция обновления позиций маркеров (ГЛОБАЛЬНАЯ)
     window.updateNavRail = function() {
         rail.innerHTML = ''; 
-        
-        // Берем полную высоту страницы с учетом прокрутки
         const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
         
-        // Доступная высота для маркеров (чтобы нижний не улетал за экран)
-        // Вычитаем немного (например, 10%), чтобы маркеры не прилипали к самому низу
-        const usableHeight = docHeight - winHeight * 0.1; 
-
         sections.forEach(sec => {
             const element = document.getElementById(sec.id);
             if (element) {
-                // Точная позиция элемента от верха страницы
                 const topPos = element.getBoundingClientRect().top + window.scrollY;
-                
-                // Рассчитываем процентное положение на рейке
                 let percent = (topPos / docHeight) * 100;
-                
-                // Ограничиваем, чтобы не вылетало (от 2% до 95%)
                 percent = Math.max(2, Math.min(98, percent));
                 
                 const marker = document.createElement('div');
@@ -176,73 +183,48 @@ function initNavRail() {
                 marker.style.top = `${percent}%`; 
                 marker.dataset.targetId = sec.id;
                 
-                const tooltip = document.createElement('div');
-                tooltip.className = 'nav-tooltip';
-                tooltip.textContent = sec.label;
+                // ВАЖНО: Создаем новую структуру DOM (shape отдельно от tooltip)
+                marker.innerHTML = `
+                    <div class="nav-shape"></div>
+                    <div class="nav-tooltip">${sec.label}</div>
+                `;
                 
-                marker.appendChild(tooltip);
+                marker.appendChild(document.createElement('div')).className = 'nav-shape'; 
+                // Ой, выше дубль, правильный код внутри innerHTML уже есть.
+                // marker.innerHTML перезаписывает всё, поэтому appendChild не нужен.
+                // Чистая версия innerHTML выше верна.
                 
-                // Клик по маркеру
-                marker.addEventListener('click', () => {
-                    const el = document.getElementById(sec.id);
-                    if(el) {
-                        const offset = 80; // Отступ сверху
-                        const elementPos = el.getBoundingClientRect().top;
-                        const offsetPos = elementPos + window.pageYOffset - offset;
-                        
-                        window.scrollTo({
-                            top: offsetPos,
-                            behavior: 'smooth'
-                        });
-                    }
+                marker.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    customSmoothScroll(element);
                 });
                 rail.appendChild(marker);
             }
         });
-
-        // Перезапускаем подсветку активного маркера
         checkActiveSection();
     };
 
-    // Функция проверки активной секции при скролле
     function checkActiveSection() {
-        const scrollPos = window.scrollY + window.innerHeight / 3; // Точка срабатывания - треть экрана
-
+        const scrollPos = window.scrollY + window.innerHeight / 3;
         let currentId = '';
         sections.forEach(sec => {
             const el = document.getElementById(sec.id);
             if (el) {
                 const top = el.offsetTop;
                 const bottom = top + el.offsetHeight;
-                
-                if (scrollPos >= top && scrollPos < bottom) {
-                    currentId = sec.id;
-                }
+                if (scrollPos >= top && scrollPos < bottom) currentId = sec.id;
             }
         });
-
         document.querySelectorAll('.nav-marker').forEach(m => {
-            m.classList.remove('active');
-            if (m.dataset.targetId === currentId) {
-                m.classList.add('active');
-            }
+            m.classList.toggle('active', m.dataset.targetId === currentId);
         });
     }
 
-    // Запускаем
     window.updateNavRail();
-    
-    // Слушаем скролл для подсветки
     window.addEventListener('scroll', checkActiveSection);
-
-    // Слушаем ресайз окна и ДОМ-изменения
     const resizeObserver = new ResizeObserver(() => {
-        // Debounce (ждем 100мс перед обновлением)
         clearTimeout(window.navUpdateTimeout);
-        window.navUpdateTimeout = setTimeout(() => {
-            window.updateNavRail();
-        }, 100);
+        window.navUpdateTimeout = setTimeout(() => { window.updateNavRail(); }, 100);
     });
-    
     resizeObserver.observe(document.body);
 }

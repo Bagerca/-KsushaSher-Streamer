@@ -1,27 +1,19 @@
 /* js/reptile-engine.js */
 
-// Глобальные переменные для управления
+// Глобальные переменные
 let reptileCanvas = null;
 let reptileCtx = null;
 let reptileInterval = null;
-let isActive = false;
 
-// Цвета отряда (BAGERca, TETLA, Angel, Kiriki, Ksusha)
-const SQUAD_COLORS = [
-    "#ff4444", // Красный (BAGERca)
-    "#39ff14", // Зеленый (TETLA)
-    "#ffd700", // Желтый/Золотой (Angel)
-    "#007bff", // Синий (Kiriki)
-    "#ff2d95"  // Розовый (Ksusha)
-];
+// Цвета
+const SQUAD_COLORS = ["#ff4444", "#39ff14", "#ffd700", "#007bff", "#ff2d95"];
 
-// Input tracking object
+// Input
 var Input = {
     keys: [],
     mouse: { left: false, right: false, middle: false, x: 0, y: 0 }
 };
 
-// Setup listeners
 for (var i = 0; i < 230; i++) { Input.keys.push(false); }
 document.addEventListener("keydown", function(event) { Input.keys[event.keyCode] = true; });
 document.addEventListener("keyup", function(event) { Input.keys[event.keyCode] = false; });
@@ -30,8 +22,7 @@ document.addEventListener("mousemove", function(event) {
     Input.mouse.y = event.clientY;
 });
 
-// --- КЛАССЫ ФИЗИКИ ---
-
+// --- КЛАССЫ ФИЗИКИ (Оригинальные) ---
 var segmentCount = 0;
 class Segment {
     constructor(parent, size, angle, range, stiffness) {
@@ -224,20 +215,11 @@ class Creature {
 
 function setupLizard(size, legs, tail) {
     var s = size;
-    // (x, y, angle, fAccel, fFric, fRes, fThresh, rAccel, rFric, rRes, rThresh)
-    // ТЮНИНГ ФИЗИКИ (МЕДЛЕННЫЙ РЕЖИМ):
     var critter = new Creature(
         window.innerWidth / 2, 
         window.innerHeight / 2, 
         0, 
-        s * 9,   // Ускорение (Было 12 -> 9, разгон еще медленнее)
-        s * 2,   // Трение
-        0.45,    // Сопротивление (Было 0.35 -> 0.45, сильнее тормозит об воздух)
-        16, 
-        0.4,     // Скорость поворота (Чуть медленнее поворачивает)
-        0.085, 
-        0.5, 
-        0.3
+        s * 9, s * 2, 0.45, 16, 0.4, 0.085, 0.5, 0.3
     );
     
     var spinal = critter;
@@ -261,9 +243,9 @@ function setupLizard(size, legs, tail) {
             }
         }
         for (var ii = -1; ii <= 1; ii += 2) {
-            var node = new Segment(spinal, s * 12, ii * 0.785, 0, 8); //Hip
-            node = new Segment(node, s * 16, -ii * 0.785, 6.28, 1); //Humerus
-            node = new Segment(node, s * 16, ii * 1.571, 3.1415, 2); //Forearm
+            var node = new Segment(spinal, s * 12, ii * 0.785, 0, 8); 
+            node = new Segment(node, s * 16, -ii * 0.785, 6.28, 1); 
+            node = new Segment(node, s * 16, ii * 1.571, 3.1415, 2); 
             for (var iii = 0; iii < 4; iii++) { new Segment(node, s * 4, (iii / 3 - 0.5) * 1.571, 0.1, 4); }
             new LegSystem(node, 3, s * 12, critter, 4);
         }
@@ -279,19 +261,24 @@ function setupLizard(size, legs, tail) {
     return critter;
 }
 
-// --- ФУНКЦИЯ ЗАПУСКА ---
-export function startReptileProtocol() {
-    // Если уже активна - перезапускаем с новым цветом
+// --- НОВАЯ ФУНКЦИЯ ОСТАНОВКИ (чтобы не было конфликта с Драконом) ---
+export function stopReptileProtocol() {
     if (reptileInterval) {
         clearInterval(reptileInterval);
+        reptileInterval = null;
+    }
+    if (reptileCtx && reptileCanvas) {
         reptileCtx.clearRect(0, 0, reptileCanvas.width, reptileCanvas.height);
     }
+}
+
+// --- ЗАПУСК ---
+export function startReptileProtocol() {
+    if (reptileInterval) stopReptileProtocol();
 
     if (!reptileCanvas) {
-        // Создаем Canvas только один раз
         reptileCanvas = document.createElement("canvas");
         document.body.appendChild(reptileCanvas);
-        
         reptileCanvas.width = window.innerWidth;
         reptileCanvas.height = window.innerHeight;
         reptileCanvas.style.position = "fixed";
@@ -300,28 +287,21 @@ export function startReptileProtocol() {
         reptileCanvas.style.zIndex = "9999"; 
         reptileCanvas.style.pointerEvents = "none"; 
         reptileCanvas.style.backgroundColor = "transparent"; 
-        
         reptileCtx = reptileCanvas.getContext("2d");
         reptileCtx.lineWidth = 2;
     }
     
-    // --- ВЫБОР СЛУЧАЙНОГО ЦВЕТА ---
     const randomColor = SQUAD_COLORS[Math.floor(Math.random() * SQUAD_COLORS.length)];
     reptileCtx.strokeStyle = randomColor;
+    reptileCtx.shadowBlur = 0; // Сбрасываем свечение дракона если было
 
-    // Генерация случайной ящерицы
     var legNum = Math.floor(1 + Math.random() * 8); 
-    var critter = setupLizard(
-        8 / Math.sqrt(legNum),
-        legNum,
-        Math.floor(4 + Math.random() * legNum * 8)
-    );
+    var critter = setupLizard(8 / Math.sqrt(legNum), legNum, Math.floor(4 + Math.random() * legNum * 8));
 
-    // Анимационный цикл
     reptileInterval = setInterval(function() {
         reptileCtx.clearRect(0, 0, reptileCanvas.width, reptileCanvas.height);
         critter.follow(Input.mouse.x, Input.mouse.y);
-    }, 30); // 30 FPS
+    }, 30);
     
-    console.log(`🐉 REPTILE SPAWNED. COLOR: ${randomColor}`);
+    console.log(`🦎 REPTILE SPAWNED. COLOR: ${randomColor}`);
 }

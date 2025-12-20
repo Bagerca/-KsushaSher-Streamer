@@ -3,13 +3,17 @@
 // UI & Components
 import { initializeUI } from './ui-components.js';
 import { initMediaArchive } from './media-manager.js';
-import { initModalSystem } from './media-modal.js'; // <--- НОВЫЙ ИМПОРТ
+import { initModalSystem } from './media-modal.js';
 
 // Visual Effects
-import { startReptileProtocol } from './reptile-engine.js';
+// Импортируем управление Ящерицей
+import { startReptileProtocol, stopReptileProtocol } from './reptile-engine.js';
+// Импортируем управление Драконом
+import { startDragonProtocol, stopDragonProtocol } from './dragon-engine.js';
+// Импортируем Кометы
 import { initCometSystem, triggerCometShower } from './comets.js';
 
-// Data Modules (New Architecture)
+// Data Modules
 import { initSchedule } from './schedule.js';
 import { initStats } from './stats.js';
 import { initSubscribers } from './subscribers.js';
@@ -30,16 +34,16 @@ async function initializeApplication() {
     try {
         console.log('🚀 Starting Ksusha Sher website initialization...');
         
-        // 1. Инициализация UI (Скролл, Навигация, Копирование)
+        // 1. Инициализация UI
         initializeUI();
         
-        // 2. Параллельная загрузка данных из модулей и систем
+        // 2. Загрузка данных
         await Promise.all([
             initSchedule(),
             initStats(),
             initSubscribers(),
             initMediaArchive(),
-            initModalSystem() // <--- ИНИЦИАЛИЗАЦИЯ МОДАЛКИ
+            initModalSystem()
         ]);
         
         // Автообновление данных каждые 5 минут
@@ -48,7 +52,7 @@ async function initializeApplication() {
             initStats();
         }, 300000);
         
-        // 3. Запуск визуальных эффектов
+        // 3. Запуск визуальных эффектов (Кометы)
         initCometSystem();
         
         // 4. Инициализация терминала
@@ -64,13 +68,11 @@ async function initializeApplication() {
 }
 
 /**
- * --- ЛОГИКА ТЕРМИНАЛА (BOOT & NOISE) ---
+ * --- ЛОГИКА ТЕРМИНАЛА ---
  */
 
-// Функция задержки
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
-// Функция добавления строки в лог
 function addLogLine(html, isTyping = false) {
     if (!terminalHistory) return;
     
@@ -78,7 +80,6 @@ function addLogLine(html, isTyping = false) {
     p.innerHTML = html;
     p.style.margin = '0 0 5px 0';
     
-    // Эффект печатания (зеленая каретка справа от строки)
     if (isTyping) {
         p.style.borderRight = '7px solid var(--neon-green)';
         p.style.width = 'fit-content';
@@ -87,24 +88,21 @@ function addLogLine(html, isTyping = false) {
     
     terminalHistory.appendChild(p);
     
-    // Автоскролл вниз
     if (terminalBox) terminalBox.scrollTop = terminalBox.scrollHeight;
     
     return p;
 }
 
-// 1. ЗАГРУЗКА СИСТЕМЫ (BOOT SEQUENCE)
+// Загрузка системы (визуальный эффект)
 async function runTerminalBoot() {
     if (!terminalHistory) return;
     
-    // Очистка перед стартом
     terminalHistory.innerHTML = '';
     
-    // Сценарий загрузки
     await delay(500);
     let line = addLogLine("INITIALIZING TETLA_OS v5.6...", true);
     await delay(800);
-    line.style.borderRight = 'none'; // Убираем курсор с прошлой строки
+    line.style.borderRight = 'none';
     
     line = addLogLine("CHECKING MEMORY... <span class='terminal-ok'>OK</span>");
     await delay(400);
@@ -123,11 +121,10 @@ async function runTerminalBoot() {
     
     line = addLogLine("<span style='opacity:0.7'>Введите 'help' для списка команд...</span>");
     
-    // Запуск фонового шума после загрузки
     startSystemNoise();
 }
 
-// 2. СИСТЕМНЫЙ ШУМ (RANDOM LOGS)
+// Случайные системные сообщения
 function startSystemNoise() {
     const messages = [
         "<span style='color:#666; font-size:0.8rem'>[SYS] Ping: 24ms check ok</span>",
@@ -138,12 +135,9 @@ function startSystemNoise() {
     ];
 
     setInterval(() => {
-        // 30% шанс появления сообщения каждые 8 секунд
         if (Math.random() > 0.7 && terminalHistory) {
             const msg = messages[Math.floor(Math.random() * messages.length)];
             addLogLine(msg);
-            
-            // Если строк слишком много - удаляем верхнюю
             if (terminalHistory.children.length > 50) {
                 terminalHistory.removeChild(terminalHistory.firstChild);
             }
@@ -152,67 +146,74 @@ function startSystemNoise() {
 }
 
 /**
- * Логика интерактивного терминала (Ввод пользователя)
+ * Обработка ввода команд
  */
 function initTerminalInput() {
     const input = document.getElementById('cmd-input');
 
     if (!input || !terminalBox || !terminalHistory) return;
 
-    // Фокус на инпут при клике в любое место терминала
     terminalBox.addEventListener('click', () => {
         input.focus();
     });
 
-    // Обработка нажатия клавиш
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const rawValue = input.value;
             const command = rawValue.trim().toLowerCase();
             
-            // 1. Добавляем введенную команду в историю
+            // Лог введенной команды
             const cmdLine = document.createElement('p');
             cmdLine.innerHTML = `> ${rawValue}`;
             cmdLine.style.color = '#fff'; 
             cmdLine.style.margin = '0 0 5px 0';
             terminalHistory.appendChild(cmdLine);
             
-            // 2. Обработка команд
             let responseText = '';
             
-            if (command === 'lizard' || command === 'protocol 66' || command === 'run creature') {
-                // ПАСХАЛКА: ЯЩЕРИЦА
-                responseText = '<span style="color:var(--neon-green)">ЗАПУСК ПРОТОКОЛА "РЕПТИЛИЯ"...</span>';
+            // --- ОБРАБОТКА КОМАНД ---
+            
+            if (command === 'lizard' || command === 'protocol 66') {
+                // 1. Выключаем Дракона
+                stopDragonProtocol();
+                // 2. Включаем Ящерицу
                 startReptileProtocol();
+                responseText = '<span style="color:var(--neon-green)">ЗАПУСК ПРОТОКОЛА "РЕПТИЛИЯ"...</span>';
                 
-            } else if (command === 'comet' || command === 'comets' || command === 'meteor') {
-                // ПАСХАЛКА: МЕТЕОРИТНЫЙ ДОЖДЬ
-                responseText = '<span style="color:var(--neon-pink)">ВНИМАНИЕ: ОБНАРУЖЕН МЕТЕОРИТНЫЙ ПОТОК!</span>';
+            } else if (command === 'dragon' || command === 'dracarys') {
+                // 1. Выключаем Ящерицу
+                stopReptileProtocol();
+                // 2. Включаем Дракона
+                startDragonProtocol();
+                responseText = '<span style="color:var(--neon-pink); font-weight:bold; text-shadow:0 0 10px var(--neon-pink);">ВНИМАНИЕ: СУЩНОСТЬ "ДРАКОН" АКТИВИРОВАНА!</span>';
+                
+            } else if (command === 'comet' || command === 'meteor') {
                 triggerCometShower();
+                responseText = '<span style="color:var(--neon-pink)">ВНИМАНИЕ: ОБНАРУЖЕН МЕТЕОРИТНЫЙ ПОТОК!</span>';
                 
             } else if (command === 'help') {
-                responseText = 'ДОСТУПНЫЕ КОМАНДЫ: HELP, CLEAR, STATUS, LIZARD, COMET';
+                responseText = 'ДОСТУПНЫЕ КОМАНДЫ: HELP, CLEAR, STATUS, LIZARD, DRAGON, COMET';
                 
             } else if (command === 'status') {
                 responseText = 'СИСТЕМЫ В НОРМЕ. TETLA V5.6 АКТИВНА.';
                 
             } else if (command === 'clear') {
                 terminalHistory.innerHTML = '';
+                // Очистка экрана от существ
+                stopReptileProtocol();
+                stopDragonProtocol();
                 responseText = ''; 
                 
             } else if (command === '') {
                 responseText = ''; 
-                
             } else {
                 responseText = `<span style="color:#ff4444">ОШИБКА: КОМАНДА "${command}" НЕ РАСПОЗНАНА</span>`;
             }
 
-            // 3. Вывод ответа
             if (responseText) {
                 addLogLine(responseText);
             }
 
-            // 4. Очистка и скролл
             input.value = '';
             requestAnimationFrame(() => {
                 terminalBox.scrollTop = terminalBox.scrollHeight;
@@ -221,7 +222,7 @@ function initTerminalInput() {
     });
 }
 
-// Error handling
+// Global Error Handlers
 window.addEventListener('error', function(e) {
     console.error('🚨 Global error caught:', e.error);
 });
@@ -230,20 +231,7 @@ window.addEventListener('unhandledrejection', function(e) {
     console.error('🚨 Unhandled promise rejection:', e.reason);
 });
 
-// Performance monitoring
-function monitorPerformance() {
-    if ('performance' in window) {
-        const navigationTiming = performance.getEntriesByType('navigation')[0];
-        if (navigationTiming) {
-            console.log('📊 Page load performance:', {
-                'DOM Content Loaded': `${(navigationTiming.domContentLoadedEventEnd - navigationTiming.navigationStart).toFixed(2)}ms`,
-                'Full Load': `${(navigationTiming.loadEventEnd - navigationTiming.navigationStart).toFixed(2)}ms`
-            });
-        }
-    }
-}
-
-// Start app
+// Init
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initializeApplication();
@@ -252,5 +240,4 @@ if (document.readyState === 'loading') {
     initializeApplication();
 }
 
-// Export for debugging
 window.AppState = AppState;
