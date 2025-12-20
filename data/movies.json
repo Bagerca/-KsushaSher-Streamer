@@ -10,7 +10,7 @@
     ],
     "genres": ["comedy", "family", "adventure"],
     "status": "watched",
-    "customColor": "#e67e22"
+    "customColor": "#1275bc"
   },
   {
     "id": "shrek-2",
@@ -73,7 +73,7 @@
     "image": "assets/images/movies/indie-cross.jpg",
     "genres": ["animation", "action", "fantasy"],
     "status": "watched",
-    "customColor": "#ffffff"
+    "customColor": "#604d8d"
   },
   {
     "id": "nine",

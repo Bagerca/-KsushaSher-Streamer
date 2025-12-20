@@ -1,6 +1,7 @@
 /* js/media-manager.js */
 
 import { loadData } from './api.js';
+import { openMediaModal } from './media-modal.js';
 
 const ArchiveState = {
     currentType: 'games', // 'games' или 'movies'
@@ -26,7 +27,7 @@ const genreMap = {
     'horror': 'Хоррор', 'coop': 'Кооператив', 'shooter': 'Шутер', 'platformer': 'Платформер',
     'rpg': 'RPG', 'animation': 'Анимация', 'fantasy': 'Фэнтези', 'action': 'Экшен',
     'strategy': 'Стратегия', 'survival': 'Выживание', 'scifi': 'Sci-Fi', 
-    'mystery': 'Мистика', 'comedy': 'Комедия'
+    'mystery': 'Мистика', 'comedy': 'Комедия', 'family': 'Семейный'
 };
 
 const statusMap = {
@@ -45,6 +46,7 @@ export async function initMediaArchive() {
     setupTabs();
     setupSearch(); 
     setupSort();
+    setupGridClick(); // Подключаем клик для модального окна
     await switchArchiveType('games');
 }
 
@@ -352,26 +354,42 @@ function renderNextBatch() {
 
         const delay = (index % ArchiveState.batchSize) * 50; 
 
-        // ЛОГИКА ДЛЯ КАРТИНОК (ОДНА ИЛИ СТОПКА)
-        let imageHtml = '';
-        // Если есть массив images и там больше 1 элемента
-        if (item.images && item.images.length > 1) {
-            imageHtml = `
-                <div class="stack-wrapper">
-                    <img src="${item.images[1]}" class="stack-back" alt="Season Previous">
-                    <img src="${item.images[0]}" class="card-thumb stack-front" alt="${item.title}" loading="lazy">
-                </div>
-            `;
-        } else {
-            // Обычный режим (одна картинка) - берем или image, или первый элемент массива
-            const imgSrc = item.image || (item.images ? item.images[0] : '');
-            imageHtml = `<img src="${imgSrc}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">`;
-        }
+        // ОПРЕДЕЛЯЕМ, ЭТО КОЛЛЕКЦИЯ ИЛИ НЕТ
+        const isCollection = item.images && item.images.length > 1;
 
-        return `
+        if (isCollection) {
+            // КОЛЛЕКЦИЯ (Стопка карточек)
+            // Картинка на ПЕРЕДНЕМ плане (Front) = Индекс 1 (1 сезон)
+            const frontImg = item.images[1];
+            // Картинка на ЗАДНЕМ плане (Back) = Индекс 0 (2 сезон / актуальный)
+            const backImg = item.images[0];
+
+            return `
+            <div class="archive-card collection-wrapper animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
+                
+                <!-- ЗАДНЯЯ КАРТОЧКА -->
+                <div class="collection-back" style="background-image: url('${backImg}')"></div>
+                
+                <!-- ПЕРЕДНЯЯ КАРТОЧКА -->
+                <div class="collection-front">
+                    <div class="card-thumb-container">
+                        <img src="${frontImg}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
+                        <div class="card-rating-badge"><span class="stars-visual">${starsHtml}</span><span class="rating-number">${item.rating}</span></div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title" title="${item.title}">${item.title}</div>
+                        <div class="card-genres">${genresHtml}</div>
+                        <p class="card-desc">${item.description || ''}</p>
+                    </div>
+                </div>
+            </div>`;
+        } else {
+            // ОБЫЧНАЯ ОДИНОЧНАЯ КАРТОЧКА
+            const imgSrc = item.image || (item.images ? item.images[0] : '');
+            return `
             <div class="archive-card animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
                 <div class="card-thumb-container">
-                    ${imageHtml}
+                    <img src="${imgSrc}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
                     <div class="card-rating-badge"><span class="stars-visual">${starsHtml}</span><span class="rating-number">${item.rating}</span></div>
                 </div>
                 <div class="card-info">
@@ -379,12 +397,34 @@ function renderNextBatch() {
                     <div class="card-genres">${genresHtml}</div>
                     <p class="card-desc">${item.description || ''}</p>
                 </div>
-            </div>
-        `;
+            </div>`;
+        }
     }).join('');
 
     container.insertAdjacentHTML('beforeend', newCardsHtml);
     ArchiveState.renderedCount = end;
+}
+
+/**
+ * Обработчик клика по карточке (для открытия модалки)
+ */
+function setupGridClick() {
+    const grid = document.getElementById('archive-grid');
+    if (!grid) return;
+
+    grid.addEventListener('click', (e) => {
+        // Ищем ближайшего родителя - карточку
+        // Это может быть .archive-card (обычная) или .archive-card.collection-wrapper (коллекция)
+        const card = e.target.closest('.archive-card');
+        if (card) {
+            const id = card.dataset.id;
+            const item = ArchiveState.data.find(i => i.id === id);
+            
+            if (item) {
+                openMediaModal(item, ArchiveState.currentType);
+            }
+        }
+    });
 }
 
 function setupTabs() {

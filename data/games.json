@@ -7,7 +7,10 @@
     "image": "assets/images/games/bad-cheese.jpg",
     "genres": ["horror", "adventure"],
     "status": "completed",
-    "customColor": "#f4d03f"
+    "customColor": "#e3ea04",
+    "videos": [
+      { "title": "мышиные бега 197", "url": "https://youtu.be/BVJIZ-ugBxs?si=yUkwC-GWPp0bX40c" }
+    ]
   },
   {
     "id": "state-of-decay-2",
@@ -17,7 +20,10 @@
     "image": "assets/images/games/state-of-decay-2.jpg",
     "genres": ["survival", "shooter", "coop"],
     "status": "completed",
-    "customColor": "#d35400"
+    "customColor": "#b79967",
+    "videos": [
+      { "title": "поездные реалии 196", "url": "https://www.youtube.com/watch?v=4V4y8rO75mA" }
+    ]
   },
   {
     "id": "fuck-you-witch",
@@ -27,7 +33,10 @@
     "image": "assets/images/games/fuck-you-witch.jpg",
     "genres": ["horror", "simulator"],
     "status": "completed",
-    "customColor": "#2ecc71"
+    "customColor": "#a43c2e",
+    "videos": [
+      { "title": "почему же почему же стрима нет, когда он нужен? 195", "url": "https://youtu.be/cpHjztWDMCM?si=-Lu5sbN5oyKQ5Bl1" }
+    ]
   },
   {
     "id": "bendy-dark-revival",
@@ -47,7 +56,12 @@
     "image": "https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png",
     "genres": ["horror", "puzzle"],
     "status": "completed",
-    "customColor": "#f4d03f"
+    "customColor": "#f4d03f",
+    "videos": [
+    { "title": "Начало выживания", "url": "https://youtu.be/vAEKtyPSgz0?si=uHFo3TWzWa7n907A" },
+    { "title": "Смешные моменты", "url": "https://youtu.be/_aJV27IXlwU?si=umTTVpbWwlLkuJ_z" },
+    { "title": "Финал", "url": "https://youtu.be/RtRBWSAvdMY?si=V-w71faGbqms4L5f" }
+    ]
   },
   {
     "id": "gris",

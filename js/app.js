@@ -3,6 +3,7 @@
 // UI & Components
 import { initializeUI } from './ui-components.js';
 import { initMediaArchive } from './media-manager.js';
+import { initModalSystem } from './media-modal.js'; // <--- НОВЫЙ ИМПОРТ
 
 // Visual Effects
 import { startReptileProtocol } from './reptile-engine.js';
@@ -32,12 +33,13 @@ async function initializeApplication() {
         // 1. Инициализация UI (Скролл, Навигация, Копирование)
         initializeUI();
         
-        // 2. Параллельная загрузка данных из модулей
+        // 2. Параллельная загрузка данных из модулей и систем
         await Promise.all([
             initSchedule(),
             initStats(),
             initSubscribers(),
-            initMediaArchive()
+            initMediaArchive(),
+            initModalSystem() // <--- ИНИЦИАЛИЗАЦИЯ МОДАЛКИ
         ]);
         
         // Автообновление данных каждые 5 минут

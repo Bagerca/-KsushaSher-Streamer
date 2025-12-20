@@ -23,7 +23,8 @@
     <link rel="stylesheet" href="css/hero.css">             
     <link rel="stylesheet" href="css/content.css">          
     <link rel="stylesheet" href="css/command-center.css">   
-    <link rel="stylesheet" href="css/media-archive.css">    
+    <link rel="stylesheet" href="css/media-archive.css">
+    <link rel="stylesheet" href="css/media-modal.css"> <!-- СТИЛИ МОДАЛЬНОГО ОКНА -->
     <link rel="stylesheet" href="css/specs.css">            
     <link rel="stylesheet" href="css/donations.css">        
     <link rel="stylesheet" href="css/footer.css">           
@@ -439,6 +440,65 @@
             </div>
             <div class="tube-cap top"></div>
             <div class="tube-cap bottom"></div>
+        </div>
+    </div>
+
+<!-- MODAL WINDOW (MEDIA DETAIL) -->
+    <div id="media-modal-overlay" class="media-modal-overlay">
+        <div class="media-modal-content">
+            <button class="modal-close-btn">&times;</button>
+            
+            <div class="modal-layout">
+                <!-- ЛЕВАЯ КОЛОНКА: Постер + Статы -->
+                <div class="modal-col-sidebar">
+                    <div class="modal-poster-wrapper">
+                        <img src="" alt="" id="modal-img">
+                        <div class="modal-poster-glow"></div>
+                    </div>
+                    
+                    <div class="modal-rating-box">
+                        <span id="modal-rating-val">0.0</span>
+                        <div class="modal-stars" id="modal-stars"></div>
+                    </div>
+
+                    <!-- Техническая инфа теперь слева -->
+                    <div class="modal-tech-data">
+                        <div class="tech-line"><span>ID:</span> <span class="t-val" id="modal-id">---</span></div>
+                        <div class="tech-line"><span>TYPE:</span> <span class="t-val neon-pulse" id="modal-type">---</span></div>
+                    </div>
+                </div>
+
+                <!-- ПРАВАЯ КОЛОНКА: Контент + Видео -->
+                <div class="modal-col-main">
+                    <div class="modal-header">
+                        <div class="modal-header-top">
+                            <h2 class="modal-title" id="modal-title">TITLE</h2>
+                            <span class="modal-status-badge" id="modal-status">STATUS</span>
+                        </div>
+                        <div class="modal-meta-row" id="modal-genres"></div>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="modal-desc" id="modal-desc"></p>
+                    </div>
+
+                    <!-- СЕКЦИЯ ВИДЕО -->
+                    <div class="modal-video-section" id="modal-video-section" style="display: none;">
+                        <div class="video-header"><i class="fas fa-film"></i> МЕДИА МАТЕРИАЛЫ</div>
+                        <div class="video-container">
+                            <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <!-- Плейлист -->
+                        <div class="video-playlist" id="modal-playlist"></div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <a href="#" target="_blank" class="cyber-btn-modal" id="modal-link-btn" style="display: none;">
+                            <i class="fas fa-external-link-alt"></i> ОТКРЫТЬ ССЫЛКУ
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

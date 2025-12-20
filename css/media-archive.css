@@ -17,7 +17,7 @@
         radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.04) 0%, transparent 40%);
 }
 
-/* --- ДОПОЛНИТЕЛЬНЫЕ СЛОИ ЗВЕЗД (АНИМИРОВАННЫЕ) --- */
+/* --- ФОНОВЫЕ ЗВЕЗДЫ --- */
 .media-archive-section::before,
 .media-archive-section::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -65,26 +65,15 @@
     margin: 0;
     padding: 0;
     color: #ffffff;
-    
-    text-shadow: 
-        0 0 10px rgba(57, 255, 20, 0.8),
-        0 0 20px rgba(57, 255, 20, 0.4),
-        0 0 40px rgba(57, 255, 20, 0.2);
-    
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.8), 0 0 20px rgba(57, 255, 20, 0.4);
     display: inline-block;
     position: relative;
 }
 
 .archive-header .section-title::before,
 .archive-header .section-title::after {
-    content: '';
-    position: absolute;
-    width: 60px;
-    height: 3px;
-    border-radius: 2px;
-    opacity: 0.8;
-    top: 53%;       
-    transform: translateY(-50%); 
+    content: ''; position: absolute; width: 60px; height: 3px; border-radius: 2px; opacity: 0.8;
+    top: 53%; transform: translateY(-50%); 
 }
 
 .archive-header .section-title::before {
@@ -148,7 +137,7 @@
 .sort-side-btn:hover { color: #fff; }
 .sort-side-btn.active { color: var(--neon-green); }
 
-.sort-icon { display: inline-block; transition: transform 0.15s ease-in, opacity 0.15s ease-in; backface-visibility: hidden; }
+.sort-icon { display: inline-block; transition: transform 0.15s ease-in, opacity 0.15s ease-in; }
 .sort-icon.flipping { transform: rotateX(90deg) scale(0.8); opacity: 0.5; }
 
 /* =========================================
@@ -250,7 +239,7 @@
 }
 .suggestion-empty i { font-size: 1.5rem; color: #444; margin-bottom: 5px; }
 
-/* --- FILTERS (UPDATED FOR COLORS) --- */
+/* --- FILTERS (FIXED COLORS) --- */
 .filters-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .filter-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 
@@ -322,7 +311,7 @@
 .card-thumb { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
 .archive-card:hover .card-thumb { transform: scale(1.08); }
 
-/* РЕЙТИНГ (FIX: Z-INDEX 30) */
+/* РЕЙТИНГ: ФИКС ПЕРЕКРЫТИЯ (z-index 30) */
 .card-rating-badge {
     position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.85); color: #ffd700;
     padding: 3px 7px; border-radius: 4px; font-size: 0.75rem; border: 1px solid rgba(255,215,0,0.2); font-weight: bold; backdrop-filter: blur(5px);
@@ -368,69 +357,90 @@
     padding-bottom: 20px;
 }
 
-/* =========================================
-   STACK EFFECT (3D DEPTH)
-   ========================================= */
-.stack-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    /* 3D Перспектива */
-    perspective: 1000px;
-    overflow: visible; /* Разрешаем вылет за границы */
+/* =========================================================================
+   NEW COLLECTION LOGIC (FINAL)
+   ========================================================================= */
+
+/* КОНТЕЙНЕР (Обертка) - Стоит в сетке */
+.archive-card.collection-wrapper {
+    background: transparent; 
+    border: none;
+    overflow: visible; 
+    perspective: 1000px; 
     transform-style: preserve-3d;
+    box-shadow: none;
 }
+.archive-card.collection-wrapper::after { display: none; } 
 
-/* ЗАДНЯЯ КАРТИНКА (предыдущий сезон) */
-.stack-back {
+/* ЗАДНЯЯ КАРТОЧКА (СЛОЙ 1) */
+.collection-back {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: 1; /* На заднем плане */
+    inset: 0;
+    background-size: cover;
+    background-position: center top;
+    border-radius: 12px;
+    z-index: 1; /* Позади */
     
-    /* Затемнение и сдвиг вглубь */
-    opacity: 0.8;
-    filter: brightness(0.4) grayscale(0.5);
+    /* Сдвигаем ВПРАВО и ВВЕРХ (5px) - поменьше */
+    transform: translate(5px, -5px);
+    
+    filter: brightness(0.5) grayscale(1);
     border: 1px solid rgba(255,255,255,0.1);
-    
-    /* 3D ПОЗИЦИЯ: Глубина -20px, чуть правее и выше */
-    transform: translateZ(-20px) translateY(-10px) translateX(10px);
-    
-    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    border-radius: 4px;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 5px -5px 15px rgba(0,0,0,0.5);
 }
 
-/* ПЕРЕДНЯЯ КАРТИНКА (актуальный сезон) */
-.stack-front {
+/* ПЕРЕДНЯЯ КАРТОЧКА (СЛОЙ 2) */
+.collection-front {
     position: relative;
-    z-index: 2; /* На переднем плане */
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 4px;
+    width: 100%; height: 100%;
     
-    /* Стандартная позиция */
-    transform: translateZ(0);
+    background: rgba(15, 15, 20, 0.95); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 2; /* Впереди */
+    display: flex; flex-direction: column;
     
+    /* Сдвигаем ВЛЕВО и ВНИЗ (-5px) */
+    transform: translate(-5px, 5px);
+    
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
+
+/* Статус бар внутри передней карточки */
+.collection-front::after {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
+    z-index: 5; transition: 0.3s;
+}
+
+/* Цвета статусов */
+.collection-wrapper[data-status="watched"] .collection-front::after { background: var(--neon-green); }
+.collection-wrapper[data-status="playing"] .collection-front::after { background: #007bff; }
+.collection-wrapper[data-status="dropped"] .collection-front::after { background: #ff4444; }
 
 /* --- HOVER ЭФФЕКТЫ --- */
 
-/* При наведении: Передняя вылетает НА НАС (Z+20px) */
-.archive-card:hover .stack-front {
-    transform: translateZ(20px) translateY(10px) translateX(-10px);
-    box-shadow: -10px 10px 30px rgba(0,0,0,0.8);
+/* При наведении: Передняя уезжает еще дальше ВНИЗ-ВЛЕВО */
+.collection-wrapper:hover .collection-front {
+    transform: translate(-10px, 10px);
+    z-index: 25;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    border-color: rgba(255,255,255,0.3);
 }
 
-/* При наведении: Задняя становится яркой и смещается */
-.archive-card:hover .stack-back {
-    transform: translateZ(-10px) translateY(-15px) translateX(15px);
+/* При наведении: Задняя уезжает еще дальше ВВЕРХ-ВПРАВО и загорается */
+.collection-wrapper:hover .collection-back {
+    transform: translate(10px, -10px); /* 10px для симметрии */
     filter: brightness(1) grayscale(0);
-    opacity: 1;
+    border-color: rgba(255,255,255,0.4);
+    box-shadow: 10px -10px 20px rgba(0,0,0,0.5);
 }
+
+/* Цветная подсветка границ при наведении */
+.collection-wrapper[data-status="watched"]:hover .collection-front { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); }
+.collection-wrapper[data-status="dropped"]:hover .collection-front { border-color: #ff4444; box-shadow: 0 0 20px rgba(255, 68, 68, 0.2); }
 
 /* АДАПТИВ */
 @media (max-width: 1600px) { .archive-grid { grid-template-columns: repeat(5, 1fr); } }
@@ -439,13 +449,11 @@
 @media (max-width: 768px) {
     .archive-header .section-title::before, .archive-header .section-title::after { display: none; }
     .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; }
-    
     .archive-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .header-control-bar { flex-wrap: wrap; justify-content: center; border-radius: 20px; }
     .type-switcher { order: 1; width: 100%; justify-content: center; }
     .sort-side-btn { order: 2; flex-grow: 1; justify-content: center; }
     .type-switcher::before { width: calc(50% - 6px); }
     .card-desc { display: none; }
-    
     .search-suggestions { width: 95%; left: 2.5%; }
 }
