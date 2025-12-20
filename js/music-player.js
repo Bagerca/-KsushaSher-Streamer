@@ -15,7 +15,11 @@ audio.crossOrigin = "anonymous";
 let currentTrackIdx = 0;
 let isPlaying = false;
 let isMusicModeActive = false;
-let currentVolume = 1; // НОВОЕ: Текущая громкость (от 0 до 1)
+
+// Состояние вращения колец
+let ringRot1 = 0;
+let ringRot2 = 0;
+let ringRot3 = 0;
 
 // Web Audio API
 let audioCtx;
@@ -40,19 +44,24 @@ const els = {
     waveformBars: document.querySelectorAll('.sync-waveform .bar'),
     ringsContainer: document.querySelector('.main-display-rings'),
     
+    // НОВОЕ: Отдельные кольца для вращения
+    ring1: document.querySelector('.ring-1'),
+    ring2: document.querySelector('.ring-2'),
+    ring3: document.querySelector('.ring-3'),
+    
     progressArea: document.getElementById('progress-area'),
     progressFill: document.getElementById('progress-fill'),
-
-    // НОВЫЕ ЭЛЕМЕНТЫ ГРОМКОСТИ
-    volumeArea: document.getElementById('volume-area'),
-    volumeFill: document.getElementById('volume-fill'),
-    volumeHandle: document.getElementById('volume-handle')
+    volumeTicksContainer: document.getElementById('volume-ticks')
 };
+
+let currentVolume = 0.5;
+const VOLUME_TICKS_COUNT = 20;
 
 export function initMusicPlayer() {
     if (!els.playlist) return;
 
     renderPlaylist();
+    createVolumeTicks();
 
     els.btnPlay.addEventListener('click', () => {
         if (!audioCtx) setupAudioContext();
@@ -63,30 +72,55 @@ export function initMusicPlayer() {
     els.btnNext.addEventListener('click', nextTrack);
     
     audio.addEventListener('ended', nextTrack);
-
     audio.addEventListener('timeupdate', updateProgress);
     els.progressArea.addEventListener('click', setProgress);
 
-    // НОВОЕ: Инициализация и слушатели для громкости
-    audio.volume = currentVolume; // Устанавливаем начальную громкость
-    updateVolumeUI(currentVolume); // Обновляем UI громкости
-    els.volumeArea.addEventListener('click', setVolume);
-    
-    // Перетаскивание ползунка громкости (drag and drop)
+    audio.volume = currentVolume;
+    updateVolumeUI(currentVolume);
+
     let isDraggingVolume = false;
-    els.volumeHandle.addEventListener('mousedown', (e) => {
-        e.preventDefault(); // Предотвращаем выделение текста
+    els.volumeTicksContainer.addEventListener('mousedown', (e) => {
         isDraggingVolume = true;
+        handleVolumeInput(e);
     });
-    // Слушаем движения мыши на всем документе, чтобы можно было перетаскивать за пределы бара
     document.addEventListener('mousemove', (e) => {
-        if (!isDraggingVolume) return;
-        setVolume(e); // Используем тот же обработчик для обновления громкости
+        if (isDraggingVolume) handleVolumeInput(e);
     });
-    // Останавливаем перетаскивание при отпускании кнопки мыши
     document.addEventListener('mouseup', () => {
         isDraggingVolume = false;
     });
+}
+
+function createVolumeTicks() {
+    els.volumeTicksContainer.innerHTML = '';
+    for (let i = 0; i < VOLUME_TICKS_COUNT; i++) {
+        const tick = document.createElement('div');
+        tick.className = 'vol-tick';
+        els.volumeTicksContainer.appendChild(tick);
+    }
+}
+
+function handleVolumeInput(e) {
+    if (!isMusicModeActive) return;
+    const rect = els.volumeTicksContainer.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    x = Math.max(0, Math.min(x, rect.width));
+    let newVolume = x / rect.width;
+    const step = 1 / VOLUME_TICKS_COUNT;
+    newVolume = Math.round(newVolume / step) * step;
+    newVolume = Math.max(0, Math.min(1, newVolume));
+    audio.volume = newVolume;
+    currentVolume = newVolume;
+    updateVolumeUI(newVolume);
+}
+
+function updateVolumeUI(vol) {
+    const ticks = els.volumeTicksContainer.children;
+    const activeCount = Math.round(vol * VOLUME_TICKS_COUNT);
+    for (let i = 0; i < ticks.length; i++) {
+        if (i < activeCount) ticks[i].classList.add('active');
+        else ticks[i].classList.remove('active');
+    }
 }
 
 function updateProgress(e) {
@@ -98,59 +132,19 @@ function updateProgress(e) {
 
 function setProgress(e) {
     if (!isMusicModeActive || isNaN(audio.duration)) return;
-
     const width = els.progressArea.clientWidth;
-    const clickX = e.offsetX; // Позиция клика относительно элемента
-    
+    const clickX = e.offsetX;
     audio.currentTime = (clickX / width) * audio.duration;
 }
-
-// НОВАЯ ФУНКЦИЯ: Установка громкости по клику/перетаскиванию
-function setVolume(e) {
-    // Проверяем, что это Music Mode и что мы перетаскиваем или кликаем по области
-    if (!isMusicModeActive && !isDraggingVolume) return;
-    if (e.target !== els.volumeArea && e.target !== els.volumeHandle && isDraggingVolume === false) return; // Уточненная проверка для клика
-
-    const volumeAreaRect = els.volumeArea.getBoundingClientRect();
-    let clientX = e.clientX; // Позиция курсора на странице
-
-    // Ограничиваем clientX в пределах ползунка
-    let newX = clientX - volumeAreaRect.left;
-    newX = Math.max(0, Math.min(newX, volumeAreaRect.width));
-    
-    let newVolume = newX / volumeAreaRect.width;
-    newVolume = Math.max(0, Math.min(1, newVolume)); // Громкость от 0 до 1
-
-    audio.volume = newVolume;
-    currentVolume = newVolume; // Сохраняем для обновления UI
-    updateVolumeUI(newVolume);
-}
-
-// НОВАЯ ФУНКЦИЯ: Обновление UI громкости
-function updateVolumeUI(volume) {
-    const volumePercent = volume * 100;
-    els.volumeFill.style.width = `${volumePercent}%`;
-    // Позиционируем бегунок (нужно учесть его ширину, чтобы не вылезал)
-    els.volumeHandle.style.right = `${100 - volumePercent}%`;
-    // Если громкость 0, сдвигаем хендл влево на его ширину
-    if (volume === 0) {
-        els.volumeHandle.style.right = `${100 - (els.volumeHandle.clientWidth / els.volumeArea.clientWidth) * 100}%`;
-    } else {
-        els.volumeHandle.style.right = `${100 - volumePercent}%`;
-    }
-}
-
 
 function setupAudioContext() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
         analyser = audioCtx.createAnalyser();
-        
         source = audioCtx.createMediaElementSource(audio);
         source.connect(analyser);
         analyser.connect(audioCtx.destination);
-        
         analyser.fftSize = 64; 
     } catch (e) {
         console.warn("Web Audio API Error", e);
@@ -164,7 +158,6 @@ function visualizerLoop() {
 
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
-
     analyser.getByteFrequencyData(dataArray);
 
     // 1. Волны
@@ -174,52 +167,59 @@ function visualizerLoop() {
         bar.style.height = heightPercent < 2 ? '4px' : `${heightPercent}%`;
     });
 
-    // 2. Кольца
+    // Расчет средней громкости басов для пульсации и вращения
     let bassTotal = 0;
     for (let i = 0; i < 4; i++) {
         bassTotal += dataArray[i];
     }
     const bassAverage = bassTotal / 4;
 
+    // 2. Кольца (Пульсация - SCALE)
     let scale = 1;
     if (bassAverage > 40) {
         scale = 1 + (bassAverage / 255) * 0.12; 
     }
-
     els.ringsContainer.style.transform = `scale(${scale})`;
+
+    // 3. Кольца (Вращение - ROTATION) - НОВОЕ
+    // Базовая скорость (медленно крутится всегда) + Скорость от баса
+    // bassAverage / 255 дает значение от 0 до 1
+    // Умножаем на коэффициент скорости (например 3)
+    let rotationSpeed = 0.2 + (bassAverage / 255) * 4; 
+
+    // Обновляем углы
+    ringRot1 += rotationSpeed;       // По часовой
+    ringRot2 -= rotationSpeed * 1.2; // Против часовой (чуть быстрее)
+    ringRot3 += rotationSpeed * 0.5; // По часовой (медленнее)
+
+    // Применяем вращение
+    if(els.ring1) els.ring1.style.transform = `rotate(${ringRot1}deg)`;
+    if(els.ring2) els.ring2.style.transform = `rotate(${ringRot2}deg)`;
+    if(els.ring3) els.ring3.style.transform = `rotate(${ringRot3}deg)`;
 }
 
 export function toggleMusicMode() {
     isMusicModeActive = !isMusicModeActive;
 
     if (isMusicModeActive) {
-        // ВКЛЮЧАЕМ
         els.squadView.style.display = 'none';
         els.musicView.style.display = 'flex';
         els.liveStatus.style.display = 'none';
         els.musicControls.style.display = 'flex';
         els.hudRight.classList.add('music-mode-active');
         
-        if (isPlaying) {
-            startVisualizer();
-        }
-        
-        // НОВОЕ: Обновляем UI громкости при входе в режим
+        if (isPlaying) startVisualizer();
         updateVolumeUI(currentVolume);
 
         return "MUSIC MODULE: <span style='color:var(--neon-pink)'>ACTIVATED</span>";
     } else {
-        // ВЫКЛЮЧАЕМ
         if (isPlaying) pauseTrack();
-
         els.squadView.style.display = 'flex';
         els.musicView.style.display = 'none';
         els.liveStatus.style.display = 'flex';
         els.musicControls.style.display = 'none';
         els.hudRight.classList.remove('music-mode-active');
-        
         els.progressFill.style.width = '0%';
-        
         stopVisualizer();
         
         return "MUSIC MODULE: <span style='color:var(--neon-green)'>DEACTIVATED</span>";
@@ -257,15 +257,11 @@ function loadTrack(index) {
 
 function togglePlay() {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-
     if (isPlaying) {
         pauseTrack();
     } else {
         if (!audio.src) loadTrack(currentTrackIdx);
-        audio.play().then(() => {
-            startVisualizer();
-        }).catch(e => console.error(e));
-        
+        audio.play().then(() => { startVisualizer(); }).catch(e => console.error(e));
         isPlaying = true;
         updatePlayIcon();
         renderPlaylist();
@@ -274,7 +270,6 @@ function togglePlay() {
 
 function playTrack(index) {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-    
     loadTrack(index);
     audio.play();
     isPlaying = true;
@@ -304,13 +299,24 @@ function startVisualizer() {
 function stopVisualizer() {
     cancelAnimationFrame(animationId);
     
+    // Снимаем классы управления
     els.waveformContainer.classList.remove('js-controlled');
     els.ringsContainer.classList.remove('js-beat-controlled'); 
     
+    // Включаем режим сброса (для плавного scale)
     els.ringsContainer.classList.add('is-resetting');
     
+    // Сброс высоты баров
     resetBars(); 
-    els.ringsContainer.style.transform = 'scale(1)'; 
+    
+    // Сброс масштаба и вращения колец
+    els.ringsContainer.style.transform = 'scale(1)';
+    // Очищаем инлайн стили вращения, чтобы CSS анимация могла подхватить управление (хотя будет скачок)
+    // Либо оставляем как есть, чтобы они замерли в последней позиции? 
+    // Лучше сбросить, чтобы вернулась красивая CSS-анимация.
+    if(els.ring1) els.ring1.style.transform = '';
+    if(els.ring2) els.ring2.style.transform = '';
+    if(els.ring3) els.ring3.style.transform = '';
     
     if (resetTimeout) clearTimeout(resetTimeout);
     resetTimeout = setTimeout(() => {
@@ -320,9 +326,7 @@ function stopVisualizer() {
 }
 
 function resetBars() {
-    els.waveformBars.forEach(bar => {
-        bar.style.height = ''; 
-    });
+    els.waveformBars.forEach(bar => { bar.style.height = ''; });
 }
 
 function nextTrack() {

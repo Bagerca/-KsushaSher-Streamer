@@ -172,21 +172,18 @@
                     <div class="music-playlist-view" id="music-view" style="display: none;">
                         <div class="panel-header">
                             <span class="header-title" style="background: var(--neon-pink); color: #fff;">MUSIC</span>
-                            <span class="header-deco-line" style="background: repeating-linear-gradient(90deg, var(--neon-pink), var(--neon-pink) 2px, transparent 2px, transparent 6px);"></span>
+                            
+                            <!-- РЕГУЛЯТОР ГРОМКОСТИ (ТИКИ) ВМЕСТО ЛИНИИ -->
+                            <div class="volume-ticks-container" id="volume-ticks"></div>
                         </div>
                         
-                        <!-- РЕГУЛЯТОР ГРОМКОСТИ -->
-                        <div class="volume-control-area" id="volume-area">
-                            <div class="volume-fill" id="volume-fill"></div>
-                            <div class="volume-handle" id="volume-handle"></div>
-                        </div>
-
                         <div class="playlist-container" id="playlist-list">
                             <!-- Треки генерируются JS -->
                         </div>
                     </div>
 
                     <!-- 4. ОБЩИЙ ПОДВАЛ (ВОЛНЫ + ПРОГРЕСС) -->
+                    <!-- Вынесен сюда, чтобы быть общим для Отряда и Музыки -->
                     <div class="squad-status-footer">
                         
                         <!-- ПРОГРЕСС-БАР ТРЕКА -->
