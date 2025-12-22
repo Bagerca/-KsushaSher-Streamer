@@ -65,6 +65,7 @@ async function initializeApplication() {
         
         // 5. Инициализация терминала
         initTerminalInput();
+        initTerminalCustomScroll(); // Плавный скролл
         runTerminalBoot();
         
         console.log('✅ Ksusha Sher website initialized successfully!');
@@ -261,15 +262,15 @@ function initTerminalInput() {
         }
     });
 
-    input.addEventListener('keydown', (e) => {
+    input.addEventListener('keydown', async (e) => {
         if (e.key === 'Enter') {
             const rawValue = input.value;
-            const command = rawValue.trim().toLowerCase();
+            const commandParts = rawValue.trim().split(/\s+/); // Сплит по пробелам (множественным тоже)
+            const command = commandParts[0].toLowerCase();
             
             if (!rawValue.trim()) return;
 
             const cmdLine = document.createElement('p');
-            // Делаем галочку в истории зеленой для красоты
             cmdLine.innerHTML = `<span style="color:var(--neon-green); margin-right:8px;">></span>${rawValue}`;
             cmdLine.style.color = '#fff'; 
             cmdLine.style.margin = '0 0 5px 0';
@@ -282,7 +283,87 @@ function initTerminalInput() {
 
             // --- ОБРАБОТКА КОМАНД ---
             
-            if (command === 'god' || command === 'godmode') {
+            // 1. SCAN (АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ JSON С МУЛЬТИ-ССЫЛКАМИ)
+            if (command === 'scan' || command === 'generate') {
+                const urls = commandParts.slice(1); // Все аргументы после команды
+
+                if (urls.length === 0) {
+                    responseText = `<span style="color:#ffd700">ИСПОЛЬЗОВАНИЕ:</span> scan <url1> [url2] [url3]...`;
+                } else {
+                    const loadingLine = addLogLine(`SCANNING ${urls.length} LINK(S)...`, false, true);
+                    
+                    try {
+                        // Функция для одного видео
+                        const fetchVideoData = async (url) => {
+                            const apiUrl = `https://noembed.com/embed?url=${url}`;
+                            const res = await fetch(apiUrl);
+                            const data = await res.json();
+                            
+                            if (data.error || !data.title) throw new Error(`Invalid URL: ${url}`);
+                            
+                            // Парсим ID
+                            const match = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=))([\w\-]{10,12})\b/);
+                            const videoId = match ? match[1] : null;
+                            
+                            if (!videoId) throw new Error(`No ID: ${url}`);
+
+                            return {
+                                title: data.title,
+                                url: url,
+                                id: videoId,
+                                thumb: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+                            };
+                        };
+
+                        // Запрашиваем все ссылки параллельно
+                        const results = await Promise.all(urls.map(url => fetchVideoData(url)));
+                        
+                        // Используем первое видео как основу для карточки
+                        const mainVid = results[0];
+                        
+                        const newEntry = {
+                            id: `sug-${mainVid.id}`,
+                            type: "movies", // Или games, меняем вручную
+                            format: "youtube",
+                            title: mainVid.title,
+                            description: "Описание от зрителя...", 
+                            image: mainVid.thumb,
+                            status: "suggested",
+                            suggestedBy: "Имя_Зрителя", 
+                            customColor: "#ff0000",
+                            // Массив всех видео
+                            videos: results.map(vid => ({
+                                title: vid.title,
+                                url: vid.url
+                            }))
+                        };
+
+                        const jsonString = JSON.stringify(newEntry, null, 2);
+                        
+                        // Копируем
+                        await navigator.clipboard.writeText(jsonString + ",");
+
+                        let infoHtml = `Title: <span style="color:#fff">${mainVid.title}</span><br>`;
+                        if (results.length > 1) {
+                            infoHtml += `<span style="color:#ffd700">DETECTED PLAYLIST:</span> ${results.length} items<br>`;
+                        }
+
+                        responseText = `
+                            <span style="color:var(--neon-green)">SUCCESS!</span><br>
+                            ${infoHtml}
+                            <span style="color:#888; font-style:italic">JSON скопирован. Вставь в suggestions.json</span>
+                        `;
+                        
+                        loadingLine.remove();
+
+                    } catch (err) {
+                        loadingLine.innerHTML = `<span style="color:#ff4444">ERROR: ${err.message}</span>`;
+                        console.error(err);
+                    }
+                }
+            }
+
+            else if (command === 'god' || command === 'godmode') {
                 toggleGodMode();
                 const isNowGod = isGodModeActive();
                 
@@ -310,6 +391,7 @@ function initTerminalInput() {
                 // 1. СИСТЕМА
                 const sysCommands = [
                     { cmd: 'HELP', desc: 'Список команд' },
+                    { cmd: 'SCAN', desc: 'Генератор JSON (YouTube)' },
                     { cmd: 'CLEAR', desc: 'Очистить терминал' },
                     { cmd: 'STATUS', desc: 'Состояние систем' },
                     { cmd: 'GOD', desc: 'Режим доступа (Root)' },
@@ -476,7 +558,9 @@ function initTerminalInput() {
                 responseText = ''; 
                 
             } else {
-                responseText = `<span style="color:#ff4444">ОШИБКА: КОМАНДА НЕ РАСПОЗНАНА</span>`;
+                if (responseText === '') {
+                    responseText = `<span style="color:#ff4444">ОШИБКА: КОМАНДА НЕ РАСПОЗНАНА</span>`;
+                }
             }
 
             if (responseText) {
@@ -486,6 +570,24 @@ function initTerminalInput() {
             input.value = '';
         }
     });
+}
+
+/**
+ * Функция для плавного/медленного скролла терминала
+ */
+function initTerminalCustomScroll() {
+    if (!terminalBox) return;
+
+    // Коэффициент скорости (0.3 = 30% от обычной скорости)
+    const SCROLL_FACTOR = 0.3; 
+
+    terminalBox.addEventListener('wheel', (e) => {
+        // Останавливаем стандартный "резкий" скролл браузера
+        e.preventDefault();
+
+        // Прибавляем к текущей позиции скролла уменьшенное значение прокрутки
+        terminalBox.scrollTop += e.deltaY * SCROLL_FACTOR;
+    }, { passive: false });
 }
 
 // Global Error Handlers

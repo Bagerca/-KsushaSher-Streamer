@@ -1,0 +1,103 @@
+[
+  {
+    "id": "sug-movie-1",
+    "type": "movies",
+    "title": "Interstellar / Интерстеллар",
+    "description": "Ты обязана это посмотреть. Музыка Циммера, космос, черные дыры. Готовь платочки, это шедевр на все времена.",
+    "images": [
+      "https://cdn2.steamgriddb.com/grid/50896c8a37922749110dae272e7a345b.png", 
+      "https://cdn2.steamgriddb.com/grid/d72e76b9ae60a3aa304fcc6f080a8bd5.png"
+    ],
+    "status": "suggested",
+    "suggestedBy": "Kiriki",
+    "customColor": "#a476ff"
+  },
+  {
+  "id": "sug-Vi0flWHGVlg",
+  "type": "movies",
+  "format": "youtube",
+  "title": "ХЕСУС ХИТ ПРО КОЗУ #shorts jesusavgn",
+  "description": "Описание от зрителя...",
+  "image": "https://img.youtube.com/vi/Vi0flWHGVlg/maxresdefault.jpg",
+  "status": "suggested",
+  "suggestedBy": "Имя_Зрителя",
+  "customColor": "#ff0000",
+  "videos": [
+    {
+      "title": "ХЕСУС ХИТ ПРО КОЗУ #shorts jesusavgn",
+      "url": "https://youtu.be/Vi0flWHGVlg?si=DpPV2lLZsAWFI52t"
+    }
+  ]
+},
+  {
+  "id": "sug-S0x2llxEAjk",
+  "type": "movies",
+  "format": "youtube",
+  "title": "I Made a Self-Aware Robot",
+  "description": "Описание от зрителя...",
+  "image": "https://img.youtube.com/vi/S0x2llxEAjk/maxresdefault.jpg",
+  "status": "suggested",
+  "suggestedBy": "Имя_Зрителя",
+  "customColor": "#ff0000",
+  "videos": [
+    {
+      "title": "I Made a Self-Aware Robot",
+      "url": "https://youtu.be/S0x2llxEAjk?si=yGWck99dX5890wsE"
+    },
+    {
+      "title": "My Self-Aware Robot Escaped!",
+      "url": "https://youtu.be/6nEfAb5q84o?si=lcZumLqz1V9PIhkT"
+    }
+  ]
+},
+{
+  "id": "sug-MrNbqT7-S-Y",
+  "type": "movies",
+  "format": "youtube",
+  "title": "Внушил 56-летнему танкисту, что он добывает реальный биткоин в Майнкрафте, и месяц платил ему за это",
+  "description": "Описание от зрителя...",
+  "image": "https://img.youtube.com/vi/MrNbqT7-S-Y/maxresdefault.jpg",
+  "status": "suggested",
+  "suggestedBy": "Имя_Зрителя",
+  "customColor": "#ff0000",
+  "videos": [
+    {
+      "title": "Внушил 56-летнему танкисту, что он добывает реальный биткоин в Майнкрафте, и месяц платил ему за это",
+      "url": "https://youtu.be/MrNbqT7-S-Y?si=NCXYgUSJajxQr8CD"
+    },
+    {
+      "title": "30 дней платил скуфу за добычу биткоина в майнкрафте [Убедил его, что всё по-настоящему]",
+      "url": "https://youtu.be/7qa3erbXU80?si=eDPH_jy--6Ifo2oA"
+    },
+    {
+      "title": "Месяц платил ОДНОМУ СКУФУ, чтобы он обучал другого СКУФА фармить биткоин на ВЫДУМАННОЙ мной работе.",
+      "url": "https://youtu.be/FbqsyItv9so?si=fgzp76OKX314YIpn"
+    },
+    {
+      "title": "Финал эксперимента: месяц платил Скуфу за игру в Майнкрафт",
+      "url": "https://youtu.be/4g_kbyPIjuo?si=2qdc5V_T-wH3pHju"
+    }
+  ]
+},
+{
+  "id": "sug-fEqjAznFQyk",
+  "type": "movies",
+  "format": "youtube",
+  "title": "ВСЯ ИСТОРИЯ ВСЕЛЕННОЙ BIOSHOCK | ВОСТОРГ",
+  "description": "Описание от зрителя...",
+  "image": "https://img.youtube.com/vi/fEqjAznFQyk/maxresdefault.jpg",
+  "status": "suggested",
+  "suggestedBy": "Имя_Зрителя",
+  "customColor": "#ff0000",
+  "videos": [
+    {
+      "title": "ВСЯ ИСТОРИЯ ВСЕЛЕННОЙ BIOSHOCK | ВОСТОРГ",
+      "url": "https://youtu.be/fEqjAznFQyk?si=37TP0eY9nydZ76zD"
+    },
+    {
+      "title": "ВСЯ ИСТОРИЯ ВСЕЛЕННОЙ BIOSHOCK | КОЛУМБИЯ",
+      "url": "https://youtu.be/Of4BTo6GbjQ?si=v9yH5BpX5h3OsQPW"
+    }
+  ]
+}
+]

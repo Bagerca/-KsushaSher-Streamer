@@ -3,191 +3,73 @@
 import { loadData } from './api.js';
 import { openMediaModal } from './media-modal.js';
 
+// Хелпер для получения ID видео
+function getYouTubeId(url) {
+    if (!url) return null;
+    const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[1].length === 11) ? match[1] : null;
+}
+
 const ArchiveState = {
-    currentType: 'games', // 'games' или 'movies'
-    data: [],             // Полные данные из JSON
-    filteredData: [],     // Данные после фильтрации
-    
-    // Множественный выбор фильтров
+    currentType: 'games',
+    dataMain: [],
+    dataSuggestions: [],
+    combinedData: [],
     activeFilters: new Set(['all']), 
-    
     searchQuery: '',
     sort: 'name',
     sortDirection: 'asc',
-    
-    // --- ПАРАМЕТРЫ SCROLL & UI ---
     renderedCount: 0,
-    batchSize: 12,        // Размер пачки подгрузки
-    observer: null,       // Ссылка на IntersectionObserver
-    isExpanded: false     // Флаг: развернут список или нет
+    batchSize: 12,
+    observer: null,
+    isExpanded: false
 };
 
-// РАСШИРЕННАЯ КАРТА ТЕГОВ (ИГРЫ + КИНО)
 const genreMap = {
-    // --- Глобальные жанры (Общие) ---
-    'action': 'Экшен',
-    'adventure': 'Приключения',
-    'comedy': 'Комедия',
-    'drama': 'Драма',
-    'horror': 'Хоррор',
-    'thriller': 'Триллер',
-    'scifi': 'Sci-Fi',
-    'fantasy': 'Фэнтези',
-    'mystery': 'Мистика',
-    'detective': 'Детектив',
-    'crime': 'Криминал',
-    'historical': 'Исторический',
-    'romance': 'Романтика',
-    'biography': 'Биография',
-
-    // --- Кино: Формат и Тип ---
-    'movie': 'Фильм',
-    'series': 'Сериал',
-    'mini-series': 'Мини-сериал',
-    'cartoon': 'Мультфильм',
-    'anime': 'Аниме',
-    'anime-series': 'Аниме-сериал',
-    'short': 'Короткометражка',
-    'documentary': 'Документалка',
-    'show': 'ТВ-Шоу',
-
-    // --- Кино: Специфические жанры ---
-    'animation': 'Анимация',
-    'superhero': 'Супергероика',
-    'sitcom': 'Ситком',
-    'slasher': 'Слэшер',
-    'musical': 'Мюзикл',
-    'western': 'Вестерн',
-    'noir': 'Нуар',
-    'sport': 'Спорт',
-    'war': 'Военный',
-    'family': 'Семейный',
-    'kids': 'Детский',
-
-    // --- Кино: Атмосфера и Темы ---
-    'adaptation': 'Экранизация',
-    'remake': 'Ремейк',
-    'blockbuster': 'Блокбастер',
-    'arthouse': 'Артхаус',
-    'trash': 'Трэш / B-Movie',
-    'psychological': 'Психологический',
-    'atmospheric': 'Атмосферный',
-    'feel-good': 'Добрый / Уютный',
-    'sad': 'Грустный',
-    'mind-bending': 'Вынос мозга',
-    'epic': 'Эпик',
-    'weird': 'Странное',
-    'classic': 'Классика',
-    'cult': 'Культовое',
-
-    // --- Игры: Механики и Геймплей ---
-    'rpg': 'РПГ',
-    'shooter': 'Шутер',
-    'strategy': 'Стратегия',
-    'simulation': 'Симулятор',
-    'puzzle': 'Головоломка',
-    'platformer': 'Платформер',
-    'fighting': 'Файтинг',
-    'racing': 'Гонки',
-    'visual-novel': 'Виз. новелла',
-    'interactive-movie': 'Интерактивное кино',
-    'survival': 'Выживание',
-    'stealth': 'Стелс',
-    'roguelike': 'Рогалик',
-    'metroidvania': 'Метроидвания',
-    'souls-like': 'Соулс-лайк',
-    'open-world': 'Открытый мир',
-    'sandbox': 'Песочница',
-    'battle-royale': 'Батл-рояль',
-    'point-click': 'Point & Click',
-    'rhythm': 'Ритм',
-    'walking-sim': 'Сим. ходьбы',
-    'hack-and-slash': 'Слэшер',
-    'mmo': 'ММО',
-
-    // --- Общие теги сеттинга ---
-    'cyberpunk': 'Киберпанк',
-    'post-apocalyptic': 'Постапокалипсис',
-    'space': 'Космос',
-    'zombies': 'Зомби',
-    'retro': 'Ретро/80-е',
-    'dystopia': 'Антиутопия',
-    'magic': 'Магия',
-    'aliens': 'Пришельцы',
-
-    // --- Технические теги ---
-    'indie': 'Инди',
-    'aaa': 'AAA',
-    'singleplayer': 'Одиночная',
-    'coop': 'Кооператив',
-    'multiplayer': 'Мультиплеер',
-    'free': 'Бесплатно',
-    'early-access': 'Ранний доступ',
-    'story-rich': 'Сюжетная',
-    'funny': 'Комедия/Юмор'
+    'action': 'Экшен', 'adventure': 'Приключения', 'comedy': 'Комедия', 'drama': 'Драма', 'horror': 'Хоррор', 'thriller': 'Триллер', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези', 'mystery': 'Мистика', 'detective': 'Детектив', 'crime': 'Криминал', 'historical': 'Исторический', 'romance': 'Романтика', 'biography': 'Биография', 'movie': 'Фильм', 'series': 'Сериал', 'mini-series': 'Мини-сериал', 'cartoon': 'Мультфильм', 'anime': 'Аниме', 'anime-series': 'Аниме-сериал', 'short': 'Короткометражка', 'documentary': 'Документалка', 'show': 'ТВ-Шоу', 'animation': 'Анимация', 'superhero': 'Супергероика', 'sitcom': 'Ситком', 'slasher': 'Слэшер', 'musical': 'Мюзикл', 'western': 'Вестерн', 'noir': 'Нуар', 'sport': 'Спорт', 'war': 'Военный', 'family': 'Семейный', 'kids': 'Детский', 'adaptation': 'Экранизация', 'remake': 'Ремейк', 'blockbuster': 'Блокбастер', 'arthouse': 'Артхаус', 'trash': 'Трэш / B-Movie', 'psychological': 'Психологический', 'atmospheric': 'Атмосферный', 'feel-good': 'Добрый / Уютный', 'sad': 'Грустный', 'mind-bending': 'Вынос мозга', 'epic': 'Эпик', 'weird': 'Странное', 'classic': 'Классика', 'cult': 'Культовое', 'rpg': 'РПГ', 'shooter': 'Шутер', 'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка', 'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино', 'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик', 'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир', 'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click', 'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер', 'mmo': 'ММО', 'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'space': 'Космос', 'zombies': 'Зомби', 'retro': 'Ретро/80-е', 'dystopia': 'Антиутопия', 'magic': 'Магия', 'aliens': 'Пришельцы', 'indie': 'Инди', 'aaa': 'AAA', 'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'free': 'Бесплатно', 'early-access': 'Ранний доступ', 'story-rich': 'Сюжетная', 'funny': 'Комедия/Юмор'
 };
 
 const statusMap = {
     'completed': 'ПРОЙДЕНО', 'watched': 'ПОСМОТРЕНО',
     'playing': 'В ПРОЦЕССЕ', 'watching': 'СМОТРИМ',
-    'dropped': 'БРОШЕНО', 'on-hold': 'ПОД ВОПРОСОМ'
+    'dropped': 'БРОШЕНО', 'on-hold': 'ПОД ВОПРОСОМ',
+    'suggested': 'ПРЕДЛОЖКА'
 };
 
-const VALID_STATUSES = ['completed', 'playing', 'watched', 'watching', 'dropped', 'on-hold'];
+const VALID_STATUSES = ['completed', 'playing', 'watched', 'watching', 'dropped', 'on-hold', 'suggested'];
 
-// ==========================================
-// ЛОГИКА ТРИГРАММ (НЕЧЕТКИЙ ПОИСК)
-// ==========================================
-
-/**
- * Разбивает текст на массив триграмм (по 3 символа)
- * Пример: "hello" -> ["hel", "ell", "llo"]
- */
 function getTrigrams(text) {
-    const cleanText = text.toLowerCase().replace(/[^\wа-яё0-9]/gi, ''); // Оставляем только буквы и цифры
+    if (!text) return [];
+    const cleanText = text.toLowerCase().replace(/[^\wа-яё0-9]/gi, '');
     const trigrams = [];
-    if (cleanText.length < 3) return [cleanText]; // Для очень коротких слов возвращаем как есть
-    
+    if (cleanText.length < 3) return [cleanText];
     for (let i = 0; i < cleanText.length - 2; i++) {
         trigrams.push(cleanText.substring(i, i + 3));
     }
     return trigrams;
 }
 
-/**
- * Сравнивает две строки и возвращает коэффициент сходства (от 0 до 1)
- */
 function calculateSimilarity(str1, str2) {
     if (!str1 || !str2) return 0;
-    
-    // Если есть полное вхождение (обычный поиск), даем бонус
     if (str1.toLowerCase().includes(str2.toLowerCase())) return 1.0;
-
     const set1 = getTrigrams(str1);
     const set2 = getTrigrams(str2);
-    
     let matches = 0;
-    // Бежим по триграммам запроса и ищем их в названии
-    for (const trigram of set2) {
-        if (set1.includes(trigram)) {
-            matches++;
-        }
-    }
-    
-    // Формула сходства (Коэффициент Дайса)
+    for (const trigram of set2) { if (set1.includes(trigram)) matches++; }
     return (2.0 * matches) / (set1.length + set2.length);
 }
 
-// ==========================================
-// ОСНОВНАЯ ЛОГИКА
-// ==========================================
-
 export async function initMediaArchive() {
-    setupTabs();
-    setupSearch(); 
-    setupSort();
-    setupGridClick();
-    await switchArchiveType('games');
+    try {
+        setupTabs();
+        setupSearch(); 
+        setupSort();
+        setupGridClick();
+        await switchArchiveType('games');
+    } catch (e) {
+        console.error("CRITICAL ERROR IN MEDIA ARCHIVE:", e);
+    }
 }
 
 async function switchArchiveType(type) {
@@ -205,7 +87,6 @@ async function switchArchiveType(type) {
         const searchInput = document.getElementById('archive-search');
         if (searchInput) searchInput.value = '';
         
-        // Сброс подсказок
         const suggestionsBox = document.querySelector('.search-suggestions');
         const searchModule = document.querySelector('.search-module');
         if (suggestionsBox) {
@@ -217,8 +98,18 @@ async function switchArchiveType(type) {
         const rawData = type === 'games' 
             ? await loadData('games.json', []) 
             : await loadData('movies.json', []);
+        ArchiveState.dataMain = Array.isArray(rawData) ? rawData : [];
 
-        ArchiveState.data = Array.isArray(rawData) ? rawData : [];
+        let rawSuggestions = [];
+        try {
+            rawSuggestions = await loadData('suggestions.json', []);
+        } catch (e) {
+            console.warn("Failed to load suggestions.json", e);
+        }
+        
+        ArchiveState.dataSuggestions = Array.isArray(rawSuggestions) 
+            ? rawSuggestions.filter(item => item.type === type) 
+            : [];
         
         renderFilters();
         processData();
@@ -244,7 +135,11 @@ function renderFilters() {
     if (!statusContainer || !genreContainer) return;
 
     const allGenres = new Set();
-    ArchiveState.data.forEach(item => { if (item.genres) item.genres.forEach(g => allGenres.add(g)); });
+    [...ArchiveState.dataMain, ...ArchiveState.dataSuggestions].forEach(item => { 
+        if (item.genres && Array.isArray(item.genres)) {
+            item.genres.forEach(g => allGenres.add(g)); 
+        }
+    });
 
     const statuses = ArchiveState.currentType === 'games' 
         ? ['completed', 'playing', 'on-hold', 'dropped'] 
@@ -263,6 +158,8 @@ function renderFilters() {
     statuses.slice(middleIndex).forEach(s => { 
         statusHtml += `<div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">${statusMap[s] || s}</div>`; 
     });
+
+    statusHtml += `<div class="filter-chip is-status status-suggested ${isActive('suggested')}" data-filter="suggested" style="border-color:var(--neon-green); color:var(--neon-green); opacity:0.8;">ПРЕДЛОЖКА</div>`;
 
     statusContainer.innerHTML = statusHtml;
 
@@ -307,62 +204,84 @@ function processData() {
         });
     }
 
-    // 1. Предварительная фильтрация и подсчет Score (Сходства)
-    let processedItems = ArchiveState.data.map(item => {
-        let matchScore = 0;
-        
-        if (ArchiveState.searchQuery.length > 0) {
-            if (ArchiveState.searchQuery.length < 3) {
-                matchScore = item.title.toLowerCase().includes(ArchiveState.searchQuery) ? 1 : 0;
+    const filterList = (sourceList) => {
+        if (!Array.isArray(sourceList)) return [];
+        return sourceList.map(item => {
+            let matchScore = 0;
+            if (ArchiveState.searchQuery.length > 0 && item.title) {
+                if (ArchiveState.searchQuery.length < 3) {
+                    matchScore = item.title.toLowerCase().includes(ArchiveState.searchQuery) ? 1 : 0;
+                } else {
+                    matchScore = calculateSimilarity(item.title, ArchiveState.searchQuery);
+                }
             } else {
-                matchScore = calculateSimilarity(item.title, ArchiveState.searchQuery);
+                matchScore = 1; 
             }
-        } else {
-            matchScore = 1; 
-        }
+            return { ...item, _matchScore: matchScore };
+        }).filter(item => {
+            if (item._matchScore < 0.25) return false;
+            if (isAllSelected) return true;
 
-        return { ...item, _matchScore: matchScore };
-    });
+            let statusMatch = true;
+            if (activeStatuses.size > 0) statusMatch = activeStatuses.has(item.status);
 
-    // 2. Фильтрация
-    let result = processedItems.filter(item => {
-        // Порог сходства 0.25
-        if (item._matchScore < 0.25) return false;
+            let genreMatch = true;
+            if (activeGenres.size > 0) {
+                if (!item.genres || item.genres.length === 0) genreMatch = false;
+                else genreMatch = item.genres.some(g => activeGenres.has(g));
+            }
+            return statusMatch && genreMatch;
+        });
+    };
 
-        if (isAllSelected) return true;
+    let filteredMain = filterList(ArchiveState.dataMain);
+    let filteredSuggestions = filterList(ArchiveState.dataSuggestions);
 
-        let statusMatch = true;
-        if (activeStatuses.size > 0) {
-            statusMatch = activeStatuses.has(item.status);
-        }
-
-        let genreMatch = true;
-        if (activeGenres.size > 0) {
-            if (!item.genres || item.genres.length === 0) genreMatch = false;
-            else genreMatch = item.genres.some(g => activeGenres.has(g));
-        }
-
-        return statusMatch && genreMatch;
-    });
-
-    // 3. Сортировка
+    // Сортировка
     const dir = ArchiveState.sortDirection === 'asc' ? 1 : -1;
-    
-    result.sort((a, b) => {
-        // Если идет поиск, сортируем ПО РЕЛЕВАНТНОСТИ (Score)
+    const sortFn = (a, b) => {
         if (ArchiveState.searchQuery.length > 0 && Math.abs(a._matchScore - b._matchScore) > 0.1) {
             return b._matchScore - a._matchScore;
         }
-
-        // Иначе обычная сортировка
         if (ArchiveState.sort === 'rating') {
             return ((parseFloat(a.rating) || 0) - (parseFloat(b.rating) || 0)) * dir;
         } else {
-            return a.title.localeCompare(b.title) * dir;
+            return (a.title || "").localeCompare(b.title || "") * dir;
         }
-    });
+    };
 
-    ArchiveState.filteredData = result;
+    filteredMain.sort(sortFn);
+    filteredSuggestions.sort(sortFn);
+
+    // --- ЛОГИКА ГРУППИРОВКИ ---
+    ArchiveState.combinedData = [...filteredMain];
+    
+    if (filteredSuggestions.length > 0) {
+        
+        const sugPosters = filteredSuggestions.filter(item => item.format !== 'youtube');
+        const sugYoutube = filteredSuggestions.filter(item => item.format === 'youtube');
+
+        // 1. ЕДИНЫЙ ЗАГОЛОВОК ПРЕДЛОЖКИ
+        if (filteredMain.length > 0) {
+            ArchiveState.combinedData.push({ isDivider: true, title: "COMMUNITY_SUGGESTIONS // ПРЕДЛОЖКА" });
+        } else {
+            ArchiveState.combinedData.push({ isDivider: true, title: "SUGGESTED" });
+        }
+
+        // 2. ПОСТЕРЫ (Идут первыми)
+        ArchiveState.combinedData = [...ArchiveState.combinedData, ...sugPosters];
+
+        // 3. НЕВИДИМАЯ РАСПОРКА (Если есть YouTube и были постеры)
+        if (sugYoutube.length > 0) {
+            if (sugPosters.length > 0) {
+                ArchiveState.combinedData.push({ isSpacer: true });
+            }
+            // 4. YOUTUBE (Идут следом)
+            ArchiveState.combinedData = [...ArchiveState.combinedData, ...sugYoutube];
+        }
+    }
+
+    ArchiveState.filteredData = ArchiveState.combinedData; 
 }
 
 function renderGrid() {
@@ -378,7 +297,7 @@ function renderGrid() {
     container.innerHTML = '';
     ArchiveState.renderedCount = 0;
 
-    if (ArchiveState.filteredData.length === 0) {
+    if (ArchiveState.combinedData.length === 0) {
         container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:50px; color:#666;">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
         const overlay = wrapper.querySelector('.archive-fade-overlay');
         if (overlay) overlay.remove();
@@ -388,7 +307,7 @@ function renderGrid() {
 
     renderNextBatch();
 
-    if (ArchiveState.filteredData.length > ArchiveState.batchSize) {
+    if (ArchiveState.combinedData.length > ArchiveState.batchSize) {
         if (!ArchiveState.isExpanded) {
             renderButton('expand');
             let overlay = wrapper.querySelector('.archive-fade-overlay');
@@ -424,7 +343,10 @@ function renderButton(mode) {
     const controlsDiv = document.createElement('div');
     controlsDiv.className = 'archive-footer-controls';
     
-    const btnText = mode === 'expand' ? `РАЗВЕРНУТЬ БАЗУ (${ArchiveState.filteredData.length})` : 'СВЕРНУТЬ';
+    // Подсчет реальных карточек (минус разделители и спейсеры)
+    const realCount = ArchiveState.combinedData.filter(i => !i.isDivider && !i.isSpacer).length;
+
+    const btnText = mode === 'expand' ? `РАЗВЕРНУТЬ БАЗУ (${realCount})` : 'СВЕРНУТЬ';
     const btnIcon = mode === 'expand' ? '<i class="fas fa-chevron-down"></i>' : '<i class="fas fa-chevron-up"></i>';
     const collapseClass = mode === 'collapse' ? 'collapse-mode' : '';
 
@@ -457,7 +379,7 @@ function setupInfiniteScroll() {
     const options = { root: null, rootMargin: '200px', threshold: 0.1 };
     ArchiveState.observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting && ArchiveState.renderedCount < ArchiveState.filteredData.length) {
+            if (entry.isIntersecting && ArchiveState.renderedCount < ArchiveState.combinedData.length) {
                 renderNextBatch();
             }
         });
@@ -470,50 +392,136 @@ function renderNextBatch() {
     const container = document.getElementById('archive-grid');
     const start = ArchiveState.renderedCount;
     const limit = ArchiveState.isExpanded ? (start + ArchiveState.batchSize) : ArchiveState.batchSize;
-    const end = Math.min(limit, ArchiveState.filteredData.length);
+    const end = Math.min(limit, ArchiveState.combinedData.length);
     
     if (start >= end) return;
 
-    const itemsToRender = ArchiveState.filteredData.slice(start, end);
+    const itemsToRender = ArchiveState.combinedData.slice(start, end);
 
     const newCardsHtml = itemsToRender.map((item, index) => {
-        const genresHtml = item.genres ? item.genres.slice(0, 3).map(g => `<span class="genre-tag">${genreMap[g] || g}</span>`).join('') : '';
-        const fullStars = Math.floor(item.rating);
-        let starsHtml = '';
-        for(let i=0; i < 5; i++) starsHtml += i < fullStars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star" style="opacity: 0.3;"></i>';
+        // 1. ВИДИМЫЙ РАЗДЕЛИТЕЛЬ
+        if (item.isDivider) {
+            return `
+            <div class="archive-divider-row animate-entry" style="grid-column: 1 / -1; animation-delay: ${index * 50}ms">
+                <div class="divider-line"></div>
+                <div class="divider-text">${item.title}</div>
+                <div class="divider-line"></div>
+            </div>`;
+        }
 
+        // 2. НЕВИДИМАЯ РАСПОРКА (НОВАЯ СТРОКА)
+        if (item.isSpacer) {
+            return `<div style="grid-column: 1 / -1; height: 0; margin: 0; pointer-events: none;"></div>`;
+        }
+
+        const isSuggested = item.status === 'suggested';
+        const isYouTube = item.format === 'youtube';
         const delay = (index % ArchiveState.batchSize) * 50; 
-        const isCollection = item.images && item.images.length > 1;
+        
+        let isCollection = false;
+        let midImgSrc = ''; // 2-я карта (бывшая back)
+        let deepImgSrc = ''; // 3-я карта (новая)
+
+        if (isYouTube) {
+            if (item.videos && item.videos.length > 1) {
+                isCollection = true;
+                // Картинка для 2-й карты
+                const vidId2 = getYouTubeId(item.videos[1].url);
+                midImgSrc = `https://img.youtube.com/vi/${vidId2}/mqdefault.jpg`;
+                
+                // Картинка для 3-й карты (если есть)
+                if (item.videos.length > 2) {
+                    const vidId3 = getYouTubeId(item.videos[2].url);
+                    deepImgSrc = `https://img.youtube.com/vi/${vidId3}/mqdefault.jpg`;
+                }
+            }
+        } else {
+            if (item.images && item.images.length > 1) {
+                isCollection = true;
+                midImgSrc = item.images[0];
+            }
+        }
+        
+        const cardClasses = `archive-card ${isYouTube ? 'is-youtube' : ''} ${isCollection ? 'collection-wrapper' : ''} animate-entry`;
+
+        let ratingBadgeHtml = '';
+        let genresHtml = '';
+
+        if (!isSuggested && !isYouTube) {
+            const fullStars = Math.floor(item.rating || 0);
+            let starsHtml = '';
+            for(let i=0; i < 5; i++) starsHtml += i < fullStars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star" style="opacity: 0.3;"></i>';
+            ratingBadgeHtml = `<div class="card-rating-badge"><span class="stars-visual">${starsHtml}</span><span class="rating-number">${item.rating}</span></div>`;
+            
+            if (item.genres) {
+                const tags = item.genres.slice(0, 3).map(g => `<span class="genre-tag">${genreMap[g] || g}</span>`).join('');
+                genresHtml = `<div class="card-genres">${tags}</div>`;
+            }
+        }
+        
+        let suggestedBadge = '';
+        if (isSuggested && item.suggestedBy) {
+            suggestedBadge = `<div class="suggested-by-badge"><i class="fas fa-user"></i> ${item.suggestedBy}</div>`;
+        }
+
+        let playOverlay = '';
+        let playlistBadge = ''; 
+
+        if (isYouTube) {
+            playOverlay = `<div class="youtube-play-overlay"><i class="fab fa-youtube"></i></div>`;
+            if (isCollection) {
+                playlistBadge = `<div class="yt-playlist-badge"><i class="fas fa-layer-group"></i> PLAYLIST (${item.videos.length})</div>`;
+            }
+        }
+
+        let frontImgSrc = item.image;
+        if (!isYouTube && isCollection) {
+            frontImgSrc = item.images[1];
+        } else if (!frontImgSrc && item.images) {
+            frontImgSrc = item.images[0];
+        }
+
+        // --- ГЕНЕРАЦИЯ СЛОЕВ ---
+        const deepLayer = (isCollection && deepImgSrc) 
+            ? `<div class="collection-back-deep" style="background-image: url('${deepImgSrc}')"></div>`
+            : '';
+
+        const midLayer = isCollection 
+            ? `<div class="collection-back" style="background-image: url('${midImgSrc}')"></div>` 
+            : '';
 
         if (isCollection) {
-            const frontImg = item.images[1];
-            const backImg = item.images[0];
             return `
-            <div class="archive-card collection-wrapper animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
-                <div class="collection-back" style="background-image: url('${backImg}')"></div>
+            <div class="${cardClasses}" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
+                ${deepLayer} 
+                ${midLayer}
                 <div class="collection-front">
                     <div class="card-thumb-container">
-                        <img src="${frontImg}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
-                        <div class="card-rating-badge"><span class="stars-visual">${starsHtml}</span><span class="rating-number">${item.rating}</span></div>
+                        <img src="${frontImgSrc}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
+                        ${playOverlay}
+                        ${ratingBadgeHtml}
+                        ${suggestedBadge}
+                        ${playlistBadge}
                     </div>
                     <div class="card-info">
                         <div class="card-title" title="${item.title}">${item.title}</div>
-                        <div class="card-genres">${genresHtml}</div>
+                        ${genresHtml}
                         <p class="card-desc">${item.description || ''}</p>
                     </div>
                 </div>
             </div>`;
         } else {
-            const imgSrc = item.image || (item.images ? item.images[0] : '');
             return `
-            <div class="archive-card animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
+            <div class="${cardClasses}" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
                 <div class="card-thumb-container">
-                    <img src="${imgSrc}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
-                    <div class="card-rating-badge"><span class="stars-visual">${starsHtml}</span><span class="rating-number">${item.rating}</span></div>
+                    <img src="${frontImgSrc}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
+                    ${playOverlay}
+                    ${ratingBadgeHtml}
+                    ${suggestedBadge}
                 </div>
                 <div class="card-info">
                     <div class="card-title" title="${item.title}">${item.title}</div>
-                    <div class="card-genres">${genresHtml}</div>
+                    ${genresHtml}
                     <p class="card-desc">${item.description || ''}</p>
                 </div>
             </div>`;
@@ -531,7 +539,7 @@ function setupGridClick() {
         const card = e.target.closest('.archive-card');
         if (card) {
             const id = card.dataset.id;
-            const item = ArchiveState.data.find(i => i.id === id);
+            const item = [...ArchiveState.dataMain, ...ArchiveState.dataSuggestions].find(i => i.id === id);
             if (item) openMediaModal(item, ArchiveState.currentType);
         }
     });
@@ -545,10 +553,6 @@ function setupTabs() {
     });
 }
 
-/**
- * ПОИСК: Обновлен для использования fuzzy-логики
- * И добавлен атрибут data-status для цветных стилей в CSS
- */
 function setupSearch() {
     const input = document.getElementById('archive-search');
     const searchModule = document.querySelector('.search-module');
@@ -587,20 +591,19 @@ function setupSearch() {
             return;
         }
 
-        // Fuzzy logic для подсказок
-        let allMatches = ArchiveState.data.map(item => {
+        const fullList = [...ArchiveState.dataMain, ...ArchiveState.dataSuggestions];
+
+        let allMatches = fullList.map(item => {
             let score = 0;
-            if (query.length < 3) {
+            if (query.length < 3 && item.title) {
                  score = item.title.toLowerCase().includes(query) ? 1 : 0;
-            } else {
+            } else if (item.title) {
                  score = calculateSimilarity(item.title, query);
             }
             return { ...item, score };
         }).filter(item => item.score > 0.25); 
 
         allMatches.sort((a, b) => b.score - a.score);
-
-        // БЕРЕМ ТОЛЬКО 4 ЛУЧШИХ РЕЗУЛЬТАТА
         const matches = allMatches.slice(0, 4);
 
         if (matches.length > 0) {
@@ -611,7 +614,7 @@ function setupSearch() {
                         <span class="sugg-title">${item.title}</span>
                         <div class="sugg-meta">
                             <span class="sugg-status">${statusMap[item.status] || item.status}</span>
-                            <span class="sugg-rating"><i class="fas fa-star"></i> ${item.rating}</span>
+                            <span class="sugg-rating"><i class="fas fa-star"></i> ${item.rating || 0}</span>
                         </div>
                     </div>
                 </div>

@@ -6,8 +6,6 @@ const closeBtn = document.querySelector('.modal-close-btn');
 
 // Объект со ссылками на элементы внутри модалки
 const els = {
-    // modal-img больше не используется напрямую для стопки, 
-    // логика перенесена в создание динамических тегов img
     ratingVal: document.getElementById('modal-rating-val'),
     stars: document.getElementById('modal-stars'),
     status: document.getElementById('modal-status'),
@@ -27,14 +25,16 @@ const els = {
 const statusTextMap = {
     'completed': 'ЗАВЕРШЕНО', 'watched': 'ПРОСМОТРЕНО',
     'playing': 'В ПРОЦЕССЕ', 'watching': 'СМОТРИМ',
-    'dropped': 'БРОШЕНО', 'on-hold': 'НА ПАУЗЕ'
+    'dropped': 'БРОШЕНО', 'on-hold': 'НА ПАУЗЕ',
+    'suggested': 'ПРЕДЛОЖЕНО'
 };
 
 const statusColorMap = {
     'completed': '#39ff14', 'watched': '#39ff14',
     'playing': '#007bff', 'watching': '#007bff',
     'dropped': '#ff4444',
-    'on-hold': '#ffd700'
+    'on-hold': '#ffd700',
+    'suggested': '#00ffff'
 };
 
 /**
@@ -99,7 +99,6 @@ export function openMediaModal(item, type) {
     }
 
     // Создаем DOM-элементы для ВСЕХ картинок один раз
-    // Это важно для плавной CSS-анимации (transition)
     const imgElements = imageUrls.map((src) => {
         const img = document.createElement('img');
         img.src = src;
@@ -162,24 +161,35 @@ export function openMediaModal(item, type) {
     els.status.style.backgroundColor = color;
     els.status.style.boxShadow = `0 0 15px ${color}`;
 
-    // Рейтинг
-    els.ratingVal.textContent = item.rating;
-    els.ratingVal.style.color = color;
+    // --- ЛОГИКА РЕЙТИНГА И ЖАНРОВ ---
+    const ratingBox = document.querySelector('.modal-rating-box');
     
-    const fullStars = Math.floor(item.rating);
-    let starsHtml = '';
-    for(let i=0; i < 5; i++) {
-        starsHtml += i < fullStars 
-            ? `<i class="fas fa-star" style="color:${color}"></i>` 
-            : `<i class="far fa-star" style="opacity:0.3"></i>`;
-    }
-    els.stars.innerHTML = starsHtml;
-
-    // Жанры
-    if (item.genres) {
-        els.genres.innerHTML = item.genres.map(g => `<span class="modal-genre-tag">${g}</span>`).join('');
-    } else {
+    if (item.status === 'suggested') {
+        // СКРЫВАЕМ для предложки
+        if (ratingBox) ratingBox.style.display = 'none';
         els.genres.innerHTML = '';
+    } else {
+        // ПОКАЗЫВАЕМ для обычных записей
+        if (ratingBox) ratingBox.style.display = 'flex';
+
+        els.ratingVal.textContent = item.rating;
+        els.ratingVal.style.color = color;
+        
+        const fullStars = Math.floor(item.rating);
+        let starsHtml = '';
+        for(let i=0; i < 5; i++) {
+            starsHtml += i < fullStars 
+                ? `<i class="fas fa-star" style="color:${color}"></i>` 
+                : `<i class="far fa-star" style="opacity:0.3"></i>`;
+        }
+        els.stars.innerHTML = starsHtml;
+
+        // Жанры
+        if (item.genres) {
+            els.genres.innerHTML = item.genres.map(g => `<span class="modal-genre-tag">${g}</span>`).join('');
+        } else {
+            els.genres.innerHTML = '';
+        }
     }
 
     // Техническая инфо

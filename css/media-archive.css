@@ -380,7 +380,15 @@
    GRID & CARDS
    ========================================= */
 .archive-full-grid-wrapper { width: 100%; position: relative; z-index: 5; min-height: 400px; }
-.archive-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; padding-bottom: 10px; transition: height 0.5s ease; }
+
+/* Сетка (без dense, чтобы соблюдать порядок) */
+.archive-grid { 
+    display: grid; 
+    grid-template-columns: repeat(6, 1fr); 
+    gap: 20px; 
+    padding-bottom: 10px; 
+    transition: height 0.5s ease; 
+}
 
 @keyframes card-load { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 .archive-card.animate-entry { opacity: 0; animation: card-load 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
@@ -410,11 +418,11 @@
 .card-thumb { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
 .archive-card:hover .card-thumb { transform: scale(1.08); }
 
-/* РЕЙТИНГ: ФИКС ПЕРЕКРЫТИЯ (z-index 30) */
+/* РЕЙТИНГ */
 .card-rating-badge {
     position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.85); color: #ffd700;
     padding: 3px 7px; border-radius: 4px; font-size: 0.75rem; border: 1px solid rgba(255,215,0,0.2); font-weight: bold; backdrop-filter: blur(5px);
-    z-index: 30; /* ВАЖНО: Рейтинг поверх всего */
+    z-index: 30; 
 }
 
 .card-info { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; }
@@ -508,3 +516,217 @@
     .card-desc { display: none; }
     .search-suggestions { width: 95%; left: 2.5%; }
 }
+
+/* =========================================
+   СТИЛИ ДЛЯ ПРЕДЛОЖКИ (SUGGESTIONS)
+   ========================================= */
+
+/* Разделитель "COMMUNITY SUGGESTIONS" */
+.archive-divider-row {
+    grid-column: 1 / -1; /* Растягивается на всю ширину сетки */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 40px 0 20px 0;
+    opacity: 1;
+}
+
+.divider-line {
+    flex-grow: 1;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(57, 255, 20, 0) 0%, rgba(57, 255, 20, 1) 50%, rgba(57, 255, 20, 0) 100%);
+    box-shadow: none; 
+    filter: drop-shadow(0 0 4px var(--neon-green));
+    border-radius: 100%;
+}
+
+.divider-text {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-green);
+    letter-spacing: 3px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    white-space: nowrap;
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+}
+
+/* Бейдж "Предложено пользователем" (FIXED) */
+.suggested-by-badge {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(10, 11, 16, 1); /* Плотный фон */
+    color: #fff;
+    height: 32px; /* Фиксированная высота */
+    padding: 0 10px;
+    font-size: 0.75rem;
+    font-family: 'Exo 2', sans-serif;
+    border-top: 1px solid rgba(57, 255, 20, 0.3);
+    z-index: 50; /* Z-Index 50! Поверх текста */
+    display: flex; align-items: center; gap: 6px;
+}
+
+.suggested-by-badge i { color: var(--neon-green); }
+
+/* Специфичный стиль для карточек со статусом suggested */
+.archive-card[data-status="suggested"] { border-color: rgba(0, 255, 255, 0.3); }
+.archive-card[data-status="suggested"]:hover { border-color: #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
+.archive-card[data-status="suggested"]::after { background: #00ffff; }
+
+.filter-chip.status-suggested { border-color: rgba(0, 255, 255, 0.3) !important; color: #00ffff !important; }
+.filter-chip.status-suggested.active { background: #00ffff !important; color: #000 !important; box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
+.suggestion-item[data-status="suggested"] .sugg-status { color: #00ffff; border-color: #00ffff; background: rgba(0, 255, 255, 0.1); box-shadow: 0 0 8px rgba(0, 255, 255, 0.2); }
+
+/* =========================================
+   YOUTUBE КАРТОЧКА (REAL 3-LAYER STACK)
+   ========================================= */
+
+/* 1. БАЗА */
+.archive-card.is-youtube {
+    grid-column: span 2; 
+    aspect-ratio: 16 / 9; 
+    
+    /* Центрируем содержимое (слои) внутри области */
+    display: grid;
+    place-items: center; 
+    
+    /* Дефолт для одиночки */
+    background: #000; 
+    border-color: rgba(255, 0, 0, 0.3);
+    align-self: center;
+    position: relative;
+    overflow: visible !important; 
+}
+
+.archive-card.is-youtube::after { display: none !important; }
+
+/* 2. НАСТРОЙКА ПЛЕЙЛИСТА (ОБЕРТКА) */
+.archive-card.is-youtube.collection-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+/* 
+   ОБЩИЕ СТИЛИ ДЛЯ ВСЕХ 3-х СЛОЕВ 
+   Мы делаем их чуть меньше (92%), чтобы при сдвиге они не вылезали слишком сильно
+   и оставались визуально по центру композиции.
+*/
+.collection-front, 
+.collection-back, 
+.collection-back-deep {
+    grid-area: 1 / 1; /* Накладываем все слои друг на друга в одну ячейку */
+    width: 95%; 
+    height: 95%;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* --- СЛОЙ 3: ДАЛЬНИЙ (Deep Back) --- */
+/* Сдвигаем ВПРАВО-ВВЕРХ */
+.collection-back-deep {
+    z-index: 1;
+    transform: translate(12px, -12px) scale(0.9);
+    filter: brightness(0.3); /* Самый темный */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: #000;
+}
+
+/* --- СЛОЙ 2: СРЕДНИЙ (Back) --- */
+/* По центру (или чуть сдвинут для красоты) */
+.collection-back {
+    z-index: 2;
+    /* Сдвигаем чуть меньше, чтобы был между дальним и передним */
+    transform: translate(6px, -6px) scale(0.95);
+    filter: brightness(0.5); /* Средняя яркость */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: #000;
+}
+/* Убираем псевдо-элемент (халтуру), так как теперь есть реальный div */
+.archive-card.is-youtube.collection-wrapper .collection-back::before { display: none; }
+
+/* --- СЛОЙ 1: ПЕРЕДНИЙ (Front) --- */
+/* Сдвигаем ВЛЕВО-ВНИЗ */
+.collection-front {
+    z-index: 10;
+    transform: translate(-6px, 6px); /* Смещение для компенсации задних */
+    background: #000 !important;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    display: block !important; 
+    position: relative;
+}
+
+/* --- ХОВЕР ЭФФЕКТЫ (РАЗЪЕЗЖАЮТСЯ) --- */
+.archive-card.is-youtube.collection-wrapper:hover .collection-back-deep {
+    transform: translate(24px, -24px) scale(0.9);
+    filter: brightness(0.6);
+    z-index: 3; /* Чуть всплывает */
+}
+
+.archive-card.is-youtube.collection-wrapper:hover .collection-back {
+    transform: translate(12px, -12px) scale(0.95);
+    filter: brightness(0.8);
+    z-index: 4;
+}
+
+.archive-card.is-youtube.collection-wrapper:hover .collection-front {
+    transform: translate(-8px, 8px); /* Чуть больше влево-вниз */
+    border-color: #ff0000;
+    box-shadow: -5px 5px 30px rgba(255, 0, 0, 0.2);
+    z-index: 11;
+}
+
+/* --- ВНУТРЕННИЕ ЭЛЕМЕНТЫ (Без изменений) --- */
+.archive-card.is-youtube .card-thumb-container {
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+    z-index: 1; border-bottom: none;
+}
+
+.archive-card.is-youtube .card-info {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 25; padding: 15px;
+    background: linear-gradient(to top, rgba(0,0,0,1) 10%, rgba(0,0,0,0.6) 80%, transparent 100%);
+    pointer-events: none;
+}
+
+.archive-card.is-youtube[data-status="suggested"] .card-info {
+    bottom: 32px; padding-bottom: 10px;
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 80%, transparent 100%);
+}
+
+.suggested-by-badge { border-radius: 0 0 12px 12px; }
+
+.archive-card.is-youtube .card-title { font-size: 1.1rem; text-shadow: 0 2px 4px black; margin-bottom: 2px; }
+.archive-card.is-youtube .card-desc { -webkit-line-clamp: 1; font-size: 0.8rem; opacity: 0.8; }
+
+.youtube-play-overlay {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, 0.3); opacity: 0.8; transition: 0.3s; z-index: 20;
+}
+.youtube-play-overlay i { font-size: 3rem; color: #ff0000; filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6)); transition: 0.3s; }
+
+/* Hover для одиночной карты */
+.archive-card.is-youtube:not(.collection-wrapper):hover {
+    border-color: #ff0000; box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
+    transform: translateY(-5px) scale(1.02); z-index: 50;
+}
+.archive-card.is-youtube:hover .youtube-play-overlay { background: rgba(0, 0, 0, 0.1); }
+.archive-card.is-youtube:hover .youtube-play-overlay i { transform: scale(1.2); text-shadow: 0 0 15px #ff0000; }
+
+/* АДАПТИВ */
+@media (max-width: 768px) {
+    .archive-card.is-youtube { grid-column: span 2; }
+}
+
+/* БЕЙДЖ ПЛЕЙЛИСТА */
+.yt-playlist-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(255, 0, 0, 0.85); color: #fff;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.8rem;
+    padding: 4px 8px; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 30; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(4px);
+}
+.yt-playlist-badge i { font-size: 0.9rem; }
