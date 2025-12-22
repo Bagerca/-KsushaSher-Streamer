@@ -22,77 +22,25 @@ const ArchiveState = {
     isExpanded: false     // Флаг: развернут список или нет
 };
 
-// РАСШИРЕННАЯ КАРТА ТЕГОВ (ЗОЛОТОЙ СТАНДАРТ)
+// РАСШИРЕННАЯ КАРТА ТЕГОВ
 const genreMap = {
-    // --- Глобальные жанры ---
-    'action': 'Экшен',
-    'adventure': 'Приключения',
-    'rpg': 'РПГ',
-    'shooter': 'Шутер',
-    'strategy': 'Стратегия',
-    'simulation': 'Симулятор',
-    'puzzle': 'Головоломка',
-    'platformer': 'Платформер',
-    'fighting': 'Файтинг',
-    'racing': 'Гонки',
-    'horror': 'Хоррор',
-    'visual-novel': 'Виз. новелла',
-    'interactive-movie': 'Интерактивное кино',
-
-    // --- Механики и Геймплей ---
-    'survival': 'Выживание',
-    'stealth': 'Стелс',
-    'roguelike': 'Рогалик',
-    'metroidvania': 'Метроидвания',
-    'souls-like': 'Соулс-лайк',
-    'open-world': 'Открытый мир',
-    'sandbox': 'Песочница',
-    'battle-royale': 'Батл-рояль',
-    'point-click': 'Point & Click',
-    'rhythm': 'Ритм',
-    'walking-sim': 'Сим. ходьбы',
-    'hack-and-slash': 'Слэшер',
-
-    // --- Режимы ---
-    'singleplayer': 'Одиночная',
-    'coop': 'Кооператив',
-    'multiplayer': 'Мультиплеер',
-    'mmo': 'ММО',
-
-    // --- Атмосфера и Сюжет ---
-    'story-rich': 'Сюжетная',
-    'atmospheric': 'Атмосферная',
-    'funny': 'Комедия',
-    'trash': 'Трэш/Мем',
-    'detective': 'Детектив',
-    'mystery': 'Мистика',
-    'psychological': 'Психология',
-    'relaxing': 'Релакс',
-    'hardcore': 'Хардкор',
-    'cinematic': 'Киношная',
-    'drama': 'Драма',
-
-    // --- Сеттинг ---
-    'scifi': 'Sci-Fi',
-    'fantasy': 'Фэнтези',
-    'cyberpunk': 'Киберпанк',
-    'post-apocalyptic': 'Постапокалипсис',
-    'retro': 'Ретро/Пиксели',
-    'anime': 'Аниме',
-    'zombies': 'Зомби',
-
-    // --- Тип проекта ---
-    'indie': 'Инди',
-    'aaa': 'AAA',
-    'remake': 'Ремейк',
-    'early-access': 'Ранний доступ',
-    'free': 'Бесплатно',
-
-    // --- Кино / Мультики (Специфичные) ---
-    'animation': 'Анимация',
-    'family': 'Семейный',
-    'comedy': 'Комедия',
-    'thriller': 'Триллер'
+    'action': 'Экшен', 'adventure': 'Приключения', 'rpg': 'РПГ', 'shooter': 'Шутер',
+    'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка',
+    'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки',
+    'horror': 'Хоррор', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино',
+    'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик',
+    'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир',
+    'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click',
+    'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер',
+    'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'mmo': 'ММО',
+    'story-rich': 'Сюжетная', 'atmospheric': 'Атмосферная', 'funny': 'Комедия',
+    'trash': 'Трэш/Мем', 'detective': 'Детектив', 'mystery': 'Мистика',
+    'psychological': 'Психология', 'relaxing': 'Релакс', 'hardcore': 'Хардкор',
+    'cinematic': 'Киношная', 'drama': 'Драма', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези',
+    'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'retro': 'Ретро/Пиксели',
+    'anime': 'Аниме', 'zombies': 'Зомби', 'indie': 'Инди', 'aaa': 'AAA',
+    'remake': 'Ремейк', 'early-access': 'Ранний доступ', 'free': 'Бесплатно',
+    'animation': 'Анимация', 'family': 'Семейный', 'comedy': 'Комедия', 'thriller': 'Триллер'
 };
 
 const statusMap = {
@@ -101,23 +49,64 @@ const statusMap = {
     'dropped': 'БРОШЕНО', 'on-hold': 'ПОД ВОПРОСОМ'
 };
 
-// Список статусов для логики пересечения групп
 const VALID_STATUSES = ['completed', 'playing', 'watched', 'watching', 'dropped', 'on-hold'];
 
+// ==========================================
+// ЛОГИКА ТРИГРАММ (НЕЧЕТКИЙ ПОИСК)
+// ==========================================
+
 /**
- * Инициализация модуля архива
+ * Разбивает текст на массив триграмм (по 3 символа)
+ * Пример: "hello" -> ["hel", "ell", "llo"]
  */
+function getTrigrams(text) {
+    const cleanText = text.toLowerCase().replace(/[^\wа-яё0-9]/gi, ''); // Оставляем только буквы и цифры
+    const trigrams = [];
+    if (cleanText.length < 3) return [cleanText]; // Для очень коротких слов возвращаем как есть
+    
+    for (let i = 0; i < cleanText.length - 2; i++) {
+        trigrams.push(cleanText.substring(i, i + 3));
+    }
+    return trigrams;
+}
+
+/**
+ * Сравнивает две строки и возвращает коэффициент сходства (от 0 до 1)
+ * Используем коэффициент Дайса: 2 * (пересечение) / (сумма элементов)
+ */
+function calculateSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+    
+    // Если есть полное вхождение (обычный поиск), даем бонус
+    if (str1.toLowerCase().includes(str2.toLowerCase())) return 1.0;
+
+    const set1 = getTrigrams(str1);
+    const set2 = getTrigrams(str2);
+    
+    let matches = 0;
+    // Бежим по триграммам запроса и ищем их в названии
+    for (const trigram of set2) {
+        if (set1.includes(trigram)) {
+            matches++;
+        }
+    }
+    
+    // Формула сходства
+    return (2.0 * matches) / (set1.length + set2.length);
+}
+
+// ==========================================
+// ОСНОВНАЯ ЛОГИКА
+// ==========================================
+
 export async function initMediaArchive() {
     setupTabs();
     setupSearch(); 
     setupSort();
-    setupGridClick(); // Слушатель кликов для модалки
+    setupGridClick();
     await switchArchiveType('games');
 }
 
-/**
- * Переключение типа контента
- */
 async function switchArchiveType(type) {
     const gridContainer = document.getElementById('archive-grid');
     if (gridContainer) gridContainer.classList.add('switching');
@@ -125,18 +114,15 @@ async function switchArchiveType(type) {
 
     setTimeout(async () => {
         ArchiveState.currentType = type;
-        
-        // Сброс состояния
         ArchiveState.activeFilters = new Set(['all']);
         ArchiveState.searchQuery = '';
         ArchiveState.renderedCount = 0;
         ArchiveState.isExpanded = false;
         
-        // Очистка поиска
         const searchInput = document.getElementById('archive-search');
         if (searchInput) searchInput.value = '';
         
-        // Закрытие подсказок
+        // Сброс подсказок
         const suggestionsBox = document.querySelector('.search-suggestions');
         const searchModule = document.querySelector('.search-module');
         if (suggestionsBox) {
@@ -145,7 +131,6 @@ async function switchArchiveType(type) {
         }
         if (searchModule) searchModule.classList.remove('suggestions-open');
         
-        // ЗАГРУЗКА ДАННЫХ ЧЕРЕЗ API
         const rawData = type === 'games' 
             ? await loadData('games.json', []) 
             : await loadData('movies.json', []);
@@ -170,9 +155,6 @@ function updateTabUI(type) {
     btns.forEach(btn => btn.classList.toggle('active', btn.dataset.type === type));
 }
 
-/**
- * Рендер фильтров и мульти-выбор
- */
 function renderFilters() {
     const statusContainer = document.getElementById('archive-filters-status');
     const genreContainer = document.getElementById('archive-filters-genre');
@@ -187,7 +169,6 @@ function renderFilters() {
     
     const middleIndex = Math.floor(statuses.length / 2);
     let statusHtml = '';
-    
     const isActive = (val) => ArchiveState.activeFilters.has(val) ? 'active' : '';
 
     statuses.slice(0, middleIndex).forEach(s => { 
@@ -212,21 +193,16 @@ function renderFilters() {
     document.querySelectorAll('.filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             const val = chip.dataset.filter;
-
             if (val === 'all') {
                 ArchiveState.activeFilters.clear();
                 ArchiveState.activeFilters.add('all');
             } else {
                 if (ArchiveState.activeFilters.has('all')) ArchiveState.activeFilters.delete('all');
-                
                 if (ArchiveState.activeFilters.has(val)) ArchiveState.activeFilters.delete(val);
                 else ArchiveState.activeFilters.add(val);
-                
                 if (ArchiveState.activeFilters.size === 0) ArchiveState.activeFilters.add('all');
             }
-            
             ArchiveState.isExpanded = false; 
-            
             renderFilters();
             processData();
             renderGrid();
@@ -235,7 +211,7 @@ function renderFilters() {
 }
 
 /**
- * Логика фильтрации: (Статусы) И (Жанры)
+ * ОБНОВЛЕННАЯ ЛОГИКА ФИЛЬТРАЦИИ С ТРИГРАММАМИ
  */
 function processData() {
     const activeStatuses = new Set();
@@ -251,20 +227,39 @@ function processData() {
         });
     }
 
-    let result = ArchiveState.data.filter(item => {
-        // 1. Поиск по тексту
-        const matchesSearch = item.title.toLowerCase().includes(ArchiveState.searchQuery);
-        if (!matchesSearch) return false;
+    // 1. Предварительная фильтрация и подсчет Score (Сходства)
+    let processedItems = ArchiveState.data.map(item => {
+        // --- ТРИГРАММНЫЙ ПОИСК ---
+        let matchScore = 0;
         
+        if (ArchiveState.searchQuery.length > 0) {
+            // Если запрос короткий (< 3 символов), используем обычный includes
+            if (ArchiveState.searchQuery.length < 3) {
+                matchScore = item.title.toLowerCase().includes(ArchiveState.searchQuery) ? 1 : 0;
+            } else {
+                // Иначе считаем триграммы
+                matchScore = calculateSimilarity(item.title, ArchiveState.searchQuery);
+            }
+        } else {
+            matchScore = 1; // Если поиска нет, показываем всё
+        }
+
+        return { ...item, _matchScore: matchScore };
+    });
+
+    // 2. Фильтрация
+    let result = processedItems.filter(item => {
+        // Порог сходства. 0.25 значит, что четверть буквосочетаний должна совпасть.
+        // Это позволяет находить "Манкрафт" (Minecraft) или "Витчер" (Witcher)
+        if (item._matchScore < 0.25) return false;
+
         if (isAllSelected) return true;
 
-        // 2. Проверка статуса (ИЛИ)
         let statusMatch = true;
         if (activeStatuses.size > 0) {
             statusMatch = activeStatuses.has(item.status);
         }
 
-        // 3. Проверка жанра (ИЛИ)
         let genreMatch = true;
         if (activeGenres.size > 0) {
             if (!item.genres || item.genres.length === 0) genreMatch = false;
@@ -274,9 +269,16 @@ function processData() {
         return statusMatch && genreMatch;
     });
 
-    // Сортировка
+    // 3. Сортировка
     const dir = ArchiveState.sortDirection === 'asc' ? 1 : -1;
+    
     result.sort((a, b) => {
+        // Если идет поиск, сортируем ПО РЕЛЕВАНТНОСТИ (Score) в первую очередь
+        if (ArchiveState.searchQuery.length > 0 && Math.abs(a._matchScore - b._matchScore) > 0.1) {
+            return b._matchScore - a._matchScore;
+        }
+
+        // Иначе обычная сортировка
         if (ArchiveState.sort === 'rating') {
             return ((parseFloat(a.rating) || 0) - (parseFloat(b.rating) || 0)) * dir;
         } else {
@@ -287,9 +289,6 @@ function processData() {
     ArchiveState.filteredData = result;
 }
 
-/**
- * Отрисовка сетки
- */
 function renderGrid() {
     const container = document.getElementById('archive-grid');
     const wrapper = document.querySelector('.archive-full-grid-wrapper');
@@ -313,7 +312,6 @@ function renderGrid() {
 
     renderNextBatch();
 
-    // Логика кнопки
     if (ArchiveState.filteredData.length > ArchiveState.batchSize) {
         if (!ArchiveState.isExpanded) {
             renderButton('expand');
@@ -345,9 +343,6 @@ function renderGrid() {
     }
 }
 
-/**
- * Кнопка и скролл-навигация
- */
 function renderButton(mode) {
     const wrapper = document.querySelector('.archive-full-grid-wrapper');
     const controlsDiv = document.createElement('div');
@@ -367,34 +362,23 @@ function renderButton(mode) {
 
     document.getElementById('archive-toggle-btn').addEventListener('click', () => {
         if (mode === 'expand') {
-            // Развернуть -> Скролл вверх (начало списка)
             const sectionTop = document.getElementById('media-archive').offsetTop;
             window.scrollTo({ top: sectionTop - 50, behavior: 'smooth' });
-            
             ArchiveState.isExpanded = true;
             renderGrid();
         } else {
-            // Свернуть -> Скролл вниз (конец списка)
             ArchiveState.isExpanded = false;
             renderGrid();
-            
             const section = document.getElementById('media-archive');
             section.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
-
-        // === ВАЖНО: ОБНОВЛЕНИЕ NAV RAIL ПОСЛЕ ИЗМЕНЕНИЯ ВЫСОТЫ ===
-        // Ждем пока анимация CSS пройдет (обычно 300-500мс), потом обновляем
-        setTimeout(() => {
-            if (window.updateNavRail) window.updateNavRail();
-        }, 500);
+        setTimeout(() => { if (window.updateNavRail) window.updateNavRail(); }, 500);
     });
 }
 
 function setupInfiniteScroll() {
     if (ArchiveState.observer) ArchiveState.observer.disconnect();
-
     const options = { root: null, rootMargin: '200px', threshold: 0.1 };
-
     ArchiveState.observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting && ArchiveState.renderedCount < ArchiveState.filteredData.length) {
@@ -402,7 +386,6 @@ function setupInfiniteScroll() {
             }
         });
     }, options);
-
     const sentinel = document.getElementById('scroll-sentinel');
     if (sentinel) ArchiveState.observer.observe(sentinel);
 }
@@ -424,22 +407,14 @@ function renderNextBatch() {
         for(let i=0; i < 5; i++) starsHtml += i < fullStars ? '<i class="fas fa-star"></i>' : '<i class="far fa-star" style="opacity: 0.3;"></i>';
 
         const delay = (index % ArchiveState.batchSize) * 50; 
-
-        // ОПРЕДЕЛЯЕМ, ЭТО КОЛЛЕКЦИЯ ИЛИ НЕТ
         const isCollection = item.images && item.images.length > 1;
 
         if (isCollection) {
-            // КОЛЛЕКЦИЯ (Стопка карточек)
-            const frontImg = item.images[1]; // ПЕРЕДНИЙ ПЛАН (второй элемент массива)
-            const backImg = item.images[0];  // ЗАДНИЙ ПЛАН (первый элемент)
-
+            const frontImg = item.images[1];
+            const backImg = item.images[0];
             return `
             <div class="archive-card collection-wrapper animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
-                
-                <!-- ЗАДНЯЯ КАРТОЧКА (СЛОЙ 1) -->
                 <div class="collection-back" style="background-image: url('${backImg}')"></div>
-                
-                <!-- ПЕРЕДНЯЯ КАРТОЧКА (СЛОЙ 2) -->
                 <div class="collection-front">
                     <div class="card-thumb-container">
                         <img src="${frontImg}" class="card-thumb" loading="lazy" onerror="this.src='https://via.placeholder.com/600x900?text=NO+IMAGE'">
@@ -453,7 +428,6 @@ function renderNextBatch() {
                 </div>
             </div>`;
         } else {
-            // ОБЫЧНАЯ КАРТОЧКА
             const imgSrc = item.image || (item.images ? item.images[0] : '');
             return `
             <div class="archive-card animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
@@ -474,23 +448,15 @@ function renderNextBatch() {
     ArchiveState.renderedCount = end;
 }
 
-/**
- * Обработчик клика (для модалки)
- */
 function setupGridClick() {
     const grid = document.getElementById('archive-grid');
     if (!grid) return;
-
     grid.addEventListener('click', (e) => {
-        // Поднимаемся до карточки (будь то обычная или коллекция)
         const card = e.target.closest('.archive-card');
         if (card) {
             const id = card.dataset.id;
             const item = ArchiveState.data.find(i => i.id === id);
-            
-            if (item) {
-                openMediaModal(item, ArchiveState.currentType);
-            }
+            if (item) openMediaModal(item, ArchiveState.currentType);
         }
     });
 }
@@ -503,6 +469,9 @@ function setupTabs() {
     });
 }
 
+/**
+ * ПОИСК: Обновлен для использования fuzzy-логики в подсказках
+ */
 function setupSearch() {
     const input = document.getElementById('archive-search');
     const searchModule = document.querySelector('.search-module');
@@ -541,16 +510,19 @@ function setupSearch() {
             return;
         }
 
-        let allMatches = ArchiveState.data.filter(item => item.title.toLowerCase().includes(query));
-        allMatches.sort((a, b) => {
-            const titleA = a.title.toLowerCase();
-            const titleB = b.title.toLowerCase();
-            const startsA = titleA.startsWith(query);
-            const startsB = titleB.startsWith(query);
-            if (startsA && !startsB) return -1;
-            if (!startsA && startsB) return 1;
-            return titleA.localeCompare(titleB);
-        });
+        // Используем нашу новую функцию calculateSimilarity для подсказок тоже
+        let allMatches = ArchiveState.data.map(item => {
+            let score = 0;
+            if (query.length < 3) {
+                 score = item.title.toLowerCase().includes(query) ? 1 : 0;
+            } else {
+                 score = calculateSimilarity(item.title, query);
+            }
+            return { ...item, score };
+        }).filter(item => item.score > 0.25); // Порог для подсказок
+
+        // Сортировка подсказок
+        allMatches.sort((a, b) => b.score - a.score);
 
         const matches = allMatches.slice(0, 5);
 

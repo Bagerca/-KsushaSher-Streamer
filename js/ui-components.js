@@ -159,28 +159,7 @@ function initNavRail() {
     const rail = document.getElementById('cyber-nav-rail');
     if (!rail) return;
 
-    // --- НОВАЯ ЛОГИКА ДЛЯ ДВИЖУЩЕГОСЯ ЛУЧА ---
-    function updateRailBeam() {
-        const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
-        const scrollableHeight = docHeight - winHeight;
-        const scrolled = window.scrollY;
-
-        let percent = 0;
-        if (scrollableHeight > 0) {
-            percent = (scrolled / scrollableHeight) * 100;
-        }
-        
-        // Передаем позицию (0% - 100%) в CSS переменную
-        rail.style.setProperty('--line-pos', `${percent}%`);
-    }
-
-    // Слушаем скролл для обновления луча
-    window.addEventListener('scroll', updateRailBeam);
-    // Вызываем один раз сразу, чтобы луч встал на место
-    updateRailBeam();
-    // ------------------------------------------
-
+    // Секции, по которым строим навигацию
     const sections = [
         { id: 'hero', label: 'ГЛАВНАЯ' },
         { id: 'about', label: 'ОБО МНЕ' },
@@ -190,39 +169,75 @@ function initNavRail() {
         { id: 'donation', label: 'ДОНАТ' }
     ];
 
-    window.updateNavRail = function() {
-        // Очищаем старые маркеры, но луч (::after) останется, так как он в CSS
-        rail.innerHTML = ''; 
-        const docHeight = document.documentElement.scrollHeight;
+    // 1. СОЗДАЕМ МАРКЕРЫ (ОДИН РАЗ)
+    // Очищаем на всякий случай, но только при старте, а не при каждом обновлении
+    rail.innerHTML = ''; 
+    
+    sections.forEach(sec => {
+        const marker = document.createElement('div');
+        marker.className = 'nav-marker';
+        // Устанавливаем уникальный ID для последующего поиска
+        marker.id = `nav-marker-${sec.id}`; 
+        marker.dataset.targetId = sec.id;
         
+        // Начальная позиция
+        marker.style.top = '0%'; 
+
+        marker.innerHTML = `
+            <div class="nav-shape"></div>
+            <div class="nav-tooltip">${sec.label}</div>
+        `;
+        
+        // Клик с плавным скроллом
+        marker.addEventListener('click', (e) => {
+            e.preventDefault();
+            const element = document.getElementById(sec.id);
+            if (element) customSmoothScroll(element);
+        });
+        
+        rail.appendChild(marker);
+    });
+
+    // --- ФУНКЦИЯ ОБНОВЛЕНИЯ ПОЗИЦИЙ (ЛУЧ + МАРКЕРЫ) ---
+    // Теперь она не пересоздает DOM, а меняет стили существующим элементам
+    window.updateNavRail = function() {
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const scrollableHeight = docHeight - winHeight;
+        const scrolled = window.scrollY;
+
+        // 1. Обновляем луч
+        let percentLine = 0;
+        if (scrollableHeight > 0) {
+            percentLine = (scrolled / scrollableHeight) * 100;
+        }
+        rail.style.setProperty('--line-pos', `${percentLine}%`);
+
+        // 2. Обновляем позиции маркеров
         sections.forEach(sec => {
             const element = document.getElementById(sec.id);
-            if (element) {
+            const marker = document.getElementById(`nav-marker-${sec.id}`);
+            
+            if (element && marker) {
+                // Вычисляем центр секции относительно всей высоты документа
                 const topPos = element.getBoundingClientRect().top + window.scrollY;
+                
+                // Рассчитываем процент
                 let percent = (topPos / docHeight) * 100;
-                // Ограничиваем, чтобы не прилипало к самым краям
+                
+                // Ограничители (чтобы не улетали за края экрана в крайних точках)
                 percent = Math.max(2, Math.min(98, percent));
                 
-                const marker = document.createElement('div');
-                marker.className = 'nav-marker';
-                marker.style.top = `${percent}%`; 
-                marker.dataset.targetId = sec.id;
-                
-                marker.innerHTML = `
-                    <div class="nav-shape"></div>
-                    <div class="nav-tooltip">${sec.label}</div>
-                `;
-                
-                marker.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    customSmoothScroll(element);
-                });
-                rail.appendChild(marker);
+                // Просто меняем свойство top. 
+                // Благодаря CSS transition в global.css маркер плавно поедет на новое место.
+                marker.style.top = `${percent}%`;
             }
         });
+
         checkActiveSection();
     };
 
+    // --- ПОДСВЕТКА АКТИВНОЙ СЕКЦИИ ---
     function checkActiveSection() {
         const scrollPos = window.scrollY + window.innerHeight / 3;
         let currentId = '';
@@ -241,21 +256,35 @@ function initNavRail() {
             });
         }
 
+        // Просто переключаем класс active
         document.querySelectorAll('.nav-marker').forEach(m => {
             m.classList.toggle('active', m.dataset.targetId === currentId);
         });
     }
 
-    window.updateNavRail();
-    window.addEventListener('scroll', checkActiveSection);
-    
-    // Обновляем позицию маркеров при изменении размера окна
-    const resizeObserver = new ResizeObserver(() => {
-        clearTimeout(window.navUpdateTimeout);
-        window.navUpdateTimeout = setTimeout(() => { 
-            window.updateNavRail(); 
-            updateRailBeam(); // Обновляем и луч тоже
-        }, 100);
+    // Слушатели событий
+    window.addEventListener('scroll', () => {
+        // Обновляем луч на скролле (он должен быть реактивным)
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const scrollableHeight = docHeight - winHeight;
+        const scrolled = window.scrollY;
+        let percentLine = (scrollableHeight > 0) ? (scrolled / scrollableHeight) * 100 : 0;
+        rail.style.setProperty('--line-pos', `${percentLine}%`);
+        
+        checkActiveSection();
     });
+
+    // ResizeObserver следит за изменением высоты body (например, при раскрытии архива)
+    // Это и запустит плавное перемещение маркеров
+    const resizeObserver = new ResizeObserver(() => {
+        requestAnimationFrame(() => {
+            if (window.updateNavRail) window.updateNavRail();
+        });
+    });
+    
     resizeObserver.observe(document.body);
+
+    // Первичный запуск (с небольшой задержкой, чтобы DOM успел отрендериться)
+    setTimeout(window.updateNavRail, 100);
 }
