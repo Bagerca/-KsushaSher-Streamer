@@ -28,7 +28,7 @@
 /* КОНТЕЙНЕР ОКНА */
 .media-modal-content {
     width: 95%;
-    max-width: 1600px; /* Максимальная ширина */
+    max-width: 1600px; /* Широкий формат */
     max-height: 95vh; 
     overflow-y: auto; 
     
@@ -115,30 +115,32 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Плавная анимация перелета */
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     
     opacity: 0;
-    transform: translate(0, 0); 
+    transform: scale(0.8) translate(0, 0); 
     z-index: 0;
 }
 
 /* --- 1. ПЕРЕДНЯЯ КАРТИНКА (ГЛАВНАЯ) --- */
-/* Смещаем ВНИЗ и ВЛЕВО */
+/* Смещаем ВЛЕВО и ВНИЗ */
 .modal-poster-img.is-front {
     opacity: 1;
     z-index: 20; 
-    transform: translate(-10px, 10px); 
+    transform: translate(-10px, 10px) scale(1);
     border-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    filter: brightness(1);
 }
 
 /* --- 2. ЗАДНЯЯ КАРТИНКА --- */
-/* Смещаем ВВЕРХ и ВПРАВО */
+/* Смещаем ВПРАВО и ВВЕРХ */
 .modal-poster-img.is-back {
     opacity: 1; 
     z-index: 10; 
-    transform: translate(10px, -10px);
-    filter: brightness(0.4) grayscale(0.8);
+    transform: translate(10px, -10px) scale(0.95);
+    filter: brightness(0.5) grayscale(0.5);
     border-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -146,9 +148,16 @@
 .modal-poster-img.is-back-2 {
     opacity: 1;
     z-index: 5; 
-    transform: translate(25px, -25px);
-    filter: brightness(0.2) grayscale(1);
+    transform: translate(25px, -25px) scale(0.9);
+    filter: brightness(0.3) grayscale(0.8);
     border-color: rgba(255, 255, 255, 0.02);
+}
+
+/* --- СКРЫТАЯ (УЛЕТАЕТ) --- */
+.modal-poster-img.is-hidden {
+    opacity: 0;
+    transform: translate(40px, -40px) scale(0.8);
+    z-index: 0;
 }
 
 /* ИНТЕРАКТИВ */
@@ -156,13 +165,13 @@
 
 /* ЭФФЕКТ ПРИ НАВЕДЕНИИ (РАЗДВИГАЕМ СТОПКУ) */
 .modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-front {
-    transform: translate(-15px, 15px);
+    transform: translate(-15px, 15px) scale(1.02);
     border-color: var(--modal-color); 
 }
 
 .modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-back {
-    transform: translate(15px, -15px);
-    filter: brightness(0.6) grayscale(0.5);
+    transform: translate(20px, -20px) scale(0.95);
+    filter: brightness(0.7) grayscale(0.3);
 }
 
 /* Глоу эффект */
@@ -247,7 +256,7 @@
 }
 
 /* =========================================
-   VIDEO SECTION (YOUTUBE STYLE)
+   VIDEO SECTION (YOUTUBE STYLE - FIXED)
    ========================================= */
 .modal-video-section {
     margin-top: 5px; 
@@ -276,8 +285,8 @@
     .modal-video-section.has-playlist {
         display: grid !important; 
         
-        /* Левая колонка (плеер), Правая (список 270px) */
-        grid-template-columns: minmax(0, 1fr) 270px; 
+        /* Левая колонка (плеер), Правая (список 280px) */
+        grid-template-columns: minmax(0, 1fr) 280px; 
         grid-template-rows: auto 1fr; /* Заголовок, потом контент */
         
         column-gap: 20px;

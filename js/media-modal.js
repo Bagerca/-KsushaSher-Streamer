@@ -6,7 +6,8 @@ const closeBtn = document.querySelector('.modal-close-btn');
 
 // Объект со ссылками на элементы внутри модалки
 const els = {
-    img: document.getElementById('modal-img'), // Больше не используется напрямую для стопки, но оставим для совместимости
+    // modal-img больше не используется напрямую для стопки, 
+    // логика перенесена в создание динамических тегов img
     ratingVal: document.getElementById('modal-rating-val'),
     stars: document.getElementById('modal-stars'),
     status: document.getElementById('modal-status'),
@@ -78,68 +79,81 @@ export function openMediaModal(item, type) {
     const color = item.customColor || statusColorMap[item.status] || '#fff';
     document.querySelector('.media-modal-content').style.setProperty('--modal-color', color);
 
-    // 2. ЛОГИКА ПОСТЕРОВ (СТОПКА)
+    // 2. ЛОГИКА ПОСТЕРОВ (АНИМИРОВАННАЯ СТОПКА)
     const posterWrapper = document.querySelector('.modal-poster-wrapper');
-    posterWrapper.innerHTML = ''; // Очищаем старое содержимое
+    posterWrapper.innerHTML = ''; // Очищаем контейнер один раз перед рендером
     
     // Добавляем красивое свечение назад
     const glow = document.createElement('div');
     glow.className = 'modal-poster-glow';
     posterWrapper.appendChild(glow);
 
-    // Собираем все картинки в массив
-    let images = [];
+    // Подготовка списка картинок
+    let imageUrls = [];
     if (item.images && item.images.length > 0) {
-        images = [...item.images]; // Копируем массив
+        imageUrls = [...item.images];
     } else if (item.image) {
-        images = [item.image];
+        imageUrls = [item.image];
     } else {
-        images = ['https://via.placeholder.com/600x900?text=NO+IMAGE'];
+        imageUrls = ['https://via.placeholder.com/600x900?text=NO+IMAGE'];
     }
 
-    // Функция рендера стопки картинок
-    const renderImages = () => {
-        // Удаляем старые img, оставляя glow (первый ребенок)
-        const oldImgs = posterWrapper.querySelectorAll('img');
-        oldImgs.forEach(img => img.remove());
+    // Создаем DOM-элементы для ВСЕХ картинок один раз
+    // Это важно для плавной CSS-анимации (transition)
+    const imgElements = imageUrls.map((src) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'modal-poster-img'; // Базовый класс
+        posterWrapper.appendChild(img);
+        return img;
+    });
 
-        images.forEach((src, index) => {
-            const img = document.createElement('img');
-            img.src = src;
-            img.className = 'modal-poster-img';
+    // Функция обновления классов (запускает анимацию)
+    const updateClasses = () => {
+        imgElements.forEach((img, index) => {
+            // Сбрасываем все позиционные классы
+            img.classList.remove('is-front', 'is-back', 'is-back-2', 'is-hidden');
             
-            // Назначаем классы позиций для CSS-анимаций
+            // Раздаем роли в зависимости от текущего порядка в массиве
             if (index === 0) {
                 img.classList.add('is-front');
+                img.style.zIndex = 20;
             } else if (index === 1) {
                 img.classList.add('is-back');
+                img.style.zIndex = 10;
             } else if (index === 2) {
                 img.classList.add('is-back-2');
+                img.style.zIndex = 5;
+            } else {
+                img.classList.add('is-hidden'); // Улетает назад
+                img.style.zIndex = 0;
             }
-            // Остальные картинки (index > 2) скрыты стилями
-            
-            posterWrapper.appendChild(img);
         });
     };
 
-    renderImages();
+    // Первичная расстановка
+    updateClasses();
 
-    // Если картинок больше одной — включаем интерактив (перелистывание)
-    if (images.length > 1) {
+    // ИНТЕРАКТИВ: Если картинок > 1, включаем клик
+    if (imgElements.length > 1) {
         posterWrapper.classList.add('is-interactive');
         
-        // Обработчик клика: перенос первой картинки в конец массива
         posterWrapper.onclick = () => {
-            const first = images.shift(); // Берем первую
-            images.push(first);           // Кладем в конец
-            renderImages();               // Перерисовываем
+            // Берем первую картинку (Front)
+            const movingCard = imgElements.shift(); 
+            
+            // Отправляем ее в конец массива (в самый низ колоды)
+            imgElements.push(movingCard);
+            
+            // Запускаем пересчет классов -> CSS сам сделает красивый свайп
+            updateClasses();
         };
     } else {
         posterWrapper.classList.remove('is-interactive');
         posterWrapper.onclick = null;
     }
 
-    // 3. ЗАПОЛНЕНИЕ ТЕКСТА
+    // 3. ЗАПОЛНЕНИЕ ТЕКСТОВОГО КОНТЕНТА
     els.title.textContent = item.title;
     els.desc.textContent = item.description || "Описание отсутствует.";
     
@@ -177,7 +191,7 @@ export function openMediaModal(item, type) {
 
     // 5. ПОКАЗАТЬ ОКНО
     overlay.classList.add('active');
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
 }
 
 /**
@@ -250,7 +264,7 @@ function setupVideoPlayer(videos) {
     if (validCount > 1) {
         // Если видео несколько -> Добавляем класс для сетки
         els.videoSection.classList.add('has-playlist');
-        els.playlist.style.display = 'flex'; // Временный флекс для мобилок, CSS перебьет на Grid для десктопа
+        els.playlist.style.display = 'flex'; // Это перебьется CSS Grid'ом на десктопе
     } else {
         // Если видео одно -> Скрываем плейлист
         els.playlist.style.display = 'none';
