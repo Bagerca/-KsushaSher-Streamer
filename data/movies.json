@@ -8,7 +8,7 @@
       "assets/images/movies/garfield-2.jpg",
       "assets/images/movies/garfield-1.jpg"
     ],
-    "genres": ["comedy", "family", "adventure"],
+    "genres": ["movie", "comedy", "family", "adaptation", "feel-good", "classic"],
     "status": "watched",
     "customColor": "#1275bc"
   },
@@ -18,9 +18,9 @@
     "rating": 5.0,
     "description": "Абсолютная классика. Сочная графика, глубокий смысл, скрытый за отличным юмором. Вызывает чистую ностальгию.",
     "image": "assets/images/movies/shrek-2.jpg",
-    "genres": ["animation", "comedy", "fantasy"],
+    "genres": ["cartoon", "comedy", "fantasy", "family", "adventure", "classic"],
     "status": "watched",
-    "customColor": "#badc58"
+    "customColor": "#929449"
   },
   {
     "id": "shark-tale",
@@ -28,9 +28,9 @@
     "rating": 5.0,
     "description": "Мультфильм детства. Обожаю подводный мир и этот стиль. Вызывает исключительно теплые чувства.",
     "image": "assets/images/movies/shark-tale.jpg",
-    "genres": ["animation", "comedy", "family"],
+    "genres": ["cartoon", "comedy", "family", "adventure", "feel-good"],
     "status": "watched",
-    "customColor": "#00a8ff"
+    "customColor": "#2696d1"
   },
   {
     "id": "arcane",
@@ -41,9 +41,9 @@
       "assets/images/movies/arcane-s2.jpg",
       "assets/images/movies/arcane-s1.jpg"
     ],
-    "genres": ["animation", "fantasy", "action"],
+    "genres": ["series", "animation", "fantasy", "scifi", "action", "drama", "adaptation", "epic"],
     "status": "watched",
-    "customColor": "#a29bfe"
+    "customColor": "#abb5b5"
   },
   {
     "id": "wild-robot",
@@ -51,9 +51,9 @@
     "rating": 4.0,
     "description": "Очень трогательный сюжет, пробивает на слёзы. Приятная графика. Логика иногда возмущается, но редко.",
     "image": "assets/images/movies/wild-robot.jpg",
-    "genres": ["animation", "scifi", "adventure"],
+    "genres": ["cartoon", "scifi", "adventure", "drama", "family", "atmospheric", "survival"],
     "status": "watched",
-    "customColor": "#2ecc71"
+    "customColor": "#2f422f"
   },
   {
     "id": "gravity-falls",
@@ -61,9 +61,9 @@
     "rating": 3.5,
     "description": "Люблю теории заговора и легкое повествование. Но моментами показался слишком детским или глупым.",
     "image": "assets/images/movies/gravity-falls.jpg",
-    "genres": ["animation", "mystery", "comedy"],
+    "genres": ["series", "cartoon", "mystery", "comedy", "fantasy", "family", "cult"],
     "status": "watched",
-    "customColor": "#9b59b6"
+    "customColor": "#c1a773"
   },
   {
     "id": "indie-cross",
@@ -71,7 +71,7 @@
     "rating": 3.5,
     "description": "Прикольная задумка и ностальгия по играм. Но если мало пройдено оригинальных игр, можно потеряться в сюжете.",
     "image": "assets/images/movies/indie-cross.jpg",
-    "genres": ["animation", "action", "fantasy"],
+    "genres": ["animation", "short", "action", "fantasy", "indie", "adaptation"],
     "status": "watched",
     "customColor": "#604d8d"
   },
@@ -81,9 +81,9 @@
     "rating": 2.5,
     "description": "Приятная картинка и звук, есть моменты на подумать. Но сюжет полон логических несостыковок (либо я не понял).",
     "image": "assets/images/movies/nine.jpg",
-    "genres": ["animation", "scifi", "horror"],
+    "genres": ["cartoon", "scifi", "post-apocalyptic", "atmospheric", "thriller", "action"],
     "status": "watched",
-    "customColor": "#d35400"
+    "customColor": "#80b454"
   },
   {
     "id": "heroes-of-envell",
@@ -91,8 +91,8 @@
     "rating": 2.0,
     "description": "Неплохой сюжет, но рисовка показалась слишком детской. Не зашло.",
     "image": "assets/images/movies/heroes-of-envell.jpg",
-    "genres": ["animation", "adventure", "fantasy"],
+    "genres": ["series", "cartoon", "adventure", "fantasy", "kids", "rpg"],
     "status": "dropped",
-    "customColor": "#8e44ad"
+    "customColor": "#e19e5c"
   }
 ]

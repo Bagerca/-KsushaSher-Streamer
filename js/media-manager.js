@@ -22,25 +22,109 @@ const ArchiveState = {
     isExpanded: false     // Флаг: развернут список или нет
 };
 
-// РАСШИРЕННАЯ КАРТА ТЕГОВ
+// РАСШИРЕННАЯ КАРТА ТЕГОВ (ИГРЫ + КИНО)
 const genreMap = {
-    'action': 'Экшен', 'adventure': 'Приключения', 'rpg': 'РПГ', 'shooter': 'Шутер',
-    'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка',
-    'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки',
-    'horror': 'Хоррор', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино',
-    'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик',
-    'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир',
-    'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click',
-    'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер',
-    'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'mmo': 'ММО',
-    'story-rich': 'Сюжетная', 'atmospheric': 'Атмосферная', 'funny': 'Комедия',
-    'trash': 'Трэш/Мем', 'detective': 'Детектив', 'mystery': 'Мистика',
-    'psychological': 'Психология', 'relaxing': 'Релакс', 'hardcore': 'Хардкор',
-    'cinematic': 'Киношная', 'drama': 'Драма', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези',
-    'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'retro': 'Ретро/Пиксели',
-    'anime': 'Аниме', 'zombies': 'Зомби', 'indie': 'Инди', 'aaa': 'AAA',
-    'remake': 'Ремейк', 'early-access': 'Ранний доступ', 'free': 'Бесплатно',
-    'animation': 'Анимация', 'family': 'Семейный', 'comedy': 'Комедия', 'thriller': 'Триллер'
+    // --- Глобальные жанры (Общие) ---
+    'action': 'Экшен',
+    'adventure': 'Приключения',
+    'comedy': 'Комедия',
+    'drama': 'Драма',
+    'horror': 'Хоррор',
+    'thriller': 'Триллер',
+    'scifi': 'Sci-Fi',
+    'fantasy': 'Фэнтези',
+    'mystery': 'Мистика',
+    'detective': 'Детектив',
+    'crime': 'Криминал',
+    'historical': 'Исторический',
+    'romance': 'Романтика',
+    'biography': 'Биография',
+
+    // --- Кино: Формат и Тип ---
+    'movie': 'Фильм',
+    'series': 'Сериал',
+    'mini-series': 'Мини-сериал',
+    'cartoon': 'Мультфильм',
+    'anime': 'Аниме',
+    'anime-series': 'Аниме-сериал',
+    'short': 'Короткометражка',
+    'documentary': 'Документалка',
+    'show': 'ТВ-Шоу',
+
+    // --- Кино: Специфические жанры ---
+    'animation': 'Анимация',
+    'superhero': 'Супергероика',
+    'sitcom': 'Ситком',
+    'slasher': 'Слэшер',
+    'musical': 'Мюзикл',
+    'western': 'Вестерн',
+    'noir': 'Нуар',
+    'sport': 'Спорт',
+    'war': 'Военный',
+    'family': 'Семейный',
+    'kids': 'Детский',
+
+    // --- Кино: Атмосфера и Темы ---
+    'adaptation': 'Экранизация',
+    'remake': 'Ремейк',
+    'blockbuster': 'Блокбастер',
+    'arthouse': 'Артхаус',
+    'trash': 'Трэш / B-Movie',
+    'psychological': 'Психологический',
+    'atmospheric': 'Атмосферный',
+    'feel-good': 'Добрый / Уютный',
+    'sad': 'Грустный',
+    'mind-bending': 'Вынос мозга',
+    'epic': 'Эпик',
+    'weird': 'Странное',
+    'classic': 'Классика',
+    'cult': 'Культовое',
+
+    // --- Игры: Механики и Геймплей ---
+    'rpg': 'РПГ',
+    'shooter': 'Шутер',
+    'strategy': 'Стратегия',
+    'simulation': 'Симулятор',
+    'puzzle': 'Головоломка',
+    'platformer': 'Платформер',
+    'fighting': 'Файтинг',
+    'racing': 'Гонки',
+    'visual-novel': 'Виз. новелла',
+    'interactive-movie': 'Интерактивное кино',
+    'survival': 'Выживание',
+    'stealth': 'Стелс',
+    'roguelike': 'Рогалик',
+    'metroidvania': 'Метроидвания',
+    'souls-like': 'Соулс-лайк',
+    'open-world': 'Открытый мир',
+    'sandbox': 'Песочница',
+    'battle-royale': 'Батл-рояль',
+    'point-click': 'Point & Click',
+    'rhythm': 'Ритм',
+    'walking-sim': 'Сим. ходьбы',
+    'hack-and-slash': 'Слэшер',
+    'mmo': 'ММО',
+
+    // --- Общие теги сеттинга ---
+    'cyberpunk': 'Киберпанк',
+    'post-apocalyptic': 'Постапокалипсис',
+    'space': 'Космос',
+    'zombies': 'Зомби',
+    'retro': 'Ретро/80-е',
+    'dystopia': 'Антиутопия',
+    'magic': 'Магия',
+    'aliens': 'Пришельцы',
+
+    // --- Технические теги ---
+    'indie': 'Инди',
+    'aaa': 'AAA',
+    'singleplayer': 'Одиночная',
+    'coop': 'Кооператив',
+    'multiplayer': 'Мультиплеер',
+    'free': 'Бесплатно',
+    'early-access': 'Ранний доступ',
+    'story-rich': 'Сюжетная',
+    'funny': 'Комедия/Юмор'
 };
 
 const statusMap = {
@@ -72,7 +156,6 @@ function getTrigrams(text) {
 
 /**
  * Сравнивает две строки и возвращает коэффициент сходства (от 0 до 1)
- * Используем коэффициент Дайса: 2 * (пересечение) / (сумма элементов)
  */
 function calculateSimilarity(str1, str2) {
     if (!str1 || !str2) return 0;
@@ -91,7 +174,7 @@ function calculateSimilarity(str1, str2) {
         }
     }
     
-    // Формула сходства
+    // Формула сходства (Коэффициент Дайса)
     return (2.0 * matches) / (set1.length + set2.length);
 }
 
@@ -210,9 +293,6 @@ function renderFilters() {
     });
 }
 
-/**
- * ОБНОВЛЕННАЯ ЛОГИКА ФИЛЬТРАЦИИ С ТРИГРАММАМИ
- */
 function processData() {
     const activeStatuses = new Set();
     const activeGenres = new Set();
@@ -229,19 +309,16 @@ function processData() {
 
     // 1. Предварительная фильтрация и подсчет Score (Сходства)
     let processedItems = ArchiveState.data.map(item => {
-        // --- ТРИГРАММНЫЙ ПОИСК ---
         let matchScore = 0;
         
         if (ArchiveState.searchQuery.length > 0) {
-            // Если запрос короткий (< 3 символов), используем обычный includes
             if (ArchiveState.searchQuery.length < 3) {
                 matchScore = item.title.toLowerCase().includes(ArchiveState.searchQuery) ? 1 : 0;
             } else {
-                // Иначе считаем триграммы
                 matchScore = calculateSimilarity(item.title, ArchiveState.searchQuery);
             }
         } else {
-            matchScore = 1; // Если поиска нет, показываем всё
+            matchScore = 1; 
         }
 
         return { ...item, _matchScore: matchScore };
@@ -249,8 +326,7 @@ function processData() {
 
     // 2. Фильтрация
     let result = processedItems.filter(item => {
-        // Порог сходства. 0.25 значит, что четверть буквосочетаний должна совпасть.
-        // Это позволяет находить "Манкрафт" (Minecraft) или "Витчер" (Witcher)
+        // Порог сходства 0.25
         if (item._matchScore < 0.25) return false;
 
         if (isAllSelected) return true;
@@ -273,7 +349,7 @@ function processData() {
     const dir = ArchiveState.sortDirection === 'asc' ? 1 : -1;
     
     result.sort((a, b) => {
-        // Если идет поиск, сортируем ПО РЕЛЕВАНТНОСТИ (Score) в первую очередь
+        // Если идет поиск, сортируем ПО РЕЛЕВАНТНОСТИ (Score)
         if (ArchiveState.searchQuery.length > 0 && Math.abs(a._matchScore - b._matchScore) > 0.1) {
             return b._matchScore - a._matchScore;
         }
@@ -470,7 +546,8 @@ function setupTabs() {
 }
 
 /**
- * ПОИСК: Обновлен для использования fuzzy-логики в подсказках
+ * ПОИСК: Обновлен для использования fuzzy-логики
+ * И добавлен атрибут data-status для цветных стилей в CSS
  */
 function setupSearch() {
     const input = document.getElementById('archive-search');
@@ -510,7 +587,7 @@ function setupSearch() {
             return;
         }
 
-        // Используем нашу новую функцию calculateSimilarity для подсказок тоже
+        // Fuzzy logic для подсказок
         let allMatches = ArchiveState.data.map(item => {
             let score = 0;
             if (query.length < 3) {
@@ -519,17 +596,17 @@ function setupSearch() {
                  score = calculateSimilarity(item.title, query);
             }
             return { ...item, score };
-        }).filter(item => item.score > 0.25); // Порог для подсказок
+        }).filter(item => item.score > 0.25); 
 
-        // Сортировка подсказок
         allMatches.sort((a, b) => b.score - a.score);
 
-        const matches = allMatches.slice(0, 5);
+        // БЕРЕМ ТОЛЬКО 4 ЛУЧШИХ РЕЗУЛЬТАТА
+        const matches = allMatches.slice(0, 4);
 
         if (matches.length > 0) {
             suggestionsBox.innerHTML = matches.map(item => `
-                <div class="suggestion-item" data-title="${item.title}">
-                    <img src="${item.image || (item.images ? item.images[0] : '')}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/40x50'">
+                <div class="suggestion-item" data-title="${item.title}" data-status="${item.status}">
+                    <img src="${item.image || (item.images ? item.images[0] : '')}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/60x85'">
                     <div class="sugg-info">
                         <span class="sugg-title">${item.title}</span>
                         <div class="sugg-meta">

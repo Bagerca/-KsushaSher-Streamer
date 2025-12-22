@@ -38,7 +38,6 @@ const statusColorMap = {
 
 /**
  * Инициализация системы модальных окон
- * Вызывается один раз при старте приложения
  */
 export function initModalSystem() {
     if (!overlay) return;
@@ -61,35 +60,27 @@ export function initModalSystem() {
 
 /**
  * Надежное получение ID видео из ссылки YouTube
- * Поддерживает: youtube.com/watch?v=..., youtu.be/..., embed/...
  */
 function getYouTubeId(url) {
     if (!url) return null;
     const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
     const match = url.match(regExp);
-    // ID у YouTube всегда 11 символов
     return (match && match[1].length === 11) ? match[1] : null;
 }
 
 /**
  * Открытие модального окна с данными
- * @param {Object} item - Объект данных (игра/фильм)
- * @param {String} type - Тип контента ('games'/'movies')
  */
 export function openMediaModal(item, type) {
     if (!overlay) return;
 
     // 1. ОПРЕДЕЛЕНИЕ ЦВЕТА
-    // Приоритет: customColor -> цвет статуса -> белый
     const color = item.customColor || statusColorMap[item.status] || '#fff';
     
     // Устанавливаем CSS переменную для покраски элементов
     document.querySelector('.media-modal-content').style.setProperty('--modal-color', color);
 
     // 2. ЗАПОЛНЕНИЕ КОНТЕНТА
-    
-    // Картинка: Если это коллекция (массив images), берем первую (актуальную)
-    // Если одиночный элемент - берем image
     const imgSrc = (item.images && item.images.length > 0) ? item.images[0] : item.image;
     els.img.src = imgSrc;
 
@@ -101,11 +92,10 @@ export function openMediaModal(item, type) {
     els.status.style.backgroundColor = color;
     els.status.style.boxShadow = `0 0 15px ${color}`;
 
-    // Рейтинг (цифра)
+    // Рейтинг
     els.ratingVal.textContent = item.rating;
     els.ratingVal.style.color = color;
     
-    // Рейтинг (звезды)
     const fullStars = Math.floor(item.rating);
     let starsHtml = '';
     for(let i=0; i < 5; i++) {
@@ -115,7 +105,7 @@ export function openMediaModal(item, type) {
     }
     els.stars.innerHTML = starsHtml;
 
-    // Жанры (теги)
+    // Жанры
     if (item.genres) {
         els.genres.innerHTML = item.genres.map(g => `<span class="modal-genre-tag">${g}</span>`).join('');
     } else {
@@ -135,65 +125,87 @@ export function openMediaModal(item, type) {
 }
 
 /**
- * Логика плеера и плейлиста
+ * Логика плеера и плейлиста (YouTube Style)
  */
 function setupVideoPlayer(videos) {
-    // Сброс
+    // Сброс контента
     els.playlist.innerHTML = '';
     els.iframe.src = '';
+    
+    // Сбрасываем классы разметки на контейнере
+    els.videoSection.className = 'modal-video-section';
 
-    // Если видео нет в JSON
+    // Если видео нет -> скрываем секцию
     if (!videos || videos.length === 0) {
         els.videoSection.style.display = 'none';
         return;
     }
 
-    els.videoSection.style.display = 'block';
+    // --- ВАЖНЫЙ ФИКС ---
+    // Убираем инлайн-стиль display, чтобы CSS мог применить Grid или Flex в зависимости от @media
+    els.videoSection.style.display = ''; 
+    els.videoSection.style.removeProperty('display'); 
 
     // Функция переключения видео
     const playVideo = (videoId, btn) => {
         // Снимаем активность со всех кнопок
-        document.querySelectorAll('.playlist-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.playlist-item').forEach(b => b.classList.remove('active'));
         // Активируем нажатую
         if(btn) btn.classList.add('active');
-        // Загружаем видео (с автоплеем)
-        els.iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        // Загружаем видео
+        els.iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
     };
 
     let firstValidId = null;
+    let validCount = 0;
 
-    // Генерируем кнопки плейлиста
+    // Генерируем элементы плейлиста
     videos.forEach((vid, index) => {
         const vidId = getYouTubeId(vid.url);
         if (!vidId) return; // Пропускаем кривые ссылки
 
+        validCount++;
         if (!firstValidId) firstValidId = vidId;
 
-        const btn = document.createElement('div');
-        btn.className = 'playlist-btn';
-        if (index === 0) btn.classList.add('active'); // Первое видео активно по умолчанию
+        const item = document.createElement('div');
+        item.className = 'playlist-item';
+        if (index === 0) item.classList.add('active'); // Первое видео активно
         
-        // Иконка play и название
-        btn.innerHTML = `<i class="fas fa-play"></i> ${vid.title || 'Видео ' + (index + 1)}`;
+        // Получаем превью с YouTube
+        const thumbUrl = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
+
+        item.innerHTML = `
+            <div class="pl-thumb">
+                <img src="${thumbUrl}" alt="preview">
+                <div class="pl-overlay"><i class="fas fa-play"></i></div>
+            </div>
+            <div class="pl-info">
+                <div class="pl-title">${vid.title || 'Видео ' + (index + 1)}</div>
+                <div class="pl-status"><i class="fas fa-film"></i> СМОТРЕТЬ</div>
+            </div>
+        `;
         
         // Клик
-        btn.addEventListener('click', () => playVideo(vidId, btn));
-        els.playlist.appendChild(btn);
+        item.addEventListener('click', () => playVideo(vidId, item));
+        els.playlist.appendChild(item);
     });
 
-    // Загружаем первое видео в плеер (БЕЗ автоплея при открытии окна, чтобы не пугать звуком)
-    if (firstValidId) {
-        els.iframe.src = `https://www.youtube.com/embed/${firstValidId}?rel=0`;
+    // УПРАВЛЕНИЕ РАЗМЕТКОЙ (GRID vs COLUMN)
+    if (validCount > 1) {
+        // Если видео несколько -> Добавляем класс для сетки
+        els.videoSection.classList.add('has-playlist');
+        els.playlist.style.display = 'flex';
     } else {
-        // Если все ссылки битые, скрываем секцию
-        els.videoSection.style.display = 'none';
+        // Если видео одно -> Скрываем плейлист
+        els.playlist.style.display = 'none';
     }
 
-    // Если видео всего одно, скрываем плейлист (кнопки), оставляем только плеер
-    if (videos.length < 2) {
-        els.playlist.style.display = 'none';
+    // Загружаем первое видео в плеер (БЕЗ автоплея при открытии)
+    if (firstValidId) {
+        els.iframe.src = `https://www.youtube.com/embed/${firstValidId}?rel=0&modestbranding=1`;
     } else {
-        els.playlist.style.display = 'flex';
+        // Если ни одного валидного ID не нашлось
+        els.videoSection.style.display = 'none';
     }
 }
 
@@ -204,7 +216,7 @@ function closeModal() {
     overlay.classList.remove('active');
     document.body.style.overflow = ''; // Разблокируем скролл
     
-    // Очищаем iframe, чтобы остановить звук видео
+    // Очищаем iframe, чтобы остановить звук
     setTimeout(() => {
         els.iframe.src = '';
     }, 300);
