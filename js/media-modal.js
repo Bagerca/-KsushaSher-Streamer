@@ -6,7 +6,7 @@ const closeBtn = document.querySelector('.modal-close-btn');
 
 // Объект со ссылками на элементы внутри модалки
 const els = {
-    img: document.getElementById('modal-img'),
+    img: document.getElementById('modal-img'), // Больше не используется напрямую для стопки, но оставим для совместимости
     ratingVal: document.getElementById('modal-rating-val'),
     stars: document.getElementById('modal-stars'),
     status: document.getElementById('modal-status'),
@@ -76,14 +76,70 @@ export function openMediaModal(item, type) {
 
     // 1. ОПРЕДЕЛЕНИЕ ЦВЕТА
     const color = item.customColor || statusColorMap[item.status] || '#fff';
-    
-    // Устанавливаем CSS переменную для покраски элементов
     document.querySelector('.media-modal-content').style.setProperty('--modal-color', color);
 
-    // 2. ЗАПОЛНЕНИЕ КОНТЕНТА
-    const imgSrc = (item.images && item.images.length > 0) ? item.images[0] : item.image;
-    els.img.src = imgSrc;
+    // 2. ЛОГИКА ПОСТЕРОВ (СТОПКА)
+    const posterWrapper = document.querySelector('.modal-poster-wrapper');
+    posterWrapper.innerHTML = ''; // Очищаем старое содержимое
+    
+    // Добавляем красивое свечение назад
+    const glow = document.createElement('div');
+    glow.className = 'modal-poster-glow';
+    posterWrapper.appendChild(glow);
 
+    // Собираем все картинки в массив
+    let images = [];
+    if (item.images && item.images.length > 0) {
+        images = [...item.images]; // Копируем массив
+    } else if (item.image) {
+        images = [item.image];
+    } else {
+        images = ['https://via.placeholder.com/600x900?text=NO+IMAGE'];
+    }
+
+    // Функция рендера стопки картинок
+    const renderImages = () => {
+        // Удаляем старые img, оставляя glow (первый ребенок)
+        const oldImgs = posterWrapper.querySelectorAll('img');
+        oldImgs.forEach(img => img.remove());
+
+        images.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = 'modal-poster-img';
+            
+            // Назначаем классы позиций для CSS-анимаций
+            if (index === 0) {
+                img.classList.add('is-front');
+            } else if (index === 1) {
+                img.classList.add('is-back');
+            } else if (index === 2) {
+                img.classList.add('is-back-2');
+            }
+            // Остальные картинки (index > 2) скрыты стилями
+            
+            posterWrapper.appendChild(img);
+        });
+    };
+
+    renderImages();
+
+    // Если картинок больше одной — включаем интерактив (перелистывание)
+    if (images.length > 1) {
+        posterWrapper.classList.add('is-interactive');
+        
+        // Обработчик клика: перенос первой картинки в конец массива
+        posterWrapper.onclick = () => {
+            const first = images.shift(); // Берем первую
+            images.push(first);           // Кладем в конец
+            renderImages();               // Перерисовываем
+        };
+    } else {
+        posterWrapper.classList.remove('is-interactive');
+        posterWrapper.onclick = null;
+    }
+
+    // 3. ЗАПОЛНЕНИЕ ТЕКСТА
     els.title.textContent = item.title;
     els.desc.textContent = item.description || "Описание отсутствует.";
     
@@ -116,12 +172,12 @@ export function openMediaModal(item, type) {
     els.id.textContent = item.id;
     els.type.textContent = type.toUpperCase();
 
-    // 3. НАСТРОЙКА ВИДЕО ПЛЕЕРА
+    // 4. НАСТРОЙКА ВИДЕО ПЛЕЕРА
     setupVideoPlayer(item.videos);
 
-    // 4. ПОКАЗАТЬ ОКНО
+    // 5. ПОКАЗАТЬ ОКНО
     overlay.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
+    document.body.style.overflow = 'hidden'; 
 }
 
 /**
@@ -141,8 +197,8 @@ function setupVideoPlayer(videos) {
         return;
     }
 
-    // --- ВАЖНЫЙ ФИКС ---
-    // Убираем инлайн-стиль display, чтобы CSS мог применить Grid или Flex в зависимости от @media
+    // --- ВАЖНЫЙ ФИКС ДЛЯ СЕТКИ ---
+    // Убираем инлайн-стиль display, чтобы CSS мог применить Grid или Flex
     els.videoSection.style.display = ''; 
     els.videoSection.style.removeProperty('display'); 
 
@@ -194,7 +250,7 @@ function setupVideoPlayer(videos) {
     if (validCount > 1) {
         // Если видео несколько -> Добавляем класс для сетки
         els.videoSection.classList.add('has-playlist');
-        els.playlist.style.display = 'flex';
+        els.playlist.style.display = 'flex'; // Временный флекс для мобилок, CSS перебьет на Grid для десктопа
     } else {
         // Если видео одно -> Скрываем плейлист
         els.playlist.style.display = 'none';
