@@ -44,7 +44,7 @@
 }
 
 /* =========================================
-   HEADER (TECHNO HUD STYLE)
+   HEADER (TECHNO HUD STYLE - UPDATED)
    ========================================= */
 .archive-header {
     display: flex;
@@ -56,24 +56,26 @@
     text-align: center;
 }
 
+/* 1. Сам заголовок (Контейнер) */
 .archive-header .section-title {
     font-family: 'Orbitron', sans-serif;
     font-size: 3rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 4px;
+    letter-spacing: 6px;
     margin: 0;
     
-    /* Отступы для скобок по бокам */
-    padding: 0 45px;
+    /* Отступы для скобок */
+    padding: 10px 60px;
     
     color: #ffffff;
-    text-shadow: 0 0 10px rgba(57, 255, 20, 0.8), 0 0 20px rgba(57, 255, 20, 0.4);
+    text-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+    
     display: inline-block;
     position: relative;
 }
 
-/* СТРОГИЕ НЕОНОВЫЕ СКОБКИ */
+/* 2. Общий стиль для скобок (Тонкие и высокие HUD-элементы) */
 .archive-header .section-title::before,
 .archive-header .section-title::after {
     content: ''; 
@@ -81,25 +83,64 @@
     top: 50%; 
     transform: translateY(-50%);
     
-    width: 12px;
-    height: 35px; /* Высота скобки */
+    /* Высота 100% от заголовка */
+    height: 100%; 
+    width: 25px;
     
-    border: 3px solid var(--neon-green); 
-    box-shadow: 0 0 10px var(--neon-green);
-    background: transparent;
-    opacity: 0.8;
+    /* Используем background + clip-path для создания формы скобки */
+    background: var(--neon-green);
+    
+    /* Свечение через drop-shadow, т.к. clip-path обрезает box-shadow */
+    filter: drop-shadow(0 0 5px var(--neon-green));
+    
+    opacity: 0.9;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Левая скобка [ */
+/* 3. Левая скобка [ */
 .archive-header .section-title::before {
-    left: 0; 
-    border-right: none; 
+    left: 0;
+    /* Рисуем форму буквы "С" с угловатыми краями */
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        100% 2px, 
+        2px 2px, 
+        2px calc(100% - 2px), 
+        100% calc(100% - 2px), 
+        100% 100%, 
+        0 100%, 
+        0 calc(100% - 10px), /* Срез угла внешний */
+        0 10px /* Срез угла внешний */
+    );
 }
 
-/* Правая скобка ] */
+/* 4. Правая скобка ] */
 .archive-header .section-title::after {
-    right: 0; 
-    border-left: none;
+    right: 0;
+    /* Рисуем зеркальную форму */
+    clip-path: polygon(
+        100% 0, 
+        0 0, 
+        0 2px, 
+        calc(100% - 2px) 2px, 
+        calc(100% - 2px) calc(100% - 2px), 
+        0 calc(100% - 2px), 
+        0 100%, 
+        100% 100%, 
+        100% calc(100% - 10px), 
+        100% 10px
+    );
+}
+
+/* 5. Эффект при наведении на заголовок */
+.archive-header:hover .section-title::before {
+    transform: translateY(-50%) translateX(-10px); /* Отъезжает влево */
+    filter: drop-shadow(0 0 15px var(--neon-green));
+}
+.archive-header:hover .section-title::after {
+    transform: translateY(-50%) translateX(10px); /* Отъезжает вправо */
+    filter: drop-shadow(0 0 15px var(--neon-green));
 }
 
 .archive-header-sub {
@@ -114,6 +155,7 @@
     text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
 }
 
+/* --- КОНТРОЛЫ (Сортировка и Тип) --- */
 .header-control-bar {
     margin-top: 15px; 
     display: flex; align-items: center; gap: 15px;
@@ -461,7 +503,7 @@
 @media (max-width: 1400px) { .archive-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 1000px) { .archive-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) {
-    /* На мобилках убираем декоративные элементы заголовка, чтобы не ломать верстку */
+    /* На мобилках скрываем скобки, если они мешают */
     .archive-header .section-title::before, .archive-header .section-title::after { display: none; }
     .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; padding: 0; }
     

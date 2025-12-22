@@ -22,12 +22,77 @@ const ArchiveState = {
     isExpanded: false     // Флаг: развернут список или нет
 };
 
+// РАСШИРЕННАЯ КАРТА ТЕГОВ (ЗОЛОТОЙ СТАНДАРТ)
 const genreMap = {
-    'puzzle': 'Головоломка', 'adventure': 'Приключения', 'simulator': 'Симулятор',
-    'horror': 'Хоррор', 'coop': 'Кооператив', 'shooter': 'Шутер', 'platformer': 'Платформер',
-    'rpg': 'RPG', 'animation': 'Анимация', 'fantasy': 'Фэнтези', 'action': 'Экшен',
-    'strategy': 'Стратегия', 'survival': 'Выживание', 'scifi': 'Sci-Fi', 
-    'mystery': 'Мистика', 'comedy': 'Комедия', 'family': 'Семейный'
+    // --- Глобальные жанры ---
+    'action': 'Экшен',
+    'adventure': 'Приключения',
+    'rpg': 'РПГ',
+    'shooter': 'Шутер',
+    'strategy': 'Стратегия',
+    'simulation': 'Симулятор',
+    'puzzle': 'Головоломка',
+    'platformer': 'Платформер',
+    'fighting': 'Файтинг',
+    'racing': 'Гонки',
+    'horror': 'Хоррор',
+    'visual-novel': 'Виз. новелла',
+    'interactive-movie': 'Интерактивное кино',
+
+    // --- Механики и Геймплей ---
+    'survival': 'Выживание',
+    'stealth': 'Стелс',
+    'roguelike': 'Рогалик',
+    'metroidvania': 'Метроидвания',
+    'souls-like': 'Соулс-лайк',
+    'open-world': 'Открытый мир',
+    'sandbox': 'Песочница',
+    'battle-royale': 'Батл-рояль',
+    'point-click': 'Point & Click',
+    'rhythm': 'Ритм',
+    'walking-sim': 'Сим. ходьбы',
+    'hack-and-slash': 'Слэшер',
+
+    // --- Режимы ---
+    'singleplayer': 'Одиночная',
+    'coop': 'Кооператив',
+    'multiplayer': 'Мультиплеер',
+    'mmo': 'ММО',
+
+    // --- Атмосфера и Сюжет ---
+    'story-rich': 'Сюжетная',
+    'atmospheric': 'Атмосферная',
+    'funny': 'Комедия',
+    'trash': 'Трэш/Мем',
+    'detective': 'Детектив',
+    'mystery': 'Мистика',
+    'psychological': 'Психология',
+    'relaxing': 'Релакс',
+    'hardcore': 'Хардкор',
+    'cinematic': 'Киношная',
+    'drama': 'Драма',
+
+    // --- Сеттинг ---
+    'scifi': 'Sci-Fi',
+    'fantasy': 'Фэнтези',
+    'cyberpunk': 'Киберпанк',
+    'post-apocalyptic': 'Постапокалипсис',
+    'retro': 'Ретро/Пиксели',
+    'anime': 'Аниме',
+    'zombies': 'Зомби',
+
+    // --- Тип проекта ---
+    'indie': 'Инди',
+    'aaa': 'AAA',
+    'remake': 'Ремейк',
+    'early-access': 'Ранний доступ',
+    'free': 'Бесплатно',
+
+    // --- Кино / Мультики (Специфичные) ---
+    'animation': 'Анимация',
+    'family': 'Семейный',
+    'comedy': 'Комедия',
+    'thriller': 'Триллер'
 };
 
 const statusMap = {
@@ -365,17 +430,13 @@ function renderNextBatch() {
 
         if (isCollection) {
             // КОЛЛЕКЦИЯ (Стопка карточек)
-            // ПЕРЕДНИЙ ПЛАН: 1 сезон (index 1)
-            const frontImg = item.images[1];
-            // ЗАДНИЙ ПЛАН: 2 сезон (index 0 - актуальный)
-            const backImg = item.images[0];
+            const frontImg = item.images[1]; // ПЕРЕДНИЙ ПЛАН (второй элемент массива)
+            const backImg = item.images[0];  // ЗАДНИЙ ПЛАН (первый элемент)
 
-            // Важно: анимация задержки тоже нужна
             return `
             <div class="archive-card collection-wrapper animate-entry" data-status="${item.status}" data-id="${item.id}" style="animation-delay: ${delay}ms">
                 
                 <!-- ЗАДНЯЯ КАРТОЧКА (СЛОЙ 1) -->
-                <!-- Передаем картинку через inline-style в переменную --stack-bg, чтобы CSS мог её подхватить -->
                 <div class="collection-back" style="background-image: url('${backImg}')"></div>
                 
                 <!-- ПЕРЕДНЯЯ КАРТОЧКА (СЛОЙ 2) -->

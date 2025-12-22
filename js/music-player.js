@@ -42,8 +42,6 @@ const tracks = [
 ];
 
 let audio = new Audio();
-// ВАЖНО: crossOrigin нужен для онлайн треков, но для локальных через Live Server тоже полезен.
-// Если не работает, попробуйте закомментировать эту строку.
 audio.crossOrigin = "anonymous"; 
 
 let currentTrackIdx = 0;
@@ -82,8 +80,7 @@ const els = {
     
     progressArea: document.getElementById('progress-area'),
     progressFill: document.getElementById('progress-fill'),
-    volumeTicksContainer: document.getElementById('volume-ticks'),
-    navShapes: [] 
+    volumeTicksContainer: document.getElementById('volume-ticks')
 };
 
 let currentVolume = 0.5;
@@ -118,7 +115,6 @@ export function initMusicPlayer() {
     renderPlaylist();
     createVolumeTicks();
 
-    // Инициализация аудио-контекста должна быть по клику
     const initAudio = () => {
         if (!audioCtx) setupAudioContext();
     };
@@ -131,7 +127,6 @@ export function initMusicPlayer() {
     els.btnPrev.addEventListener('click', () => { initAudio(); prevTrack(); });
     els.btnNext.addEventListener('click', () => { initAudio(); nextTrack(); });
     
-    // Клик по плейлисту тоже инициализирует звук
     els.playlist.addEventListener('click', initAudio);
 
     audio.addEventListener('ended', nextTrack);
@@ -209,27 +204,19 @@ function setProgress(e) {
     logMusicAction("SEEK_TO:", `${mins}:${secs}`);
 }
 
-/**
- * ИСПРАВЛЕННАЯ ФУНКЦИЯ НАСТРОЙКИ АУДИО
- * Гарантирует, что Source создается только один раз.
- */
 function setupAudioContext() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         
-        // 1. Создаем контекст, если его нет
         if (!audioCtx) {
             audioCtx = new AudioContext();
         }
 
-        // 2. Создаем анализатор, если его нет
         if (!analyser) {
             analyser = audioCtx.createAnalyser();
             analyser.fftSize = 64; 
         }
 
-        // 3. ВАЖНО: Источник (Source) создаем ТОЛЬКО ОДИН РАЗ для этого тега audio
-        // Если создать его дважды, браузер выдаст ошибку и всё сломается
         if (!source) {
             source = audioCtx.createMediaElementSource(audio);
             source.connect(analyser);
@@ -255,6 +242,7 @@ function getComputedRotation(el) {
     return 0;
 }
 
+// --- ВИЗУАЛИЗАТОР (ОБНОВЛЕННАЯ ЛОГИКА) ---
 function visualizerLoop() {
     if (!isMusicModeActive) {
         if (animationId) cancelAnimationFrame(animationId);
@@ -279,9 +267,7 @@ function visualizerLoop() {
         }
         bassAverage = bassTotal / 8;
 
-        // Если все нули, значит браузер заблокировал данные (CORS)
-        // Но анимацию все равно оставим "в покое"
-        
+        // 1. Анимация волн в панели (справа)
         els.waveformBars.forEach((bar, index) => {
             let value = dataArray[index] || 0;
             let heightPercent = (value / 255) * 100;
@@ -289,52 +275,61 @@ function visualizerLoop() {
         });
         els.waveformContainer.classList.add('js-controlled');
 
-        // Квадратики
-        if (els.navShapes && els.navShapes.length > 0) {
+        // 2. Анимация навигационных квадратиков
+        // Ищем элементы каждый кадр, чтобы работать даже после скролла
+        const liveShapes = document.querySelectorAll('.nav-marker .nav-shape');
+
+        if (liveShapes.length > 0) {
             const pulseDuration = 100;
+            
+            // Распределение частот: Низкие частоты (басы) дублируем по краям
             const freqBands = [
-                { start: 25, end: 31, threshold: 0.3 }, 
-                { start: 19, end: 24, threshold: 0.3 },
-                { start: 13, end: 18, threshold: 0.3 }, 
-                { start: 7, end: 12, threshold: 0.3 },
-                { start: 0, end: 6, threshold: 0.3 }
+                { start: 0, end: 4, threshold: 0.4 },   // БАС (Верхний квадрат)
+                { start: 2, end: 6, threshold: 0.35 },  // БАС
+                { start: 4, end: 8, threshold: 0.3 },   // Низкая середина
+                { start: 6, end: 12, threshold: 0.3 },  // Середина
+                { start: 8, end: 16, threshold: 0.3 },  // Высокая середина
+                { start: 0, end: 5, threshold: 0.4 }    // БАС (Нижний квадрат)
             ];
 
-            els.navShapes.forEach((shape, i) => {
+            liveShapes.forEach((shape, i) => {
                 const bandIndex = i % freqBands.length;
                 const bandConfig = freqBands[bandIndex];
                 
                 let bandEnergy = 0;
+                const safeStart = Math.min(bandConfig.start, bufferLength - 1);
                 const safeEnd = Math.min(bandConfig.end, bufferLength - 1);
                 
-                for (let j = bandConfig.start; j <= safeEnd; j++) {
+                for (let j = safeStart; j <= safeEnd; j++) {
                     bandEnergy += dataArray[j];
                 }
-                const count = safeEnd - bandConfig.start + 1;
+                const count = safeEnd - safeStart + 1;
                 const avgIntensity = count > 0 ? (bandEnergy / count) / 255 : 0; 
 
+                // Если энергия выше порога - пульсируем
                 if (avgIntensity > bandConfig.threshold) {
-                    if (shape.pulseTimeout) {
-                        clearTimeout(shape.pulseTimeout);
-                        shape.pulseTimeout = null;
+                    if (shape.dataset.pulseTimer) {
+                        clearTimeout(parseInt(shape.dataset.pulseTimer));
                     }
+
                     shape.style.borderColor = 'var(--neon-green)';
                     shape.style.backgroundColor = 'var(--neon-green)';
-                    shape.style.boxShadow = `0 0 ${20 * avgIntensity}px var(--neon-green)`;
-                    shape.style.transform = `rotate(45deg) scale(${1 + (avgIntensity * 0.3)})`;
+                    shape.style.boxShadow = `0 0 ${25 * avgIntensity}px var(--neon-green)`;
+                    shape.style.transform = `rotate(45deg) scale(${1.1 + (avgIntensity * 0.5)})`;
                     
-                    shape.pulseTimeout = setTimeout(() => {
+                    const timerId = setTimeout(() => {
                         shape.style.borderColor = ''; 
                         shape.style.backgroundColor = '';
                         shape.style.boxShadow = '';
                         shape.style.transform = ''; 
-                        shape.pulseTimeout = null;
                     }, pulseDuration);
+                    
+                    shape.dataset.pulseTimer = timerId;
                 }
             });
         }
 
-        // Аватар Glow
+        // 3. Аватар Glow
         if (els.mainAvatar) {
             const intensity = bassAverage / 255;
             const sharpIntensity = Math.pow(intensity, 2);
@@ -347,27 +342,26 @@ function visualizerLoop() {
         els.waveformBars.forEach(bar => { bar.style.height = '4px'; });
         els.waveformContainer.classList.remove('js-controlled');
         
-        if (els.navShapes) {
-            els.navShapes.forEach(shape => {
-                if (shape.pulseTimeout) clearTimeout(shape.pulseTimeout);
-                shape.style = '';
-            });
-        }
+        // Сброс квадратиков
+        const liveShapes = document.querySelectorAll('.nav-marker .nav-shape');
+        liveShapes.forEach(shape => {
+            if (shape.dataset.pulseTimer) clearTimeout(parseInt(shape.dataset.pulseTimer));
+            shape.style = '';
+        });
+        
         if (els.mainAvatar) {
             els.mainAvatar.style.filter = '';
         }
     }
 
-    // --- 5. КОЛЬЦА (Пульсация) ---
-    // Увеличенная пульсация (0.3)
+    // 4. Кольца (Пульсация)
     let scale = 1;
     if (bassAverage > 40) {
         scale = 1 + (bassAverage / 255) * 0.3; 
     }
-    els.ringsContainer.style.transform = `scale(${scale})`;
+    if(els.ringsContainer) els.ringsContainer.style.transform = `scale(${scale})`;
 
-    // --- 6. КОЛЬЦА (Вращение) ---
-    // Вращаются всегда, но быстрее при басах
+    // 5. Кольца (Вращение)
     let rotationSpeed = 0.5 + (bassAverage / 255) * 3.0; 
 
     ringRot1 += rotationSpeed;       
@@ -402,7 +396,6 @@ export function toggleMusicMode() {
             
             els.hudRight.classList.add('music-mode-active');
             
-            els.navShapes = Array.from(document.querySelectorAll('.nav-marker .nav-shape'));
             ringRot1 = getComputedRotation(els.ring1);
             ringRot2 = getComputedRotation(els.ring2);
             ringRot3 = getComputedRotation(els.ring3);
@@ -452,12 +445,12 @@ export function toggleMusicMode() {
                 els.ring3.style.transform = '';
             }
 
-            if (els.navShapes) {
-                els.navShapes.forEach(shape => {
-                    if (shape.pulseTimeout) clearTimeout(shape.pulseTimeout);
-                    shape.style = '';
-                });
-            }
+            // Сброс стилей навигации
+            const liveShapes = document.querySelectorAll('.nav-marker .nav-shape');
+            liveShapes.forEach(shape => {
+                if (shape.dataset.pulseTimer) clearTimeout(parseInt(shape.dataset.pulseTimer));
+                shape.style = '';
+            });
 
             if (els.mainAvatar) {
                 els.mainAvatar.style.filter = '';
@@ -537,10 +530,6 @@ function pauseTrack() {
     updatePlayIcon();
     renderPlaylist();
     logMusicAction("STATUS:", "PAUSED");
-}
-
-function resetBars() {
-    els.waveformBars.forEach(bar => { bar.style.height = ''; });
 }
 
 function nextTrack() {

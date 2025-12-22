@@ -11,7 +11,6 @@
     position: relative;
     z-index: 10;
     
-    /* БЫЛО: 40px 0 -> СТАЛО: 20px 0 (Меньше отступ сверху) */
     padding: 20px 0 40px 0; 
     
     overflow: hidden;
@@ -38,10 +37,7 @@
 
 .cyber-header-wrapper {
     text-align: center;
-    
-    /* БЫЛО: 50px -> СТАЛО: 30px (Меньше отступ до карточек) */
     margin-bottom: 30px;
-    
     position: relative;
     z-index: 5;
 }
@@ -140,7 +136,8 @@
 .spec-card:hover {
     transform: translateY(-5px);
     border-color: var(--neon-green);
-    box-shadow: 0 10px 30px rgba(57, 255, 20, 0.15);
+    /* Свечение самой карты (внешнее) */
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.4), 0 10px 30px rgba(57, 255, 20, 0.15);
 }
 .spec-card:hover .card-glass { opacity: 1; }
 
@@ -201,20 +198,24 @@
     color: #ccc; border: 1px solid rgba(255,255,255,0.05);
 }
 
+/* --- УГОЛКИ: ИСПРАВЛЕНИЕ --- */
+
 .tech-corner {
     position: absolute;
     width: 20px;
     height: 20px;
-    border: 2px solid transparent;
+    /* ВАЖНО: Мы убрали 'border: 2px solid transparent' отсюда.
+       Теперь здесь нет границ по умолчанию. */
     background: transparent !important;
     box-shadow: none !important;
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease;
     pointer-events: none;
     z-index: 5;
 }
 
 .tech-corner.top-right {
     top: 0; right: 0;
+    /* Границы создаем только для нужных сторон */
     border-top: 2px solid rgba(255, 255, 255, 0.1);
     border-right: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 0 16px 0 0;
@@ -222,14 +223,16 @@
 
 .tech-corner.bottom-left {
     bottom: 0; left: 0;
+    /* Границы создаем только для нужных сторон */
     border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     border-left: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 0 0 0 16px;
 }
 
 .spec-card:hover .tech-corner {
+    /* Меняем только цвет. Несуществующие границы (шириной 0) не покрасятся */
     border-color: var(--neon-green);
-    filter: drop-shadow(0 0 2px var(--neon-green)) drop-shadow(0 0 5px var(--neon-green));
+    filter: none;
 }
 
 .spec-bar-loader {

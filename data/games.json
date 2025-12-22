@@ -3,9 +3,9 @@
     "id": "bad-cheese",
     "title": "Bad Cheese",
     "rating": 1.5,
-    "description": "Начало интригует, но дальше начинается сложная психоделика. Звук несбалансирован: скримеры громкие, действия тихие. Зато звуки шлепков приятные.",
+    "description": "Начало интригует, но дальше начинается сложная психоделика. Звук несбалансирован, но шлепки приятные. Стиль 1920-х.",
     "image": "assets/images/games/bad-cheese.jpg",
-    "genres": ["horror", "adventure"],
+    "genres": ["horror", "trash", "retro", "psychological", "indie"],
     "status": "completed",
     "customColor": "#e3ea04",
     "videos": [
@@ -16,10 +16,10 @@
     "id": "state-of-decay-2",
     "title": "State of Decay 2",
     "rating": 4.5,
-    "description": "Топовое выживание. Отличная графика, сочная разрушаемость зомби и затягивающий лутинг. В коопе роль гостя урезана до «мешка для ресов».",
+    "description": "Топовое выживание. Строим базу, лутаем, давим зомби. В коопе весело, хоть роль гостя и урезана.",
     "image": "assets/images/games/state-of-decay-2.jpg",
-    "genres": ["survival", "shooter", "coop"],
-    "status": "completed",
+    "genres": ["survival", "zombies", "coop", "open-world", "shooter", "action"],
+    "status": "playing",
     "customColor": "#b79967",
     "videos": [
       { "title": "поездные реалии 196", "url": "https://www.youtube.com/watch?v=4V4y8rO75mA" }
@@ -29,22 +29,22 @@
     "id": "fuck-you-witch",
     "title": "Fuck You Witch",
     "rating": 2.5,
-    "description": "Мемный хоррор с понятным сюжетом. Техническая часть хромает: ведьма иногда игнорирует маты, а игра может вылететь в неподходящий момент.",
+    "description": "Мемный хоррор, где нужно орать матом в микрофон, чтобы отпугнуть ведьму. Технически сыро, но весело.",
     "image": "assets/images/games/fuck-you-witch.jpg",
-    "genres": ["horror", "simulator"],
+    "genres": ["horror", "trash", "funny", "indie", "simulation"],
     "status": "completed",
     "customColor": "#a43c2e",
     "videos": [
-      { "title": "почему же почему же стрима нет, когда он нужен? 195", "url": "https://youtu.be/07lzMJrVDjg?si=Pv9W52-LxTagbW9M" }
+      { "title": "почему же стрима нет?", "url": "https://youtu.be/07lzMJrVDjg?si=Pv9W52-LxTagbW9M" }
     ]
   },
   {
     "id": "bendy-dark-revival",
     "title": "Bendy and the Dark Revival",
     "rating": 4.8,
-    "description": "Возвращение в чернильную бездну. Более мрачное и глубокое продолжение истории Одри.",
+    "description": "Возвращение в чернильную бездну. Более мрачное, глубокое и красивое продолжение истории Одри.",
     "image": "https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png",
-    "genres": ["horror", "adventure", "puzzle"],
+    "genres": ["horror", "adventure", "puzzle", "story-rich", "atmospheric", "indie"],
     "status": "completed",
     "customColor": "#ffd700"
   },
@@ -52,24 +52,24 @@
     "id": "bendy-ink-machine",
     "title": "Bendy and the Ink Machine",
     "rating": 4.7,
-    "description": "Классический хоррор от первого лица. Разгадываем тайны старой студии анимации.",
+    "description": "Классика. Бродим по старой студии анимации, убегаем от чернильного демона и решаем загадки.",
     "image": "https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png",
-    "genres": ["horror", "puzzle"],
+    "genres": ["horror", "puzzle", "adventure", "story-rich", "indie", "retro"],
     "status": "completed",
     "customColor": "#f4d03f",
     "videos": [
-    { "title": "Начало выживания", "url": "https://youtu.be/vAEKtyPSgz0?si=uHFo3TWzWa7n907A" },
-    { "title": "Смешные моменты", "url": "https://youtu.be/_aJV27IXlwU?si=umTTVpbWwlLkuJ_z" },
-    { "title": "Финал", "url": "https://youtu.be/RtRBWSAvdMY?si=V-w71faGbqms4L5f" }
+      { "title": "Начало выживания", "url": "https://youtu.be/vAEKtyPSgz0?si=uHFo3TWzWa7n907A" },
+      { "title": "Смешные моменты", "url": "https://youtu.be/_aJV27IXlwU?si=umTTVpbWwlLkuJ_z" },
+      { "title": "Финал", "url": "https://youtu.be/RtRBWSAvdMY?si=V-w71faGbqms4L5f" }
     ]
   },
   {
     "id": "gris",
     "title": "GRIS",
     "rating": 5.0,
-    "description": "Медитативное путешествие по миру скорби. Невероятно красивый визуал и музыка.",
+    "description": "Медитативное путешествие по миру скорби. Невероятно красивый акварельный визуал и музыка.",
     "image": "https://cdn2.steamgriddb.com/grid/28c3c3e591be4d57567ec7830f7b3b46.webp",
-    "genres": ["platformer", "adventure", "puzzle"],
+    "genres": ["platformer", "adventure", "atmospheric", "relaxing", "puzzle", "indie"],
     "status": "completed",
     "customColor": "#79c5ce"
   },
@@ -77,9 +77,9 @@
     "id": "hollow-knight",
     "title": "Hollow Knight",
     "rating": 5.0,
-    "description": "Хардкорная метроидвания о приключениях в заброшенном королевстве насекомых Халлоунест.",
+    "description": "Хардкорная метроидвания о жуках. Огромный мир, сложные боссы и грустная история.",
     "image": "https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp",
-    "genres": ["platformer", "action", "adventure"],
+    "genres": ["metroidvania", "souls-like", "platformer", "action", "hardcore", "indie"],
     "status": "playing",
     "customColor": "#aab7b8"
   },
@@ -87,9 +87,9 @@
     "id": "lethal-company",
     "title": "Lethal Company",
     "rating": 4.5,
-    "description": "Кооперативный хоррор. Собираем металлолом на лунах, убегаем от монстров и выполняем квоту.",
+    "description": "Кооперативный хоррор. Собираем металлолом, орем от страха и смеемся над нелепыми смертями.",
     "image": "https://cdn2.steamgriddb.com/grid/fd729ccc51bbb0d182ac464d2f34e4f2.webp",
-    "genres": ["horror", "coop", "survival"],
+    "genres": ["horror", "coop", "survival", "scifi", "funny", "indie"],
     "status": "playing",
     "customColor": "#ff4444"
   },
@@ -97,9 +97,9 @@
     "id": "content-warning",
     "title": "Content Warning",
     "rating": 4.2,
-    "description": "Снимаем вирусные видео с призраками ради просмотров на SpookTube. Очень весело и страшно.",
+    "description": "Снимаем вирусные видео с призраками ради просмотров на SpookTube. Очень весело.",
     "image": "https://cdn2.steamgriddb.com/grid/ec6fbf0d38ffc435686348723a08c839.png",
-    "genres": ["coop", "horror", "simulator"],
+    "genres": ["coop", "horror", "simulation", "funny", "indie"],
     "status": "playing",
     "customColor": "#e1ff00"
   },
@@ -109,7 +109,7 @@
     "rating": 5.0,
     "description": "Строим, копаем, выживаем. Творчество и приключения в бесконечном кубическом мире.",
     "image": "https://cdn2.steamgriddb.com/grid/53344d4d9596276b9b7f70158bf95779.webp",
-    "genres": ["simulator", "survival", "coop"],
+    "genres": ["sandbox", "survival", "open-world", "coop", "adventure"],
     "status": "playing",
     "customColor": "#39ff14"
   },
@@ -117,9 +117,9 @@
     "id": "portal-2",
     "title": "Portal 2",
     "rating": 5.0,
-    "description": "Шедевральная головоломка с порталами. Проходим кооператив и смеемся над ГЛэДОС.",
+    "description": "Шедевральная головоломка. Порталы, физика, юмор ГЛэДОС и отличный кооператив.",
     "image": "https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png",
-    "genres": ["puzzle", "coop", "adventure"],
+    "genres": ["puzzle", "coop", "adventure", "story-rich", "funny", "scifi", "aaa"],
     "status": "completed",
     "customColor": "#00a2ff"
   },
@@ -127,19 +127,19 @@
     "id": "cs2",
     "title": "Counter-Strike 2",
     "rating": 4.0,
-    "description": "Тактический командный шутер. Раскидки, тактики и напряженные матчи.",
+    "description": "Тактический командный шутер. Раскидки, тактики, скины и напряженные клатчи.",
     "image": "https://cdn2.steamgriddb.com/grid/0662aa1719017e0efa5fa8daf0880c6e.png",
-    "genres": ["shooter", "action", "coop"],
+    "genres": ["shooter", "multiplayer", "action", "strategy", "aaa"],
     "status": "playing",
-    "customColor": "#orange"
+    "customColor": "#ffa500"
   },
   {
     "id": "sally-face",
     "title": "Sally Face",
     "rating": 4.9,
-    "description": "Мрачная приключенческая игра о мальчике с протезом на лице и темных тайнах.",
+    "description": "Мрачная история о мальчике с протезом. Детектив, мистика и тяжелые темы.",
     "image": "https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png",
-    "genres": ["horror", "adventure", "puzzle"],
+    "genres": ["adventure", "horror", "story-rich", "psychological", "indie", "point-click"],
     "status": "completed",
     "customColor": "#79c5ce"
   },
@@ -147,9 +147,9 @@
     "id": "bendy-lone-wolf",
     "title": "Bendy: Lone Wolf",
     "rating": 4.5,
-    "description": "Мрачное выживание в заброшенной студии от лица Бориса. Собираем ресурсы и прячемся от чернильного демона.",
+    "description": "Выживание за Бориса в процедурно генерируемой студии. Прятки от Демона.",
     "image": "https://cdn2.steamgriddb.com/grid/29eae898bbf4086376aa8fd60007aaaa.png",
-    "genres": ["horror", "survival", "adventure"],
+    "genres": ["horror", "survival", "roguelike", "indie", "retro"],
     "status": "completed",
     "customColor": "#f4d03f"
   },
@@ -157,26 +157,26 @@
     "id": "bioshock-infinite",
     "title": "BioShock Infinite",
     "rating": 5.0,
-    "description": "Путешествие в парящий город Колумбия. Потрясающий сюжет о квантовых мирах и спасении Элизабет.",
+    "description": "Парящий город Колумбия, Элизабет и квантовые разломы. Сюжет, который взрывает мозг.",
     "image": "https://cdn2.steamgriddb.com/grid/374ad92e28ff7e130fb88205d8f49384.png",
-    "genres": ["shooter", "action", "adventure"],
+    "genres": ["shooter", "action", "story-rich", "scifi", "adventure", "aaa"],
     "status": "completed",
     "customColor": "#dfc4ac",
     "videos": [
       { "title": "не разочаруй нас (часть 1)", "url": "https://youtu.be/wvlF0sBKpgA?si=RjUJY0zQgfyO5XK4" },
-      { "title": "а мы женщину нашли, а мы с женщиной пошли (часть 2)", "url": "https://youtu.be/KsBProOxvpY?si=Fi4NY89QZ7ZoGnGv" },
+      { "title": "а мы женщину нашли (часть 2)", "url": "https://youtu.be/KsBProOxvpY?si=Fi4NY89QZ7ZoGnGv" },
       { "title": "поднебесный городок (часть 3)", "url": "https://youtu.be/mFQjB_5FQNs?si=cB1jEYdu7Yr1nqfF" },
       { "title": "воздушные опи*дюливания", "url": "https://youtu.be/cXXcKHYQJ2c?si=lT6pkfaNIf7wVB7Q" },
-      { "title": "Я подкатывал к ней яйца, а оказалось что она моя...", "url": "https://youtu.be/jBobUycOKEM?si=TOVsx5ig8C9vG1XP" }
+      { "title": "Я подкатывал к ней яйца...", "url": "https://youtu.be/jBobUycOKEM?si=TOVsx5ig8C9vG1XP" }
     ]
   },
   {
     "id": "beholder",
     "title": "Beholder",
     "rating": 4.2,
-    "description": "Симулятор управляющего домом в тоталитарном государстве. Следим за жильцами и делаем сложный моральный выбор.",
+    "description": "Симулятор стукача в тоталитарном государстве. Следим за жильцами, пишем доносы, делаем выбор.",
     "image": "https://cdn2.steamgriddb.com/grid/5ea7aaa4eaff9e67e37e174ccf82b56b.jpg",
-    "genres": ["simulator", "strategy"],
+    "genres": ["strategy", "simulation", "story-rich", "indie", "atmospheric"],
     "status": "on-hold",
     "customColor": "#2c3e50"
   },
@@ -184,9 +184,9 @@
     "id": "mouthwashing",
     "title": "Mouthwashing",
     "rating": 4.8,
-    "description": "Сюрреалистичный хоррор о экипаже космического грузовика после крушения. Психологическое безумие гарантировано.",
+    "description": "Сюрреалистичный хоррор о гибнущем экипаже космического корабля. Безумие и ретро-стиль PS1.",
     "image": "https://cdn2.steamgriddb.com/grid/20b9686ae90039dd7216f07c6bdd3211.png",
-    "genres": ["horror", "adventure"],
+    "genres": ["horror", "psychological", "story-rich", "retro", "scifi", "indie"],
     "status": "playing",
     "customColor": "#ff2d95"
   },
@@ -194,9 +194,9 @@
     "id": "cuphead",
     "title": "Cuphead",
     "rating": 4.7,
-    "description": "Хардкорный платформер в стиле мультфильмов 30-х годов. Боссы заставят тебя страдать.",
+    "description": "Хардкорный платформер в стиле 30-х. Красиво, но боссы заставят страдать.",
     "image": "https://cdn2.steamgriddb.com/grid/23d2d7ff1a670a1ac0f181516bd58520.png",
-    "genres": ["platformer", "action"],
+    "genres": ["platformer", "action", "hardcore", "coop", "indie", "retro"],
     "status": "dropped",
     "customColor": "#c0392b"
   },
@@ -204,9 +204,9 @@
     "id": "buckshot-roulette",
     "title": "Buckshot Roulette",
     "rating": 4.9,
-    "description": "Смертельная игра в русскую рулетку с дробовиком против Дилера в подпольном клубе.",
+    "description": "Русская рулетка с дробовиком против Дилера. Стратегия, удача и мрачный клуб.",
     "image": "https://cdn2.steamgriddb.com/grid/15dedec079bd674cc309564d63c8db2c.png",
-    "genres": ["horror", "strategy", "simulator"],
+    "genres": ["horror", "strategy", "psychological", "indie", "roguelike"],
     "status": "completed",
     "customColor": "#27ae60"
   },
@@ -214,9 +214,9 @@
     "id": "bendy-secrets-of-the-machine",
     "title": "Bendy: Secrets of the Machine",
     "rating": 4.0,
-    "description": "Загадочный тизер-проект, скрывающий тайны будущего вселенной Bendy.",
+    "description": "Загадочный тизер-проект. Скрывает тайны будущего вселенной Bendy.",
     "image": "https://cdn2.steamgriddb.com/grid/419f51a7b50c04bb38fd5870da376a5a.jpg",
-    "genres": ["horror", "puzzle"],
+    "genres": ["horror", "puzzle", "mystery", "indie"],
     "status": "playing",
     "customColor": "#f1c40f"
   },
@@ -224,9 +224,9 @@
     "id": "undertale",
     "title": "Undertale",
     "rating": 5.0,
-    "description": "RPG, где не обязательно никого убивать. Творчество и приключения в бесконечном кубическом мире.",
+    "description": "RPG, где не обязательно никого убивать. Шедевр с душой, юмором и крутой музыкой.",
     "image": "https://cdn2.steamgriddb.com/grid/bbd30950ec6c745947d21a08d002f782.png",
-    "genres": ["rpg", "adventure"],
+    "genres": ["rpg", "story-rich", "adventure", "funny", "retro", "indie"],
     "status": "completed",
     "customColor": "#9b59b6"
   },
@@ -234,9 +234,9 @@
     "id": "vrchat",
     "title": "VRChat",
     "rating": 4.1,
-    "description": "Бесконечные миры и общение. Место, где можно стать кем угодно и встретить кого угодно.",
+    "description": "Бесконечные миры и общение. Можно стать кем угодно: от аниме-девочки до хлебушка.",
     "image": "https://cdn2.steamgriddb.com/grid/295b5d1a1f98d2c6c64569ed889378d7.png",
-    "genres": ["simulator", "coop"],
+    "genres": ["simulation", "multiplayer", "sandbox", "anime", "free"],
     "status": "playing",
     "customColor": "#1abc9c"
   },
@@ -244,9 +244,9 @@
     "id": "alice-madness-returns",
     "title": "Alice: Madness Returns",
     "rating": 4.6,
-    "description": "Мрачное переосмысление Страны Чудес. Алиса борется со своими внутренними демонами.",
+    "description": "Мрачное переосмысление Страны Чудес. Алиса с ножом против своих демонов.",
     "image": "https://cdn2.steamgriddb.com/grid/18c1932d87fb2d0250f2b3235f3802c9.png",
-    "genres": ["action", "adventure", "horror"],
+    "genres": ["action", "platformer", "horror", "psychological", "fantasy", "hack-and-slash"],
     "status": "on-hold",
     "customColor": "#8e44ad"
   },
@@ -254,9 +254,9 @@
     "id": "boris-and-the-dark-survival",
     "title": "Boris and the Dark Survival",
     "rating": 4.3,
-    "description": "Каждый уровень генерируется случайно. Сможешь ли ты найти выход раньше чернильного монстра?",
+    "description": "Рандомно генерируемые уровни. Ищем припасы и бегаем от Чернильного Демона.",
     "image": "https://cdn2.steamgriddb.com/grid/216085f7b9a7e1484e2b0802bc4f1bb8.png",
-    "genres": ["horror", "survival"],
+    "genres": ["horror", "survival", "roguelike", "indie", "strategy"],
     "status": "completed",
     "customColor": "#7f8c8d"
   },
@@ -264,9 +264,9 @@
     "id": "abyssus",
     "title": "Abyssus",
     "rating": 3.9,
-    "description": "Динамичный шутер в сеттинге подводной цивилизации с элементами стимпанка.",
+    "description": "Динамичный roguelike-шутер в подводном стимпанк-сеттинге.",
     "image": "https://cdn2.steamgriddb.com/grid/ad65411e5914ebe1d688874f6f9f865a.jpg",
-    "genres": ["shooter", "action"],
+    "genres": ["shooter", "action", "roguelike", "scifi", "indie"],
     "status": "on-hold",
     "customColor": "#16a085"
   },
@@ -274,9 +274,9 @@
     "id": "awaria",
     "title": "Awaria",
     "rating": 4.0,
-    "description": "Короткая инди-история о технической катастрофе и выживании в замкнутом пространстве.",
+    "description": "Короткая игра от создателя Helltaker. Чиним генераторы в проклятых туннелях.",
     "image": "https://cdn2.steamgriddb.com/grid/00b1f760f5b1831e2495c8bb1e99c38e.png",
-    "genres": ["adventure", "puzzle"],
+    "genres": ["action", "indie", "horror", "free", "singleplayer"],
     "status": "playing",
     "customColor": "#d35400"
   },
@@ -286,8 +286,21 @@
     "rating": 4.9,
     "description": "Короткая игра про демонических девчонок, блины и решение головоломок в аду.",
     "image": "https://cdn2.steamgriddb.com/grid/8ca2ddca9fd5b429152341f9c56cde20.png",
-    "genres": ["puzzle", "adventure"],
+    "genres": ["puzzle", "adventure", "funny", "anime", "indie", "free"],
     "status": "completed",
     "customColor": "#bdc3c7"
+  },
+  {
+    "id": "unmourned",
+    "title": "Unmourned",
+    "rating": 0,
+    "description": "???",
+    "image": "assets/images/games/unmourned.jpg",
+    "genres": ["horror", "walking-sim", "psychological", "indie", "detective"],
+    "status": "playing",
+    "customColor": "#2f3b32",
+    "videos": [
+      { "title": "Веселая Виселица", "url": "https://youtu.be/ytz5jMFVGdQ?si=_wlH1usG1kDzxnzO" }
+    ]
   }
 ]

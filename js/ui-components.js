@@ -159,9 +159,30 @@ function initNavRail() {
     const rail = document.getElementById('cyber-nav-rail');
     if (!rail) return;
 
-    // ДОБАВЛЕН 'hero' В СПИСОК СЕКЦИЙ
+    // --- НОВАЯ ЛОГИКА ДЛЯ ДВИЖУЩЕГОСЯ ЛУЧА ---
+    function updateRailBeam() {
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const scrollableHeight = docHeight - winHeight;
+        const scrolled = window.scrollY;
+
+        let percent = 0;
+        if (scrollableHeight > 0) {
+            percent = (scrolled / scrollableHeight) * 100;
+        }
+        
+        // Передаем позицию (0% - 100%) в CSS переменную
+        rail.style.setProperty('--line-pos', `${percent}%`);
+    }
+
+    // Слушаем скролл для обновления луча
+    window.addEventListener('scroll', updateRailBeam);
+    // Вызываем один раз сразу, чтобы луч встал на место
+    updateRailBeam();
+    // ------------------------------------------
+
     const sections = [
-        { id: 'hero', label: 'ГЛАВНАЯ' }, // <-- Новый квадрат
+        { id: 'hero', label: 'ГЛАВНАЯ' },
         { id: 'about', label: 'ОБО МНЕ' },
         { id: 'command-center', label: 'КОМАНДНЫЙ ЦЕНТР' },
         { id: 'media-archive', label: 'БАЗА ДАННЫХ' },
@@ -170,6 +191,7 @@ function initNavRail() {
     ];
 
     window.updateNavRail = function() {
+        // Очищаем старые маркеры, но луч (::after) останется, так как он в CSS
         rail.innerHTML = ''; 
         const docHeight = document.documentElement.scrollHeight;
         
@@ -226,9 +248,14 @@ function initNavRail() {
 
     window.updateNavRail();
     window.addEventListener('scroll', checkActiveSection);
+    
+    // Обновляем позицию маркеров при изменении размера окна
     const resizeObserver = new ResizeObserver(() => {
         clearTimeout(window.navUpdateTimeout);
-        window.navUpdateTimeout = setTimeout(() => { window.updateNavRail(); }, 100);
+        window.navUpdateTimeout = setTimeout(() => { 
+            window.updateNavRail(); 
+            updateRailBeam(); // Обновляем и луч тоже
+        }, 100);
     });
     resizeObserver.observe(document.body);
 }

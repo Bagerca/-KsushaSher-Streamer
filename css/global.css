@@ -46,8 +46,13 @@
 html {
     scrollbar-width: thin;
     scrollbar-color: var(--neon-green) #0a0b10;
-    /* ОТКЛЮЧАЕМ нативный скролл, чтобы работал наш JS */
+    /* ОТКЛЮЧАЕМ нативный скролл, чтобы работала наша плавная прокрутка */
     scroll-behavior: auto !important; 
+    
+    /* ВАЖНО: Базовый черный фон. 
+       Если этого не сделать, при прозрачном body (для Матрицы) 
+       фон станет белым (дефолт браузера). */
+    background-color: #050508; 
 }
 
 /* =========================================
@@ -60,12 +65,18 @@ html {
 }
 
 body {
-    background-color: #050508; 
+    /* ВАЖНО: Фон прозрачный, чтобы через него было видно слои 
+       Матрицы (canvas) и Шторки (div#matrix-curtain) */
+    background-color: transparent; 
+    
     color: var(--white);
     line-height: 1.6;
     font-family: 'Exo 2', sans-serif;
     overflow-x: hidden; 
+    
+    /* Растягиваем body, чтобы шторка работала корректно */
     min-height: 100vh;
+    position: relative;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.3s; }
@@ -102,7 +113,7 @@ section {
 }
 
 /* =========================================
-   CYBER NAV RAIL (ФИНАЛЬНАЯ ВЕРСИЯ)
+   CYBER NAV RAIL (ОБНОВЛЕННАЯ ВЕРСИЯ)
    ========================================= */
 .cyber-nav-rail {
     position: fixed; 
@@ -116,17 +127,47 @@ section {
     pointer-events: none;
 }
 
+/* 1. СТАТИЧНАЯ ЛИНИЯ-ФОН (РЕЛЬСА) */
 .cyber-nav-rail::before {
     content: '';
     position: absolute;
-    top: 50px; bottom: 50px;
-    left: 50%; transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
+    left: 50%; 
+    transform: translateX(-50%);
     width: 1px;
-    background: linear-gradient(to bottom, transparent, rgba(57, 255, 20, 0.2), transparent);
+    background: rgba(57, 255, 20, 0.1); /* Тусклый фон */
     z-index: 0;
 }
 
-/* 1. КОНТЕЙНЕР (Не вращается! Просто держит позицию) */
+/* 2. ДИНАМИЧЕСКИЙ ЛУЧ (Бегущий огонек) */
+.cyber-nav-rail::after {
+    content: '';
+    position: absolute;
+    top: 0; 
+    bottom: 0;
+    left: 50%; 
+    transform: translateX(-50%);
+    width: 2px; /* Чуть толще фона */
+    z-index: 1; /* Над фоном, но под ромбами */
+    
+    /* Градиент, центр которого зависит от JS-переменной --line-pos */
+    background: linear-gradient(
+        to bottom, 
+        transparent, 
+        transparent calc(var(--line-pos, 0%) - 15%), 
+        var(--neon-green) var(--line-pos, 0%), 
+        transparent calc(var(--line-pos, 0%) + 15%), 
+        transparent
+    );
+    
+    opacity: 0.8;
+    filter: drop-shadow(0 0 5px var(--neon-green));
+    pointer-events: none;
+    will-change: background; /* Оптимизация отрисовки */
+}
+
+/* 3. КОНТЕЙНЕР МАРКЕРА (Не вращается! Просто держит позицию) */
 .nav-marker {
     position: absolute; 
     left: 50%;
@@ -134,20 +175,20 @@ section {
     transform: translate(-50%, -50%); /* Центрирование */
     cursor: pointer;
     pointer-events: auto; 
-    z-index: 2;
+    z-index: 2; /* Поверх линии */
 }
 
-/* 2. ФОРМА РОМБА (Вращается отдельно внутри контейнера) */
+/* 4. ФОРМА РОМБА (Вращается отдельно внутри контейнера) */
 .nav-shape {
     position: absolute;
     inset: 2px;
     background-color: #050508;
     border: 1px solid rgba(255, 255, 255, 0.3);
-    transform: rotate(45deg); /* Вот где происходит поворот */
+    transform: rotate(45deg); /* Поворот */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 3. ТАБЛИЧКА (Позиционируется от ровного контейнера) */
+/* 5. ТАБЛИЧКА (Позиционируется от ровного контейнера) */
 .nav-tooltip {
     position: absolute; 
     top: 50%; 
@@ -176,7 +217,7 @@ section {
     box-shadow: 0 0 15px rgba(0,0,0,0.8);
 }
 
-/* Линия-коннектор */
+/* Линия-коннектор для тултипа */
 .nav-tooltip::after {
     content: '';
     position: absolute;
@@ -189,7 +230,7 @@ section {
     transform: translateY(-50%);
 }
 
-/* Эффекты при наведении */
+/* Эффекты при наведении и активности */
 .nav-marker:hover .nav-shape, 
 .nav-marker.active .nav-shape { 
     border-color: var(--neon-green);

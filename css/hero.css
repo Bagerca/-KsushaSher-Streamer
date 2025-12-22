@@ -182,8 +182,21 @@
 }
 @keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 #terminal-history p { margin: 0 0 5px 0; line-height: 1.2; word-break: normal; overflow-wrap: break-word; }
-.command-line { display: flex; align-items: center; position: relative; margin-top: 5px; z-index: 5; }
-.prompt { margin-right: 8px; color: var(--neon-green); font-weight: bold; }
+
+/* ИСПРАВЛЕНО: Выравнивание строки ввода */
+.command-line { 
+    display: flex; 
+    align-items: baseline; /* Выравнивание по тексту */
+    position: relative; 
+    margin-top: 5px; 
+    z-index: 5; 
+}
+.prompt { 
+    margin-right: 8px; 
+    color: var(--neon-green); 
+    font-weight: normal; /* Одинаковая толщина с историей */
+}
+
 #cmd-input {
     background: transparent; border: none; outline: none; color: #fff;
     font-family: 'monospace'; font-size: 0.9rem; flex-grow: 1;
