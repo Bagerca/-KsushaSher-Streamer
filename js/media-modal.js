@@ -34,7 +34,7 @@ const statusColorMap = {
     'playing': '#007bff', 'watching': '#007bff',
     'dropped': '#ff4444',
     'on-hold': '#ffd700',
-    'suggested': '#00ffff'
+    'suggested': '#ff2d95' // Обновили на розовый, как в фильтрах
 };
 
 /**
@@ -75,8 +75,8 @@ function getYouTubeId(url) {
 export function openMediaModal(item, type) {
     if (!overlay) return;
 
-    // 1. ОПРЕДЕЛЕНИЕ ЦВЕТА
-    const color = item.customColor || statusColorMap[item.status] || '#fff';
+    // 1. ОПРЕДЕЛЕНИЕ ЦВЕТА ОКНА (Рамка, свечение)
+    const color = item.customColor || '#fff';
     document.querySelector('.media-modal-content').style.setProperty('--modal-color', color);
 
     // 2. ЛОГИКА ПОСТЕРОВ (АНИМИРОВАННАЯ СТОПКА)
@@ -90,7 +90,17 @@ export function openMediaModal(item, type) {
 
     // Подготовка списка картинок
     let imageUrls = [];
-    if (item.images && item.images.length > 0) {
+    
+    // ПРИОРИТЕТ: Если это YouTube и есть видео, берем превью видео как картинки
+    if (item.format === 'youtube' && item.videos && item.videos.length > 0) {
+        // Берем первые 3 видео для обложек, чтобы стопка была красивой
+        imageUrls = item.videos.slice(0, 3).map(v => {
+            const vidId = getYouTubeId(v.url);
+            return `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`;
+        });
+    } 
+    // Иначе берем обычные картинки
+    else if (item.images && item.images.length > 0) {
         imageUrls = [...item.images];
     } else if (item.image) {
         imageUrls = [item.image];
@@ -116,13 +126,13 @@ export function openMediaModal(item, type) {
             // Раздаем роли в зависимости от текущего порядка в массиве
             if (index === 0) {
                 img.classList.add('is-front');
-                img.style.zIndex = 20;
+                img.style.zIndex = 30;
             } else if (index === 1) {
                 img.classList.add('is-back');
-                img.style.zIndex = 10;
+                img.style.zIndex = 20;
             } else if (index === 2) {
                 img.classList.add('is-back-2');
-                img.style.zIndex = 5;
+                img.style.zIndex = 10;
             } else {
                 img.classList.add('is-hidden'); // Улетает назад
                 img.style.zIndex = 0;
@@ -133,18 +143,17 @@ export function openMediaModal(item, type) {
     // Первичная расстановка
     updateClasses();
 
-    // ИНТЕРАКТИВ: Если картинок > 1, включаем клик
-    if (imgElements.length > 1) {
+    // ИНТЕРАКТИВ: Если картинок > 1, включаем клик (перелистывание)
+    // НО: Если это YouTube, отключаем клик по постеру, так как управление идет через плейлист
+    if (imgElements.length > 1 && item.format !== 'youtube') {
         posterWrapper.classList.add('is-interactive');
         
         posterWrapper.onclick = () => {
             // Берем первую картинку (Front)
             const movingCard = imgElements.shift(); 
-            
-            // Отправляем ее в конец массива (в самый низ колоды)
+            // Отправляем ее в конец массива
             imgElements.push(movingCard);
-            
-            // Запускаем пересчет классов -> CSS сам сделает красивый свайп
+            // Запускаем пересчет
             updateClasses();
         };
     } else {
@@ -156,10 +165,19 @@ export function openMediaModal(item, type) {
     els.title.textContent = item.title;
     els.desc.textContent = item.description || "Описание отсутствует.";
     
-    // Статус
+    // СТАТУС (Цвет берется строго из карты статусов)
     els.status.textContent = statusTextMap[item.status] || item.status;
-    els.status.style.backgroundColor = color;
-    els.status.style.boxShadow = `0 0 15px ${color}`;
+    const statusColor = statusColorMap[item.status] || '#fff';
+    
+    els.status.style.backgroundColor = statusColor;
+    els.status.style.boxShadow = `0 0 15px ${statusColor}`;
+    
+    // Цвет текста в статусе (белый для темных фонов, черный для светлых)
+    if (['dropped', 'playing', 'watching'].includes(item.status)) {
+        els.status.style.color = '#fff';
+    } else {
+        els.status.style.color = '#000';
+    }
 
     // --- ЛОГИКА РЕЙТИНГА И ЖАНРОВ ---
     const ratingBox = document.querySelector('.modal-rating-box');
@@ -221,19 +239,31 @@ function setupVideoPlayer(videos) {
         return;
     }
 
-    // --- ВАЖНЫЙ ФИКС ДЛЯ СЕТКИ ---
-    // Убираем инлайн-стиль display, чтобы CSS мог применить Grid или Flex
     els.videoSection.style.display = ''; 
     els.videoSection.style.removeProperty('display'); 
 
     // Функция переключения видео
     const playVideo = (videoId, btn) => {
-        // Снимаем активность со всех кнопок
+        // 1. Снимаем активность со всех кнопок
         document.querySelectorAll('.playlist-item').forEach(b => b.classList.remove('active'));
-        // Активируем нажатую
+        
+        // 2. Активируем нажатую
         if(btn) btn.classList.add('active');
-        // Загружаем видео
+        
+        // 3. Загружаем видео
         els.iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+
+        // 4. --- ОБНОВЛЕНИЕ ОБЛОЖКИ (СЛЕВА) ---
+        const newThumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        const currentPosters = document.querySelectorAll('.modal-poster-img');
+        
+        currentPosters.forEach(img => {
+            img.style.opacity = '0.5'; // Микро-фейд
+            setTimeout(() => {
+                img.src = newThumbUrl;
+                img.style.opacity = ''; 
+            }, 150);
+        });
     };
 
     let firstValidId = null;
@@ -271,12 +301,11 @@ function setupVideoPlayer(videos) {
     });
 
     // УПРАВЛЕНИЕ РАЗМЕТКОЙ (GRID vs COLUMN)
-    if (validCount > 1) {
-        // Если видео несколько -> Добавляем класс для сетки
+    // Всегда показываем структуру с плейлистом справа, даже если видео одно
+    if (validCount > 0) {
         els.videoSection.classList.add('has-playlist');
         els.playlist.style.display = 'flex'; // Это перебьется CSS Grid'ом на десктопе
     } else {
-        // Если видео одно -> Скрываем плейлист
         els.playlist.style.display = 'none';
     }
 
