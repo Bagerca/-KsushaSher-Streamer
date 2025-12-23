@@ -22,7 +22,7 @@
     "status": "playing",
     "customColor": "#b79967",
     "videos": [
-      { "title": "поездные реалии 196", "url": "https://www.youtube.com/watch?v=4V4y8rO75mA" }
+      { "title": "Привокзальное выживание", "url": "https://www.youtube.com/watch?v=4V4y8rO75mA" }
     ]
   },
   {
@@ -35,7 +35,7 @@
     "status": "completed",
     "customColor": "#a43c2e",
     "videos": [
-      { "title": "почему же стрима нет?", "url": "https://youtu.be/07lzMJrVDjg?si=Pv9W52-LxTagbW9M" }
+      { "title": "Бешбармак, Казы и Казахская ведьма", "url": "https://youtu.be/07lzMJrVDjg?si=Pv9W52-LxTagbW9M" }
     ]
   },
   {
@@ -43,10 +43,24 @@
     "title": "Lethal Company",
     "rating": 5.0,
     "description": "Классика нашего кооператива. Процесс сбора лута невероятно затягивает. Единственный минус — малая вместимость лобби в ванильной версии, нужны моды.",
-    "image": "assets/images/games/lethal-company.gif",
+    "image": "assets/images/games/lethal-company.webp",
     "genres": ["horror", "coop", "survival", "scifi", "funny", "indie"],
     "status": "playing",
-    "customColor": "#cc050d"
+    "customColor": "#cc050d",
+    "videos": [
+      { "title": "медовое побоище", "url": "https://youtu.be/8rQTRqSYB9I?si=V3reYBLt2a5z7_GH" },
+      { "title": "мусорки оп", "url": "https://youtu.be/poR5ososvEw?si=siSblpBHDynj-pB9" },
+      { "title": "семейное дело - уборщики", "url": "https://youtu.be/oGM9v8Mx_mI?si=vstMN30MfWaKffgE" },
+      { "title": "Собираем пидарочки", "url": "https://youtu.be/yzZkGAWhuaE?si=H3NS5ApiuXR7hTNR" },
+      { "title": "Еженедельный уборочный цех", "url": "https://youtu.be/hVI6wmxfDXw?si=sz5db27d2XNyEVli" },
+      { "title": "Мы все про*бали", "url": "https://youtu.be/OCBMaHUegZ4?si=Hd8ccLCEzKG_P9KJ" },
+      { "title": "Яйца птицы так не годится", "url": "https://youtu.be/spYKfCO6G7Q?si=KUdxczC-TlNfandw" },
+      { "title": "Расчехляем космолет", "url": "https://youtu.be/7YhFVjOU2-w?si=RKYcdA9vs4QSL6jx" },
+      { "title": "Подпивасный Расколбас", "url": "https://youtu.be/QDvf0aRlnjM?si=KwkKH0Ty7OThjwa9" },
+      { "title": "Мусорные черви", "url": "https://youtu.be/pjLLbazxijc?si=YCQ3HrLlO5Q2lMII" },
+      { "title": "Увеселительный мусоросборник", "url": "https://youtu.be/xnyfzVJ_ofU?si=0OqHpMXGfauMOcOF" },
+      { "title": "Летательно увлекательно", "url": "https://youtu.be/jRCkXl96YgY?si=TPdU2-fah7cS1rwR" }
+    ]
   },
   {
     "id": "unmourned",
@@ -58,7 +72,8 @@
     "status": "completed",
     "customColor": "#2f3b32",
     "videos": [
-      { "title": "Веселая Виселица", "url": "https://youtu.be/ytz5jMFVGdQ?si=_wlH1usG1kDzxnzO" }
+      { "title": "Веселая Виселица", "url": "https://youtu.be/ytz5jMFVGdQ?si=_wlH1usG1kDzxnzO" },
+      { "title": "Кончаем виселичное безумие", "url": "https://youtu.be/vih6bH6ebSo?si=2CERkFQjDFvwd2zJ" }
     ]
   },
   {

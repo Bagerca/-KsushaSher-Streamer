@@ -6,7 +6,8 @@
     "description": "Ты обязана это посмотреть. Музыка Циммера, космос, черные дыры. Готовь платочки, это шедевр на все времена.",
     "images": [
       "https://cdn2.steamgriddb.com/grid/50896c8a37922749110dae272e7a345b.png", 
-      "https://cdn2.steamgriddb.com/grid/d72e76b9ae60a3aa304fcc6f080a8bd5.png"
+      "https://cdn2.steamgriddb.com/grid/d72e76b9ae60a3aa304fcc6f080a8bd5.png",
+      "https://cdn2.steamgriddb.com/grid/447ec32b7f8e9dc5559c93ee54512bd6.webp"
     ],
     "status": "suggested",
     "suggestedBy": "Kiriki",
@@ -20,7 +21,7 @@
   "description": "Описание от зрителя...",
   "image": "https://img.youtube.com/vi/Vi0flWHGVlg/maxresdefault.jpg",
   "status": "suggested",
-  "suggestedBy": "Имя_Зрителя",
+  "suggestedBy": "BAGERca",
   "customColor": "#ff0000",
   "videos": [
     {
@@ -37,7 +38,7 @@
   "description": "Описание от зрителя...",
   "image": "https://img.youtube.com/vi/S0x2llxEAjk/maxresdefault.jpg",
   "status": "suggested",
-  "suggestedBy": "Имя_Зрителя",
+  "suggestedBy": "BAGERca",
   "customColor": "#ff0000",
   "videos": [
     {
@@ -58,7 +59,7 @@
   "description": "Описание от зрителя...",
   "image": "https://img.youtube.com/vi/MrNbqT7-S-Y/maxresdefault.jpg",
   "status": "suggested",
-  "suggestedBy": "Имя_Зрителя",
+  "suggestedBy": "BAGERca",
   "customColor": "#ff0000",
   "videos": [
     {
@@ -87,7 +88,7 @@
   "description": "Описание от зрителя...",
   "image": "https://img.youtube.com/vi/fEqjAznFQyk/maxresdefault.jpg",
   "status": "suggested",
-  "suggestedBy": "Имя_Зрителя",
+  "suggestedBy": "BAGERca",
   "customColor": "#ff0000",
   "videos": [
     {
@@ -99,5 +100,15 @@
       "url": "https://youtu.be/Of4BTo6GbjQ?si=v9yH5BpX5h3OsQPW"
     }
   ]
-}
+},
+{
+    "id": "sug-awaria",
+    "type": "games",
+    "title": "Awaria",
+    "description": "Короткая игра от создателя Helltaker. Чиним генераторы в проклятых туннелях, избегая монстров.",
+    "image": "https://cdn2.steamgriddb.com/grid/00b1f760f5b1831e2495c8bb1e99c38e.png",
+    "status": "suggested",
+    "suggestedBy": "BAGERca",
+    "customColor": "#d35400"
+  }
 ]
