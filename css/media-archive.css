@@ -296,8 +296,6 @@
 .filter-chip:hover { transform: translateY(-2px); border-color: #fff; color: #fff; }
 .filter-chip.active { background: #333; color: #fff; border-color: #777; }
 
-/* 1. ВСЕ (PINK - REMOVED, BUT COLOR KEPT FOR SUGGESTED) */
-
 /* 2. COMPLETED / WATCHED (GREEN) */
 .filter-chip.status-completed, .filter-chip.status-watched { border-color: rgba(57, 255, 20, 0.3); color: var(--neon-green); }
 .filter-chip.status-completed.active, .filter-chip.status-watched.active { background: var(--neon-green); color: #000; border-color: var(--neon-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.5); }
@@ -372,7 +370,13 @@
     height: 100%;
     border-radius: 12px;
     
-    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    /* UPDATED TRANSITION: Separated color/shadow (fast) from movement (smooth) */
+    transition:
+        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), /* Движение */
+        border-color 0.2s ease-out,                   /* Цвет - быстро */
+        box-shadow 0.2s ease-out,                     /* Свечение - быстро */
+        filter 0.4s ease;                             /* Яркость */
+        
     box-shadow: 0 5px 15px rgba(0,0,0,0.6);
     
     background-size: cover;
@@ -472,24 +476,25 @@
 /* --- STACK-1 HOVER --- */
 .archive-card-container.stack-1:hover .layer-front { 
     transform: scale(1.02) translateY(-5px); 
-    box-shadow: 0 15px 30px rgba(0,0,0,0.5); 
+    /* Box-shadow removed to avoid conflict with colored status shadow */
 }
 
 /* --- STACK-2 HOVER --- */
 .archive-card-container.stack-2:hover .layer-front { 
     transform: scale(0.96) translate(-12px, 12px); 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    /* Box-shadow removed */
 }
 .archive-card-container.stack-2:hover .layer-back { 
     transform: scale(0.96) translate(12px, -12px); 
     filter: brightness(0.9) grayscale(0);
     border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 10px -5px 20px rgba(0,0,0,0.5);
 }
 
 /* --- STACK-3 HOVER --- */
 .archive-card-container.stack-3:hover .layer-front { 
     transform: scale(0.92) translate(-18px, 18px); /* Сильнее влево-вниз */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    /* Box-shadow removed */
 }
 .archive-card-container.stack-3:hover .layer-back { 
     transform: scale(0.92) translate(0, 0); /* Остается в центре */
@@ -500,6 +505,7 @@
     transform: scale(0.92) translate(18px, -18px); /* Сильнее вправо-вверх */
     filter: brightness(0.6) grayscale(0.4); 
     border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 15px -5px 25px rgba(0,0,0,0.5);
 }
 
 /* --- YOUTUBE SPECIFIC (Немного больше сдвиг) --- */
@@ -610,12 +616,12 @@
     height: 30px; padding: 0 10px; 
     font-size: 0.7rem; display: flex; align-items: center; gap: 6px; 
     
-    /* ИЗМЕНЕНО: С зеленого на розовый (PINK) */
-    border-top: 1px solid rgba(255, 45, 149, 0.3); 
+    /* ИЗМЕНЕНО: С зеленого на голубой (Cyan) - как ты просил в прошлый раз */
+    border-top: 1px solid rgba(0, 255, 255, 0.3); 
     
     z-index: 20; 
 }
-.suggested-by-badge i { color: #ff2d95; }
+.suggested-by-badge i { color: #00ffff; }
 
 /* --------------------------------------------------------
    FOOTER BUTTONS
