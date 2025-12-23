@@ -25,13 +25,12 @@ const ArchiveState = {
     dataMain: [],
     dataSuggestions: [],
     combinedData: [],
-    // Изначально пусто = показываем всё
-    activeFilters: new Set(), 
+    activeFilters: new Set(['all']), 
     searchQuery: '',
     sort: 'name',
     sortDirection: 'asc',
     renderedCount: 0,
-    batchSize: 12,
+    batchSize: 12, // 2 ряда по 6 элементов
     observer: null,
     isExpanded: false
 };
@@ -89,7 +88,7 @@ async function switchArchiveType(type) {
 
     setTimeout(async () => {
         ArchiveState.currentType = type;
-        ArchiveState.activeFilters = new Set(); // Сброс фильтров (показываем все)
+        ArchiveState.activeFilters = new Set(['all']);
         ArchiveState.searchQuery = '';
         ArchiveState.renderedCount = 0;
         ArchiveState.isExpanded = false;
@@ -151,29 +150,25 @@ function renderFilters() {
         }
     });
 
-    // --- НОВАЯ СИММЕТРИЧНАЯ СХЕМА КНОПОК ---
-    // Формируем строгий порядок:
-    // [Completed] [Playing] [SUGGESTED] [OnHold] [Dropped]
+    const statuses = ArchiveState.currentType === 'games' 
+        ? ['completed', 'playing', 'on-hold', 'dropped'] 
+        : ['watched', 'watching', 'on-hold', 'dropped'];
     
-    let statusesOrder = [];
-    if (ArchiveState.currentType === 'games') {
-        statusesOrder = ['completed', 'playing', 'suggested', 'on-hold', 'dropped'];
-    } else {
-        statusesOrder = ['watched', 'watching', 'suggested', 'on-hold', 'dropped'];
-    }
-    
+    const middleIndex = Math.floor(statuses.length / 2);
     let statusHtml = '';
     const isActive = (val) => ArchiveState.activeFilters.has(val) ? 'active' : '';
 
-    statusesOrder.forEach(s => {
-        // Особый стиль для кнопки предложки (уже прописан в CSS)
-        const isSuggested = s === 'suggested';
-        const extraClass = isSuggested ? 'status-suggested' : `status-${s}`;
-        
-        statusHtml += `<div class="filter-chip is-status ${extraClass} ${isActive(s)}" data-filter="${s}">
-            ${statusMap[s] || s}
-        </div>`;
+    statuses.slice(0, middleIndex).forEach(s => { 
+        statusHtml += `<div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">${statusMap[s] || s}</div>`; 
     });
+    
+    statusHtml += `<div class="filter-chip is-status ${isActive('all')}" data-filter="all">ВСЕ</div>`;
+    
+    statuses.slice(middleIndex).forEach(s => { 
+        statusHtml += `<div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">${statusMap[s] || s}</div>`; 
+    });
+
+    statusHtml += `<div class="filter-chip is-status status-suggested ${isActive('suggested')}" data-filter="suggested" style="border-color:var(--neon-green); color:var(--neon-green); opacity:0.8;">ПРЕДЛОЖКА</div>`;
 
     statusContainer.innerHTML = statusHtml;
 
@@ -184,32 +179,18 @@ function renderFilters() {
         });
     genreContainer.innerHTML = genreHtml;
 
-    // --- ОБНОВЛЕННАЯ ЛОГИКА КЛИКА ---
     document.querySelectorAll('.filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             const val = chip.dataset.filter;
-            
-            if (ArchiveState.activeFilters.has(val)) {
-                // Если уже активно - выключаем
-                ArchiveState.activeFilters.delete(val);
+            if (val === 'all') {
+                ArchiveState.activeFilters.clear();
+                ArchiveState.activeFilters.add('all');
             } else {
-                // Если не активно - включаем
-                // Можно сделать одиночный выбор для статусов, чтобы было удобнее переключать
-                // Если это статус (входит в VALID_STATUSES), очищаем другие статусы
-                if (VALID_STATUSES.includes(val)) {
-                    // Удаляем другие статусы, но оставляем жанры
-                    const currentGenres = [];
-                    ArchiveState.activeFilters.forEach(f => {
-                        if (!VALID_STATUSES.includes(f)) currentGenres.push(f);
-                    });
-                    
-                    ArchiveState.activeFilters.clear();
-                    currentGenres.forEach(g => ArchiveState.activeFilters.add(g));
-                }
-                
-                ArchiveState.activeFilters.add(val);
+                if (ArchiveState.activeFilters.has('all')) ArchiveState.activeFilters.delete('all');
+                if (ArchiveState.activeFilters.has(val)) ArchiveState.activeFilters.delete(val);
+                else ArchiveState.activeFilters.add(val);
+                if (ArchiveState.activeFilters.size === 0) ArchiveState.activeFilters.add('all');
             }
-            
             ArchiveState.isExpanded = false; 
             renderFilters();
             processData();
@@ -223,19 +204,13 @@ function processData() {
     const activeGenres = new Set();
     let isAllSelected = false;
 
-    // --- НОВАЯ ЛОГИКА: ЕСЛИ ФИЛЬТРОВ НЕТ, ЗНАЧИТ "ВСЕ" ---
-    if (ArchiveState.activeFilters.size === 0) {
+    if (ArchiveState.activeFilters.has('all')) {
         isAllSelected = true;
     } else {
         ArchiveState.activeFilters.forEach(filter => {
             if (VALID_STATUSES.includes(filter)) activeStatuses.add(filter);
             else activeGenres.add(filter);
         });
-        
-        // Если выбраны только жанры, но не статусы - показываем эти жанры во всех статусах
-        if (activeStatuses.size === 0 && activeGenres.size > 0) {
-            // Флаг не нужен, логика ниже обработает это корректно
-        }
     }
 
     const filterList = (sourceList) => {
@@ -254,23 +229,16 @@ function processData() {
             return { ...item, _matchScore: matchScore };
         }).filter(item => {
             if (item._matchScore < 0.25) return false;
-            
-            // Если выбрано "Всё" (нет фильтров)
             if (isAllSelected) return true;
 
-            // Проверка статуса (если статусы выбраны)
             let statusMatch = true;
-            if (activeStatuses.size > 0) {
-                statusMatch = activeStatuses.has(item.status);
-            }
+            if (activeStatuses.size > 0) statusMatch = activeStatuses.has(item.status);
 
-            // Проверка жанра (если жанры выбраны)
             let genreMatch = true;
             if (activeGenres.size > 0) {
                 if (!item.genres || item.genres.length === 0) genreMatch = false;
                 else genreMatch = item.genres.some(g => activeGenres.has(g));
             }
-            
             return statusMatch && genreMatch;
         });
     };
@@ -278,7 +246,6 @@ function processData() {
     let filteredMain = filterList(ArchiveState.dataMain);
     let filteredSuggestions = filterList(ArchiveState.dataSuggestions);
 
-    // Сортировка
     const dir = ArchiveState.sortDirection === 'asc' ? 1 : -1;
     const sortFn = (a, b) => {
         if (ArchiveState.searchQuery.length > 0 && Math.abs(a._matchScore - b._matchScore) > 0.1) {
@@ -294,35 +261,24 @@ function processData() {
     filteredMain.sort(sortFn);
     filteredSuggestions.sort(sortFn);
 
-    // --- ЛОГИКА ГРУППИРОВКИ ---
     ArchiveState.combinedData = [...filteredMain];
     
-    // Если выбрана конкретно "Предложка" (suggested) - не показываем заголовки
-    // Если выбрано "Всё" - показываем заголовки
-    const showDividers = isAllSelected;
-
     if (filteredSuggestions.length > 0) {
-        
         const sugPosters = filteredSuggestions.filter(item => item.format !== 'youtube');
         const sugYoutube = filteredSuggestions.filter(item => item.format === 'youtube');
 
-        if (showDividers) {
-            if (filteredMain.length > 0) {
-                ArchiveState.combinedData.push({ isDivider: true, title: "COMMUNITY_SUGGESTIONS // ПРЕДЛОЖКА" });
-            } else {
-                ArchiveState.combinedData.push({ isDivider: true, title: "SUGGESTED" });
-            }
+        if (filteredMain.length > 0) {
+            ArchiveState.combinedData.push({ isDivider: true, title: "COMMUNITY_SUGGESTIONS // ПРЕДЛОЖКА" });
+        } else {
+            ArchiveState.combinedData.push({ isDivider: true, title: "SUGGESTED" });
         }
 
-        // 2. ПОСТЕРЫ (Идут первыми)
         ArchiveState.combinedData = [...ArchiveState.combinedData, ...sugPosters];
 
-        // 3. НЕВИДИМАЯ РАСПОРКА (Если есть YouTube и были постеры)
         if (sugYoutube.length > 0) {
             if (sugPosters.length > 0) {
                 ArchiveState.combinedData.push({ isSpacer: true });
             }
-            // 4. YOUTUBE (Идут следом)
             ArchiveState.combinedData = [...ArchiveState.combinedData, ...sugYoutube];
         }
     }
@@ -367,6 +323,10 @@ function renderGrid() {
             }
             wrapper.classList.add('has-more');
         } else {
+            // Если развернуто, но элементов очень много (infinite scroll), это уже другая история.
+            // В нашей логике "Expand" показывает всё.
+            // Но мы оставим кнопку "Свернуть"
+            
             const overlay = wrapper.querySelector('.archive-fade-overlay');
             if (overlay) overlay.remove();
             wrapper.classList.remove('has-more');
@@ -461,6 +421,7 @@ function renderNextBatch() {
         
         // НО: Если разделитель встречается РАНЬШЕ, чем 12-й элемент
         // Мы обрезаем список ДО разделителя.
+        // Это предотвращает показ "огрызков" предложки в свернутом виде.
         if (dividerIndex !== -1 && dividerIndex < limit) {
             limit = dividerIndex;
         }
@@ -555,7 +516,6 @@ function renderNextBatch() {
                         <p class="card-desc">${item.description || ''}</p>
                     </div>
                 </div>
-                <!-- Статус бар -->
                 <div class="card-status-bar"></div>
             </div>
         `;
@@ -653,7 +613,7 @@ function setupSearch() {
         if (matches.length > 0) {
             suggestionsBox.innerHTML = matches.map(item => `
                 <div class="suggestion-item" data-title="${item.title}" data-status="${item.status}">
-                    <img src="${item.image || (item.images ? item.images[0] : '')}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/6x85'">
+                    <img src="${item.image || (item.images ? item.images[0] : '')}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/60x85'">
                     <div class="sugg-info">
                         <span class="sugg-title">${item.title}</span>
                         <div class="sugg-meta">
