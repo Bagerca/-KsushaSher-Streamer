@@ -102,6 +102,373 @@
     border: none; 
     box-shadow: none;
     z-index: 5;
+    perspective: 1000px; /* Для 3D эффектов */
+}
+
+/* СТИЛЬ ДЛЯ КАРТИНОК В СТОПКЕ */
+.modal-poster-img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    
+    /* Плавная анимация перелета (Shuffle Effect) */
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    opacity: 0;
+    transform-origin: center bottom;
+    z-index: 0;
+}
+
+/* --- 1. ПЕРЕДНЯЯ КАРТИНКА (ГЛАВНАЯ) --- */
+/* Чуть сдвинута влево и вниз */
+.modal-poster-img.is-front {
+    opacity: 1;
+    z-index: 30; 
+    transform: translate(-5px, 5px) scale(1);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    filter: brightness(1);
+}
+
+/* --- 2. ЗАДНЯЯ КАРТИНКА (ВТОРАЯ) --- */
+/* Сдвинута вправо и вверх */
+.modal-poster-img.is-back {
+    opacity: 1; 
+    z-index: 20; 
+    transform: translate(5px, -5px) scale(0.96);
+    filter: brightness(0.6) grayscale(0.4);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* --- 3. ГЛУБОКАЯ ЗАДНЯЯ (ТРЕТЬЯ) --- */
+/* Сдвинута еще дальше вправо и вверх */
+.modal-poster-img.is-back-2 {
+    opacity: 1;
+    z-index: 10; 
+    transform: translate(15px, -15px) scale(0.92);
+    filter: brightness(0.4) grayscale(0.8);
+    border-color: rgba(255, 255, 255, 0.02);
+}
+
+/* --- СКРЫТАЯ (УЛЕТАЕТ НАЗАД ДЛЯ ЦИКЛА) --- */
+.modal-poster-img.is-hidden {
+    opacity: 0;
+    transform: translate(0, 20px) scale(0.8);
+    z-index: 0;
+}
+
+/* ИНТЕРАКТИВ (HOVER EFFECT) */
+.modal-poster-wrapper.is-interactive { cursor: pointer; }
+
+/* При наведении стопка раздвигается ПРЯМО (БЕЗ ПОВОРОТА) */
+.modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-front {
+    transform: translate(-10px, 10px) scale(1.02); /* Сдвиг влево-вниз */
+    border-color: var(--modal-color); 
+    box-shadow: -5px 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-back {
+    transform: translate(10px, -10px) scale(0.96); /* Сдвиг вправо-вверх */
+    filter: brightness(0.8) grayscale(0.1);
+    z-index: 25; 
+}
+
+.modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-back-2 {
+    transform: translate(25px, -25px) scale(0.92); /* Сильнее вправо-вверх */
+    filter: brightness(0.6) grayscale(0.5);
+}
+
+/* Глоу эффект на фоне */
+.modal-poster-glow {
+    position: absolute; inset: -30px;
+    background: radial-gradient(circle at center, transparent 30%, var(--modal-color) 100%);
+    opacity: 0.1; pointer-events: none; mix-blend-mode: screen;
+    z-index: 0; filter: blur(40px);
+}
+
+.modal-rating-box {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(0, 0, 0, 0.3); padding: 15px 20px;
+    border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+    z-index: 10;
+}
+
+#modal-rating-val {
+    font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700;
+    color: #ffd700; line-height: 1;
+}
+.modal-stars { color: #ffd700; font-size: 1.1rem; }
+
+.modal-tech-data {
+    margin-top: auto;
+    font-family: 'monospace'; font-size: 0.85rem; color: #555;
+    background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;
+}
+.tech-line { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.tech-line:last-child { margin-bottom: 0; }
+.tech-line span:first-child { color: #444; }
+.t-val { color: var(--modal-color); font-weight: bold; }
+.neon-pulse { animation: neon-text-pulse 2s infinite; }
+
+@keyframes neon-text-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+/* --- ПРАВАЯ КОЛОНКА (MAIN CONTENT) --- */
+.modal-col-main {
+    padding: 40px; 
+    display: flex; flex-direction: column;
+}
+
+.modal-header-top {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+    margin-bottom: 15px;
+    
+    /* ФИКС: Отступ справа, чтобы текст не наезжал на крестик */
+    padding-right: 60px;
+}
+
+.modal-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem; line-height: 1.1;
+    color: #fff; margin: 0;
+    text-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.modal-status-badge {
+    padding: 6px 12px;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 0.9rem;
+    color: #000;
+    background: var(--modal-color);
+    border-radius: 4px;
+    box-shadow: 0 0 15px var(--modal-color);
+    white-space: nowrap;
+    margin-top: 5px; 
+    text-transform: uppercase;
+}
+
+.modal-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+.modal-genre-tag {
+    font-size: 0.85rem; color: #ccc;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    padding: 4px 12px; border-radius: 4px;
+    font-family: 'Exo 2', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+}
+
+.modal-desc {
+    color: #ddd; font-size: 1.1rem; line-height: 1.6;
+    margin-bottom: 10px; /* Компактный отступ */
+    font-family: 'Exo 2', sans-serif;
+    max-width: 900px;
+}
+
+/* =========================================
+   VIDEO SECTION (YOUTUBE STYLE)
+   ========================================= */
+.modal-video-section {
+    margin-top: 5px; 
+    margin-bottom: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    width: 100%;
+    
+    /* Дефолт (Мобилка): Колонка */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.video-header {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff; font-size: 1.1rem;
+    display: flex; align-items: center; gap: 10px; opacity: 0.9;
+    letter-spacing: 1px; margin-bottom: 0; 
+}
+
+/* --- DESKTOP LAYOUT (СЕТКА) --- */
+@media (min-width: 900px) {
+    .modal-video-section.has-playlist {
+        display: grid !important; 
+        grid-template-columns: minmax(0, 1fr) 280px; 
+        grid-template-rows: auto 1fr;
+        column-gap: 20px;
+        row-gap: 15px;
+        align-items: start;
+    }
+
+    .video-header { grid-column: 1 / -1; grid-row: 1; }
+    .video-container { grid-column: 1 / 2; grid-row: 2; margin-bottom: 0 !important; }
+    .video-playlist { grid-column: 2 / 3; grid-row: 2; height: 100%; max-height: 480px; overflow-y: auto; padding-right: 5px; margin-top: 0; }
+}
+
+/* --- САМ ПЛЕЕР --- */
+.video-container {
+    position: relative; width: 100%; 
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    background: #000; 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+/* --- ПЛЕЙЛИСТ --- */
+.video-playlist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--modal-color) rgba(0, 0, 0, 0.3);
+}
+
+.video-playlist::-webkit-scrollbar { width: 6px; }
+.video-playlist::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 3px; margin: 5px 0; }
+.video-playlist::-webkit-scrollbar-thumb { 
+    background: var(--modal-color);
+    border-radius: 3px; 
+    box-shadow: 0 0 8px var(--modal-color);
+    border: 1px solid rgba(0,0,0,0.5);
+}
+.video-playlist::-webkit-scrollbar-thumb:hover { background: #fff; box-shadow: 0 0 15px var(--modal-color); }
+
+.playlist-item {
+    display: flex; gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px; padding: 8px; cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.playlist-item:hover { background: rgba(255, 255, 255, 0.08); transform: translateX(-2px); }
+
+.playlist-item.active {
+    background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent);
+    border-color: var(--modal-color);
+    box-shadow: inset 3px 0 0 var(--modal-color);
+}
+
+.pl-thumb {
+    width: 90px; min-width: 90px; height: 50px;
+    border-radius: 4px; overflow: hidden; position: relative;
+    background: #000;
+}
+.pl-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
+.playlist-item.active .pl-thumb img { opacity: 1; }
+.playlist-item:hover .pl-thumb img { transform: scale(1.1); opacity: 1; }
+
+.pl-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: 0.2s;
+}
+.playlist-item:hover .pl-overlay { opacity: 1; }
+.pl-overlay i { font-size: 0.9rem; color: #fff; }
+
+.pl-info { display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+
+.pl-title {
+    font-family: 'Exo 2', sans-serif; font-size: 0.8rem; color: #ddd;
+    line-height: 1.2; margin-bottom: 2px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.playlist-item.active .pl-title { color: var(--modal-color); font-weight: 700; }
+
+.pl-status { font-size: 0.6rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ДЕЙСТВИЯ */
+.modal-actions { margin-top: 20px; }
+.cyber-btn-modal {
+    display: inline-block; padding: 12px 30px;
+    background: transparent; color: var(--modal-color);
+    border: 1px solid var(--modal-color);
+    font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 2px;
+    text-decoration: none; border-radius: 4px; transition: 0.3s;
+}
+.cyber-btn-modal:hover {
+    background: var(--modal-color); color: #000;
+    box-shadow: 0 0 20px var(--modal-color); transform: translateY(-2px);
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+@media (max-width: 1200px) {
+    .modal-layout { grid-template-columns: 280px 1fr; }
+}
+
+@media (max-width: 900px) {
+    .modal-layout { grid-template-columns: 1fr; }
+    
+    .modal-col-sidebar { 
+        flex-direction: row; align-items: center; padding: 30px;
+        border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .modal-poster-wrapper { width: 140px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+    .modal-rating-box { flex-grow: 1; margin: 0 0 0 20px; height: fit-content; }
+    .modal-tech-data { display: none; }
+    .modal-col-main { padding: 30px; }
+    .modal-title { font-size: 2.2rem; }
+
+    .modal-video-section.has-playlist { display: flex; flex-direction: column; }
+    .video-playlist { max-height: 300px; margin-top: 15px; }
+}
+
+@media (max-width: 600px) {
+    .modal-col-sidebar { flex-direction: column; align-items: flex-start; }
+    .modal-poster-wrapper { width: 100%; aspect-ratio: 16/9; object-position: top; }
+    #modal-img { object-position: 0 20%; }
+    .modal-rating-box { width: 100%; margin: 15px 0 0 0; }
+    .modal-col-main { padding: 20px; padding-top: 40px; }
+    .modal-title { font-size: 1.8rem; }
+}}
+
+/* КНОПКА ЗАКРЫТИЯ */
+.modal-close-btn {
+    position: absolute; top: 15px; right: 15px;
+    background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%; width: 36px; height: 36px;
+    font-size: 1.2rem; color: #fff; cursor: pointer; transition: 0.3s;
+    z-index: 200; display: flex; align-items: center; justify-content: center;
+}
+
+.modal-close-btn:hover { 
+    background: var(--modal-color); border-color: var(--modal-color); 
+    color: #000; transform: rotate(90deg);
+}
+
+/* =========================================
+   LAYOUT (SIDEBAR + MAIN)
+   ========================================= */
+.modal-layout {
+    display: grid;
+    /* Сайдбар 340px, остальное контент */
+    grid-template-columns: 340px 1fr; 
+    min-height: 600px;
+}
+
+/* --- ЛЕВАЯ КОЛОНКА (САЙДБАР) --- */
+.modal-col-sidebar {
+    background: rgba(255, 255, 255, 0.02);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px 30px;
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+/* КОНТЕЙНЕР ПОСТЕРА (СТОПКА КАРТ) */
+.modal-poster-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    border: none; 
+    box-shadow: none;
+    z-index: 5;
 }
 
 /* СТИЛЬ ДЛЯ КАРТИНОК В СТОПКЕ */
