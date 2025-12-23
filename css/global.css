@@ -24,34 +24,31 @@
 }
 
 /* =========================================
-   CYBERPUNK SCROLLBAR
+   SCROLLBAR HIDDEN (СКРЫТЫЙ СКРОЛЛ)
    ========================================= */
+/* Для Webkit (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 0px; /* Убираем ширину */
+    background: transparent; /* Делаем прозрачным */
 }
+
+/* Эти стили больше не нужны, так как ширина 0, но оставим пустыми для надежности */
 ::-webkit-scrollbar-track {
-    background: #0a0b10;
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(57, 255, 20, 0.15);
-    border: 1px solid var(--neon-green);
-    box-shadow: inset 0 0 6px rgba(57, 255, 20, 0.3);
-}
-::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(57, 255, 20, 0.5);
-    box-shadow: 0 0 15px var(--neon-green);
+    background: transparent;
+    border: none;
 }
 
 html {
-    scrollbar-width: thin;
-    scrollbar-color: var(--neon-green) #0a0b10;
+    /* Для Firefox */
+    scrollbar-width: none; 
+    
     /* ОТКЛЮЧАЕМ нативный скролл, чтобы работала наша плавная прокрутка */
     scroll-behavior: auto !important; 
     
-    /* ВАЖНО: Базовый черный фон. 
-       Если этого не сделать, при прозрачном body (для Матрицы) 
-       фон станет белым (дефолт браузера). */
+    /* ВАЖНО: Базовый черный фон */
     background-color: #050508; 
 }
 
@@ -65,8 +62,7 @@ html {
 }
 
 body {
-    /* ВАЖНО: Фон прозрачный, чтобы через него было видно слои 
-       Матрицы (canvas) и Шторки (div#matrix-curtain) */
+    /* ВАЖНО: Фон прозрачный для слоев Canvas */
     background-color: transparent; 
     
     color: var(--white);
@@ -74,7 +70,6 @@ body {
     font-family: 'Exo 2', sans-serif;
     overflow-x: hidden; 
     
-    /* Растягиваем body, чтобы шторка работала корректно */
     min-height: 100vh;
     position: relative;
 }
@@ -113,12 +108,13 @@ section {
 }
 
 /* =========================================
-   CYBER NAV RAIL (ОБНОВЛЕННАЯ ВЕРСИЯ)
+   CYBER NAV RAIL (ПРАВАЯ НАВИГАЦИЯ)
    ========================================= */
 .cyber-nav-rail {
     position: fixed; 
     top: 0; 
-    right: 12px; /* Близко к скроллу */
+    /* ИЗМЕНЕНО: Было right: 12px, стало 2px (ближе к краю) */
+    right: 2px; 
     width: 20px; 
     height: 100vh;
     z-index: 9990; 
@@ -127,31 +123,20 @@ section {
     pointer-events: none;
 }
 
-/* 1. СТАТИЧНАЯ ЛИНИЯ-ФОН (РЕЛЬСА) */
+/* 1. СТАТИЧНАЯ ЛИНИЯ */
 .cyber-nav-rail::before {
     content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%; 
-    transform: translateX(-50%);
-    width: 1px;
-    background: rgba(57, 255, 20, 0.1); /* Тусклый фон */
-    z-index: 0;
+    position: absolute; top: 0; bottom: 0; left: 50%; 
+    transform: translateX(-50%); width: 1px;
+    background: rgba(57, 255, 20, 0.1); z-index: 0;
 }
 
-/* 2. ДИНАМИЧЕСКИЙ ЛУЧ (Бегущий огонек) */
+/* 2. ДИНАМИЧЕСКИЙ ЛУЧ */
 .cyber-nav-rail::after {
     content: '';
-    position: absolute;
-    top: 0; 
-    bottom: 0;
-    left: 50%; 
-    transform: translateX(-50%);
-    width: 2px; /* Чуть толще фона */
-    z-index: 1; /* Над фоном, но под ромбами */
-    
-    /* Градиент, центр которого зависит от JS-переменной --line-pos */
+    position: absolute; top: 0; bottom: 0; left: 50%; 
+    transform: translateX(-50%); width: 2px;
+    z-index: 1; 
     background: linear-gradient(
         to bottom, 
         transparent, 
@@ -160,110 +145,185 @@ section {
         transparent calc(var(--line-pos, 0%) + 15%), 
         transparent
     );
-    
-    opacity: 0.8;
-    filter: drop-shadow(0 0 5px var(--neon-green));
-    pointer-events: none;
-    will-change: background; /* Оптимизация отрисовки */
+    opacity: 0.8; filter: drop-shadow(0 0 5px var(--neon-green));
+    pointer-events: none; will-change: background; 
 }
 
 /* 3. КОНТЕЙНЕР МАРКЕРА */
 .nav-marker {
-    position: absolute; 
-    left: 50%;
-    width: 12px; height: 12px;
-    transform: translate(-50%, -50%); /* Центрирование */
-    cursor: pointer;
-    pointer-events: auto; 
-    z-index: 2; /* Поверх линии */
-    
-    /* --- ВАЖНО: Плавная анимация перемещения при изменении высоты страницы --- */
+    position: absolute; left: 50%; width: 12px; height: 12px;
+    transform: translate(-50%, -50%); cursor: pointer;
+    pointer-events: auto; z-index: 2;
     transition: top 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* 4. ФОРМА РОМБА (Вращается отдельно внутри контейнера) */
+/* 4. ФОРМА РОМБА */
 .nav-shape {
-    position: absolute;
-    inset: 2px;
-    background-color: #050508;
+    position: absolute; inset: 2px; background-color: #050508;
     border: 1px solid rgba(255, 255, 255, 0.3);
-    transform: rotate(45deg); /* Поворот */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: rotate(45deg); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 5. ТАБЛИЧКА (Позиционируется от ровного контейнера) */
+/* 5. ТАБЛИЧКА */
 .nav-tooltip {
-    position: absolute; 
-    top: 50%; 
-    right: 22px; /* Расстояние влево от центра маркера */
-    transform: translateY(-50%); /* Идеальное центрирование по Y */
-    
-    font-family: 'Rajdhani', sans-serif; 
-    font-size: 0.65rem; 
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase; 
-    white-space: nowrap;
-    color: var(--neon-green);
-    background: rgba(0, 0, 0, 0.95);
-    padding: 3px 8px;
-    border-radius: 2px;
-    border: 1px solid rgba(57, 255, 20, 0.4);
-    
-    opacity: 0; 
-    pointer-events: none; 
-    
-    /* Эффект проявления справа налево */
-    clip-path: inset(0 0 0 100%); 
+    position: absolute; top: 50%; right: 22px; transform: translateY(-50%);
+    font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; 
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase; 
+    white-space: nowrap; color: var(--neon-green);
+    background: rgba(0, 0, 0, 0.95); padding: 3px 8px;
+    border-radius: 2px; border: 1px solid rgba(57, 255, 20, 0.4);
+    opacity: 0; pointer-events: none; clip-path: inset(0 0 0 100%); 
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        
     box-shadow: 0 0 15px rgba(0,0,0,0.8);
 }
 
-/* Линия-коннектор для тултипа */
 .nav-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: -10px; /* Длина линии до маркера */
-    width: 10px;
-    height: 1px;
-    background: var(--neon-green);
-    opacity: 0.6;
+    content: ''; position: absolute; top: 50%; right: -10px; width: 10px;
+    height: 1px; background: var(--neon-green); opacity: 0.6;
     transform: translateY(-50%);
 }
 
-/* Эффекты при наведении и активности */
-.nav-marker:hover .nav-shape, 
-.nav-marker.active .nav-shape { 
-    border-color: var(--neon-green);
-    background-color: var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green);
-    transform: rotate(45deg) scale(1.2);
+.nav-marker:hover .nav-shape, .nav-marker.active .nav-shape { 
+    border-color: var(--neon-green); background-color: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green); transform: rotate(45deg) scale(1.2);
 }
-
-.nav-marker:hover .nav-tooltip { 
-    opacity: 1; 
-    right: 18px; /* Небольшой сдвиг к маркеру */
-    clip-path: inset(0 0 0 0); /* Раскрытие */
-}
+.nav-marker:hover .nav-tooltip { opacity: 1; right: 18px; clip-path: inset(0 0 0 0); }
 
 /* =========================================
    COMET SYSTEMS
    ========================================= */
 #comet-system, #comet-system-fg {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; overflow: hidden;
 }
 #comet-system { z-index: 0; }
 #comet-system-fg { z-index: 15; }
 
 .comet {
-    position: absolute;
-    height: 2px; border-radius: 50%;
-    opacity: 0; 
-    transform-origin: right center;
-    filter: drop-shadow(0 0 4px currentColor);
+    position: absolute; height: 2px; border-radius: 50%; opacity: 0; 
+    transform-origin: right center; filter: drop-shadow(0 0 4px currentColor);
     will-change: transform, opacity;
 }
+
+/* =========================================
+   MAGIC MENU (SETTINGS HUD)
+   ========================================= */
+
+.magic-menu-container {
+    position: fixed; bottom: 40px; left: 40px;
+    width: 60px; height: 60px; display: flex;
+    justify-content: center; align-items: center; z-index: 9995;
+}
+
+/* Кнопка переключения (Центр) */
+.magic-toggle {
+    position: absolute; width: 60px; height: 60px;
+    background: rgba(10, 11, 16, 0.9);
+    border: 2px solid var(--neon-green); border-radius: 50%;
+    color: var(--neon-green); display: flex;
+    justify-content: center; align-items: center; font-size: 1.5rem;
+    cursor: pointer; z-index: 10;
+    
+    /* ПОЛУПРОЗРАЧНОСТЬ В ПОКОЕ */
+    opacity: 0.3;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s, opacity 0.3s;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+
+/* При наведении - полная яркость */
+.magic-toggle:hover {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+}
+
+/* Активное состояние кнопки (Меню открыто) */
+.magic-menu-container.active .magic-toggle {
+    opacity: 1;
+    transform: rotate(90deg); background: var(--neon-pink);
+    border-color: var(--neon-pink); color: #fff;
+    box-shadow: 0 0 20px var(--neon-pink);
+}
+
+/* Список элементов */
+.magic-items {
+    position: absolute; width: 0; height: 0;
+    list-style: none; margin: 0; padding: 0;
+}
+
+.magic-items li {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); list-style: none;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition-delay: calc(0.05s * var(--i));
+}
+
+/* Ссылки (Кнопки) */
+.magic-items li a {
+    display: flex; justify-content: center; align-items: center;
+    width: 50px; height: 50px; background: rgba(5, 5, 8, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%;
+    color: #fff; font-size: 1.1rem; transition: 0.3s;
+    backdrop-filter: blur(5px); opacity: 0; pointer-events: none;
+}
+
+/* 
+   АКТИВНОЕ СОСТОЯНИЕ (ВЕЕР)
+   Радиус увеличен до 190px, чтобы кнопки не слипались.
+   Делим 90 градусов на 5 промежутков (для 6 кнопок).
+*/
+.magic-menu-container.active .magic-items li {
+    transform: 
+        rotate(calc(270deg + (90deg / 5 * var(--i)))) 
+        translateX(190px) 
+        rotate(calc(-270deg - (90deg / 5 * var(--i))));
+}
+
+.magic-menu-container.active .magic-items li a { opacity: 1; pointer-events: auto; }
+
+/* Ховер */
+.magic-items li a:hover {
+    background: var(--neon-green); color: #000;
+    box-shadow: 0 0 15px var(--neon-green); border-color: var(--neon-green);
+}
+
+/* --- СОСТОЯНИЯ КНОПОК --- */
+.magic-items li a.disabled-state {
+    border-color: #555; color: #555; background: rgba(0,0,0,0.8); box-shadow: none;
+}
+.magic-items li a.disabled-state:hover {
+    border-color: #777; color: #ccc; box-shadow: none; background: #333;
+}
+.magic-items li a.active-state {
+    border-color: var(--neon-green); color: var(--neon-green);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+
+/* =========================================
+   VISUAL FX STATES (ПЕРЕКЛЮЧАТЕЛИ)
+   ========================================= */
+
+/* 1. ОТКЛЮЧЕНИЕ КОМЕТ */
+body.state-no-comets #comet-system,
+body.state-no-comets #comet-system-fg { display: none !important; }
+
+/* 2. ОТКЛЮЧЕНИЕ ЗВЕЗД */
+body.state-no-stars .hero-section-hud {
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 0.2) 0%, rgba(5, 5, 8, 0.6) 100%),
+        radial-gradient(circle at 80% 20%, rgba(57, 255, 20, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 20% 80%, rgba(255, 45, 149, 0.05) 0%, transparent 40%) !important;
+    animation: none !important;
+}
+
+body.state-no-stars .donation-section::before,
+body.state-no-stars .donation-section::after,
+body.state-no-stars .media-archive-section::before,
+body.state-no-stars .media-archive-section::after,
+body.state-no-stars #about::after { 
+    opacity: 0 !important; animation: none !important;
+}
+
+/* Индикация иконки FX */
+body.state-no-comets .magic-items #btn-toggle-fx { color: #ffd700; border-color: #ffd700; }
+body.state-no-stars .magic-items #btn-toggle-fx { color: #007bff; border-color: #007bff; }
+body.state-no-comets.state-no-stars .magic-items #btn-toggle-fx { color: #555; border-color: #555; box-shadow: none; }

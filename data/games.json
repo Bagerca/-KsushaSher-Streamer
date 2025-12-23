@@ -18,13 +18,13 @@
     "genres": ["horror", "coop", "roguelike", "funny", "indie", "scifi", "shooter", "action"],
     "customColor": "#ce8219",
     "videos": [
-      { "title": "посадил дед репо", "url": "https://youtu.be/INxLtYGWWNI?si=KsPtALsCc-_lU4Yn" },
-      { "title": "репку родили, сферы разбили", "url": "https://youtu.be/-Io-aMBFqWg?si=LiWu6hVg3x4pF4fd" },
-      { "title": "репка", "url": "https://youtu.be/UKgEd3xHn5g?si=kcPcyFr3-f_tGnW-" },
-      { "title": "Репанутые на всю голову", "url": "https://youtu.be/BUkbzbvlQ44?si=1_yF9T_a8ikqu9tT" },
-      { "title": "Баги, приколы, ПиНгИ", "url": "https://youtu.be/oudyoE8akHk?si=DwdLdIfR8nD4GGhV" },
-      { "title": "Получили по репке", "url": "https://youtu.be/PdA7Ebci5lA?si=9lM8y_4_QZAziuIC" },
-      { "title": "Мы долбились и Пробились", "url": "https://youtu.be/YppmFYy0PSk?si=0_rjuJ-sRMHLMVka" }
+      "https://youtu.be/INxLtYGWWNI",
+      "https://youtu.be/-Io-aMBFqWg",
+      "https://youtu.be/UKgEd3xHn5g",
+      "https://youtu.be/BUkbzbvlQ44",
+      "https://youtu.be/oudyoE8akHk",
+      "https://youtu.be/PdA7Ebci5lA",
+      "https://youtu.be/YppmFYy0PSk"
     ]
   },
   {
@@ -37,10 +37,10 @@
     "status": "playing",
     "customColor": "#71b64a",
     "videos": [
-      { "title": "антернед", "url": "https://youtu.be/rzfnAtjE4as?si=IEr9Jc_Wx4mgULjc" },
-      { "title": "ем цветочек, а не мозги", "url": "https://youtu.be/SMsvjKDwdZw?si=Rga8mdM-7KkChxJD" },
-      { "title": "утро начинается с зомби", "url": "https://youtu.be/F1nUsoEGR6U?si=KCEaMAVm_FCrFJks" },
-      { "title": "забежали убежали", "url": "https://youtu.be/LJa-1BoEbMc?si=NkyiBm0jh53-iA9d" }
+      "https://youtu.be/rzfnAtjE4as",
+      "https://youtu.be/SMsvjKDwdZw",
+      "https://youtu.be/F1nUsoEGR6U",
+      "https://youtu.be/LJa-1BoEbMc"
     ]
   },
   {
@@ -53,9 +53,9 @@
     "status": "dropped",
     "customColor": "#e65e3b",
     "videos": [
-      { "title": "холоу найт 2", "url": "https://youtu.be/JPGKia9djuA?si=vmek1jegoXu6WjJi" },
-      { "title": "холоу найт 2 часть 2", "url": "https://youtu.be/deMaQZA9Vc4?si=uNY3G_bWYPitxgSo" },
-      { "title": "теряем нервные клетки", "url": "https://youtu.be/7xn2mNWE4Pw?si=ft5UjYP8xNd6OWg7" }
+      "https://youtu.be/JPGKia9djuA",
+      "https://youtu.be/deMaQZA9Vc4",
+      "https://youtu.be/7xn2mNWE4Pw"
     ]
   },
   {
@@ -68,7 +68,7 @@
     "status": "completed",
     "customColor": "#e3ea04",
     "videos": [
-      { "title": "СыРнАя ПсИхОдЕлИкА", "url": "https://youtu.be/PIyCxvZzeDA?si=tP0kL84hsmKL8Kpj" }
+      "https://youtu.be/PIyCxvZzeDA"
     ]
   },
   {
@@ -81,7 +81,7 @@
     "status": "playing",
     "customColor": "#b79967",
     "videos": [
-      { "title": "Привокзальное выживание", "url": "https://www.youtube.com/watch?v=4V4y8rO75mA" }
+      "https://www.youtube.com/watch?v=4V4y8rO75mA"
     ]
   },
   {
@@ -94,7 +94,7 @@
     "status": "completed",
     "customColor": "#a43c2e",
     "videos": [
-      { "title": "Бешбармак, Казы и Казахская ведьма", "url": "https://youtu.be/07lzMJrVDjg?si=Pv9W52-LxTagbW9M" }
+      "https://youtu.be/07lzMJrVDjg"
     ]
   },
   {
@@ -107,18 +107,18 @@
     "status": "playing",
     "customColor": "#cc050d",
     "videos": [
-      { "title": "медовое побоище", "url": "https://youtu.be/8rQTRqSYB9I?si=V3reYBLt2a5z7_GH" },
-      { "title": "мусорки оп", "url": "https://youtu.be/poR5ososvEw?si=siSblpBHDynj-pB9" },
-      { "title": "семейное дело - уборщики", "url": "https://youtu.be/oGM9v8Mx_mI?si=vstMN30MfWaKffgE" },
-      { "title": "Собираем пидарочки", "url": "https://youtu.be/yzZkGAWhuaE?si=H3NS5ApiuXR7hTNR" },
-      { "title": "Еженедельный уборочный цех", "url": "https://youtu.be/hVI6wmxfDXw?si=sz5db27d2XNyEVli" },
-      { "title": "Мы все про*бали", "url": "https://youtu.be/OCBMaHUegZ4?si=Hd8ccLCEzKG_P9KJ" },
-      { "title": "Яйца птицы так не годится", "url": "https://youtu.be/spYKfCO6G7Q?si=KUdxczC-TlNfandw" },
-      { "title": "Расчехляем космолет", "url": "https://youtu.be/7YhFVjOU2-w?si=RKYcdA9vs4QSL6jx" },
-      { "title": "Подпивасный Расколбас", "url": "https://youtu.be/QDvf0aRlnjM?si=KwkKH0Ty7OThjwa9" },
-      { "title": "Мусорные черви", "url": "https://youtu.be/pjLLbazxijc?si=YCQ3HrLlO5Q2lMII" },
-      { "title": "Увеселительный мусоросборник", "url": "https://youtu.be/xnyfzVJ_ofU?si=0OqHpMXGfauMOcOF" },
-      { "title": "Летательно увлекательно", "url": "https://youtu.be/jRCkXl96YgY?si=TPdU2-fah7cS1rwR" }
+      "https://youtu.be/8rQTRqSYB9I",
+      "https://youtu.be/poR5ososvEw",
+      "https://youtu.be/oGM9v8Mx_mI",
+      "https://youtu.be/yzZkGAWhuaE",
+      "https://youtu.be/hVI6wmxfDXw",
+      "https://youtu.be/OCBMaHUegZ4",
+      "https://youtu.be/spYKfCO6G7Q",
+      "https://youtu.be/7YhFVjOU2-w",
+      "https://youtu.be/QDvf0aRlnjM",
+      "https://youtu.be/pjLLbazxijc",
+      "https://youtu.be/xnyfzVJ_ofU",
+      "https://youtu.be/jRCkXl96YgY"
     ]
   },
   {
@@ -131,8 +131,8 @@
     "status": "completed",
     "customColor": "#2f3b32",
     "videos": [
-      { "title": "Веселая Виселица", "url": "https://youtu.be/ytz5jMFVGdQ?si=_wlH1usG1kDzxnzO" },
-      { "title": "Кончаем виселичное безумие", "url": "https://youtu.be/vih6bH6ebSo?si=2CERkFQjDFvwd2zJ" }
+      "https://youtu.be/ytz5jMFVGdQ",
+      "https://youtu.be/vih6bH6ebSo"
     ]
   },
   {
@@ -155,9 +155,9 @@
     "status": "on-hold",
     "customColor": "#f4d03f",
     "videos": [
-      { "title": "Начало выживания", "url": "https://youtu.be/vAEKtyPSgz0?si=uHFo3TWzWa7n907A" },
-      { "title": "Смешные моменты", "url": "https://youtu.be/_aJV27IXlwU?si=umTTVpbWwlLkuJ_z" },
-      { "title": "Финал", "url": "https://youtu.be/RtRBWSAvdMY?si=V-w71faGbqms4L5f" }
+      "https://youtu.be/vAEKtyPSgz0",
+      "https://youtu.be/_aJV27IXlwU",
+      "https://youtu.be/RtRBWSAvdMY"
     ]
   },
   {
@@ -250,11 +250,11 @@
     "status": "on-hold",
     "customColor": "#dfc4ac",
     "videos": [
-      { "title": "не разочаруй нас (часть 1)", "url": "https://youtu.be/wvlF0sBKpgA?si=RjUJY0zQgfyO5XK4" },
-      { "title": "а мы женщину нашли (часть 2)", "url": "https://youtu.be/KsBProOxvpY?si=Fi4NY89QZ7ZoGnGv" },
-      { "title": "поднебесный городок (часть 3)", "url": "https://youtu.be/mFQjB_5FQNs?si=cB1jEYdu7Yr1nqfF" },
-      { "title": "воздушные опи*дюливания", "url": "https://youtu.be/cXXcKHYQJ2c?si=lT6pkfaNIf7wVB7Q" },
-      { "title": "Я подкатывал к ней яйца...", "url": "https://youtu.be/jBobUycOKEM?si=TOVsx5ig8C9vG1XP" }
+      "https://youtu.be/wvlF0sBKpgA",
+      "https://youtu.be/KsBProOxvpY",
+      "https://youtu.be/mFQjB_5FQNs",
+      "https://youtu.be/cXXcKHYQJ2c",
+      "https://youtu.be/jBobUycOKEM"
     ]
   },
   {

@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="css/global.css">           
     <link rel="stylesheet" href="css/style.css">            
     <link rel="stylesheet" href="css/hero.css">  
-        <link rel="stylesheet" href="css/music-player.css">           
+    <link rel="stylesheet" href="css/music-player.css">           
     <link rel="stylesheet" href="css/content.css">          
     <link rel="stylesheet" href="css/command-center.css">   
     <link rel="stylesheet" href="css/media-archive.css">
@@ -525,6 +525,41 @@
         </div>
     </div>
 
+    <!-- MAGIC MENU (SETTINGS HUD) -->
+    <div class="magic-menu-container">
+        <!-- Центральная кнопка - Шестеренка -->
+        <div class="magic-toggle" title="Настройки интерфейса">
+            <i class="fas fa-cog"></i>
+        </div>
+        
+        <ul class="magic-items">
+            <!-- 1. ОЧИСТКА СУЩЕСТВ (Skull) -->
+            <li style="--i:0;" title="Убрать существ (Clear)">
+                <a href="#" id="btn-clear-creatures"><i class="fas fa-skull"></i></a>
+            </li>
+            
+            <!-- 2. FX ЦИКЛ (Eye) - Теперь 4 режима -->
+            <li style="--i:1;" title="Режимы Атмосферы (Кометы/Звезды)">
+                <a href="#" id="btn-toggle-fx" class="active-state"><i class="fas fa-eye"></i></a>
+            </li>
+            
+            <!-- 3. МУЗЫКАЛЬНЫЙ РЕЖИМ (Headphones) -->
+            <li style="--i:2;" title="Режим Плеера">
+                <a href="#" id="btn-toggle-music"><i class="fas fa-headphones"></i></a>
+            </li>
+            
+            <!-- 4. ОБНОВИТЬ ДАННЫЕ (Sync) -->
+            <li style="--i:3;" title="Обновить данные (API)">
+                <a href="#" id="btn-refresh-data"><i class="fas fa-sync-alt"></i></a>
+            </li>
+
+            <!-- Навигация (Оставил 2 самые важные) -->
+            <li style="--i:4;"><a href="#donation"><i class="fas fa-heart"></i></a></li>
+            <li style="--i:5;"><a href="#hero"><i class="fas fa-arrow-up"></i></a></li>
+        </ul>
+    </div>
+
+    <!-- СКРИПТЫ -->
     <script type="module" src="js/app.js"></script>
     <script src="js/hud-script.js"></script>
 </body>

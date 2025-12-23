@@ -1,6 +1,10 @@
 @import "global.css";
 @import "hero.css";
-@import "command-center.css";
+@import "music-player.css";
 @import "content.css";
+@import "command-center.css";
 @import "media-archive.css";
 @import "media-modal.css";
+@import "specs.css";
+@import "donations.css";
+@import "footer.css";
