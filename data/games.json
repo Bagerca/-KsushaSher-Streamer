@@ -1,13 +1,61 @@
 [
   {
+    "id": "silent-hill-f",
+    "title": "Silent Hill f",
+    "rating": 2.0,
+    "description": "Красивая картинка и интересный сюжет. Однако боевка отвратительная, а сама игра ощущается как нетипичный Сайлент Хилл, вызывая двоякие ощущения.",
+    "image": "assets/images/games/silent-hill-f.jpg",
+    "genres": ["horror", "psychological", "story-rich", "atmospheric", "survival", "action"],
+    "status": "completed",
+    "customColor": "#c92a2a"
+  },
+  {
+    "id": "vacation-cafe-simulator",
+    "title": "Vacation Cafe Simulator (Demo)",
+    "rating": 4.0,
+    "description": "Красивые виды и возможность плавать под водой. Геймплей приятный и несложный. В демке пока много багов и мало функций, поэтому ждем полную версию.",
+    "image": "assets/images/games/vacation-cafe-simulator.jpg",
+    "genres": ["simulation", "casual", "relaxing", "indie", "management"],
+    "status": "playing",
+    "customColor": "#84b4c1",
+    "videos": [
+      "https://youtu.be/8vjTPSYiOuM?si=QyRJdliU72-VzzX_"
+    ]
+  },
+  {
+    "id": "the-forest",
+    "title": "The Forest",
+    "rating": 4.0,
+    "description": "Залипательная песочница с поддержкой Chaos Tricks (интерактив за баллы и донаты). Сюжет интересный, но довольно короткий.",
+    "image": "assets/images/games/the-forest.png",
+    "genres": ["survival", "horror", "open-world", "sandbox", "coop", "adventure", "indie"],
+    "status": "completed",
+    "customColor": "#e0bf08",
+    "videos": [
+      "https://youtu.be/NooBjWBm8oE?si=p_wZkbis61-Uduv7",
+      "https://youtu.be/TMhmn2_8grg?si=pwNKE9Ax6Pgv2Iez"
+    ]
+  },
+  {
     "id": "dead-island-2",
     "title": "Dead Island 2",
     "rating": 5.0,
     "description": "Сочная картинка, классная музыка и залипательное лутание. Разрушаемость зомби на высоте, но звуки ломающейся мебели немного подкачали.",
-    "image": "assets/images/games/dead-island-2.jpg",
+    "image": "assets/images/games/dead-island-2.png",
     "genres": ["zombies", "action", "rpg", "coop", "hack-and-slash", "shooter", "open-world", "aaa", "horror", "funny"],
-    "status": "playing",
-    "customColor": "#ff4757"
+    "status": "completed",
+    "customColor": "#266ab1",
+    "videos": [
+      "https://youtu.be/_LQRER2rOWg?si=3Xgj5NQc-a4-7iLk",
+      "https://youtu.be/f7DoiosG1dI?si=tSTFky-cmyqA_FBk",
+      "https://youtu.be/C3ZrneATygY?si=af71ZAwy2CJ4UxB6",
+      "https://youtu.be/m-xfz0YISEg?si=ph1DTW8zopY_8qMt",
+      "https://youtu.be/qrRPE5mdCLU?si=5laSo4u09kb8ovjn",
+      "https://youtu.be/4nWV0EqxfGA?si=LddVRqKGTUZOmoLE",
+      "https://youtu.be/2DiQEA11Vps?si=x879vae6mhk1zPtO",
+      "https://youtu.be/QZKG8PHAxsA?si=zDpuJ8nsrFL27ja5",
+      "https://youtu.be/56AmmuvlppE?si=EgfK1VXk_MCKJ_s4"
+    ]
   },
   {
     "id": "repo",
@@ -16,6 +64,7 @@
     "description": "Прикольные монстры и залипательное лутание. Есть поддержка Chaos Tricks (плюшки за баллы канала или донаты). Из минусов — в последнее время ужасный пинг.",
     "image": "assets/images/games/repo.png",
     "genres": ["horror", "coop", "roguelike", "funny", "indie", "scifi", "shooter", "action"],
+    "status": "playing",
     "customColor": "#ce8219",
     "videos": [
       "https://youtu.be/INxLtYGWWNI",
@@ -78,7 +127,7 @@
     "description": "Топовое выживание. Строим базу, лутаем, давим зомби. В коопе весело, хоть роль гостя и урезана.",
     "image": "assets/images/games/state-of-decay-2.jpg",
     "genres": ["survival", "zombies", "coop", "open-world", "shooter", "action"],
-    "status": "playing",
+    "status": "dropped",
     "customColor": "#b79967",
     "videos": [
       "https://www.youtube.com/watch?v=4V4y8rO75mA"
@@ -243,11 +292,11 @@
   {
     "id": "bioshock-infinite",
     "title": "BioShock Infinite",
-    "rating": 0,
-    "description": "???",
-    "image": "https://cdn2.steamgriddb.com/grid/374ad92e28ff7e130fb88205d8f49384.png",
+    "rating": 4.0,
+    "description": "Красивая графика и расслабляющая стрельба. Механика перемещения во времени делает геймплей интересным. Но сюжет показался слишком сложным — пока не совсем понятно, что к чему.",
+    "image": "assets/images/games/bioshock-infinite.png",
     "genres": ["shooter", "action", "story-rich", "scifi", "adventure", "aaa"],
-    "status": "on-hold",
+    "status": "completed",
     "customColor": "#dfc4ac",
     "videos": [
       "https://youtu.be/wvlF0sBKpgA",

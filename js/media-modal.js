@@ -59,7 +59,6 @@ export function initModalSystem() {
  */
 function getYouTubeId(url) {
     if (!url) return null;
-    // Если передали объект, берем из него url
     const cleanUrl = (typeof url === 'object') ? url.url : url;
     
     if (!cleanUrl) return null;
@@ -75,9 +74,8 @@ async function fetchYoutubeTitle(url) {
     try {
         const response = await fetch(`https://noembed.com/embed?url=${url}`);
         const data = await response.json();
-        return data.title || "Без названия";
+        return data.title || "YouTube Video";
     } catch (e) {
-        console.warn("Не удалось получить название видео", e);
         return "YouTube Video";
     }
 }
@@ -100,10 +98,8 @@ export function openMediaModal(item, type) {
 
     let imageUrls = [];
     
-    // Если YouTube, берем превьюшки видео
     if (item.format === 'youtube' && item.videos && item.videos.length > 0) {
         imageUrls = item.videos.slice(0, 3).map(v => {
-            // Поддержка и объектов, и строк
             const url = (typeof v === 'string') ? v : v.url;
             const vidId = getYouTubeId(url);
             return `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`;
@@ -183,7 +179,7 @@ export function openMediaModal(item, type) {
 }
 
 /**
- * Логика плеера (С поддержкой авто-названий)
+ * Логика плеера (С поддержкой смены заголовка)
  */
 function setupVideoPlayer(item) {
     const videos = item.videos;
@@ -200,11 +196,20 @@ function setupVideoPlayer(item) {
     els.videoSection.style.display = ''; 
     els.videoSection.style.removeProperty('display'); 
 
-    const playVideo = (videoId, btn) => {
+    // --- ФУНКЦИЯ ВКЛЮЧЕНИЯ ВИДЕО ---
+    // Добавили аргумент titleText
+    const playVideo = (videoId, btn, titleText) => {
         document.querySelectorAll('.playlist-item').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
         els.iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
 
+        // ОБНОВЛЕНИЕ ГЛАВНОГО ЗАГОЛОВКА
+        // Работает только для Предложки (suggested)
+        if (item.status === 'suggested' && titleText) {
+            els.title.textContent = titleText;
+        }
+
+        // ОБНОВЛЕНИЕ КАРТИНКИ СЛЕВА
         if (item.format === 'youtube' && item.status === 'suggested') {
             const newThumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
             const currentPosters = document.querySelectorAll('.modal-poster-img');
@@ -219,11 +224,8 @@ function setupVideoPlayer(item) {
     let validCount = 0;
 
     videos.forEach((vid, index) => {
-        // Проверка: vid может быть строкой или объектом
         const isString = typeof vid === 'string';
         const url = isString ? vid : vid.url;
-        
-        // Берем название, если оно есть в объекте, иначе ставим заглушку
         let title = (!isString && vid.title) ? vid.title : "Загрузка названия...";
 
         const vidId = getYouTubeId(url);
@@ -238,7 +240,6 @@ function setupVideoPlayer(item) {
         
         const thumbUrl = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
 
-        // Создаем HTML
         itemEl.innerHTML = `
             <div class="pl-thumb">
                 <img src="${thumbUrl}" alt="preview">
@@ -250,21 +251,35 @@ function setupVideoPlayer(item) {
             </div>
         `;
         
-        itemEl.addEventListener('click', () => playVideo(vidId, itemEl));
+        // --- КЛИК ПО ПЛЕЙЛИСТУ ---
+        itemEl.addEventListener('click', () => {
+            // Берем актуальное название прямо из элемента (на случай если оно обновилось асинхронно)
+            const currentTitle = itemEl.querySelector('.pl-title').textContent;
+            playVideo(vidId, itemEl, currentTitle);
+        });
+        
         els.playlist.appendChild(itemEl);
 
-        // --- МАГИЯ: Если названия нет (передана строка), грузим его ---
+        // --- ЗАГРУЗКА НАЗВАНИЙ (API) ---
         if (isString) {
             fetchYoutubeTitle(url).then(fetchedTitle => {
-                // Ищем элемент названия внутри созданного блока и обновляем его
                 const titleEl = itemEl.querySelector('.pl-title');
                 if (titleEl) {
                     titleEl.textContent = fetchedTitle;
-                    // Обновляем эффект "пишущей машинки" или просто плавное появление
                     titleEl.style.opacity = 0;
                     setTimeout(() => titleEl.style.opacity = 1, 50);
+                    
+                    // ВАЖНО: Если это видео сейчас активно (например, первое при открытии)
+                    // и это предложка — обновляем главный заголовок сразу
+                    if (itemEl.classList.contains('active') && item.status === 'suggested') {
+                        els.title.textContent = fetchedTitle;
+                    }
                 }
             });
+        } 
+        // Если название было сразу (объект), но мы открыли первое видео
+        else if (index === 0 && item.status === 'suggested') {
+             els.title.textContent = title;
         }
     });
 
