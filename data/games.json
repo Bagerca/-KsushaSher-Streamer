@@ -1,5 +1,65 @@
 [
   {
+    "id": "dead-island-2",
+    "title": "Dead Island 2",
+    "rating": 5.0,
+    "description": "Сочная картинка, классная музыка и залипательное лутание. Разрушаемость зомби на высоте, но звуки ломающейся мебели немного подкачали.",
+    "image": "assets/images/games/dead-island-2.jpg",
+    "genres": ["zombies", "action", "rpg", "coop", "gore", "fps", "open-world"],
+    "status": "playing",
+    "customColor": "#ff4757"
+  },
+  {
+    "id": "repo",
+    "title": "R.E.P.O.",
+    "rating": 5.0,
+    "description": "Прикольные монстры и залипательное лутание. Есть поддержка Chaos Tricks (плюшки за баллы канала или донаты). Из минусов — в последнее время ужасный пинг.",
+    "image": "assets/images/games/repo.png",
+    "genres": ["horror", "coop", "physics", "roguelike", "funny", "indie", "twitch-integration"],
+    "status": "playing",
+    "customColor": "#ce8219",
+    "videos": [
+      { "title": "посадил дед репо", "url": "https://youtu.be/INxLtYGWWNI?si=KsPtALsCc-_lU4Yn" },
+      { "title": "репку родили, сферы разбили", "url": "https://youtu.be/-Io-aMBFqWg?si=LiWu6hVg3x4pF4fd" },
+      { "title": "репка", "url": "https://youtu.be/UKgEd3xHn5g?si=kcPcyFr3-f_tGnW-" },
+      { "title": "Репанутые на всю голову", "url": "https://youtu.be/BUkbzbvlQ44?si=1_yF9T_a8ikqu9tT" },
+      { "title": "Баги, приколы, ПиНгИ", "url": "https://youtu.be/oudyoE8akHk?si=DwdLdIfR8nD4GGhV" },
+      { "title": "Получили по репке", "url": "https://youtu.be/PdA7Ebci5lA?si=9lM8y_4_QZAziuIC" },
+      { "title": "Мы долбились и Пробились", "url": "https://youtu.be/YppmFYy0PSk?si=0_rjuJ-sRMHLMVka" }
+    ]
+  },
+  {
+    "id": "unturned",
+    "title": "Unturned",
+    "rating": 4.0,
+    "description": "Залипательная боевка и приятный геймплей. Есть кооп, но загрузка — жуть какая долгая.",
+    "image": "assets/images/games/unturned.png",
+    "genres": ["survival", "zombies", "open-world", "sandbox", "coop", "free", "indie"],
+    "status": "playing",
+    "customColor": "#71b64a",
+    "videos": [
+      { "title": "антернед", "url": "https://youtu.be/rzfnAtjE4as?si=IEr9Jc_Wx4mgULjc" },
+      { "title": "ем цветочек, а не мозги", "url": "https://youtu.be/SMsvjKDwdZw?si=Rga8mdM-7KkChxJD" },
+      { "title": "утро начинается с зомби", "url": "https://youtu.be/F1nUsoEGR6U?si=KCEaMAVm_FCrFJks" },
+      { "title": "забежали убежали", "url": "https://youtu.be/LJa-1BoEbMc?si=NkyiBm0jh53-iA9d" }
+    ]
+  },
+  {
+    "id": "hollow-knight-silksong",
+    "title": "Hollow Knight: Silksong",
+    "rating": 3.0,
+    "description": "Приятная картинка и наличие кооператива. Но геймплей оказался слишком жестким для меня.",
+    "image": "assets/images/games/hollow-knight-silksong.webp",
+    "genres": ["metroidvania", "souls-like", "platformer", "action", "hardcore", "indie", "coop"],
+    "status": "dropped",
+    "customColor": "#e65e3b",
+    "videos": [
+      { "title": "холоу найт 2", "url": "https://youtu.be/JPGKia9djuA?si=vmek1jegoXu6WjJi" },
+      { "title": "холоу найт 2 часть 2", "url": "https://youtu.be/deMaQZA9Vc4?si=uNY3G_bWYPitxgSo" },
+      { "title": "теряем нервные клетки", "url": "https://youtu.be/7xn2mNWE4Pw?si=ft5UjYP8xNd6OWg7" }
+    ]
+  },
+  {
     "id": "bad-cheese",
     "title": "Bad Cheese",
     "rating": 1.5,
@@ -116,10 +176,10 @@
     "title": "Hollow Knight",
     "rating": 0,
     "description": "???",
-    "image": "https://cdn2.steamgriddb.com/grid/2cffdc4195ce6adf0a57062e4318662e.webp",
+    "image": "assets/images/games/hollow-knight.webp",
     "genres": ["metroidvania", "souls-like", "platformer", "action", "hardcore", "indie"],
     "status": "on-hold",
-    "customColor": "#aab7b8"
+    "customColor": "#c3bebb"
   },
   {
     "id": "content-warning",
