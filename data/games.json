@@ -1,13 +1,75 @@
 [
   {
+    "id": "supernatural-the-game",
+    "title": "Supernatural: The Game",
+    "rating": 4.0,
+    "description": "Как фанатке сериала, мне очень зашло. Озвучка героев аутентичная, есть приятная привязка к лору. Игра заметно лагает и сюжет короткий, но это простительно в ожидании полнометражной версии.",
+    "image": "assets/images/games/supernatural-the-game.jpg",
+    "genres": ["horror", "adventure", "action", "story-rich", "fan-game", "atmospheric"],
+    "status": "completed",
+    "customColor": "#948c08",
+    "videos": [
+      "https://youtu.be/f2Mbj35lirQ?si=cZneYfO7FQFqSLCC"
+    ]
+  },
+  {
+    "id": "cursed-digicam",
+    "title": "Cursed Digicam",
+    "rating": 5.0,
+    "description": "Отличный хоррор с хорошим сюжетом, качественными скримерами и интересными головоломками. Есть даже забавные моменты. Минусов замечено не было.",
+    "image": "assets/images/games/cursed-digicam.jpg",
+    "genres": ["horror", "psychological", "indie", "puzzle", "simulation", "realistic"],
+    "status": "completed",
+    "customColor": "#8f8c38",
+    "videos": [
+      "https://youtu.be/9jQw2NCywLU?si=t-B8GpNMwxi6ebUM"
+    ]
+  },
+  {
+    "id": "the-maid",
+    "title": "The Maid",
+    "rating": 3.0,
+    "description": "Игра порадовала хорошими скримерами, но геймплей показался слишком затянутым из-за постоянной необходимости ходить туда-сюда в поисках предметов.",
+    "image": "assets/images/games/the-maid.jpg",
+    "genres": ["horror", "indie", "walking-sim", "psychological", "puzzle"],
+    "status": "completed",
+    "customColor": "#923f2c",
+    "videos": [
+      "https://youtu.be/zwQGqgZrBKo?si=aO8nUD2Dlig9paLw"
+    ]
+  },
+  {
+    "id": "the-cabin-factory",
+    "title": "The Cabin Factory",
+    "rating": 4.0,
+    "description": "Хоррор с хорошими скримерами и интересной фишкой — взаимодействием с чатом во время игры. Единственный минус — сюжет довольно короткий.",
+    "image": "assets/images/games/the-cabin-factory.jpg",
+    "genres": ["horror", "simulation", "indie", "short", "psychological"],
+    "status": "completed",
+    "customColor": "#c51919",
+    "videos": [
+      "https://youtu.be/qZqk1O8p9BU?si=6EfyjmwmUbub2LwS"
+    ]
+  },
+  {
     "id": "silent-hill-f",
     "title": "Silent Hill f",
     "rating": 2.0,
     "description": "Красивая картинка и интересный сюжет. Однако боевка отвратительная, а сама игра ощущается как нетипичный Сайлент Хилл, вызывая двоякие ощущения.",
-    "image": "assets/images/games/silent-hill-f.jpg",
+    "image": "assets/images/games/silent-hill-f.png",
     "genres": ["horror", "psychological", "story-rich", "atmospheric", "survival", "action"],
     "status": "completed",
-    "customColor": "#c92a2a"
+    "customColor": "#b7242b",
+    "videos": [
+      "https://youtu.be/M-xk2GDhAhc?si=y5hUgVkZux0oXZfe",
+      "https://youtu.be/L7KIwjXuCao?si=3BSo-PciBeF5jOxH",
+      "https://youtu.be/NdSCznUi0ek?si=nbm1YXGlCtbXLQ3H",
+      "https://youtu.be/Bf2IdJrUPmY?si=-0cchlrvdu0ISgIu",
+      "https://youtu.be/EBaPeWK11BU?si=Z3Yca9f2jn1tu9H3",
+      "https://youtu.be/IMz4cLhEQzE?si=xyBdr4N2yIk1t9ya",
+      "https://youtu.be/PUUXPIuBVT4?si=9z9A94rTngvm8kq_",
+      "https://youtu.be/r2CsTzv1bKE?si=QLd-Tvw5tfoyEtIi"
+    ]
   },
   {
     "id": "vacation-cafe-simulator",
