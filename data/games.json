@@ -1,5 +1,28 @@
 [
   {
+  "id": "the-floor-above-demo",
+  "title": "The Floor Above (Demo)",
+  "rating": 4.0,
+  "description": "Атмосферный хоррор с новогодним вайбом. Неплохие скримеры разбавлены мемами, что радует. Из минусов — механика поиска аномалий неочевидна, приходится просто заучивать обстановку.",
+  "image": "assets/images/games/the-floor-above-demo.jpg",
+  "genres": ["horror", "puzzle", "indie", "atmospheric", "funny"],
+  "status": "completed",
+  "customColor": "#cc2a1b"
+},
+  {
+  "id": "stick-fight-the-game",
+  "title": "Stick Fight: The Game",
+  "rating": 4.0,
+  "description": "Залипательный кооп с очень приятной музыкой. Играется весело, но контента хватило ненадолго — уровней маловато.",
+  "image": "assets/images/games/stick-fight-the-game.jpg",
+  "genres": ["fighting", "coop", "funny", "indie", "action"],
+  "status": "completed",
+  "customColor": "#1b7fa9",
+    "videos": [
+      "https://youtu.be/o1QJ3pcpeUM?si=qvEsbc1AVkUxmd_g"
+    ]
+},
+  {
     "id": "supernatural-the-game",
     "title": "Supernatural: The Game",
     "rating": 4.0,
