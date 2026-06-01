@@ -1,87 +1,112 @@
 /* js/stats.js */
-import { loadData } from './api.js';
+import EventBus from './event-bus.js';
 
-let radarChartInstance = null;
-
-export async function initStats() {
-    try {
-        await loadChartJS();
-        const stats = await loadData('stats.json', { followers: 0, hours: 0, loyalty: 0 });
-        
-        // 1. Обновляем цифры
-        const followersEl = document.querySelector('.followers-val');
-        if (followersEl) followersEl.textContent = formatNumber(stats.followers);
-        
-        const hoursEl = document.querySelector('.hours-val');
-        if (hoursEl) hoursEl.textContent = formatNumber(stats.hours) + '+';
-        
-        // 2. Круговая диаграмма
-        const circularSvg = document.querySelector('.circular-svg-compact .circle');
-        const loyaltyText = document.querySelector('.loyalty-val');
-        
-        if (circularSvg && loyaltyText) {
-            loyaltyText.textContent = `${stats.loyalty}%`;
-            circularSvg.style.strokeDasharray = `${stats.loyalty}, 100`;
-            if (stats.loyalty >= 90) circularSvg.style.stroke = 'var(--neon-green)';
-            else if (stats.loyalty >= 70) circularSvg.style.stroke = '#ffd700';
-            else circularSvg.style.stroke = '#ff6464';
-        }
-
-        // 3. Радар
-        createRadarChart(stats);
-        
-    } catch (error) {
-        console.error('Error rendering stats:', error);
+export class StatsManager {
+    constructor() {
+        this.channelName = 'bagercaa';
+        this.uptimeInterval = null;
     }
-}
 
-function formatNumber(num) {
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
-}
+    async init() {
+        try {
+            console.log("📊 [Stats] Запрос реальных данных Twitch...");
+            
+            const response = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${this.channelName}`);
+            if (!response.ok) throw new Error("API недоступно");
+            
+            const data = await response.json();
+            if (!data || data.length === 0) return;
+            
+            const user = data[0];
+            const isLive = user.stream !== null;
 
-function loadChartJS() {
-    return new Promise((resolve) => {
-        if (window.Chart) { resolve(); return; }
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-        script.onload = resolve;
-        script.onerror = resolve; 
-        document.head.appendChild(script);
-    });
-}
+            // DOM Элементы
+            const elFollowers = document.getElementById('stat-followers');
+            const elViewersLabel = document.getElementById('stat-label-viewers');
+            const elViewersVal = document.getElementById('stat-viewers');
+            const elIconViewers = document.getElementById('stat-icon-viewers');
+            
+            const elGameLabel = document.getElementById('stat-label-game');
+            const elGameVal = document.getElementById('stat-game');
+            
+            const elTimeLabel = document.getElementById('stat-label-time');
+            const elTimeVal = document.getElementById('stat-time');
+            const elIconTime = document.getElementById('stat-icon-time');
 
-function createRadarChart(stats) {
-    const ctx = document.getElementById('radarChart');
-    if (!ctx || !window.Chart) return;
+            // 1. Фолловеры (Всегда)
+            if (elFollowers) elFollowers.textContent = this.formatNumber(user.followers);
 
-    if (radarChartInstance) radarChartInstance.destroy();
+            // Очищаем старый таймер
+            if (this.uptimeInterval) clearInterval(this.uptimeInterval);
 
-    radarChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: ['Рост', 'Стримы', 'Контент', 'Чат', 'Лояльность', 'Игры'],
-            datasets: [{
-                data: [85, 70, 90, 80, stats.loyalty || 50, 60],
-                backgroundColor: 'rgba(57, 255, 20, 0.15)',
-                borderColor: '#39ff14',
-                borderWidth: 2,
-                pointBackgroundColor: '#39ff14',
-                pointRadius: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                r: {
-                    beginAtZero: true, max: 100, ticks: { display: false },
-                    angleLines: { color: 'rgba(255, 255, 255, 0.05)' },
-                    grid: { color: 'rgba(57, 255, 20, 0.1)' },
-                    pointLabels: { color: '#ccc', font: { size: 10, family: "'Rajdhani'" } }
+            if (isLive) {
+                // СТРИМ ИДЕТ
+                elViewersLabel.textContent = "ЗРИТЕЛЕЙ СЕЙЧАС";
+                elViewersVal.textContent = this.formatNumber(user.stream.viewersCount);
+                elViewersVal.style.color = "var(--neon-green)";
+                elIconViewers.className = "fas fa-eye stat-icon";
+                elIconViewers.style.color = "var(--neon-green)";
+
+                elGameLabel.textContent = "ТЕКУЩАЯ ЦЕЛЬ";
+                elGameVal.textContent = user.stream.game ? user.stream.game.displayName : "Just Chatting";
+                elGameVal.style.color = "var(--neon-pink)";
+
+                elTimeLabel.textContent = "ВРЕМЯ В ЭФИРЕ";
+                elIconTime.className = "fas fa-broadcast-tower stat-icon";
+                elIconTime.style.color = "var(--neon-pink)";
+                elTimeVal.style.color = "#fff";
+                
+                // Живой тикающий таймер
+                const startTime = new Date(user.stream.createdAt).getTime();
+                this.uptimeInterval = setInterval(() => {
+                    const now = new Date().getTime();
+                    const diff = now - startTime;
+                    
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    elTimeVal.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+
+            } else {
+                // СТРИМ ОФЛАЙН
+                elViewersLabel.textContent = "СТАТУС СИСТЕМЫ";
+                elViewersVal.textContent = "ОФЛАЙН";
+                elViewersVal.style.color = "#666";
+                elIconViewers.className = "fas fa-power-off stat-icon";
+                elIconViewers.style.color = "#666";
+
+                elGameLabel.textContent = "ПОСЛЕДНЯЯ БАЗА";
+                elGameVal.textContent = user.lastBroadcast.game ? user.lastBroadcast.game.displayName : "Just Chatting";
+                elGameVal.style.color = "#fff";
+
+                elTimeLabel.textContent = "ПОСЛЕДНИЙ ВХОД";
+                elIconTime.className = "fas fa-history stat-icon";
+                elIconTime.style.color = "#888";
+                elTimeVal.style.color = "#888";
+
+                // Считаем сколько дней назад был стрим
+                if (user.lastBroadcast.startedAt) {
+                    const lastDate = new Date(user.lastBroadcast.startedAt);
+                    const diffDays = Math.floor((new Date() - lastDate) / (1000 * 60 * 60 * 24));
+                    if (diffDays === 0) elTimeVal.textContent = "СЕГОДНЯ";
+                    else if (diffDays === 1) elTimeVal.textContent = "ВЧЕРА";
+                    else elTimeVal.textContent = `${diffDays} ДН. НАЗАД`;
+                } else {
+                    elTimeVal.textContent = "НЕИЗВЕСТНО";
                 }
-            },
-            plugins: { legend: { display: false } }
+            }
+
+            EventBus.emit('SYS_LOG', { html: `[STATS] Данные трансляции обновлены.` });
+            
+        } catch (error) {
+            console.error('❌ [Stats] Ошибка получения данных:', error);
         }
-    });
+    }
+
+    formatNumber(num) {
+        if (!num) return "0";
+        return num >= 1000 ? (num / 1000).toFixed(1) + 'K' : num.toLocaleString('ru-RU');
+    }
 }

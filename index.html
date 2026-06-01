@@ -4,20 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ksusha Sher - Стример на Twitch</title>
+    <title>Ksusha Sher - Cyber Dashboard</title>
     
-    <!-- ФАВИКОНКА -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
-    <!-- Иконки FontAwesome -->
+    <!-- Иконки и Шрифты -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- СТИЛИ -->
+    <!-- Модульные стили -->
     <link rel="stylesheet" href="css/global.css">           
     <link rel="stylesheet" href="css/style.css">            
     <link rel="stylesheet" href="css/hero.css">  
@@ -32,78 +29,36 @@
 </head>
 <body>
     
-    <!-- ГЛОБАЛЬНЫЙ ФОН (КОМЕТЫ - ЗАДНИЙ ПЛАН) -->
+    <!-- ГЛОБАЛЬНЫЙ ФОН (КОМЕТЫ) -->
     <div id="comet-system"></div>
-    
-    <!-- НОВЫЙ СЛОЙ (КОМЕТЫ - ПЕРЕДНИЙ ПЛАН / 3D ЭФФЕКТ) -->
     <div id="comet-system-fg"></div>
 
-    <!-- =========================================
-         СЕКЦИЯ 1: HERO (HUD ИНТЕРФЕЙС)
-         ======================================== -->
+    <!-- СЕКЦИЯ 1: HERO -->
     <section class="hero-section-hud" id="hero">
-        
         <div class="hud-container">
-            
-            <!-- Левая панель: Бот -->
             <div class="hud-side-panel left">
                 <div class="panel-content">
-                    <div class="panel-header">
-                        <span class="header-title">СОЮЗНИК</span>
-                        <span class="header-deco-line"></span>
-                    </div>
-                    
+                    <div class="panel-header"><span class="header-title">СОЮЗНИК</span><span class="header-deco-line"></span></div>
                     <div class="ally-container">
-                        <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar main-photo tetla" data-character="tetla">
+                        <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar main-photo tetla">
                         <h3 class="panel-name">TETLA <span class="bot-version">v5.6</span></h3>
                     </div>
-
-                    <!-- Терминал -->
                     <div class="ally-terminal" id="terminal-box">
                         <div id="terminal-history"></div>
-                        <div class="command-line">
-                            <span class="prompt">></span>
-                            <input type="text" id="cmd-input" autocomplete="off" spellcheck="false">
-                        </div>
-                    </div>
-
-                    <div class="ally-stats-grid">
-                        <div class="ally-stat-box">
-                            <span class="a-label">СТАТУС</span>
-                            <span class="a-value status-ok">ONLINE</span>
-                        </div>
-                        <div class="ally-stat-box">
-                            <span class="a-label">РОЛЬ</span>
-                            <span class="a-value">MODER</span>
-                        </div>
-                        <div class="ally-stat-box">
-                            <span class="a-label">UPTIME</span>
-                            <span class="a-value">99.9%</span>
-                        </div>
+                        <div class="command-line"><span class="prompt">></span><input type="text" id="cmd-input" autocomplete="off" spellcheck="false"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Центр: Стример -->
             <div class="hud-main-display">
                 <div class="main-avatar-container">
-                    <div class="main-display-rings">
-                        <div class="ring ring-1"></div>
-                        <div class="ring ring-2"></div>
-                        <div class="ring ring-3"></div>
-                    </div>
-                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar main-photo ksusha" data-character="ksusha">
+                    <div class="main-display-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar main-photo ksusha">
                 </div>
-                
-                <!-- Статус бар (Стрим / Плеер) -->
                 <div class="main-display-status">
-                    <!-- 1. Режим стрима (по умолчанию) -->
                     <div id="live-status-container" style="display: flex; align-items: center;">
-                        <span class="status-indicator"></span>
-                        <span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
+                        <span class="status-indicator"></span><span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
                     </div>
-
-                    <!-- 2. Режим плеера (скрыт по умолчанию) -->
                     <div id="music-controls-container" style="display: none; align-items: center; gap: 15px;">
                         <button class="music-btn" id="btn-prev"><i class="fas fa-backward"></i></button>
                         <button class="music-btn play-btn" id="btn-play"><i class="fas fa-play"></i></button>
@@ -112,212 +67,180 @@
                 </div>
             </div>
 
-            <!-- Правая панель: Отряд / Музыка -->
             <div class="hud-side-panel right" id="squad-panel">
                 <div class="panel-content">
-                    
-                    <!-- 1. РЕЖИМ ОТРЯДА (По умолчанию) -->
                     <div class="squad-default-view" id="squad-view">
-                        <div class="panel-header">
-                            <span class="header-title">ОТРЯД</span>
-                            <span class="header-deco-line"></span>
-                        </div>
+                        <div class="panel-header"><span class="header-title">ОТРЯД</span><span class="header-deco-line"></span></div>
                         <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
-                        
-                        <!-- СПИСОК УЧАСТНИКОВ -->
                         <div class="squad-list">
-                            <!-- BAGERca -->
-                            <div class="squad-member" data-member="bagerka">
-                                <div class="avatar-wrapper">
-                                    <div class="squad-avatar bagerka-avatar orbital-photo bagerka">
-                                        <img src="assets/images/bagerca.jpg" alt="BAGERca">
-                                    </div>
-                                    <div class="role-badge tech" title="Tech Lead"><i class="fas fa-code"></i></div>
-                                </div>
-                                <span class="squad-name">BAGERca</span>
-                            </div>
-
-                            <!-- Angel -->
-                            <div class="squad-member" data-member="angel">
-                                <div class="avatar-wrapper">
-                                    <div class="squad-avatar angel-avatar orbital-photo angel">
-                                        <img src="assets/images/angel.jpg" alt="Angel">
-                                    </div>
-                                    <div class="role-badge support" title="Support"><i class="fas fa-star"></i></div>
-                                </div>
-                                <span class="squad-name">Angel</span>
-                            </div>
-
-                            <!-- Kiriki -->
-                            <div class="squad-member" data-member="kiriki">
-                                <div class="avatar-wrapper">
-                                    <div class="squad-avatar kiriki-avatar orbital-photo kiriki">
-                                        <img src="assets/images/kiriki.jpg" alt="Kiriki">
-                                    </div>
-                                    <div class="role-badge fun" title="Content"><i class="fas fa-music"></i></div>
-                                </div>
-                                <span class="squad-name">Kiriki</span>
-                            </div>
+                            <div class="squad-member" data-member="bagerka"><div class="avatar-wrapper"><div class="squad-avatar bagerka-avatar orbital-photo"><img src="assets/images/bagerca.jpg" alt="BAGERca"></div><div class="role-badge tech"><i class="fas fa-code"></i></div></div><span class="squad-name">BAGERca</span></div>
+                            <div class="squad-member" data-member="angel"><div class="avatar-wrapper"><div class="squad-avatar angel-avatar orbital-photo"><img src="assets/images/angel.jpg" alt="Angel"></div><div class="role-badge support"><i class="fas fa-star"></i></div></div><span class="squad-name">Angel</span></div>
+                            <div class="squad-member" data-member="kiriki"><div class="avatar-wrapper"><div class="squad-avatar kiriki-avatar orbital-photo"><img src="assets/images/kiriki.jpg" alt="Kiriki"></div><div class="role-badge fun"><i class="fas fa-music"></i></div></div><span class="squad-name">Kiriki</span></div>
                         </div>
                     </div>
+                    <div class="squad-detail-view"><button class="close-detail-btn">&times;</button><div class="detail-avatar-container"></div><h3 class="detail-name"></h3><p class="detail-description"></p></div>
                     
-                    <!-- 2. ДЕТАЛЬНЫЙ ВИД (По клику на участника) -->
-                    <div class="squad-detail-view">
-                        <button class="close-detail-btn">&times;</button>
-                        <div class="detail-avatar-container"></div>
-                        <h3 class="detail-name"></h3>
-                        <p class="detail-description"></p>
-                    </div>
-
-                    <!-- 3. НОВЫЙ БЛОК: МУЗЫКАЛЬНЫЙ ПЛЕЕР (Скрыт) -->
                     <div class="music-playlist-view" id="music-view" style="display: none;">
-                        <div class="panel-header">
-                            <span class="header-title" style="background: var(--neon-pink); color: #fff;">MUSIC</span>
-                            
-                            <!-- РЕГУЛЯТОР ГРОМКОСТИ (ТИКИ) ВМЕСТО ЛИНИИ -->
-                            <div class="volume-ticks-container" id="volume-ticks"></div>
-                        </div>
-                        
-                        <div class="playlist-container" id="playlist-list">
-                            <!-- Треки генерируются JS -->
-                        </div>
-                    </div>
-
-                    <!-- 4. ОБЩИЙ ПОДВАЛ (ВОЛНЫ + ПРОГРЕСС) -->
-                    <!-- Вынесен сюда, чтобы быть общим для Отряда и Музыки -->
-                    <div class="squad-status-footer">
-                        
-                        <!-- ПРОГРЕСС-БАР ТРЕКА -->
                         <div class="music-progress-area" id="progress-area">
                             <div class="music-progress-fill" id="progress-fill"></div>
-                            <div class="music-progress-handle"></div> 
                         </div>
-
-                        <div class="footer-labels">
-                            <span class="data-label">СИНХРОНИЗАЦИЯ</span>
-                            <span class="data-value status-ok">100%</span>
+                        <div class="panel-header">
+                            <span class="header-title" style="background: var(--neon-pink); color: #fff;">MUSIC</span>
+                            <div class="volume-ticks-container" id="volume-ticks"></div>
                         </div>
-                        
-                        <div class="sync-waveform">
-                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                        </div>
+                        <div class="playlist-container" id="playlist-list"></div>
                     </div>
-
                 </div>
             </div>
         </div>
-        
-        <div class="hero-content-hud">
-            <h1 class="hero-title-hud">KSUSHA SHER</h1>
-            <p class="hero-subtitle-hud" id="data-ticker">STREAMER & CONTENT CREATOR</p>
-        </div>
+        <div class="hero-content-hud"><h1 class="hero-title-hud">KSUSHA SHER</h1><p class="hero-subtitle-hud" id="data-ticker">STREAMER & CONTENT CREATOR</p></div>
     </section>
 
-    <!-- СЕКЦИИ КОНТЕНТА -->
+    <!-- СЕКЦИЯ 2: ОБО МНЕ -->
     <section id="about" class="about-cyber-section">
         <div class="container">
             <div class="about-layout-wrapper">
                 <div class="about-top-row">
-                    <!-- БИО -->
                     <div class="dossier-text">
-                        <div class="bio-header">
-                            <span class="bio-icon"><i class="fas fa-terminal"></i></span>
-                            <h3 class="bio-title">БИОГРАФИЯ</h3>
-                        </div>
+                        <div class="bio-header"><span class="bio-icon"><i class="fas fa-terminal"></i></span><h3 class="bio-title">БИОГРАФИЯ</h3></div>
                         <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
                         <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="twitch-link">Twitch</a>.</p>
-                        <div class="dossier-stats">
-                            <div class="stat-tag">🎮 Variety</div>
-                            <div class="stat-tag">💬 Just Chatting</div>
-                            <div class="stat-tag">👻 Horror</div>
-                        </div>
+                        <div class="dossier-stats"><div class="stat-tag">🎮 Variety</div><div class="stat-tag">💬 Just Chatting</div><div class="stat-tag">👻 Horror</div></div>
                     </div>
-                    <!-- ВИДЕО -->
                     <div class="cyber-monitor">
                         <div class="video-wrapper">
-                            <div class="monitor-header">
-                                <span>REC <span class="rec-dot">●</span></span>
-                                <span>CAM_01 [LIVE]</span>
-                            </div>
-                            <div class="video-frame">
-                                <iframe src="https://www.youtube.com/embed/Uym3MRaJ3PE" title="Обо мне" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                <div class="screen-grid"></div>
-                            </div>
-                            <div class="monitor-footer">
-                                <span>SIGNAL: <span class="signal-status">STRONG</span></span>
-                                <span>1080p / 60FPS</span>
-                            </div>
+                            <div class="monitor-header"><span>REC <span class="rec-dot">●</span></span><span>CAM_01 [LIVE]</span></div>
+                            <div class="video-frame"><iframe src="https://www.youtube.com/embed/Uym3MRaJ3PE" title="Обо мне" frameborder="0" allowfullscreen></iframe><div class="screen-grid"></div></div>
+                            <div class="monitor-footer"><span>SIGNAL: <span class="signal-status">STRONG</span></span><span>1080p / 60FPS</span></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div> 
-        <!-- КОНВЕЙЕР -->
         <div class="subs-marquee-wrapper full-width-mode">
             <div class="marquee-header-centered"><span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ</div>
-            <div class="marquee-track-container">
-                <div class="marquee-track" id="subscribers-track"></div>
-            </div>
+            <div class="marquee-track-container"><div class="marquee-track" id="subscribers-track"></div></div>
         </div>
     </section>
 
-    <!-- DASHBOARD -->
+    <!-- СЕКЦИЯ 3: DASHBOARD (NETWORK HUB) -->
     <section id="command-center" class="command-center-section">
         <div class="hud-grid-bg"></div>
         <div class="container">
+            
             <div class="command-header">
-                <div class="cyber-header-wrapper" style="margin-bottom: 30px;">
-                    <div class="cyber-header-sub">MISSION_CONTROL // STATUS_LIVE</div>
-                    <h2 class="cyber-header-main" data-text="КОМАНДНЫЙ ЦЕНТР">КОМАНДНЫЙ ЦЕНТР</h2>
+                <div class="cyber-header-wrapper">
+                    <div class="cyber-header-sub">MISSION_CONTROL // NETWORK_HUB</div>
+                    <h2 class="cyber-header-main">КОМАНДНЫЙ ЦЕНТР</h2>
                     <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
                 </div>
-                <div class="system-status-bar">
-                    <div class="status-module"><span class="pulse-indicator"></span> СИСТЕМА: <span class="neon-text">ОНЛАЙН</span></div>
-                    <div class="status-decor-line"></div>
-                    <div class="status-module"><i class="fas fa-signal"></i> СИГНАЛ: <span class="neon-text">100%</span></div>
-                    <div class="status-decor-line"></div>
-                    <div class="status-module decoration">[ROOT_ACCESS_GRANTED]</div>
-                </div>
             </div>
-            <div class="command-grid">
-                <!-- SCHEDULE PANEL -->
-                <div class="cmd-panel schedule-panel">
-                    <div class="hud-bracket top-left"></div><div class="hud-bracket bottom-right"></div>
-                    <div class="cmd-panel-header">
-                        <span class="header-tag">LOGS</span><h3><i class="far fa-calendar-alt"></i> ГРАФИК МИССИЙ</h3><div class="header-line"></div>
+
+            <div class="hub-grid">
+                
+                <!-- РЕАЛЬНАЯ ТАКТИЧЕСКАЯ СВОДКА (TWITCH API) -->
+                <div class="cmd-panel stats-panel">
+                    <div class="hud-bracket top-left"></div>
+                    <div class="hud-bracket bottom-right"></div>
+                    <div class="stats-grid-container">
+                        
+                        <!-- Блок 1: Фолловеры -->
+                        <div class="stat-box">
+                            <i class="fas fa-users stat-icon" style="color: var(--neon-green);"></i>
+                            <div class="stat-info">
+                                <div class="stat-label">АГЕНТЫ В СЕТИ</div>
+                                <div class="stat-value" id="stat-followers">----</div>
+                            </div>
+                        </div>
+
+                        <!-- Блок 2: Статус / Зрители -->
+                        <div class="stat-box">
+                            <i class="fas fa-eye stat-icon" id="stat-icon-viewers" style="color: #00ccff;"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-viewers">СТАТУС</div>
+                                <div class="stat-value" id="stat-viewers">----</div>
+                            </div>
+                        </div>
+
+                        <!-- Блок 3: Текущая/Последняя игра -->
+                        <div class="stat-box">
+                            <i class="fas fa-gamepad stat-icon" style="color: var(--neon-pink);"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-game">ПОСЛЕДНЯЯ БАЗА</div>
+                                <div class="stat-value small" id="stat-game">----</div>
+                            </div>
+                        </div>
+
+                        <!-- Блок 4: Аптайм (Время в эфире) -->
+                        <div class="stat-box">
+                            <i class="fas fa-clock stat-icon" id="stat-icon-time" style="color: #ffd700;"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-time">ПОСЛЕДНИЙ ВХОД</div>
+                                <div class="stat-value" id="stat-time">----</div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="schedule-timeline-container" id="schedule-container"><div class="loading-scanline">INITIATING SCAN...</div></div>
                 </div>
-                <!-- RADAR PANEL -->
-                <div class="cmd-panel stats-radar-panel">
-                    <div class="hud-bracket top-right"></div><div class="hud-bracket bottom-left"></div>
-                    <div class="cmd-panel-header"><span class="header-tag">ANALYSIS</span><h3>ПАРАМЕТРЫ</h3></div>
-                    <div class="radar-crosshair"></div>
-                    <div class="radar-wrapper-compact"><canvas id="radarChart"></canvas></div>
-                </div>
-                <!-- METRICS PANEL -->
-                <div class="cmd-panel stats-metrics-panel">
-                    <div class="tech-bg-lines"></div>
-                    <div class="metric-slot"><div class="slot-label">АГЕНТЫ</div><div class="slot-value followers-val">0</div><div class="slot-bar"></div></div>
-                    <div class="metric-slot"><div class="slot-label">ЭФИР (Ч)</div><div class="slot-value hours-val">0</div><div class="slot-bar"></div></div>
-                </div>
-                <!-- CIRCLE PANEL -->
-                <div class="cmd-panel stats-circle-panel">
-                    <div class="cmd-panel-header simple"><span>LOYALTY</span></div>
-                    <div class="circular-chart-wrapper">
-                        <div class="rotating-ring"></div>
-                        <svg viewBox="0 0 36 36" class="circular-svg-compact"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
-                        <div class="circle-inner-content"><span class="loyalty-val">0%</span></div>
+
+                <!-- ЛЕВАЯ КОЛОНКА: ТЕРМИНАЛ СТРИМА -->
+                <div class="hub-col-main">
+                    <div class="cmd-panel player-panel">
+                        <div class="hud-bracket top-left"></div>
+                        <div class="cmd-panel-header">
+                            <span class="header-tag">BROADCAST</span>
+                            <h3><i class="fas fa-video"></i> ПРЯМОЙ ЭФИР</h3>
+                            <div class="header-line"></div>
+                        </div>
+                        <div class="twitch-player-wrapper" id="hub-player-container">
+                            <div class="player-loader"><i class="fas fa-circle-notch fa-spin"></i> УСТАНОВКА СВЯЗИ...</div>
+                        </div>
+                    </div>
+
+                    <div class="cmd-panel chat-panel">
+                        <div class="hud-bracket bottom-left"></div>
+                        <div class="twitch-chat-wrapper" id="hub-chat-container"></div>
                     </div>
                 </div>
+
+                <!-- ПРАВАЯ КОЛОНКА: ДАННЫЕ И СОЮЗНИКИ -->
+                <div class="hub-col-side">
+                    
+                    <!-- РАДАР СОЮЗНИКОВ -->
+                    <div class="cmd-panel network-panel">
+                        <div class="hud-bracket top-right"></div>
+                        <div class="cmd-panel-header">
+                            <span class="header-tag">RADAR</span>
+                            <h3><i class="fas fa-satellite-dish"></i> СОЮЗНАЯ СЕТЬ</h3>
+                            <div class="header-line"></div>
+                        </div>
+                        <div class="network-list" id="hub-network-list">
+                            <div class="network-loading">СКАНИРОВАНИЕ ЧАСТОТ...</div>
+                        </div>
+                    </div>
+
+                    <!-- ТАКТИЧЕСКОЕ РАСПИСАНИЕ (СИНХРОНИЗАЦИЯ С TWITCH) -->
+                    <div class="cmd-panel mission-panel">
+                        <div class="hud-bracket bottom-right"></div>
+                        <div class="cmd-panel-header">
+                            <span class="header-tag">PLANNING</span>
+                            <h3><i class="fab fa-twitch"></i> РАСПИСАНИЕ TWITCH</h3>
+                            <div class="header-line"></div>
+                        </div>
+                        
+                        <!-- Вертикальный таймлайн -->
+                        <div class="mission-timeline" id="schedule-container">
+                            <div class="network-loading">СИНХРОНИЗАЦИЯ С TWITCH...</div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- ARCHIVE -->
+    <!-- СЕКЦИЯ 4: ARCHIVE -->
     <section id="media-archive" class="media-archive-section">
         <div class="container">
             <div class="archive-header">
@@ -325,119 +248,50 @@
                 <div class="archive-header-sub">SYSTEM LIBRARY // ACCESS GRANTED</div>
                 <div class="header-control-bar">
                     <button class="sort-side-btn active" data-sort="name"><span class="btn-label">НАЗВАНИЕ</span><i class="fas fa-sort-alpha-down sort-icon"></i></button>
-                    <div class="type-switcher">
-                        <div class="switcher-bg"></div> 
-                        <button class="switcher-btn active" data-type="games"><i class="fas fa-gamepad"></i> ИГРЫ</button>
-                        <button class="switcher-btn" data-type="movies"><i class="fas fa-film"></i> КИНО</button>
-                    </div>
+                    <div class="type-switcher"><div class="switcher-bg"></div><button class="switcher-btn active" data-type="games"><i class="fas fa-gamepad"></i> ИГРЫ</button><button class="switcher-btn" data-type="movies"><i class="fas fa-film"></i> КИНО</button></div>
                     <button class="sort-side-btn" data-sort="rating"><span class="btn-label">РЕЙТИНГ</span><i class="fas fa-sort-amount-down sort-icon"></i></button>
                 </div>
             </div>
             <div class="archive-controls">
-                <div class="search-module">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
-                </div>
-                <div class="filters-wrapper">
-                    <div class="filter-row status-row" id="archive-filters-status"></div>
-                    <div class="filter-row genre-row" id="archive-filters-genre"></div>
-                </div>
+                <div class="search-module"><i class="fas fa-search search-icon"></i><input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off"></div>
+                <div class="filters-wrapper"><div class="filter-row status-row" id="archive-filters-status"></div><div class="filter-row genre-row" id="archive-filters-genre"></div></div>
             </div>
             <div class="archive-full-grid-wrapper"><div class="archive-grid" id="archive-grid"></div></div>
         </div>
     </section>
 
-    <!-- SPECS -->
+    <!-- СЕКЦИЯ 5: SPECS -->
     <section id="specs" class="specs-section">
         <div class="specs-bg-grid"></div>
         <div class="container">
             <div class="cyber-header-wrapper">
                 <div class="cyber-header-sub">SYSTEM_CONFIGURATION // V.2.0</div>
-                <h2 class="cyber-header-main" data-text="МОЕ ЖЕЛЕЗО">МОЕ ЖЕЛЕЗО</h2>
+                <h2 class="cyber-header-main">МОЕ ЖЕЛЕЗО</h2>
                 <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
             </div>
             <div class="specs-grid">
-                <div class="spec-card">
-                    <div class="card-glass"></div>
-                    <div class="spec-content">
-                        <div class="spec-icon-box"><i class="fas fa-microchip"></i></div>
-                        <div class="spec-info"><h3 class="spec-label">PROCESSOR</h3><p class="spec-value">Intel Core i7-12700H</p><div class="spec-meta"><span class="meta-tag">14 CORES</span><span class="meta-tag">4.7 GHz</span></div></div>
-                    </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
-                </div>
-                <div class="spec-card">
-                    <div class="card-glass"></div>
-                    <div class="spec-content">
-                        <div class="spec-icon-box"><i class="fas fa-desktop"></i></div>
-                        <div class="spec-info"><h3 class="spec-label">GRAPHICS</h3><p class="spec-value">NVIDIA GeForce RTX 3060</p><div class="spec-meta"><span class="meta-tag">6GB GDDR6</span><span class="meta-tag">RTX ON</span></div></div>
-                    </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
-                </div>
-                <div class="spec-card">
-                    <div class="card-glass"></div>
-                    <div class="spec-content">
-                        <div class="spec-icon-box"><i class="fas fa-memory"></i></div>
-                        <div class="spec-info"><h3 class="spec-label">MEMORY</h3><p class="spec-value">16GB RAM</p><div class="spec-meta"><span class="meta-tag">DDR5</span><span class="meta-tag">4800 MHz</span></div></div>
-                    </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
-                </div>
-                <div class="spec-card">
-                    <div class="card-glass"></div>
-                    <div class="spec-content">
-                        <div class="spec-icon-box"><i class="fas fa-microphone-lines"></i></div>
-                        <div class="spec-info"><h3 class="spec-label">MICROPHONE</h3><p class="spec-value">Shure SM7B</p><div class="spec-meta"><span class="meta-tag">STUDIO</span><span class="meta-tag">XLR</span></div></div>
-                    </div>
-                    <div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div><div class="spec-bar-loader"></div>
-                </div>
+                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-microchip"></i></div><div class="spec-info"><h3 class="spec-label">PROCESSOR</h3><p class="spec-value">Intel Core i7-12700H</p><div class="spec-meta"><span class="meta-tag">14 CORES</span><span class="meta-tag">4.7 GHz</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
+                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-desktop"></i></div><div class="spec-info"><h3 class="spec-label">GRAPHICS</h3><p class="spec-value">NVIDIA GeForce RTX 3060</p><div class="spec-meta"><span class="meta-tag">6GB GDDR6</span><span class="meta-tag">RTX ON</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
+                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-memory"></i></div><div class="spec-info"><h3 class="spec-label">MEMORY</h3><p class="spec-value">16GB RAM</p><div class="spec-meta"><span class="meta-tag">DDR5</span><span class="meta-tag">4800 MHz</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
+                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-microphone-lines"></i></div><div class="spec-info"><h3 class="spec-label">MICROPHONE</h3><p class="spec-value">Shure SM7B</p><div class="spec-meta"><span class="meta-tag">STUDIO</span><span class="meta-tag">XLR</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
             </div>
         </div>
     </section>
 
-    <!-- DONATION -->
+    <!-- СЕКЦИЯ 6: DONATION -->
     <section id="donation" class="donation-section">
         <div class="container">
-            <h2 class="section-title" data-text="SUPPORT_CHANNEL">ПОДДЕРЖАТЬ</h2>
+            <h2 class="section-title">ПОДДЕРЖАТЬ</h2>
             <p class="section-subtitle">Внеси свой вклад в развитие трансляции и улучшение качества контента</p>
             <div class="donation-grid">
-                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" class="donate-card" style="--card-color: #ff8c00;">
-                    <div class="card-glow"></div>
-                    <div class="card-inner">
-                        <div class="donate-icon"><i class="fas fa-sack-dollar"></i></div>
-                        <div class="donate-info"><h3>DonationAlerts</h3><p>Отправить сообщение</p></div>
-                        <div class="donate-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </div>
-                </a>
-                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" class="donate-card" style="--card-color: #ff2d95;">
-                    <div class="card-glow"></div>
-                    <div class="card-inner">
-                        <div class="donate-icon"><i class="fas fa-ghost"></i></div>
-                        <div class="donate-info"><h3>MemeAlerts</h3><p>Напугать стримера</p></div>
-                        <div class="donate-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </div>
-                </a>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="donate-card" style="--card-color: #9146ff;">
-                    <div class="card-glow"></div>
-                    <div class="card-inner">
-                        <div class="donate-icon"><i class="fab fa-twitch"></i></div>
-                        <div class="donate-info"><h3>Twitch Sub</h3><p>Оформить подписку</p></div>
-                        <div class="donate-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </div>
-                </a>
+                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" class="donate-card" style="--card-color: #ff8c00;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-sack-dollar"></i></div><div class="donate-info"><h3>DonationAlerts</h3><p>Отправить сообщение</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
+                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" class="donate-card" style="--card-color: #ff2d95;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-ghost"></i></div><div class="donate-info"><h3>MemeAlerts</h3><p>Напугать стримера</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
             </div>
-            <!-- ТЕРМИНАЛ -->
             <div class="crypto-terminal-wrapper">
                 <div class="terminal-label">DIRECT_TRANSFER_PROTOCOL // SBER</div>
-                <div class="card-number-box" id="card-number">
-                    <div class="card-chip"></div>
-                    <div class="card-digits"><span>4276</span><span>1805</span><span>5058</span><span>1960</span></div>
-                    <div class="copy-icon"><i class="far fa-copy"></i></div>
-                    <div class="scan-line"></div>
-                    <span id="copy-tooltip">Скопировать</span>
-                </div>
-                <div class="secure-badge"><i class="fas fa-lock"></i> SECURE CONNECTION</div>
+                <div class="card-number-box" id="card-number"><div class="card-chip"></div><div class="card-digits"><span>4276</span><span>1805</span><span>5058</span><span>1960</span></div><div class="copy-icon"><i class="far fa-copy"></i></div><div class="scan-line"></div></div>
             </div>
         </div>
-        <div class="space-fade-bottom"></div>
     </section>
 
     <!-- FOOTER -->
@@ -448,119 +302,18 @@
                 <div class="footer-left">
                     <h3 class="footer-brand">KSUSHA SHER <span class="brand-ver">LIVE</span></h3>
                     <p class="copyright">&copy; 2025. Все права защищены.</p>
-                    <p class="dev-credits">SYSTEM ARCHITECT: <span class="dev-name">BAGERca</span></p>
                 </div>
                 <div class="footer-right">
                     <div class="social-hud">
-                        <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="hud-btn twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
-                        <a href="#" target="_blank" class="hud-btn youtube" title="YouTube"><i class="fab fa-youtube"></i></a>
-                        <a href="https://t.me/pizdeckakoi_to" target="_blank" class="hud-btn telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
-                        <a href="#" target="_blank" class="hud-btn discord" title="Discord"><i class="fab fa-discord"></i></a>
-                        <a href="#" target="_blank" class="hud-btn tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="hud-btn twitch"><i class="fab fa-twitch"></i></a>
+                        <a href="https://t.me/pizdeckakoi_to" target="_blank" class="hud-btn telegram"><i class="fab fa-telegram"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- NAVIGATION RAIL -->
-    <div id="cyber-nav-rail" class="cyber-nav-rail"></div>
-
-    <!-- MODAL WINDOW (MEDIA DETAIL) -->
-    <div id="media-modal-overlay" class="media-modal-overlay">
-        <div class="media-modal-content">
-            <button class="modal-close-btn">&times;</button>
-            
-            <div class="modal-layout">
-                <!-- ЛЕВАЯ КОЛОНКА: Постер + Статы -->
-                <div class="modal-col-sidebar">
-                    <div class="modal-poster-wrapper">
-                        <img src="" alt="" id="modal-img">
-                        <div class="modal-poster-glow"></div>
-                    </div>
-                    
-                    <div class="modal-rating-box">
-                        <span id="modal-rating-val">0.0</span>
-                        <div class="modal-stars" id="modal-stars"></div>
-                    </div>
-
-                    <!-- Техническая инфа теперь слева -->
-                    <div class="modal-tech-data">
-                        <div class="tech-line"><span>ID:</span> <span class="t-val" id="modal-id">---</span></div>
-                        <div class="tech-line"><span>TYPE:</span> <span class="t-val neon-pulse" id="modal-type">---</span></div>
-                    </div>
-                </div>
-
-                <!-- ПРАВАЯ КОЛОНКА: Контент + Видео -->
-                <div class="modal-col-main">
-                    <div class="modal-header">
-                        <div class="modal-header-top">
-                            <h2 class="modal-title" id="modal-title">TITLE</h2>
-                            <span class="modal-status-badge" id="modal-status">STATUS</span>
-                        </div>
-                        <div class="modal-meta-row" id="modal-genres"></div>
-                    </div>
-
-                    <div class="modal-body">
-                        <p class="modal-desc" id="modal-desc"></p>
-                    </div>
-
-                    <!-- СЕКЦИЯ ВИДЕО -->
-                    <div class="modal-video-section" id="modal-video-section" style="display: none;">
-                        <div class="video-header"><i class="fas fa-film"></i> МЕДИА МАТЕРИАЛЫ</div>
-                        <div class="video-container">
-                            <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                        <!-- Плейлист -->
-                        <div class="video-playlist" id="modal-playlist"></div>
-                    </div>
-
-                    <div class="modal-actions">
-                        <a href="#" target="_blank" class="cyber-btn-modal" id="modal-link-btn" style="display: none;">
-                            <i class="fas fa-external-link-alt"></i> ОТКРЫТЬ ССЫЛКУ
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MAGIC MENU (SETTINGS HUD) -->
-    <div class="magic-menu-container">
-        <!-- Центральная кнопка - Шестеренка -->
-        <div class="magic-toggle" title="Настройки интерфейса">
-            <i class="fas fa-cog"></i>
-        </div>
-        
-        <ul class="magic-items">
-            <!-- 1. ОЧИСТКА СУЩЕСТВ (Skull) -->
-            <li style="--i:0;" title="Убрать существ (Clear)">
-                <a href="#" id="btn-clear-creatures"><i class="fas fa-skull"></i></a>
-            </li>
-            
-            <!-- 2. FX ЦИКЛ (Eye) - Теперь 4 режима -->
-            <li style="--i:1;" title="Режимы Атмосферы (Кометы/Звезды)">
-                <a href="#" id="btn-toggle-fx" class="active-state"><i class="fas fa-eye"></i></a>
-            </li>
-            
-            <!-- 3. МУЗЫКАЛЬНЫЙ РЕЖИМ (Headphones) -->
-            <li style="--i:2;" title="Режим Плеера">
-                <a href="#" id="btn-toggle-music"><i class="fas fa-headphones"></i></a>
-            </li>
-            
-            <!-- 4. ОБНОВИТЬ ДАННЫЕ (Sync) -->
-            <li style="--i:3;" title="Обновить данные (API)">
-                <a href="#" id="btn-refresh-data"><i class="fas fa-sync-alt"></i></a>
-            </li>
-
-            <!-- Навигация (Оставил 2 самые важные) -->
-            <li style="--i:4;"><a href="#donation"><i class="fas fa-heart"></i></a></li>
-            <li style="--i:5;"><a href="#hero"><i class="fas fa-arrow-up"></i></a></li>
-        </ul>
-    </div>
-
     <!-- СКРИПТЫ -->
     <script type="module" src="js/app.js"></script>
-    <script src="js/hud-script.js"></script>
 </body>
 </html>

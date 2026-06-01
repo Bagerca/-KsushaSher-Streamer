@@ -1,7 +1,7 @@
 /* css/hero.css */
 
 /* =========================================
-   HERO SECTION (HUD DESIGN - CLEAN TECH V3)
+   HERO SECTION
    ========================================= */
 
 .hero-section-hud {
@@ -82,7 +82,6 @@
     filter: drop-shadow(0 0 5px rgba(57, 255, 20, 0.3));
 }
 
-/* Эффект ховера для панелей (базовый) */
 .hud-side-panel.left:hover, .hud-side-panel.right:hover {
     background: linear-gradient(
         to bottom, 
@@ -101,7 +100,7 @@
     );
     padding: 30px 25px;
     display: flex; flex-direction: column; position: relative;
-    will-change: transform, opacity, filter; /* Для анимаций смены контента */
+    will-change: transform, opacity, filter;
 }
 
 .panel-header {
@@ -122,7 +121,6 @@
     margin-left: 15px; opacity: 0.5; transition: background 0.3s;
 }
 
-/* Ховер эффекты заголовков */
 .hud-side-panel.right:hover .header-title,
 .hud-side-panel.left:hover .header-title { background: var(--neon-pink); }
 .hud-side-panel.right:hover .header-deco-line,
@@ -132,27 +130,11 @@
 
 /* --- ЛЕВАЯ ПАНЕЛЬ (TETLA) --- */
 .ally-container { text-align: center; margin-bottom: 20px; }
-.panel-avatar { 
-    width: 130px; height: 130px; object-fit: cover; border-radius: 50%; 
-    border: 2px solid var(--neon-green); margin: 0 auto 15px; display: block;
-    box-shadow: 0 0 25px rgba(57, 255, 20, 0.1);
-}
-.panel-name { 
-    font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #fff; 
-    text-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
-    display: flex; justify-content: center; align-items: center; gap: 10px;
-}
-.bot-version { 
-    font-size: 0.8rem; font-family: 'Rajdhani', sans-serif; font-weight: 700;
-    background: rgba(57, 255, 20, 0.1); border: 1px solid var(--neon-green); 
-    color: var(--neon-green); padding: 2px 6px; border-radius: 4px;
-    box-shadow: 0 0 5px rgba(57, 255, 20, 0.2);
-}
+.panel-avatar { width: 130px; height: 130px; object-fit: cover; border-radius: 50%; border: 2px solid var(--neon-green); margin: 0 auto 15px; display: block; box-shadow: 0 0 25px rgba(57, 255, 20, 0.1); }
+.panel-name { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #fff; text-shadow: 0 0 15px rgba(57, 255, 20, 0.3); display: flex; justify-content: center; align-items: center; gap: 10px; }
+.bot-version { font-size: 0.8rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; background: rgba(57, 255, 20, 0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 2px 6px; border-radius: 4px; box-shadow: 0 0 5px rgba(57, 255, 20, 0.2); }
 .ally-stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
-.ally-stat-box { 
-    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 6px; padding: 10px 5px; text-align: center; display: flex; flex-direction: column;
-}
+.ally-stat-box { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 10px 5px; text-align: center; display: flex; flex-direction: column; }
 .a-label { font-size: 0.7rem; color: #777; margin-bottom: 3px; }
 .a-value { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff; font-size: 1.1rem; }
 .a-value.status-ok { color: var(--neon-green); }
@@ -183,59 +165,23 @@
 @keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 #terminal-history p { margin: 0 0 5px 0; line-height: 1.2; word-break: normal; overflow-wrap: break-word; }
 
-/* ИСПРАВЛЕНО: Выравнивание строки ввода */
-.command-line { 
-    display: flex; 
-    align-items: baseline; /* Выравнивание по тексту */
-    position: relative; 
-    margin-top: 5px; 
-    z-index: 5; 
-}
-.prompt { 
-    margin-right: 8px; 
-    color: var(--neon-green); 
-    font-weight: normal; /* Одинаковая толщина с историей */
-}
-
-#cmd-input {
-    background: transparent; border: none; outline: none; color: #fff;
-    font-family: 'monospace'; font-size: 0.9rem; flex-grow: 1;
-    caret-color: var(--neon-green); caret-shape: block;
-    text-transform: uppercase; padding: 0; margin: 0; z-index: 5;
-}
+.command-line { display: flex; align-items: baseline; position: relative; margin-top: 5px; z-index: 5; }
+.prompt { margin-right: 8px; color: var(--neon-green); font-weight: normal; }
+#cmd-input { background: transparent; border: none; outline: none; color: #fff; font-family: 'monospace'; font-size: 0.9rem; flex-grow: 1; caret-color: var(--neon-green); caret-shape: block; text-transform: uppercase; padding: 0; margin: 0; z-index: 5; }
 .terminal-ok { color: var(--neon-green); }
 .terminal-err { color: var(--neon-pink); }
-
-/* Команды в терминале (Help list) */
 .cmd-list-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; font-family: 'monospace'; }
-.interactive-cmd {
-    cursor: pointer; color: var(--neon-green); font-weight: bold; padding: 2px 6px;
-    background: rgba(57, 255, 20, 0.1); border-radius: 3px; transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
-.interactive-cmd:hover {
-    background: var(--neon-green); color: #000;
-    box-shadow: 0 0 10px var(--neon-green); transform: translateX(5px);
-}
+.interactive-cmd { cursor: pointer; color: var(--neon-green); font-weight: bold; padding: 2px 6px; background: rgba(57, 255, 20, 0.1); border-radius: 3px; transition: all 0.2s ease; border: 1px solid transparent; }
+.interactive-cmd:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-green); transform: translateX(5px); }
 .cmd-desc { color: #888; font-size: 0.85rem; font-style: italic; }
 
 /* --- ПРАВАЯ ПАНЕЛЬ (ОТРЯД) --- */
-.squad-list {
-    position: relative; display: flex; justify-content: space-around; margin-top: 30px; margin-bottom: auto;
-}
-.squad-list::before {
-    content: ''; position: absolute; top: 40px; left: 15%; right: 15%; height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.2) 80%, transparent 100%);
-    z-index: 0;
-}
+.squad-list { position: relative; display: flex; justify-content: space-around; margin-top: 30px; margin-bottom: auto; }
+.squad-list::before { content: ''; position: absolute; top: 40px; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.2) 80%, transparent 100%); z-index: 0; }
 .squad-member { text-align: center; cursor: pointer; transition: transform 0.2s; position: relative; }
 .squad-member:hover { transform: scale(1.1); }
 .avatar-wrapper { position: relative; display: inline-block; margin-bottom: 10px; }
-.squad-avatar { 
-    width: 80px; height: 80px; border-radius: 50%; border: 2px solid; 
-    position: relative; z-index: 1; background: #000; 
-    display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden;
-}
+.squad-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid; position: relative; z-index: 1; background: #000; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; }
 .squad-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .squad-name { font-family: 'Rajdhani', sans-serif; font-size: 1rem; color: #ccc; }
 
@@ -243,194 +189,82 @@
 .angel-avatar { border-color: var(--angel-color); box-shadow: 0 0 10px var(--angel-color); }
 .kiriki-avatar { border-color: var(--kiriki-color); box-shadow: 0 0 10px var(--kiriki-color); }
 
-.role-badge {
-    position: absolute; bottom: -5px; right: -5px; width: 24px; height: 24px;
-    border-radius: 50%; background: #000; border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff; display: flex; align-items: center; justify-content: center;
-    font-size: 0.7rem; z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,0.8); transition: 0.3s;
-}
+.role-badge { position: absolute; bottom: -5px; right: -5px; width: 24px; height: 24px; border-radius: 50%; background: #000; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,0.8); transition: 0.3s; }
 .role-badge.tech { border-color: var(--bagerka-color); color: var(--bagerka-color); }
 .role-badge.support { border-color: var(--angel-color); color: var(--angel-color); }
 .role-badge.fun { border-color: var(--kiriki-color); color: var(--kiriki-color); }
-
 .squad-member:hover .role-badge { transform: scale(1.2); background: #fff; box-shadow: 0 0 10px currentColor; }
 .squad-member:hover .role-badge.tech { background: var(--bagerka-color); color: #000; }
 .squad-member:hover .role-badge.support { background: var(--angel-color); color: #000; }
 .squad-member:hover .role-badge.fun { background: var(--kiriki-color); color: #000; }
 
-.squad-status-footer {
-    margin-top: auto; border-top: none; padding-top: 0; position: relative;
-}
-.music-progress-area { /* Базовые стили прогресс бара, переопределяются в music-player.css */
-    width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); 
-    cursor: default; position: relative; margin-bottom: 15px;
-    transition: height 0.2s, background 0.3s;
-}
-.music-progress-fill {
-    height: 100%; width: 0%; background: var(--neon-pink);
-    box-shadow: 0 0 10px var(--neon-pink); position: relative; transition: width 0.1s linear; 
-}
-.footer-labels {
-    display: flex; justify-content: space-between; margin-bottom: 8px;
-    font-family: 'Rajdhani', sans-serif; font-size: 1rem;
-}
+.squad-status-footer { margin-top: auto; border-top: none; padding-top: 0; position: relative; }
+.music-progress-area { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); cursor: default; position: relative; margin-bottom: 15px; transition: height 0.2s, background 0.3s; }
+.music-progress-fill { height: 100%; width: 0%; background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); position: relative; transition: width 0.1s linear; }
+.footer-labels { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; }
 .data-label { color: #888; } .data-value { font-weight: 700; color: #fff; }
 
-/* WAVEFORM (Базовые стили) */
-.sync-waveform {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    height: 20px; gap: 2px; --wave-color: var(--neon-green);
-}
-.sync-waveform .bar {
-    width: 4px; background: var(--wave-color); opacity: 0.5; border-radius: 2px;
-    animation: wave-pulse 1.2s infinite ease-in-out;
-    transition: height 0.5s ease-out, background 0.3s;
-}
+.sync-waveform { display: flex; justify-content: space-between; align-items: flex-end; height: 20px; gap: 2px; --wave-color: var(--neon-green); }
+.sync-waveform .bar { width: 4px; background: var(--wave-color); opacity: 0.5; border-radius: 2px; animation: wave-pulse 1.2s infinite ease-in-out; transition: height 0.5s ease-out, background 0.3s; }
 .sync-waveform .bar:nth-child(odd) { animation-duration: 0.8s; }
 .sync-waveform .bar:nth-child(2n) { animation-duration: 1.1s; }
 .sync-waveform .bar:nth-child(3n) { animation-duration: 1.3s; }
 .sync-waveform .bar:nth-child(4n) { animation-duration: 0.9s; }
-@keyframes wave-pulse {
-    0%, 100% { height: 20%; opacity: 0.3; }
-    50% { height: 100%; opacity: 1; box-shadow: 0 0 5px var(--wave-color); }
-}
-/* Ховер на панель меняет цвет волн на розовый */
+@keyframes wave-pulse { 0%, 100% { height: 20%; opacity: 0.3; } 50% { height: 100%; opacity: 1; box-shadow: 0 0 5px var(--wave-color); } }
 .hud-side-panel.right:hover .sync-waveform { --wave-color: var(--neon-pink); }
 
 .squad-default-view { height: 100%; display: flex; flex-direction: column; transition: opacity 0.3s; }
-.squad-detail-view { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-    padding: 30px; opacity: 0; pointer-events: none; transform: translateY(20px); 
-    transition: all 0.3s ease; 
-}
+.squad-detail-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 30px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: all 0.3s ease; }
 .hud-side-panel.right.expanded .squad-default-view { opacity: 0; pointer-events: none; }
 .hud-side-panel.right.expanded .squad-detail-view { opacity: 1; pointer-events: auto; transform: translateY(0); }
-
-.detail-avatar-container {
-    width: 140px; height: 140px; border-radius: 50%; border: 3px solid;
-    margin: 20px auto; display: flex; align-items: center; justify-content: center;
-    background: #000; font-size: 4rem; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden;
-}
+.detail-avatar-container { width: 140px; height: 140px; border-radius: 50%; border: 3px solid; margin: 20px auto; display: flex; align-items: center; justify-content: center; background: #000; font-size: 4rem; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; }
 .detail-avatar-container img { width: 100%; height: 100%; object-fit: cover; }
 .detail-name { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 20px; }
-.detail-description { 
-    font-family: 'Exo 2', sans-serif; text-align: center; color: #ccc; 
-    line-height: 1.6; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; 
-}
-.close-detail-btn { 
-    position: absolute; top: 20px; right: 20px; background: none; 
-    border: none; color: white; font-size: 2.5rem; cursor: pointer; 
-}
+.detail-description { font-family: 'Exo 2', sans-serif; text-align: center; color: #ccc; line-height: 1.6; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; }
+.close-detail-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2.5rem; cursor: pointer; }
 
 /* --------------------------------------------------
    ЦЕНТРАЛЬНЫЙ ДИСПЛЕЙ 
    -------------------------------------------------- */
-.hud-main-display { 
-    position: relative; display: flex; flex-direction: column; 
-    justify-content: center; align-items: center; z-index: 10; 
-    width: 300px; height: 300px; 
-    background: radial-gradient(closest-side, #050508 40%, rgba(5, 5, 8, 0) 100%);
-}
-.main-avatar-container { 
-    position: relative; z-index: 10; display: flex; 
-    justify-content: center; align-items: center; width: 100%; height: 100%; 
-}
-.main-display-avatar { 
-    width: 250px; height: 250px; border-radius: 50%; object-fit: cover; 
-    border: 3px solid var(--neon-pink); padding: 5px; 
-    background-color: rgba(7, 7, 17, 0.8); filter: drop-shadow(0 0 20px var(--neon-pink)); 
-    margin: 0 auto; position: relative; z-index: 2; transition: filter 0.1s ease-out; 
-}
+.hud-main-display { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; width: 300px; height: 300px; background: radial-gradient(closest-side, #050508 40%, rgba(5, 5, 8, 0) 100%); }
+.main-avatar-container { position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+.main-display-avatar { width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 3px solid var(--neon-pink); padding: 5px; background-color: rgba(7, 7, 17, 0.8); filter: drop-shadow(0 0 20px var(--neon-pink)); margin: 0 auto; position: relative; z-index: 2; transition: filter 0.1s ease-out; }
 
-/* АНИМАЦИЯ КОЛЕЦ (БАЗОВАЯ) */
-.main-display-rings { 
-    position: absolute; top: 50%; left: 50%; width: 0; height: 0; 
-    pointer-events: none; display: flex; justify-content: center; align-items: center; z-index: 1; 
-    animation: ring-breathing 6s ease-in-out infinite; 
-    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.main-display-rings .ring { 
-    position: absolute; border-radius: 50%; top: 50%; left: 50%; 
-    transform-origin: center center; background: transparent; 
-}
-.ring-1 { 
-    width: 340px; height: 340px; margin-left: -170px; margin-top: -170px; 
-    border: 1px solid rgba(57, 255, 20, 0.1); animation: rotate-only 20s linear infinite; 
-}
-.ring-1::after { 
-    content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; 
-    border-radius: 50%; background: conic-gradient(from 0deg, transparent 0%, transparent 20%, rgba(57, 255, 20, 0) 30%, var(--neon-green) 50%, rgba(57, 255, 20, 0) 70%, transparent 80%, transparent 100%);
-    -webkit-mask: radial-gradient(transparent 68%, black 69%); mask: radial-gradient(transparent 68%, black 69%);
-    filter: drop-shadow(0 0 8px var(--neon-green)); 
-}
-.ring-2 { 
-    width: 440px; height: 440px; margin-left: -220px; margin-top: -220px; 
-    border: 1px solid rgba(255, 68, 68, 0.1); animation: rotate-only 30s linear infinite reverse; 
-}
-.ring-2::after { 
-    content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; 
-    border-radius: 50%; background: conic-gradient(from 180deg, transparent 0%, transparent 25%, rgba(255, 68, 68, 0) 35%, var(--bagerka-color) 55%, rgba(255, 68, 68, 0) 75%, transparent 100%);
-    -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%);
-    filter: drop-shadow(0 0 8px var(--bagerka-color)); 
-}
-.ring-3 { 
-    width: 580px; height: 580px; margin-left: -290px; margin-top: -290px; 
-    border: 1px dashed rgba(0, 123, 255, 0.2); animation: rotate-only 60s linear infinite; 
-}
-.ring-3::after { 
-    content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; 
-    border-radius: 50%; background: conic-gradient(from 90deg, transparent 0%, var(--kiriki-color) 25%, transparent 50%, var(--kiriki-color) 75%, transparent 100%);
-    opacity: 0.6; -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%);
-    filter: drop-shadow(0 0 10px var(--kiriki-color)); 
-}
+.main-display-rings { position: absolute; top: 50%; left: 50%; width: 0; height: 0; pointer-events: none; display: flex; justify-content: center; align-items: center; z-index: 1; animation: ring-breathing 6s ease-in-out infinite; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+.main-display-rings .ring { position: absolute; border-radius: 50%; top: 50%; left: 50%; transform-origin: center center; background: transparent; }
+.ring-1 { width: 340px; height: 340px; margin-left: -170px; margin-top: -170px; border: 1px solid rgba(57, 255, 20, 0.1); animation: rotate-only 20s linear infinite; }
+.ring-1::after { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0%, transparent 20%, rgba(57, 255, 20, 0) 30%, var(--neon-green) 50%, rgba(57, 255, 20, 0) 70%, transparent 80%, transparent 100%); -webkit-mask: radial-gradient(transparent 68%, black 69%); mask: radial-gradient(transparent 68%, black 69%); filter: drop-shadow(0 0 8px var(--neon-green)); }
+.ring-2 { width: 440px; height: 440px; margin-left: -220px; margin-top: -220px; border: 1px solid rgba(255, 68, 68, 0.1); animation: rotate-only 30s linear infinite reverse; }
+.ring-2::after { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%; background: conic-gradient(from 180deg, transparent 0%, transparent 25%, rgba(255, 68, 68, 0) 35%, var(--bagerka-color) 55%, rgba(255, 68, 68, 0) 75%, transparent 100%); -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%); filter: drop-shadow(0 0 8px var(--bagerka-color)); }
+.ring-3 { width: 580px; height: 580px; margin-left: -290px; margin-top: -290px; border: 1px dashed rgba(0, 123, 255, 0.2); animation: rotate-only 60s linear infinite; }
+.ring-3::after { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%; background: conic-gradient(from 90deg, transparent 0%, var(--kiriki-color) 25%, transparent 50%, var(--kiriki-color) 75%, transparent 100%); opacity: 0.6; -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%); filter: drop-shadow(0 0 10px var(--kiriki-color)); }
 
-/* СТАТУС БАР (LIVE) */
-.main-display-status { 
-    position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%); z-index: 12; 
-    display: flex; align-items: center; justify-content: center; 
-    background: rgba(10, 11, 20, 0.95); padding: 8px 20px; 
-    border: 1px solid var(--neon-pink); border-radius: 6px; 
-    font-family: 'Orbitron', sans-serif; color: var(--neon-pink); 
-    letter-spacing: 2px; white-space: nowrap; width: auto; 
-    box-shadow: 0 0 15px rgba(255, 45, 149, 0.2); 
-    
-    /* Анимация переключения (сжатие) */
-    transition: transform 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.2s;
-    transform-origin: center center;
-}
-.main-display-status.status-switching {
-    transform: translateX(-50%) scaleY(0); /* Сжимаем в полоску */
-    opacity: 0; filter: blur(5px);
-}
-
-.status-indicator { 
-    width: 8px; height: 8px; background: var(--neon-pink); 
-    border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; 
-}
+.main-display-status { position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%); z-index: 12; display: flex; align-items: center; justify-content: center; background: rgba(10, 11, 20, 0.95); padding: 8px 20px; border: 1px solid var(--neon-pink); border-radius: 6px; font-family: 'Orbitron', sans-serif; color: var(--neon-pink); letter-spacing: 2px; white-space: nowrap; width: auto; box-shadow: 0 0 15px rgba(255, 45, 149, 0.2); transition: transform 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.2s; transform-origin: center center; }
+.main-display-status.status-switching { transform: translateX(-50%) scaleY(0); opacity: 0; filter: blur(5px); }
+.status-indicator { width: 8px; height: 8px; background: var(--neon-pink); border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; }
 
 .hero-content-hud { position: absolute; bottom: 2%; text-align: center; z-index: 51; width: 100%; }
-.hero-title-hud { 
-    font-family: 'Rajdhani', sans-serif; font-size: 4rem; font-weight: 700; 
-    letter-spacing: 5px; color: var(--white); text-shadow: 0 0 20px rgba(255, 45, 149, 0.6); 
-    margin-bottom: 5px; text-transform: uppercase; 
-}
-.hero-subtitle-hud { 
-    font-family: 'Exo 2', sans-serif; font-size: 1.1rem; color: var(--neon-green); 
-    margin-bottom: 30px; letter-spacing: 3px; font-weight: 300; min-height: 1.5em; 
-}
+.hero-title-hud { font-family: 'Rajdhani', sans-serif; font-size: 4rem; font-weight: 700; letter-spacing: 5px; color: var(--white); text-shadow: 0 0 20px rgba(255, 45, 149, 0.6); margin-bottom: 5px; text-transform: uppercase; }
+.hero-subtitle-hud { font-family: 'Exo 2', sans-serif; font-size: 1.1rem; color: var(--neon-green); margin-bottom: 30px; letter-spacing: 3px; font-weight: 300; min-height: 1.5em; }
 
 @keyframes rotate-only { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.9); } }
 @keyframes ring-breathing { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 0.6; } 100% { transform: scale(1); opacity: 0.8; } }
 @keyframes blink { 50% { opacity: 0; } }
 
+/* СГЛАЖЕННЫЙ ПЕРЕХОД */
 .hero-section-hud::after { 
-    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; 
-    background: linear-gradient(to bottom, transparent 0%, #050508 100%); 
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; 
+    
+    /* Чистый градиент в цвет фона. Убрали все шумы. */
+    background: linear-gradient(
+        to bottom, 
+        rgba(5, 5, 8, 0) 0%, 
+        rgba(5, 5, 8, 1) 100%
+    ); 
     pointer-events: none; z-index: 20; 
 }
 
-/* MEDIA QUERIES */
 @media (max-width: 1200px) { .hud-container { max-width: 1000px; } .hud-side-panel { width: 320px; height: 500px; } .main-display-rings { transform: scale(0.8); } }
 @media (max-width: 1024px) { .hud-container { flex-direction: column; height: auto; margin-top: 50px; } .hud-main-display { order: 1; margin-bottom: 80px; } .hud-side-panel.left { order: 2; margin-bottom: 30px; } .hud-side-panel.right { order: 3; } .hero-section-hud { height: auto; padding-top: 50px; padding-bottom: 100px; } }
 @media (max-width: 600px) { .hud-side-panel { width: 100%; max-width: 350px; height: auto; min-height: 500px; } .hero-title-hud { font-size: 2.5rem; } .main-display-rings { transform: scale(0.55); } }

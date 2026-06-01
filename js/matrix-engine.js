@@ -1,179 +1,155 @@
 /* js/matrix-engine.js */
+import EventBus from './event-bus.js';
 
-let canvas = null;
-let ctx = null;
-let curtain = null;
-let matrixInterval = null;
-let drops = [];
-let isGodMode = false; // Храним состояние режима
-
-// --- ПАСХАЛКИ ---
-const secretWords = [
+const SECRET_WORDS = [
     "KSUSHA", "SHER", "TETLA", "BAGERCA", "ANGEL", "KIRIKI", 
-    "FOLLOW", "SUBSCRIBE", "DONATE", "LOVE", "MATRIX", "SYSTEM",
-    "STREAM", "LIVE", "TWITCH", "ERROR", "GLITCH"
+    "FOLLOW", "SUBSCRIBE", "DONATE", "LOVE", "MATRIX", "SYSTEM"
 ];
+const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-// Хранилище активных слов: { columnIndex: { word: "KSUSHA", charIndex: 0, color: "#FFF" } }
-const activeEasterEggs = {}; 
+export class MatrixEngine {
+    constructor() {
+        this.canvas = null;
+        this.ctx = null;
+        this.curtain = null;
+        
+        this.drops = [];
+        this.activeEasterEggs = {};
+        
+        this.rafId = null;
+        this.lastDrawTime = 0;
+        this.fps = 30;
+        this.interval = 1000 / this.fps;
+        
+        this.isGodMode = false;
+        
+        // Привязываем контекст для слушателей
+        this.onResize = this.onResize.bind(this);
+        this.toggleGodMode = this.toggleGodMode.bind(this);
 
-// Символы: Катакана + Латиница + Цифры
-const chars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-export function initMatrixRain() {
-    if (canvas) return;
-
-    // 1. CANVAS (Матрица - самый глубокий слой)
-    canvas = document.createElement('canvas');
-    ctx = canvas.getContext('2d');
-
-    Object.assign(canvas.style, {
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '100%',
-        zIndex: '-10',
-        pointerEvents: 'none',
-        opacity: '0.15'
-    });
-    
-    document.body.appendChild(canvas);
-
-    // 2. CURTAIN (Шторка - фон сайта)
-    curtain = document.createElement('div');
-    curtain.id = 'matrix-curtain';
-    Object.assign(curtain.style, {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#050508',
-        zIndex: '-5',
-        pointerEvents: 'none',
-        transition: 'opacity 2s ease-in-out',
-        opacity: '1'
-    });
-    
-    document.body.appendChild(curtain);
-
-    resizeMatrix();
-    window.addEventListener('resize', resizeMatrix);
-
-    startMatrixLoop();
-    console.log('🤖 MATRIX BACKGROUND: ACTIVE (EGG MODE)');
-}
-
-function resizeMatrix() {
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    
-    // Сброс позиций
-    drops = [];
-    for (let x = 0; x < columns; x++) {
-        drops[x] = 1;
+        // Слушаем команды терминала напрямую
+        EventBus.on('CMD_GOD', this.toggleGodMode);
+        EventBus.on('CMD_GODMODE', this.toggleGodMode);
     }
-}
 
-function startMatrixLoop() {
-    if (matrixInterval) clearInterval(matrixInterval);
+    start() {
+        if (this.canvas) return;
 
-    matrixInterval = setInterval(() => {
-        if (!ctx || !canvas) return;
+        // 1. Создаем Canvas
+        this.canvas = document.createElement('canvas');
+        this.ctx = this.canvas.getContext('2d');
+        Object.assign(this.canvas.style, {
+            position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+            zIndex: '-10', pointerEvents: 'none', opacity: '0.15'
+        });
+        document.body.appendChild(this.canvas);
 
-        // Рисуем полупрозрачный след
-        ctx.fillStyle = 'rgba(5, 5, 8, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 2. Создаем Шторку (Фон)
+        this.curtain = document.createElement('div');
+        Object.assign(this.curtain.style, {
+            position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
+            backgroundColor: '#050508', zIndex: '-5', pointerEvents: 'none',
+            transition: 'opacity 2s ease-in-out', opacity: '1'
+        });
+        document.body.appendChild(this.curtain);
 
-        ctx.font = '14px monospace';
+        // 3. Биндим события
+        window.addEventListener('resize', this.onResize);
+        this.onResize();
 
-        for (let i = 0; i < drops.length; i++) {
+        // 4. Запускаем цикл
+        this.lastDrawTime = performance.now();
+        this.loop();
+        
+        console.log('🤖 [MatrixEngine] Запущен');
+    }
+
+    stop() {
+        if (this.rafId) {
+            cancelAnimationFrame(this.rafId);
+            this.rafId = null;
+        }
+        if (this.canvas) {
+            this.canvas.remove();
+            this.canvas = null;
+        }
+        if (this.curtain) {
+            this.curtain.remove();
+            this.curtain = null;
+        }
+        window.removeEventListener('resize', this.onResize);
+        console.log('🤖 [MatrixEngine] Остановлен');
+    }
+
+    onResize() {
+        if (!this.canvas) return;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        
+        const columns = Math.floor(this.canvas.width / 16);
+        this.drops = new Array(columns).fill(1);
+    }
+
+    loop() {
+        this.rafId = requestAnimationFrame(() => this.loop());
+
+        const now = performance.now();
+        const delta = now - this.lastDrawTime;
+
+        // Дросселирование FPS
+        if (delta > this.interval) {
+            this.draw();
+            this.lastDrawTime = now - (delta % this.interval);
+        }
+    }
+
+    draw() {
+        if (!this.ctx || !this.canvas) return;
+
+        this.ctx.fillStyle = 'rgba(5, 5, 8, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.font = '14px monospace';
+
+        for (let i = 0; i < this.drops.length; i++) {
             let text = "";
             
-            // --- ЛОГИКА ПАСХАЛОК ---
-            if (activeEasterEggs[i]) {
-                // Если слово уже падает
-                const egg = activeEasterEggs[i];
+            if (this.activeEasterEggs[i]) {
+                const egg = this.activeEasterEggs[i];
                 text = egg.word[egg.charIndex]; 
-                ctx.fillStyle = egg.color; 
-                
-                activeEasterEggs[i].charIndex++;
-                
-                if (activeEasterEggs[i].charIndex >= egg.word.length) {
-                    delete activeEasterEggs[i];
-                }
+                this.ctx.fillStyle = egg.color; 
+                this.activeEasterEggs[i].charIndex++;
+                if (this.activeEasterEggs[i].charIndex >= egg.word.length) delete this.activeEasterEggs[i];
             } 
             else if (Math.random() > 0.999) {
-                // Шанс начать новое слово
-                const randomWord = secretWords[Math.floor(Math.random() * secretWords.length)];
+                const randomWord = SECRET_WORDS[Math.floor(Math.random() * SECRET_WORDS.length)];
                 const colors = ['#ff2d95', '#ffffff', '#ffd700']; 
                 const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-                activeEasterEggs[i] = {
-                    word: randomWord,
-                    charIndex: 0,
-                    color: randomColor
-                };
-                
+                this.activeEasterEggs[i] = { word: randomWord, charIndex: 0, color: randomColor };
                 text = randomWord[0];
-                ctx.fillStyle = randomColor;
-                activeEasterEggs[i].charIndex++;
+                this.ctx.fillStyle = randomColor;
+                this.activeEasterEggs[i].charIndex++;
             }
             else {
-                // Обычный символ
-                text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillStyle = '#0F0'; 
+                text = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+                this.ctx.fillStyle = '#0F0'; 
             }
 
-            ctx.fillText(text, i * 16, drops[i] * 16);
+            this.ctx.fillText(text, i * 16, this.drops[i] * 16);
 
-            // Сброс капли наверх
-            if (drops[i] * 16 > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-                if (activeEasterEggs[i]) delete activeEasterEggs[i];
+            if (this.drops[i] * 16 > this.canvas.height && Math.random() > 0.975) {
+                this.drops[i] = 0;
+                if (this.activeEasterEggs[i]) delete this.activeEasterEggs[i];
             }
-            
-            drops[i]++;
+            this.drops[i]++;
         }
-    }, 33);
-}
-
-export function stopMatrix() {
-    if (matrixInterval) {
-        clearInterval(matrixInterval);
-        matrixInterval = null;
     }
-    if (canvas) {
-        canvas.remove();
-        canvas = null;
+
+    toggleGodMode() {
+        this.isGodMode = !this.isGodMode;
+        if (this.curtain) {
+            this.curtain.style.opacity = this.isGodMode ? '0' : '1';
+        }
+        EventBus.emit('STATE_GODMODE_CHANGED', this.isGodMode);
     }
-    if (curtain) {
-        curtain.remove();
-        curtain = null;
-    }
-    window.removeEventListener('resize', resizeMatrix);
-}
-
-// --- УПРАВЛЕНИЕ РЕЖИМОМ GOD MODE ---
-
-export function toggleGodMode() {
-    if (!curtain) return false;
-    
-    isGodMode = !isGodMode; // Переключаем флаг
-    
-    // Если God Mode включен -> шторка прозрачная (видим матрицу)
-    // Если выключен -> шторка черная (видим сайт)
-    curtain.style.opacity = isGodMode ? '0' : '1';
-    
-    return isGodMode;
-}
-
-// Экспорт состояния для проверки в других файлах (например, в терминале)
-export function isGodModeActive() {
-    return isGodMode;
 }
