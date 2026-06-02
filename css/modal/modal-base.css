@@ -14,10 +14,10 @@
 }
 
 /* =========================================
-   ИСПРАВЛЕННАЯ КНОПКА ЗАКРЫТИЯ (СНАРУЖИ, FIXED)
+   ИСПРАВЛЕННАЯ КНОПКА ЗАКРЫТИЯ
    ========================================= */
 .modal-close-btn { 
-    position: fixed; /* Отвязываем от модалки, привязываем к окну браузера */
+    position: fixed; 
     top: 30px; right: 40px; 
     background: rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); 
     border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; 
@@ -73,15 +73,17 @@
     overflow-y: auto; scrollbar-width: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
-.modal-col-sidebar::-webkit-scrollbar { display: none; }
+.modal-col-sidebar::-webkit-scrollbar { display: none; } /* Оставляем скрытым намеренно для эстетики сайдбара */
 
-/* ПРАВАЯ КОЛОНКА */
+/* ПРАВАЯ КОЛОНКА (С ИНТЕГРАЦИЕЙ НОВОГО СКРОЛЛА) */
 .modal-col-main { 
     display: flex; flex-direction: column; position: relative;
-    overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--modal-color) transparent;
+    overflow-y: auto; overflow-x: hidden; 
+    
+    /* Переопределяем цвет скролла на цвет текущей игры/фильма */
+    --scroll-size: 6px;
+    --scroll-thumb: var(--modal-color);
 }
-.modal-col-main::-webkit-scrollbar { width: 6px; }
-.modal-col-main::-webkit-scrollbar-thumb { background: var(--modal-color); border-radius: 3px; }
 
 /* =========================================
    КОНТЕНТ (ЗАГОЛОВКИ И МЕТА)

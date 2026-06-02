@@ -34,18 +34,19 @@
 .franchise-header i { color: var(--modal-color); }
 
 /* =========================================
-   ГОРИЗОНТАЛЬНЫЕ СПИСКИ
+   ГОРИЗОНТАЛЬНЫЕ СПИСКИ (НОВЫЙ СКРОЛЛ)
    ========================================= */
 .horizontal-scroll-list { 
     display: flex; gap: 15px; 
     overflow-x: auto; overflow-y: hidden; 
     padding-bottom: 15px; padding-top: 5px;
-    scrollbar-width: thin; scrollbar-color: var(--modal-color) rgba(0, 0, 0, 0.3); 
     -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
+    
+    /* Переменные для глобальной системы скроллов */
+    --scroll-size: 6px;
+    --scroll-thumb: var(--modal-color);
+    --scroll-track: rgba(255, 255, 255, 0.02);
 }
-.horizontal-scroll-list::-webkit-scrollbar { height: 6px; }
-.horizontal-scroll-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 3px; }
-.horizontal-scroll-list::-webkit-scrollbar-thumb { background: var(--modal-color); border-radius: 3px; }
 
 /* КАРТОЧКА ВНУТРИ СПИСКА */
 .scroll-card { 
@@ -71,7 +72,7 @@
 .scroll-card.active .sc-title { color: var(--modal-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
 .sc-status { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700;}
 
-/* СПЕЦИФИКА КАРТОЧКИ ВИДЕО (И АНИМАЦИЯ ЭКВАЛАЙЗЕРА) */
+/* СПЕЦИФИКА КАРТОЧКИ ВИДЕО */
 .video-card { min-width: 220px; width: 220px; }
 .video-card .sc-thumb { aspect-ratio: 16 / 9; }
 
@@ -100,19 +101,17 @@
    БЕСШОВНЫЙ РЕЖИМ "CINEMA" 
    ========================================= */
 .layout-cinema .modal-video-section { 
-    order: -2; /* Принудительно поднимаем в самый верх */
+    order: -2; 
     margin: 0; border: none; padding: 0; 
     background: transparent;
 }
-.layout-cinema .video-header { display: none; /* Скрываем надпись "Медиа" */ }
+.layout-cinema .video-header { display: none; }
 
-/* Плеер без границ */
 .layout-cinema .video-container { 
     border-radius: 16px 16px 0 0; border: none; 
     box-shadow: 0 10px 40px rgba(0,0,0,0.9); z-index: 10;
 }
 
-/* Полка сразу под плеером */
 .layout-cinema .horizontal-scroll-list { 
     padding: 20px 40px; background: rgba(5, 5, 8, 0.6); 
     border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
@@ -121,10 +120,8 @@
 /* Адаптив */
 @media (max-width: 768px) {
     .modal-franchise-section { padding: 20px; }
-    
     .layout-cinema .video-container { border-radius: 16px 16px 0 0; }
     .layout-cinema .horizontal-scroll-list { padding: 15px 20px; }
-    
     .video-card { min-width: 160px; width: 160px; } 
     .franchise-card { min-width: 110px; width: 110px; padding: 10px; } 
 }

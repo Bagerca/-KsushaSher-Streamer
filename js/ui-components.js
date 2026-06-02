@@ -5,7 +5,7 @@ export function initializeUI() {
     
     new SmoothScrollManager();
     new CryptoCardManager();
-    new NavRailManager(); // Сам создаст свой HTML
+    new NavRailManager(); 
 }
 
 /**
@@ -127,7 +127,7 @@ class CryptoCardManager {
 }
 
 /**
- * Менеджер Навигационного Луча (Создает свой DOM)
+ * Менеджер Навигационного Луча (PROXIMITY ENGINE 3.0 - Точный маппинг)
  */
 class NavRailManager {
     constructor() {
@@ -160,10 +160,13 @@ class NavRailManager {
 
             marker.innerHTML = `<div class="nav-shape"></div><div class="nav-tooltip">${sec.label}</div>`;
             
+            // Идеальный клик-скролл на вычисленную позицию
             marker.addEventListener('click', (e) => {
                 e.preventDefault();
-                const element = document.getElementById(sec.id);
-                if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const targetScroll = parseFloat(marker.dataset.targetScroll);
+                if (!isNaN(targetScroll)) {
+                    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                }
             });
             
             this.rail.appendChild(marker);
@@ -171,7 +174,7 @@ class NavRailManager {
         
         // 3. Биндим слушатели
         this.updatePositions = this.updatePositions.bind(this);
-        window.addEventListener('scroll', this.updatePositions);
+        window.addEventListener('scroll', this.updatePositions, { passive: true });
         new ResizeObserver(() => requestAnimationFrame(this.updatePositions)).observe(document.body);
 
         setTimeout(this.updatePositions, 100);
@@ -180,36 +183,66 @@ class NavRailManager {
     updatePositions() {
         const docHeight = document.documentElement.scrollHeight;
         const winHeight = window.innerHeight;
-        const scrollableHeight = docHeight - winHeight;
+        const scrollableHeight = Math.max(1, docHeight - winHeight);
         const scrolled = window.scrollY;
 
-        let percentLine = (scrollableHeight > 0) ? (scrolled / scrollableHeight) * 100 : 0;
+        // Позиция центра лазера в процентах от скролла (от 0 до 100%)
+        let percentLine = (scrolled / scrollableHeight) * 100;
+        percentLine = Math.max(0, Math.min(100, percentLine));
         this.rail.style.setProperty('--line-pos', `${percentLine}%`);
 
-        this.sections.forEach(sec => {
+        // Оптимальный вид: мы хотим, чтобы при клике заголовок секции 
+        // оказывался чуть ниже верха экрана (на 15% высоты окна)
+        const viewOffset = winHeight * 0.15;
+
+        let currentId = 'hero';
+        let closestDist = Infinity;
+
+        this.sections.forEach((sec, index) => {
             const element = document.getElementById(sec.id);
             const marker = document.getElementById(`nav-marker-${sec.id}`);
+            
             if (element && marker) {
-                const topPos = element.getBoundingClientRect().top + window.scrollY;
-                let percent = (topPos / docHeight) * 100;
-                marker.style.top = `${Math.max(2, Math.min(98, percent))}%`;
+                // 1. УМНЫЙ МАППИНГ 
+                const topPos = element.offsetTop;
+                let targetScroll = topPos - viewOffset;
+                
+                // Жесткая привязка краев (Первая секция - всегда 0%, Последняя - всегда 100%)
+                if (index === 0) targetScroll = 0;
+                if (index === this.sections.length - 1) targetScroll = scrollableHeight;
+
+                // Не даем значению выйти за пределы возможного скролла
+                targetScroll = Math.max(0, Math.min(scrollableHeight, targetScroll));
+                
+                // Сохраняем это идеальное значение скролла для обработчика клика
+                marker.dataset.targetScroll = targetScroll;
+
+                // Переводим targetScroll в проценты для позиционирования маркера на рельсе
+                let markerPercent = (targetScroll / scrollableHeight) * 100;
+                marker.style.top = `${markerPercent}%`;
+
+                // 2. PROXIMITY ЭФФЕКТ (Определение близости лазера)
+                // Разница между лазером и маркером (в процентах экрана)
+                let distancePct = Math.abs(percentLine - markerPercent);
+                
+                // Лазер "чувствует" маркер в радиусе 15% 
+                let proximity = Math.max(0, 1 - (distancePct / 15));
+                
+                // Смягчаем кривую затухания для плавности (квадратичная функция)
+                proximity = Math.pow(proximity, 2).toFixed(3);
+                
+                marker.style.setProperty('--proximity', proximity);
+
+                // 3. Вычисление активной секции (кто ближе всего к текущему скроллу)
+                const absDist = Math.abs(scrolled - targetScroll);
+                if (absDist < closestDist) {
+                    closestDist = absDist;
+                    currentId = sec.id;
+                }
             }
         });
 
-        this.checkActiveSection(scrolled, winHeight);
-    }
-
-    checkActiveSection(scrolled, winHeight) {
-        const scrollPos = scrolled + winHeight / 3;
-        let currentId = 'hero';
-        
-        if (scrolled >= 100) {
-            this.sections.forEach(sec => {
-                const el = document.getElementById(sec.id);
-                if (el && scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) currentId = sec.id;
-            });
-        }
-
+        // Обновляем UI активной секции
         document.querySelectorAll('.nav-marker').forEach(m => {
             m.classList.toggle('active', m.dataset.targetId === currentId);
         });
