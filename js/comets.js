@@ -5,43 +5,38 @@ const COMET_COLORS = ['#39ff14', '#ff2d95', '#ff4444', '#ff8c00', '#007bff', '#0
 export class CometEngine {
     constructor() {
         this.containerBg = document.getElementById('comet-system');
-        this.resizeObserver = null;
-        
         this.idleTimeoutId = null;
         this.showerIntervalId = null;
         this.activeComets = new Set();
-        
-        this.onResize = this.onResize.bind(this);
     }
 
     startIdle() {
         if (!this.containerBg) return;
 
         Object.assign(this.containerBg.style, {
-            position: 'absolute', top: '0', left: '0', width: '100%',
-            zIndex: '0', pointerEvents: 'none', overflow: 'hidden'
+            position: 'absolute', 
+            inset: '0', 
+            width: '100%',
+            height: '100%',
+            zIndex: '0', 
+            pointerEvents: 'none', 
+            overflow: 'hidden'
         });
 
-        this.onResize();
-        this.resizeObserver = new ResizeObserver(this.onResize);
-        this.resizeObserver.observe(document.body);
-        window.addEventListener('resize', this.onResize);
-
         this.scheduleNextIdleCycle();
-        console.log('🌠 [CometEngine] Фоновый режим запущен');
+        console.log('🌠 [CometEngine] Фоновый режим запущен (CSS Layout)');
     }
 
     stopIdle() {
-        if (this.idleTimeoutId) clearTimeout(this.idleTimeoutId);
-        if (this.resizeObserver) this.resizeObserver.disconnect();
-        window.removeEventListener('resize', this.onResize);
-        
-        // Не удаляем кометы сразу, позволяем им долететь (красивее)
+        if (this.idleTimeoutId) {
+            clearTimeout(this.idleTimeoutId);
+            this.idleTimeoutId = null;
+        }
     }
 
     triggerShower() {
         if (!this.containerBg) return;
-        this.stopShower(); // сброс если уже идет
+        this.stopShower(); 
 
         console.log("🌠 [CometEngine] Шторм начат!");
         const duration = 10000;
@@ -131,15 +126,5 @@ export class CometEngine {
             if (comet.parentNode) comet.remove();
             this.activeComets.delete(comet);
         };
-    }
-
-    onResize() {
-        if (!this.containerBg) return;
-        const docHeight = Math.max(
-            document.body.scrollHeight, document.documentElement.scrollHeight,
-            document.body.offsetHeight, document.documentElement.offsetHeight,
-            document.body.clientHeight, document.documentElement.clientHeight
-        );
-        this.containerBg.style.height = `${docHeight}px`;
     }
 }

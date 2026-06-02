@@ -13,21 +13,11 @@ export class DragonEngine {
     constructor() {
         this.svg = null;
         this.rafId = null;
-        this.resizeObserver = null;
         
         this.pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         this.rad = 0;
 
         this.onPointerMove = this.onPointerMove.bind(this);
-        this.onResize = this.onResize.bind(this);
-    }
-
-    getDocHeight() {
-        return Math.max(
-            document.body.scrollHeight, document.documentElement.scrollHeight,
-            document.body.offsetHeight, document.documentElement.offsetHeight,
-            document.body.clientHeight, document.documentElement.clientHeight
-        );
     }
 
     start() {
@@ -50,9 +40,13 @@ export class DragonEngine {
         
         this.svg = document.createElementNS(xmlns, "svg");
         Object.assign(this.svg.style, {
-            position: "absolute", top: "0", left: "0", width: "100%",
-            height: `${this.getDocHeight()}px`, 
-            zIndex: "0", pointerEvents: "none", background: "transparent",
+            position: "absolute", 
+            inset: "0", 
+            width: "100%",
+            height: "100%", 
+            zIndex: "0", 
+            pointerEvents: "none", 
+            background: "transparent",
             filter: `drop-shadow(0 0 5px ${palette.main}) contrast(1.1)` 
         });
 
@@ -88,9 +82,6 @@ export class DragonEngine {
         this.screen = this.svg.querySelector('#screen');
         document.body.appendChild(this.svg);
 
-        this.resizeObserver = new ResizeObserver(this.onResize);
-        this.resizeObserver.observe(document.body);
-        window.addEventListener("resize", this.onResize);
         window.addEventListener("pointermove", this.onPointerMove);
 
         this.elems = [];
@@ -123,7 +114,7 @@ export class DragonEngine {
             else prepend("Espina", i);
         }
 
-        console.log(`🐉 [DragonEngine] Запущен. Цвет: ${palette.name}`);
+        console.log(`🐉 [DragonEngine] Запущен на CSS-слое. Цвет: ${palette.name}`);
         this.loop();
     }
 
@@ -132,27 +123,18 @@ export class DragonEngine {
             cancelAnimationFrame(this.rafId);
             this.rafId = null;
         }
-        if (this.resizeObserver) {
-            this.resizeObserver.disconnect();
-            this.resizeObserver = null;
-        }
-        window.removeEventListener("resize", this.onResize);
         window.removeEventListener("pointermove", this.onPointerMove);
         if (this.svg) {
             this.svg.remove();
             this.svg = null;
         }
-        console.log('🐉 [DragonEngine] Остановлен');
+        console.log('🐉 [DragonEngine] Деактивирован');
     }
 
     onPointerMove(e) {
         this.pointer.x = e.clientX + window.scrollX; 
         this.pointer.y = e.clientY + window.scrollY; 
         this.rad = 0;
-    }
-
-    onResize() {
-        if (this.svg) this.svg.style.height = `${this.getDocHeight()}px`;
     }
 
     loop() {

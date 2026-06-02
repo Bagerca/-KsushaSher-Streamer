@@ -180,26 +180,18 @@
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
+/* ИСПРАВЛЕНА КАРУСЕЛЬ (Поддержка JS Drag движка) */
 .marquee-track {
     display: flex; gap: 80px; width: max-content;
     padding: 0 80px; align-items: center;
-    
-    /* УБРАЛИ animation: scrollLeft ... */
-    
-    /* Стили для курсора (подсказка, что можно тащить) */
     cursor: grab;
-    will-change: transform; /* Подсказка браузеру вынести блок на GPU */
+    will-change: transform;
 }
 
-/* Когда мы тащим ленту мышкой */
 .marquee-track.is-dragging {
     cursor: grabbing;
-    /* Отключаем pointer-events у карточек во время драга, 
-       чтобы случайно не выделить текст или картинку */
     pointer-events: none; 
-
 }
-.marquee-track:hover { animation-play-state: paused; }
 
 .holo-card {
     --sub-color: #39ff14; 
@@ -229,7 +221,6 @@
 .holo-card:hover { box-shadow: 0 0 18px var(--sub-color); border-color: var(--sub-color); transform: translateY(-5px) scale(1.02); z-index: 10; }
 .holo-card:hover .avatar-ring { border-color: var(--sub-color); box-shadow: 0 0 8px var(--sub-color); border-style: solid; width: 190px; height: 190px; margin-left: -95px; margin-top: -95px; }
 
-@keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes rotate-simple { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }

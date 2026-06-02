@@ -1,18 +1,28 @@
 /* js/media-manager.js */
 import { MediaStore } from './media-store.js';
-import { MediaRenderer } from './media-renderer.js';
+import { CardFactory } from './archive/CardFactory.js';
+import { LazyLoader } from './archive/LazyLoader.js';
+import { SearchController } from './archive/SearchController.js';
+import { FilterController } from './archive/FilterController.js';
+import { GridManager } from './archive/GridManager.js';
 
 export async function initMediaArchive() {
     try {
-        console.log('📂 [MediaArchive] Инициализация модуля...');
+        console.log('📂 [MediaArchive] Инициализация модульной архитектуры...');
         
-        // 1. Создаем Model (Управление данными и фильтрацией)
         const store = new MediaStore();
         
-        // 2. Создаем View (Управление DOM и скроллом), передаем ему Model
-        const renderer = new MediaRenderer(store);
+        // Создаем фасад для передачи состояния режима сетки
+        const getGridMode = () => gridManager ? gridManager.gridMode : 'detailed';
         
-        // 3. Запускаем первичную загрузку данных
+        const factory = new CardFactory(getGridMode);
+        const lazyLoader = new LazyLoader(getGridMode);
+        
+        const gridManager = new GridManager(store, factory, lazyLoader);
+        
+        new SearchController(store);
+        new FilterController(store, gridManager);
+        
         await store.loadType('games');
         
     } catch (error) {

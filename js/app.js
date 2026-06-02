@@ -22,7 +22,7 @@ import { MatrixEngine } from './matrix-engine.js';
 import { ScheduleManager } from './schedule.js';
 import { SubscribersManager } from './subscribers.js';
 import { HubController } from './hub-controller.js';
-import { StatsManager } from './stats.js'; // <-- ИМПОРТ ДОБАВЛЕН
+import { StatsManager } from './stats.js'; 
 
 // Музыкальный плеер
 import { initMusicPlayer, toggleMusicMode } from './music-player.js';
@@ -38,7 +38,7 @@ let terminalCtrl;
 let settingsMenu;
 const scheduleMgr = new ScheduleManager();
 const subsMgr = new SubscribersManager();
-const statsMgr = new StatsManager(); // <-- ЭКЗЕМПЛЯР ДОБАВЛЕН
+const statsMgr = new StatsManager(); 
 
 const engines = {
     reptile: new ReptileEngine(),
@@ -63,7 +63,6 @@ async function bootstrap() {
         
         registerEventHandlers();
         
-        // Добавил statsMgr.init() в пул загрузки
         await Promise.all([
             scheduleMgr.init(),
             subsMgr.init(),
@@ -81,10 +80,10 @@ async function bootstrap() {
             EventBus.emit('SYS_LOG', { html: "<span style='color:#555'>[SYS] Background data sync complete.</span>" });
         }, 300000);
         
+        // Включаем фоновый полет комет по умолчанию
         engines.comet.startIdle(); 
-        engines.matrix.start();
         
-        console.log('✅ [Boot] Инициализация завершена успешно!');
+        console.log('✅ [Boot] Инициализация завершена успешно! Матрица находится в спящем режиме.');
         AppState.initialized = true;
         
     } catch (error) {
@@ -94,7 +93,10 @@ async function bootstrap() {
 
 function registerEventHandlers() {
     EventBus.on('CMD_CLEAR', () => {
-        engines.reptile.stop(); engines.dragon.stop(); engines.comet.stopShower();
+        engines.reptile.stop(); 
+        engines.dragon.stop(); 
+        engines.comet.stopShower();
+        engines.matrix.stop();
         if (terminalCtrl.historyEl) terminalCtrl.historyEl.innerHTML = '';
     });
     EventBus.on('CMD_LIZARD', () => { engines.dragon.stop(); engines.reptile.start(); });
@@ -118,19 +120,40 @@ function registerEventHandlers() {
     EventBus.on('UI_CLICK_FX_CYCLE', () => {
         AppState.fxMode = (AppState.fxMode + 1) % 4;
         document.body.classList.remove('state-no-comets', 'state-no-stars');
-        if (AppState.fxMode === 0) engines.matrix.start();
-        else if (AppState.fxMode === 1) document.body.classList.add('state-no-comets');
-        else if (AppState.fxMode === 2) document.body.classList.add('state-no-stars');
-        else if (AppState.fxMode === 3) { document.body.classList.add('state-no-comets', 'state-no-stars'); engines.matrix.stop(); }
+        
+        if (AppState.fxMode === 0) {
+            // Режим матрицы теперь запускается динамически, если он выбран или активен god-режим
+            if (engines.matrix.isGodMode) engines.matrix.start();
+        }
+        else if (AppState.fxMode === 1) {
+            document.body.classList.add('state-no-comets');
+        }
+        else if (AppState.fxMode === 2) {
+            document.body.classList.add('state-no-stars');
+        }
+        else if (AppState.fxMode === 3) {
+            document.body.classList.add('state-no-comets', 'state-no-stars');
+            engines.matrix.stop();
+        }
         EventBus.emit('STATE_FX_CHANGED', AppState.fxMode);
     });
+    
     EventBus.on('UI_CLICK_MUSIC', () => toggleMusicMode());
     EventBus.on('UI_CLICK_REFRESH', async () => { 
         await scheduleMgr.init(); 
         await statsMgr.init();
     });
+    
     EventBus.on('CMD_GOD', () => engines.matrix.toggleGodMode());
     EventBus.on('CMD_GODMODE', () => engines.matrix.toggleGodMode());
+    
+    EventBus.on('STATE_GODMODE_CHANGED', (isGodMode) => {
+        if (isGodMode) {
+            EventBus.emit('SYS_LOG', { html: "🔥 PROTOCOL: <span style='color:var(--neon-pink)'>GOD_MODE_ACTIVATED</span>" });
+        } else {
+            EventBus.emit('SYS_LOG', { html: "💤 PROTOCOL: <span style='color:#666'>GOD_MODE_DEACTIVATED</span>" });
+        }
+    });
 }
 
 window.addEventListener('error', e => console.error('🚨 Error:', e.error));

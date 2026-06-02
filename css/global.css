@@ -114,13 +114,15 @@ section { padding: 80px 0; position: relative; z-index: 10; scroll-margin-top: 0
    COMET SYSTEMS (LAYER FIX)
    ========================================= */
 #comet-system, #comet-system-fg { 
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    pointer-events: none; overflow: hidden; 
+    position: absolute; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    pointer-events: none; 
+    overflow: hidden; 
 }
 
 #comet-system { z-index: 0; }
-
-/* Опускаем z-index до 9, чтобы кометы не перекрывали чат Twitch (у которого будет 10) */
 #comet-system-fg { z-index: 9; } 
 
 .comet { 
@@ -140,7 +142,10 @@ section { padding: 80px 0; position: relative; z-index: 10; scroll-margin-top: 0
     z-index: 9995; 
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
+
+/* КЛАСС ДЛЯ ОТЪЕЗДА ОТ ФУТЕРА */
 .magic-menu-container.above-footer { transform: translateY(-90px); }
+
 .magic-toggle { position: absolute; width: 60px; height: 60px; background: rgba(10, 11, 16, 0.9); border: 2px solid var(--neon-green); border-radius: 50%; color: var(--neon-green); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; z-index: 10; opacity: 0.3; transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s, opacity 0.3s; box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); }
 .magic-toggle:hover { opacity: 1; box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); }
 .magic-menu-container.active .magic-toggle { opacity: 1; transform: rotate(90deg); background: var(--neon-pink); border-color: var(--neon-pink); color: #fff; box-shadow: 0 0 20px var(--neon-pink); }
@@ -150,6 +155,16 @@ section { padding: 80px 0; position: relative; z-index: 10; scroll-margin-top: 0
 .magic-menu-container.active .magic-items li { transform: rotate(calc(270deg + (90deg / 5 * var(--i)))) translateX(190px) rotate(calc(-270deg - (90deg / 5 * var(--i)))); }
 .magic-menu-container.active .magic-items li a { opacity: 1; pointer-events: auto; }
 .magic-items li a:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); border-color: var(--neon-green); }
+.magic-items li a.disabled-state { border-color: #555; color: #555; background: rgba(0,0,0,0.8); box-shadow: none; }
+.magic-items li a.disabled-state:hover { border-color: #777; color: #ccc; box-shadow: none; background: #333; }
+.magic-items li a.active-state { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); }
 
 /* FX STATES */
 body.state-no-comets #comet-system, body.state-no-comets #comet-system-fg { display: none !important; }
+
+/* АДАПТИВ */
+@media (max-width: 768px) {
+    .magic-menu-container { bottom: 20px; left: 20px; }
+    /* На мобилках футер выше из-за переноса строк, отъезжаем сильнее */
+    .magic-menu-container.above-footer { transform: translateY(-160px); }
+}

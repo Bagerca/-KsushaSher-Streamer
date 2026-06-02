@@ -22,6 +22,8 @@ export class MediaStore {
         this.dataSuggestions = [];
         this.combinedData = [];
         
+        this.flatSearchIndex = [];
+        
         this.activeFilters = new Set(); 
         this.searchQuery = '';
         this.sort = 'name';
@@ -44,6 +46,7 @@ export class MediaStore {
                 ? rawSuggestions.filter(item => item.type === type) 
                 : [];
                 
+            this.buildFlatSearchIndex();
             this.processData();
             EventBus.emit('MEDIA_STORE_LOADED');
             EventBus.emit('SYS_LOG', { html: `[DB] Загружена база: ${type.toUpperCase()}` });
@@ -51,6 +54,26 @@ export class MediaStore {
             console.error("Ошибка загрузки медиа:", error);
             EventBus.emit('SYS_LOG', { html: `<span class="terminal-err">[DB] Ошибка загрузки ${type}</span>` });
         }
+    }
+
+    buildFlatSearchIndex() {
+        const fullList = [...this.dataMain, ...this.dataSuggestions];
+        this.flatSearchIndex = fullList.map(item => {
+            const genresStr = item.genres ? item.genres.map(g => GENRE_MAP[g] || g).join(' ') : '';
+            let searchableText = `${item.title || ''} ${genresStr} ${item.description || ''} ${STATUS_MAP[item.status] || item.status}`;
+            
+            // Если это коллекция, добавляем в индекс названия всех вложенных игр/фильмов
+            if (item.format === 'collection' && item.items) {
+                item.items.forEach(sub => {
+                    searchableText += ` ${sub.title || ''} ${sub.description || ''}`;
+                });
+            }
+            
+            return {
+                id: item.id,
+                searchableText: searchableText.toLowerCase()
+            };
+        });
     }
 
     getAllGenres() {
@@ -67,7 +90,6 @@ export class MediaStore {
         if (this.activeFilters.has(val)) {
             this.activeFilters.delete(val);
         } else {
-            // Если выбрали статус, очищаем другие жанры (сохраняем логику старого кода)
             if (VALID_STATUSES.includes(val)) {
                 const currentGenres = [];
                 this.activeFilters.forEach(f => {
@@ -105,17 +127,27 @@ export class MediaStore {
 
     getSearchSuggestions(query) {
         if (query.length < 1) return [];
+        const cleanQuery = query.toLowerCase();
         const fullList = [...this.dataMain, ...this.dataSuggestions];
         
-        let matches = fullList.map(item => {
-            let score = 0;
-            if (query.length < 3 && item.title) {
-                 score = item.title.toLowerCase().includes(query) ? 1 : 0;
-            } else if (item.title) {
-                 score = this._calculateSimilarity(item.title, query);
-            }
-            return { ...item, score };
-        }).filter(item => item.score > 0.25); 
+        const matchingIds = new Set(
+            this.flatSearchIndex
+                .filter(entry => entry.searchableText.includes(cleanQuery))
+                .map(entry => entry.id)
+        );
+
+        let matches = fullList.filter(item => matchingIds.has(item.id))
+            .map(item => {
+                let score = 0;
+                if (item.title) {
+                    const cleanTitle = item.title.toLowerCase();
+                    if (cleanTitle === cleanQuery) score = 1.0;
+                    else if (cleanTitle.startsWith(cleanQuery)) score = 0.8;
+                    else if (cleanTitle.includes(cleanQuery)) score = 0.6;
+                    else score = this._calculateSimilarity(cleanTitle, cleanQuery);
+                }
+                return { ...item, score };
+            });
 
         return matches.sort((a, b) => b.score - a.score).slice(0, 4);
     }
@@ -134,14 +166,17 @@ export class MediaStore {
 
         const filterFn = (item) => {
             let matchScore = 1;
-            if (this.searchQuery.length > 0 && item.title) {
-                matchScore = this.searchQuery.length < 3 
-                    ? (item.title.toLowerCase().includes(this.searchQuery) ? 1 : 0)
-                    : this._calculateSimilarity(item.title, this.searchQuery);
+            if (this.searchQuery.length > 0) {
+                const searchIdx = this.flatSearchIndex.find(idx => idx.id === item.id);
+                if (searchIdx && searchIdx.searchableText.includes(this.searchQuery)) {
+                    matchScore = item.title && item.title.toLowerCase().startsWith(this.searchQuery) ? 0.9 : 0.6;
+                } else {
+                    matchScore = 0;
+                }
             }
             item._matchScore = matchScore;
 
-            if (matchScore < 0.25) return false;
+            if (this.searchQuery.length > 0 && matchScore === 0) return false;
             if (isAllSelected) return true;
 
             let statusMatch = activeStatuses.size > 0 ? activeStatuses.has(item.status) : true;
@@ -169,27 +204,11 @@ export class MediaStore {
         filteredMain.sort(sortFn);
         filteredSuggestions.sort(sortFn);
 
-        this.combinedData = [...filteredMain];
-
-        if (filteredSuggestions.length > 0) {
-            const sugPosters = filteredSuggestions.filter(item => item.format !== 'youtube');
-            const sugYoutube = filteredSuggestions.filter(item => item.format === 'youtube');
-
-            if (isAllSelected) {
-                const title = filteredMain.length > 0 ? "COMMUNITY_SUGGESTIONS // ПРЕДЛОЖКА" : "SUGGESTED";
-                this.combinedData.push({ isDivider: true, title });
-            }
-
-            this.combinedData = [...this.combinedData, ...sugPosters];
-
-            if (sugYoutube.length > 0) {
-                if (sugPosters.length > 0) this.combinedData.push({ isSpacer: true });
-                this.combinedData = [...this.combinedData, ...sugYoutube];
-            }
-        }
+        // Мы больше не добавляем искусственные разделители (Divider) в массив.
+        // UI сам распределит карточки по нужным flex-контейнерам
+        this.combinedData = [...filteredMain, ...filteredSuggestions];
     }
 
-    // --- Private Math Helpers ---
     _getTrigrams(text) {
         if (!text) return [];
         const cleanText = text.toLowerCase().replace(/[^\wа-яё0-9]/gi, '');

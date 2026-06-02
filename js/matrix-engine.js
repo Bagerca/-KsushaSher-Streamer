@@ -5,7 +5,7 @@ const SECRET_WORDS = [
     "KSUSHA", "SHER", "TETLA", "BAGERCA", "ANGEL", "KIRIKI", 
     "FOLLOW", "SUBSCRIBE", "DONATE", "LOVE", "MATRIX", "SYSTEM"
 ];
-const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const CHARS = "アァカサтанамāяāлавагазадабапаиикишичиниҳимиривигиджидзибипиуукусуцунуфумуююлугузубудзупуеекесеТЕНЕХЕМЕРЕВЕГЕЗЕДЕБЕПЕОокосотонохомоёёловогозодобоповуцн0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export class MatrixEngine {
     constructor() {
@@ -23,19 +23,13 @@ export class MatrixEngine {
         
         this.isGodMode = false;
         
-        // Привязываем контекст для слушателей
         this.onResize = this.onResize.bind(this);
-        this.toggleGodMode = this.toggleGodMode.bind(this);
-
-        // Слушаем команды терминала напрямую
-        EventBus.on('CMD_GOD', this.toggleGodMode);
-        EventBus.on('CMD_GODMODE', this.toggleGodMode);
     }
 
     start() {
         if (this.canvas) return;
 
-        // 1. Создаем Canvas
+        // 1. Динамическое создание элементов Canvas
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
         Object.assign(this.canvas.style, {
@@ -44,7 +38,7 @@ export class MatrixEngine {
         });
         document.body.appendChild(this.canvas);
 
-        // 2. Создаем Шторку (Фон)
+        // 2. Динамическое создание Curtain (Шторки)
         this.curtain = document.createElement('div');
         Object.assign(this.curtain.style, {
             position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
@@ -53,11 +47,11 @@ export class MatrixEngine {
         });
         document.body.appendChild(this.curtain);
 
-        // 3. Биндим события
+        // 3. Биндинг событий
         window.addEventListener('resize', this.onResize);
         this.onResize();
 
-        // 4. Запускаем цикл
+        // 4. Запуск цикла
         this.lastDrawTime = performance.now();
         this.loop();
         
@@ -72,13 +66,14 @@ export class MatrixEngine {
         if (this.canvas) {
             this.canvas.remove();
             this.canvas = null;
+            this.ctx = null;
         }
         if (this.curtain) {
             this.curtain.remove();
             this.curtain = null;
         }
         window.removeEventListener('resize', this.onResize);
-        console.log('🤖 [MatrixEngine] Остановлен');
+        console.log('🤖 [MatrixEngine] Деактивирован, ресурсы освобождены');
     }
 
     onResize() {
@@ -91,12 +86,12 @@ export class MatrixEngine {
     }
 
     loop() {
+        if (!this.canvas) return;
         this.rafId = requestAnimationFrame(() => this.loop());
 
         const now = performance.now();
         const delta = now - this.lastDrawTime;
 
-        // Дросселирование FPS
         if (delta > this.interval) {
             this.draw();
             this.lastDrawTime = now - (delta % this.interval);
@@ -147,8 +142,11 @@ export class MatrixEngine {
 
     toggleGodMode() {
         this.isGodMode = !this.isGodMode;
-        if (this.curtain) {
-            this.curtain.style.opacity = this.isGodMode ? '0' : '1';
+        if (this.isGodMode) {
+            this.start();
+            if (this.curtain) this.curtain.style.opacity = '0';
+        } else {
+            this.stop();
         }
         EventBus.emit('STATE_GODMODE_CHANGED', this.isGodMode);
     }

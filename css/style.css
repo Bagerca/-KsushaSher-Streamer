@@ -1,9 +1,16 @@
+/* css/style.css */
+
 @import "global.css";
 @import "hero.css";
 @import "music-player.css";
 @import "content.css";
 @import "command-center.css";
-@import "media-archive.css";
+
+/* Рефакторинг базы данных */
+@import "archive-layout.css";
+@import "archive-controls.css";
+@import "archive-card.css";
+
 @import "media-modal.css";
 @import "specs.css";
 @import "donations.css";

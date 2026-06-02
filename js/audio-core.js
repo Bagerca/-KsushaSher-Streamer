@@ -2,7 +2,6 @@
 import EventBus from './event-bus.js';
 import { loadData } from './api.js';
 
-// Fallback на случай, если JSON не загрузится (защита от падения)
 const FALLBACK_TRACKS = [
     { title: "СЛАВА БОССУ", artist: "5opka", url: "assets/music/5opka_slava_bossu.mp3" },
     { title: "Котлетки с Пюрешкой", artist: "Enjoykin", url: "assets/music/enjoykin_kotletki.mp3" }
@@ -14,7 +13,7 @@ export class AudioCore {
         this.audio.crossOrigin = "anonymous";
         this.audio.volume = 0.5;
 
-        this.tracks = []; // Массив треков теперь пуст по умолчанию
+        this.tracks = []; 
         this.currentTrackIdx = 0;
         this.isPlaying = false;
 
@@ -27,9 +26,6 @@ export class AudioCore {
         this.initListeners();
     }
 
-    /**
-     * Асинхронно загружает плейлист из JSON
-     */
     async loadTracks() {
         try {
             const data = await loadData('music.json', FALLBACK_TRACKS);
@@ -49,6 +45,9 @@ export class AudioCore {
                 duration: this.audio.duration 
             });
         });
+
+        // Слушатель для синтеза системных звуков на лету
+        EventBus.on('PLAY_SOUND', (type) => this.playSynthSound(type));
     }
 
     initContext() {
@@ -67,6 +66,65 @@ export class AudioCore {
             console.log("🎵 [AudioCore] Web Audio API подключен");
         } catch (e) {
             console.error("❌ [AudioCore] Ошибка Web Audio API:", e);
+        }
+    }
+
+    /**
+     * Легковесный синтезатор системных звуков на основе встроенных осцилляторов
+     * Не загружает сеть и работает мгновенно в контексте аудиопроцессора
+     */
+    playSynthSound(type) {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = this.audioCtx || new AudioContext();
+            if (ctx.state === 'suspended') ctx.resume();
+
+            const osc = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            const now = ctx.currentTime;
+
+            if (type === 'click') {
+                // Системный кибер-клик (короткий высокочастотный спад)
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1000, now);
+                osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
+                
+                gainNode.gain.setValueAtTime(0.08, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } 
+            else if (type === 'hover') {
+                // Тонкое скольжение при наведении на важный объект
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(1200, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.04);
+                
+                gainNode.gain.setValueAtTime(0.02, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                
+                osc.start(now);
+                osc.stop(now + 0.04);
+            }
+            else if (type === 'expand') {
+                // Мягкий басовый импульс открытия/развертывания меню
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(100, now);
+                osc.frequency.exponentialRampToValueAtTime(350, now + 0.25);
+                
+                gainNode.gain.setValueAtTime(0.12, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+        } catch (e) {
+            console.warn("⚠️ [AudioCore] Синтезатор заблокирован браузером до первого взаимодействия", e.message);
         }
     }
 
