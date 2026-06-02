@@ -28,33 +28,58 @@ export class MediaModalManager {
         this.overlay.id = 'media-modal-overlay';
         
         this.overlay.innerHTML = `
+            <div class="modal-cinematic-bg" id="modal-cinematic-bg"></div>
+            <button class="modal-close-btn" title="Закрыть (Esc)"><i class="fas fa-times"></i></button>
+            
             <div class="media-modal-content">
-                <button class="modal-close-btn">&times;</button>
-                <div class="modal-layout">
-                    <div class="modal-col-sidebar">
+                <div class="modal-layout" id="modal-layout">
+                    <!-- ЛЕВАЯ КОЛОНКА -->
+                    <div class="modal-col-sidebar" id="modal-col-sidebar">
                         <div class="modal-poster-wrapper"><div class="modal-poster-glow"></div></div>
-                        <div class="modal-rating-box">
-                            <span id="modal-rating-val">0.0</span>
-                            <div class="modal-stars" id="modal-stars"></div>
-                        </div>
-                        <div class="modal-tech-data">
-                            <div class="tech-line"><span>ID:</span> <span class="t-val" id="modal-id">---</span></div>
-                            <div class="tech-line"><span>TYPE:</span> <span class="t-val neon-pulse" id="modal-type">---</span></div>
+                        <div class="poster-pagination" id="modal-poster-dots"></div>
+                        
+                        <div class="modal-tech-barcode">
+                            <div class="barcode-lines"></div>
+                            <div class="tech-info">
+                                <span>SYS_ID: <span class="t-val" id="modal-id">---</span></span>
+                                <span>DATATYPE: <span class="t-val" id="modal-type">---</span></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-col-main">
-                        <div class="modal-header">
-                            <div class="modal-header-top">
-                                <h2 class="modal-title" id="modal-title">TITLE</h2>
-                                <span class="modal-status-badge" id="modal-status">STATUS</span>
+                    
+                    <!-- ПРАВАЯ КОЛОНКА -->
+                    <div class="modal-col-main" id="modal-col-main">
+                        <!-- ЗОНА 1: Инфа и Плеер -->
+                        <div class="modal-dynamic-zone" id="modal-dynamic-zone">
+                            
+                            <div class="modal-header">
+                                <div class="modal-title-row">
+                                    <h2 class="modal-title" id="modal-title">TITLE</h2>
+                                    <div class="modal-rating-box" id="modal-rating-box">
+                                        <div class="modal-segments" id="modal-segments"></div>
+                                        <span id="modal-rating-val">0.0</span>
+                                    </div>
+                                </div>
+                                <div class="modal-meta-row">
+                                    <span class="modal-status-badge" id="modal-status">STATUS</span>
+                                    <div class="modal-genres-container" id="modal-genres"></div>
+                                </div>
                             </div>
-                            <div class="modal-meta-row" id="modal-genres"></div>
+                            
+                            <div class="modal-body"><p class="modal-desc" id="modal-desc"></p></div>
+
+                            <!-- ЗОНА 2: ВИДЕО ПЛЕЕР -->
+                            <div class="modal-video-section" id="modal-video-section" style="display: none;">
+                                <div class="video-header"><i class="fas fa-play-circle"></i> <span>МЕДИА АРХИВ</span></div>
+                                <div class="video-container" id="modal-player-container"><iframe id="modal-iframe" src="" frameborder="0" allowfullscreen></iframe></div>
+                                <div class="horizontal-scroll-list" id="modal-video-playlist"></div>
+                            </div>
                         </div>
-                        <div class="modal-body"><p class="modal-desc" id="modal-desc"></p></div>
-                        <div class="modal-video-section" id="modal-video-section" style="display: none;">
-                            <div class="video-header"><i class="fas fa-bars"></i> <span id="modal-sidebar-title">СОДЕРЖИМОЕ</span></div>
-                            <div class="video-container" id="modal-player-container"><iframe id="modal-iframe" src="" frameborder="0" allowfullscreen></iframe></div>
-                            <div class="video-playlist" id="modal-playlist"></div>
+
+                        <!-- ЗОНА 3: ПОЛКА ФРАНШИЗЫ -->
+                        <div class="modal-franchise-section" id="modal-franchise-section" style="display: none;">
+                            <div class="franchise-header"><i class="fas fa-sitemap"></i> СТРУКТУРА ФРАНШИЗЫ</div>
+                            <div class="horizontal-scroll-list" id="modal-franchise-list"></div>
                         </div>
                     </div>
                 </div>
@@ -67,65 +92,105 @@ export class MediaModalManager {
         this.posterWrapper = this.overlay.querySelector('.modal-poster-wrapper');
         
         this.els = {
+            layout: document.getElementById('modal-layout'),
+            colSidebar: document.getElementById('modal-col-sidebar'),
+            colMain: document.getElementById('modal-col-main'),
+            dynamicZone: document.getElementById('modal-dynamic-zone'),
+            cinematicBg: document.getElementById('modal-cinematic-bg'),
+            posterDots: document.getElementById('modal-poster-dots'),
+            ratingBox: document.getElementById('modal-rating-box'),
             ratingVal: document.getElementById('modal-rating-val'),
-            stars: document.getElementById('modal-stars'),
+            segments: document.getElementById('modal-segments'),
             status: document.getElementById('modal-status'),
             title: document.getElementById('modal-title'),
             genres: document.getElementById('modal-genres'),
             desc: document.getElementById('modal-desc'),
             id: document.getElementById('modal-id'),
             type: document.getElementById('modal-type'),
+            
             videoSection: document.getElementById('modal-video-section'),
             playerContainer: document.getElementById('modal-player-container'),
             iframe: document.getElementById('modal-iframe'),
-            playlist: document.getElementById('modal-playlist'),
-            ratingBox: document.querySelector('.modal-rating-box'),
-            sidebarTitle: document.getElementById('modal-sidebar-title')
+            videoPlaylist: document.getElementById('modal-video-playlist'),
+            
+            franchiseSection: document.getElementById('modal-franchise-section'),
+            franchiseList: document.getElementById('modal-franchise-list')
         };
     }
 
     initListeners() {
         this.closeBtn.addEventListener('click', () => { EventBus.emit('PLAY_SOUND', 'click'); this.close(); });
-        this.overlay.addEventListener('click', (e) => { if (e.target === this.overlay) this.close(); });
+        this.overlay.addEventListener('click', (e) => { 
+            if (e.target === this.overlay || e.target === this.els.cinematicBg) this.close(); 
+        });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.overlay.classList.contains('active')) this.close(); });
-
         EventBus.on('MODAL_OPEN_MEDIA', ({ item, type }) => this.open(item, type));
     }
 
     open(item, type) {
         const color = item.customColor || '#fff';
         this.content.style.setProperty('--modal-color', color);
+        this.overlay.style.setProperty('--modal-color', color); 
+        
+        this.els.layout.className = 'modal-layout';
+        this.els.videoSection.style.display = 'none';
+        this.els.franchiseSection.style.display = 'none';
+        this.els.iframe.src = '';
+        
+        // Включаем "Кинотеатр"
+        if (item.format === 'youtube') {
+            this.els.layout.classList.add('layout-cinema');
+            this.overlay.classList.add('is-cinema-mode'); 
+        } else {
+            this.els.layout.classList.add('layout-standard');
+            this.overlay.classList.remove('is-cinema-mode');
+        }
+
+        const bgImg = (item.images && item.images.length > 0) ? item.images[0] : item.image;
+        if (bgImg) this.els.cinematicBg.style.backgroundImage = `url('${bgImg}')`;
 
         if (item.format === 'collection' && item.items && item.items.length > 0) {
-            this.setupCollectionSidebar(item, color);
-            this.renderDynamicContent(item.items[0], item, type, color);
+            this.setupCollectionView(item, type, color);
+            this.renderDynamicContent(item, item, type, color); 
+            this.setupYouTubeView(item, item.status);
         } else {
-            // ИСПРАВЛЕН БАГ: Выводим ютуб плеер для любых элементов, у которых есть массив videos
-            if (item.videos && item.videos.length > 0) {
-                this.setupYouTubeSidebar(item);
-            } else {
-                this.els.videoSection.style.display = 'none';
-            }
             this.renderDynamicContent(item, item, type, color);
+            this.setupYouTubeView(item, item.status);
         }
 
         this.overlay.classList.add('active');
         document.body.style.overflow = 'hidden'; 
     }
 
+    triggerSmoothTransition(callback) {
+        const elementsToAnimate = [this.els.colSidebar, this.els.dynamicZone];
+        elementsToAnimate.forEach(el => el.classList.add('fade-out'));
+        
+        setTimeout(() => {
+            callback(); 
+            elementsToAnimate.forEach(el => {
+                el.classList.remove('fade-out');
+                el.classList.add('fade-in');
+            });
+            setTimeout(() => {
+                elementsToAnimate.forEach(el => el.classList.remove('fade-in'));
+            }, 300);
+        }, 200); 
+    }
+
     renderDynamicContent(subItem, parentItem, type, color) {
         this.setupPosters(subItem, parentItem);
+        
         this.els.title.textContent = subItem.title || parentItem.title;
         this.els.desc.textContent = subItem.description || parentItem.description || "Описание отсутствует.";
         this.els.id.textContent = subItem.id || parentItem.id;
-        this.els.type.textContent = type.toUpperCase();
+        this.els.type.textContent = type ? type.toUpperCase() : "UNKNOWN";
         
         const effectiveStatus = subItem.status || parentItem.status;
         this.els.status.textContent = STATUS_TEXT_MAP[effectiveStatus] || effectiveStatus;
         
         const statusColor = STATUS_COLOR_MAP[effectiveStatus] || '#fff';
         this.els.status.style.backgroundColor = statusColor;
-        this.els.status.style.boxShadow = `0 0 15px ${statusColor}`;
         this.els.status.style.color = ['dropped', 'playing', 'watching'].includes(effectiveStatus) ? '#fff' : '#000';
 
         if (effectiveStatus === 'suggested') {
@@ -133,12 +198,29 @@ export class MediaModalManager {
             this.els.genres.innerHTML = '';
         } else {
             this.els.ratingBox.style.display = 'flex';
-            const rating = subItem.rating || parentItem.rating || 0;
-            this.els.ratingVal.textContent = rating;
-            this.els.ratingVal.style.color = color;
             
-            const fullStars = Math.floor(rating);
-            this.els.stars.innerHTML = Array(5).fill(0).map((_, i) => `<i class="${i < fullStars ? 'fas' : 'far'} fa-star" style="${i < fullStars ? 'color:'+color : 'opacity:0.3'}"></i>`).join('');
+            let rating = subItem.rating || 0;
+            if (subItem.format === 'collection' && subItem.items) {
+                let sum = 0, count = 0;
+                subItem.items.forEach(i => { if (i.rating > 0) { sum += i.rating; count++; } });
+                if (count > 0) rating = sum / count;
+            }
+            
+            if (rating > 0) {
+                this.els.ratingVal.textContent = rating.toFixed(1);
+                this.els.ratingVal.style.color = color;
+                
+                const rScore = Math.round(rating);
+                let segmentsHtml = '';
+                for(let i=0; i<5; i++) {
+                    segmentsHtml += `<div class="modal-segment-line ${i < rScore ? 'filled' : ''}" style="color:${color}"></div>`;
+                }
+                this.els.segments.innerHTML = segmentsHtml;
+            } else {
+                this.els.ratingVal.textContent = "N/A";
+                this.els.ratingVal.style.color = "#666";
+                this.els.segments.innerHTML = `<span style="font-family:monospace;font-size:0.7rem;color:#666;">NO_DATA</span>`;
+            }
             
             const genres = subItem.genres || parentItem.genres;
             this.els.genres.innerHTML = genres ? genres.map(g => `<span class="modal-genre-tag">${GENRE_MAP[g] || g}</span>`).join('') : '';
@@ -147,6 +229,7 @@ export class MediaModalManager {
 
     setupPosters(subItem, parentItem) {
         this.posterWrapper.innerHTML = '<div class="modal-poster-glow"></div>';
+        this.els.posterDots.innerHTML = '';
         
         let imageUrls = [];
         if (subItem.images && subItem.images.length > 0) imageUrls = [...subItem.images];
@@ -155,102 +238,155 @@ export class MediaModalManager {
         else if (parentItem.image) imageUrls = [parentItem.image];
         else imageUrls = ['https://via.placeholder.com/600x900?text=NO+IMAGE'];
 
-        const imgElements = imageUrls.map(src => {
+        let currentIndex = 0;
+
+        const imgElements = imageUrls.map((src, index) => {
             const img = document.createElement('img');
             img.src = src; img.className = 'modal-poster-img'; 
-            this.posterWrapper.appendChild(img); return img;
+            this.posterWrapper.appendChild(img); 
+            if (imageUrls.length > 1) {
+                const dot = document.createElement('div');
+                dot.className = 'poster-dot';
+                this.els.posterDots.appendChild(dot);
+            }
+            return img;
         });
 
-        const updateClasses = () => {
+        const updateVisuals = () => {
             imgElements.forEach((img, index) => {
                 img.classList.remove('is-front', 'is-back', 'is-back-2', 'is-hidden');
-                if (index === 0) { img.classList.add('is-front'); img.style.zIndex = 30; }
-                else if (index === 1) { img.classList.add('is-back'); img.style.zIndex = 20; }
-                else if (index === 2) { img.classList.add('is-back-2'); img.style.zIndex = 10; }
+                let relIndex = (index - currentIndex + imgElements.length) % imgElements.length;
+                if (relIndex === 0) { img.classList.add('is-front'); img.style.zIndex = 30; }
+                else if (relIndex === 1) { img.classList.add('is-back'); img.style.zIndex = 20; }
+                else if (relIndex === 2) { img.classList.add('is-back-2'); img.style.zIndex = 10; }
                 else { img.classList.add('is-hidden'); img.style.zIndex = 0; }
             });
+            if (imageUrls.length > 1) {
+                const dots = this.els.posterDots.querySelectorAll('.poster-dot');
+                dots.forEach((dot, index) => { dot.classList.toggle('active', index === currentIndex); });
+            }
         };
-        updateClasses();
+        updateVisuals(); 
 
         if (imgElements.length > 1) {
             this.posterWrapper.classList.add('is-interactive');
-            this.posterWrapper.onclick = () => { EventBus.emit('PLAY_SOUND', 'hover'); imgElements.push(imgElements.shift()); updateClasses(); };
+            this.posterWrapper.onclick = () => { 
+                EventBus.emit('PLAY_SOUND', 'hover'); 
+                currentIndex = (currentIndex + 1) % imgElements.length; 
+                updateVisuals(); 
+            };
         } else {
             this.posterWrapper.classList.remove('is-interactive');
             this.posterWrapper.onclick = null;
         }
     }
 
-    setupCollectionSidebar(item, color) {
-        this.els.videoSection.style.display = '';
-        this.els.videoSection.className = 'modal-video-section has-playlist is-collection';
-        this.els.sidebarTitle.textContent = "ЧАСТИ ФРАНШИЗЫ";
-        this.els.playerContainer.style.display = 'none'; 
-        this.els.playlist.innerHTML = '';
+    setupCollectionView(item, type, color) {
+        this.els.franchiseSection.style.display = 'block';
+        this.els.franchiseList.innerHTML = '';
 
-        item.items.forEach((sub, index) => {
-            const thumbUrl = sub.image || item.image || 'https://via.placeholder.com/150';
+        const collectionItems = [{ isRoot: true, ...item }, ...item.items];
+
+        collectionItems.forEach((sub, index) => {
+            const thumbUrl = sub.image || item.image || 'https://via.placeholder.com/200x300';
             const itemEl = document.createElement('div');
-            itemEl.className = `playlist-item ${index === 0 ? 'active' : ''}`;
-            itemEl.innerHTML = `<div class="pl-thumb"><img src="${thumbUrl}"></div><div class="pl-info"><div class="pl-title">${sub.title}</div><div class="pl-status"><i class="fas fa-folder"></i> ДОСЬЕ</div></div>`;
+            itemEl.className = `scroll-card franchise-card ${index === 0 ? 'active is-root-item' : ''}`;
+            
+            const iconHtml = sub.isRoot ? '<i class="fas fa-folder-open"></i>' : '<i class="fas fa-file-alt"></i>';
+            const statusHtml = sub.isRoot ? 'MAIN HUB' : 'ДОСЬЕ';
+
+            itemEl.innerHTML = `
+                <div class="sc-thumb"><img src="${thumbUrl}"><div class="sc-overlay">${iconHtml}</div></div>
+                <div class="sc-info"><div class="sc-title">${sub.title}</div><div class="sc-status">${statusHtml}</div></div>
+            `;
             
             itemEl.addEventListener('click', () => {
+                if (itemEl.classList.contains('active')) return;
                 EventBus.emit('PLAY_SOUND', 'click');
-                document.querySelectorAll('.playlist-item').forEach(b => b.classList.remove('active'));
+                
+                document.querySelectorAll('.franchise-card').forEach(b => b.classList.remove('active'));
                 itemEl.classList.add('active');
-                this.renderDynamicContent(sub, item, item.type, color);
+                
+                this.triggerSmoothTransition(() => {
+                    this.renderDynamicContent(sub, item, type, color); 
+                    this.setupYouTubeView(sub, item.status);
+                });
             });
-            this.els.playlist.appendChild(itemEl);
+            this.els.franchiseList.appendChild(itemEl);
         });
     }
 
-    setupYouTubeSidebar(item) {
-        const videos = item.videos;
-        if (!videos || videos.length === 0) return;
+    setupYouTubeView(targetItem, rootStatus) {
+        const videos = targetItem.videos;
+        
+        if (!videos || videos.length === 0) {
+            this.els.videoSection.style.display = 'none';
+            this.els.iframe.src = '';
+            return;
+        }
 
-        this.els.videoSection.style.display = ''; 
-        this.els.videoSection.className = 'modal-video-section has-playlist';
-        this.els.sidebarTitle.textContent = "МЕДИА МАТЕРИАЛЫ";
-        this.els.playerContainer.style.display = '';
-        this.els.playlist.innerHTML = '';
+        this.els.videoSection.style.display = 'flex'; 
+        this.els.videoPlaylist.innerHTML = '';
         
         let firstValidId = null;
 
         videos.forEach((vid, index) => {
             const isString = typeof vid === 'string';
             const url = isString ? vid : vid.url;
-            let title = (!isString && vid.title) ? vid.title : `Видео фрагмент #${index + 1}`;
+            let title = (!isString && vid.title) ? vid.title : `Запись #${index + 1}`;
             const vidId = getYouTubeId(url);
             
             if (!vidId) return;
             if (!firstValidId) firstValidId = vidId;
 
             const itemEl = document.createElement('div');
-            itemEl.className = `playlist-item ${index === 0 ? 'active' : ''}`;
+            itemEl.className = `scroll-card video-card ${index === 0 ? 'active' : ''}`;
+            
+            // ДОБАВЛЕН ЭКВАЛАЙЗЕР И ИКОНКА PLAY
             itemEl.innerHTML = `
-                <div class="pl-thumb"><img src="https://img.youtube.com/vi/${vidId}/mqdefault.jpg"><div class="pl-overlay"><i class="fas fa-play"></i></div></div>
-                <div class="pl-info"><div class="pl-title">${title}</div><div class="pl-status"><i class="fas fa-film"></i> СМОТРЕТЬ</div></div>`;
+                <div class="sc-thumb is-16-9">
+                    <img src="https://img.youtube.com/vi/${vidId}/mqdefault.jpg">
+                    <div class="sc-overlay">
+                        <i class="fas fa-play play-icon"></i>
+                        <div class="equalizer-icon"><span></span><span></span><span></span></div>
+                    </div>
+                </div>
+                <div class="sc-info"><div class="sc-title">${title}</div><div class="sc-status">СМОТРЕТЬ</div></div>
+            `;
             
             itemEl.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
-                document.querySelectorAll('.playlist-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.video-card').forEach(b => b.classList.remove('active'));
                 itemEl.classList.add('active');
                 this.els.iframe.src = `https://www.youtube.com/embed/${vidId}?autoplay=1&rel=0&modestbranding=1`;
-                if (item.status === 'suggested') this.els.title.textContent = itemEl.querySelector('.pl-title').textContent;
+                
+                if (targetItem.status === 'suggested' || rootStatus === 'suggested') {
+                    this.els.title.textContent = itemEl.querySelector('.sc-title').textContent;
+                }
             });
-            this.els.playlist.appendChild(itemEl);
+            this.els.videoPlaylist.appendChild(itemEl);
 
             if (isString) {
                 fetch(`https://noembed.com/embed?url=${url}`).then(r => r.json()).then(d => {
                     if (d.title) {
-                        itemEl.querySelector('.pl-title').textContent = d.title;
-                        if (itemEl.classList.contains('active') && item.status === 'suggested') this.els.title.textContent = d.title;
+                        itemEl.querySelector('.sc-title').textContent = d.title;
+                        if (itemEl.classList.contains('active') && (targetItem.status === 'suggested' || rootStatus === 'suggested')) {
+                            this.els.title.textContent = d.title;
+                        }
                     }
                 }).catch(() => {});
             }
         });
 
-        if (firstValidId) this.els.iframe.src = `https://www.youtube.com/embed/${firstValidId}?rel=0&modestbranding=1`;
+        if (videos.length <= 1) {
+            this.els.videoPlaylist.style.display = 'none';
+        } else {
+            this.els.videoPlaylist.style.display = 'flex';
+        }
+
+        if (firstValidId) {
+            this.els.iframe.src = `https://www.youtube.com/embed/${firstValidId}?rel=0&modestbranding=1`;
+        }
     }
 
     close() {

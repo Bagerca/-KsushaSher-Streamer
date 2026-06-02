@@ -7,7 +7,6 @@ export class GridManager {
         this.factory = cardFactory;
         this.lazyLoader = lazyLoader;
 
-        // Создаем физическое разделение сеток
         const wrapper = document.querySelector('.archive-full-grid-wrapper');
         wrapper.innerHTML = `
             <div id="archive-grid-main" class="archive-flex-grid"></div>
@@ -17,16 +16,19 @@ export class GridManager {
                 <div class="divider-line"></div>
             </div>
             <div id="archive-grid-suggested" class="archive-flex-grid"></div>
+            <div class="archive-fade-overlay" id="archive-fade-overlay"></div>
         `;
 
         this.els = {
             wrapper: wrapper,
             gridMain: document.getElementById('archive-grid-main'),
             gridSuggested: document.getElementById('archive-grid-suggested'),
-            suggestedHeader: document.getElementById('archive-suggested-header')
+            suggestedHeader: document.getElementById('archive-suggested-header'),
+            overlay: document.getElementById('archive-fade-overlay')
         };
 
         this.isExpanded = false;
+        this.isAnimating = false; 
         this.renderedCount = 0;
         this.scrollObserver = null;
         this.resizeDebounceTimer = null;
@@ -75,7 +77,7 @@ export class GridManager {
             else if (width > 768) cols = 3;
             else cols = 2;
         }
-        return cols * 2;
+        return cols * 2; 
     }
 
     bindEvents() {
@@ -84,7 +86,7 @@ export class GridManager {
 
         this.els.wrapper.addEventListener('click', (e) => {
             const card = e.target.closest('.archive-card-container');
-            if (card) {
+            if (card && !card.classList.contains('fold-out')) {
                 const id = card.dataset.id;
                 const item = this.store.getItemById(id);
                 if (item) {
@@ -94,7 +96,6 @@ export class GridManager {
             }
         });
 
-        // Захват делегированного mouseenter для ленивой загрузки (работает для обеих сеток)
         this.els.wrapper.addEventListener('mouseenter', (e) => {
             const card = e.target.closest('.archive-card-container');
             if (!card || this.gridMode === 'compact') return;
@@ -122,85 +123,140 @@ export class GridManager {
             this.els.gridSuggested.innerHTML = '';
             this.els.suggestedHeader.style.display = 'none';
             this.renderedCount = 0;
+            this.isExpanded = false; 
             if (this.scrollObserver) this.scrollObserver.disconnect();
-            
-            const oldSentinel = document.getElementById('scroll-sentinel');
-            if (oldSentinel) oldSentinel.remove();
-            const oldBtn = document.querySelector('.archive-footer-controls');
-            if (oldBtn) oldBtn.remove();
         }
 
         const data = this.store.combinedData;
 
         if (data.length === 0) {
-            this.els.gridMain.innerHTML = '<div style="width:100%; text-align:center; padding:50px; color:#666;">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
-            this.els.wrapper.classList.remove('has-more');
+            this.els.gridMain.innerHTML = '<div style="width:100%; text-align:center; padding:50px; color:#666; font-family:\'Exo 2\';">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
+            this.toggleOverlay(false);
+            this.toggleExpandButton(false);
             return;
         }
 
-        this.renderNextBatch();
+        if (this.renderedCount === 0 || this.isExpanded) {
+            this.renderNextBatch();
+        }
 
         if (this.renderedCount < data.length) {
             if (!this.isExpanded) {
-                this.renderExpandButton('expand');
-                this.ensureOverlay(true);
+                this.toggleOverlay(true);
+                this.toggleExpandButton(true, 'expand');
             } else {
-                this.ensureOverlay(false);
+                this.toggleOverlay(false);
                 this.setupInfiniteScroll();
-                this.renderExpandButton('collapse');
+                this.toggleExpandButton(true, 'collapse');
             }
         } else {
-            this.ensureOverlay(false);
-            if (this.isExpanded) this.renderExpandButton('collapse');
+            this.toggleOverlay(false);
+            if (this.isExpanded && data.length > this.getDynamicBatchSize()) {
+                this.toggleExpandButton(true, 'collapse');
+            } else {
+                this.toggleExpandButton(false);
+            }
         }
     }
 
-    ensureOverlay(show) {
-        let overlay = this.els.wrapper.querySelector('.archive-fade-overlay');
+    toggleOverlay(show) {
         if (show) {
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.className = 'archive-fade-overlay';
-                this.els.wrapper.appendChild(overlay);
-            }
+            this.els.overlay.classList.add('active');
             this.els.wrapper.classList.add('has-more');
         } else {
-            if (overlay) overlay.remove();
+            this.els.overlay.classList.remove('active');
             this.els.wrapper.classList.remove('has-more');
         }
     }
 
-    renderExpandButton(mode) {
-        let controlsDiv = document.querySelector('.archive-footer-controls');
-        if (!controlsDiv) {
-            controlsDiv = document.createElement('div');
-            controlsDiv.className = 'archive-footer-controls';
-            this.els.wrapper.after(controlsDiv);
+    toggleExpandButton(show, mode = 'expand') {
+        let controlsDiv = document.getElementById('archive-footer-controls');
+        
+        if (!show) {
+            if (controlsDiv) controlsDiv.style.display = 'none';
+            return;
         }
 
-        const btnText = mode === 'expand' ? `РАЗВЕРНУТЬ БАЗУ (${this.store.combinedData.length})` : 'СВЕРНУТЬ';
-        const btnIcon = mode === 'expand' ? '<i class="fas fa-chevron-down"></i>' : '<i class="fas fa-chevron-up"></i>';
+        if (!controlsDiv) {
+            controlsDiv = document.createElement('div');
+            controlsDiv.id = 'archive-footer-controls';
+            this.els.wrapper.after(controlsDiv);
+            
+            const btn = document.createElement('button');
+            btn.id = 'archive-toggle-btn';
+            controlsDiv.appendChild(btn);
+            
+            btn.addEventListener('click', () => this.handleExpandCollapse());
+        }
+
+        controlsDiv.style.display = 'flex';
         
-        controlsDiv.innerHTML = `<button class="cyber-load-btn ${mode === 'collapse' ? 'collapse-mode' : ''}" id="archive-toggle-btn"><span>${btnText} ${btnIcon}</span></button>`;
+        // УСТАНАВЛИВАЕМ КЛАСС ДЛЯ CSS, ЧТОБЫ МЕНЯТЬ ОТСТУПЫ
+        controlsDiv.className = `archive-footer-controls mode-${mode}`;
+        
+        const btn = document.getElementById('archive-toggle-btn');
+        const total = this.store.combinedData.length;
+        
+        if (mode === 'expand') {
+            btn.className = 'cyber-load-btn';
+            btn.innerHTML = `<span>РАЗВЕРНУТЬ БАЗУ (${total}) <i class="fas fa-chevron-down"></i></span>`;
+        } else {
+            btn.className = 'cyber-load-btn collapse-mode';
+            btn.innerHTML = `<span>СВЕРНУТЬ <i class="fas fa-chevron-up"></i></span>`;
+        }
+    }
 
-        document.getElementById('archive-toggle-btn').addEventListener('click', () => {
+    handleExpandCollapse() {
+        if (this.isAnimating) return;
+        EventBus.emit('PLAY_SOUND', 'expand');
+
+        if (!this.isExpanded) {
+            this.isExpanded = true;
+            this.toggleOverlay(false);
+            this.toggleExpandButton(true, 'collapse');
+            this.renderNextBatch(); 
+            this.setupInfiniteScroll();
+        } else {
+            this.isAnimating = true;
             const archiveSection = document.getElementById('media-archive');
-            if (!archiveSection) return;
-
-            EventBus.emit('PLAY_SOUND', 'expand');
-
-            if (mode === 'expand') {
-                const sectionTop = archiveSection.offsetTop;
-                window.scrollTo({ top: sectionTop - 50, behavior: 'smooth' });
-                this.isExpanded = true;
-                this.renderGrid();
-            } else {
-                const sectionTop = archiveSection.offsetTop;
-                window.scrollTo({ top: sectionTop - 50, behavior: 'smooth' });
-                this.isExpanded = false;
-                setTimeout(() => { this.renderGrid(true); }, 350);
+            
+            if (archiveSection) {
+                const targetY = archiveSection.offsetTop - 50;
+                window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
             }
-        });
+
+            setTimeout(() => {
+                const initialBatchSize = this.getDynamicBatchSize();
+                const mainCards = Array.from(this.els.gridMain.querySelectorAll('.archive-card-container'));
+                const suggCards = Array.from(this.els.gridSuggested.querySelectorAll('.archive-card-container'));
+                const allCards = [...mainCards, ...suggCards];
+
+                const cardsToRemove = allCards.slice(initialBatchSize);
+
+                if (cardsToRemove.length > 0) {
+                    cardsToRemove.forEach(card => card.classList.add('fold-out'));
+                    
+                    setTimeout(() => {
+                        cardsToRemove.forEach(card => card.remove());
+                        if (this.els.gridSuggested.children.length === 0) {
+                            this.els.suggestedHeader.style.display = 'none';
+                        }
+                        
+                        this.renderedCount = initialBatchSize;
+                        this.isExpanded = false;
+                        
+                        this.toggleOverlay(true);
+                        this.toggleExpandButton(true, 'expand');
+                        
+                        if (this.scrollObserver) this.scrollObserver.disconnect();
+                        this.isAnimating = false;
+                        
+                    }, 350); 
+                } else {
+                    this.isAnimating = false;
+                }
+            }, 600);
+        }
     }
 
     setupInfiniteScroll() {
@@ -211,15 +267,17 @@ export class GridManager {
             sentinel = document.createElement('div');
             sentinel.id = 'scroll-sentinel';
             sentinel.style.width = '100%';
-            sentinel.style.height = '50px';
+            sentinel.style.height = '10px';
+            sentinel.style.position = 'absolute';
+            sentinel.style.bottom = '50px';
             this.els.wrapper.appendChild(sentinel);
         }
 
         this.scrollObserver = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && this.renderedCount < this.store.combinedData.length) {
+            if (entries[0].isIntersecting && this.renderedCount < this.store.combinedData.length && this.isExpanded) {
                 this.renderNextBatch();
             }
-        }, { rootMargin: '200px' });
+        }, { rootMargin: '400px' });
         
         this.scrollObserver.observe(sentinel);
     }

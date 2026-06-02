@@ -10,8 +10,10 @@
 @import "archive-layout.css";
 @import "archive-controls.css";
 @import "archive-card.css";
+@import "archive-stacks-3d.css";
 
-@import "media-modal.css";
+/* Модальные окна (База, Постеры, Плеер подключены в index.html) */
+
 @import "specs.css";
 @import "donations.css";
 @import "footer.css";

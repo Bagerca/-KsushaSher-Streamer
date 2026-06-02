@@ -1,42 +1,130 @@
 /* css/modal/modal-player.css */
-.modal-video-section { margin-top: 5px; margin-bottom: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px; width: 100%; display: flex; flex-direction: column; gap: 15px; }
-.video-header { font-family: 'Orbitron', sans-serif; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; opacity: 0.9; letter-spacing: 1px; }
 
-@media (min-width: 900px) {
-    .modal-video-section.has-playlist { display: grid; grid-template-columns: minmax(0, 1fr) 280px; grid-template-rows: auto 1fr; gap: 15px 20px; align-items: stretch; }
-    .video-header { grid-column: 1 / -1; }
-    .video-container { grid-column: 1 / 2; aspect-ratio: 16 / 9; padding-bottom: 0; height: auto; margin-bottom: 0; }
-    .video-playlist { grid-column: 2 / 3; height: 0; min-height: 100%; max-height: none; overflow-y: auto; padding-right: 5px; margin-top: 0; }
-    
-    .modal-video-section.is-collection { grid-template-columns: 300px; justify-content: end; }
-    .modal-video-section.is-collection .video-playlist { grid-column: 1 / -1; }
+/* =========================================
+   ЗОНА 2: ВИДЕО ПЛЕЕР
+   ========================================= */
+.modal-video-section { 
+    border-top: 1px solid rgba(255, 255, 255, 0.1); 
+    padding-top: 20px; 
+    margin-bottom: 20px;
+    width: 100%; 
+    display: flex; flex-direction: column; gap: 15px; 
+}
+.video-header { font-family: 'Orbitron', sans-serif; color: var(--modal-color); font-size: 1.1rem; display: flex; align-items: center; gap: 10px; opacity: 0.9; letter-spacing: 1px; }
+
+.video-container { position: relative; width: 100%; background: #000; overflow: hidden; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); }
+.video-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+.video-container::before { content: ""; display: block; padding-bottom: 56.25%; /* 16:9 Aspect Ratio */ }
+
+/* =========================================
+   ЗОНА 3: ПОЛКА ФРАНШИЗЫ
+   ========================================= */
+.modal-franchise-section {
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
+    border-top: 2px solid var(--modal-color);
+    padding: 20px 40px;
+    margin-top: auto; 
 }
 
-.video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); }
-.video-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+.franchise-header {
+    font-family: 'Orbitron', sans-serif; color: #fff; font-size: 0.9rem; 
+    letter-spacing: 2px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
+    opacity: 0.7; text-transform: uppercase;
+}
+.franchise-header i { color: var(--modal-color); }
 
-.video-playlist { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--modal-color) rgba(0, 0, 0, 0.3); }
-.video-playlist::-webkit-scrollbar { width: 6px; }
-.video-playlist::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-.video-playlist::-webkit-scrollbar-thumb { background: var(--modal-color); border-radius: 3px; }
+/* =========================================
+   ГОРИЗОНТАЛЬНЫЕ СПИСКИ
+   ========================================= */
+.horizontal-scroll-list { 
+    display: flex; gap: 15px; 
+    overflow-x: auto; overflow-y: hidden; 
+    padding-bottom: 15px; padding-top: 5px;
+    scrollbar-width: thin; scrollbar-color: var(--modal-color) rgba(0, 0, 0, 0.3); 
+    -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
+}
+.horizontal-scroll-list::-webkit-scrollbar { height: 6px; }
+.horizontal-scroll-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 3px; }
+.horizontal-scroll-list::-webkit-scrollbar-thumb { background: var(--modal-color); border-radius: 3px; }
 
-.playlist-item { display: flex; gap: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px; padding: 8px; cursor: pointer; transition: 0.2s; }
-.playlist-item:hover { background: rgba(255, 255, 255, 0.08); transform: translateX(-2px); }
-.playlist-item.active { background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent); border-color: var(--modal-color); box-shadow: inset 3px 0 0 var(--modal-color); }
+/* КАРТОЧКА ВНУТРИ СПИСКА */
+.scroll-card { 
+    display: flex; flex-direction: column; gap: 10px; 
+    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); 
+    border-radius: 8px; padding: 10px; cursor: pointer; transition: 0.3s; 
+    position: relative; overflow: hidden;
+    flex: 0 0 auto;
+}
+.scroll-card:hover { background: rgba(255, 255, 255, 0.05); transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.2); }
+.scroll-card.active { background: rgba(0,0,0,0.5); border-color: var(--modal-color); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); }
 
-.pl-thumb { width: 90px; min-width: 90px; height: 50px; border-radius: 4px; overflow: hidden; position: relative; background: #000; }
-.pl-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
-.playlist-item.active .pl-thumb img, .playlist-item:hover .pl-thumb img { opacity: 1; transform: scale(1.1); }
-.pl-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; }
-.playlist-item:hover .pl-overlay { opacity: 1; }
-.pl-overlay i { font-size: 0.9rem; color: #fff; }
+.sc-thumb { border-radius: 6px; overflow: hidden; position: relative; background: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.5); width: 100%; }
+.sc-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: filter 0.3s, transform 0.3s; }
+.scroll-card:hover .sc-thumb img { opacity: 1; transform: scale(1.05); }
 
-.pl-info { display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
-.pl-title { font-family: 'Exo 2', sans-serif; font-size: 0.8rem; color: #ddd; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.playlist-item.active .pl-title { color: var(--modal-color); font-weight: 700; }
-.pl-status { font-size: 0.6rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+.sc-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; }
+.scroll-card:hover .sc-overlay { opacity: 1; }
+.sc-overlay i { font-size: 1.5rem; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
 
-@media (max-width: 900px) {
-    .modal-video-section.has-playlist { display: flex; flex-direction: column; }
-    .video-container { aspect-ratio: auto; padding-bottom: 56.25%; height: auto; }
+.sc-info { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.sc-title { font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.2; }
+.scroll-card.active .sc-title { color: var(--modal-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
+.sc-status { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700;}
+
+/* СПЕЦИФИКА КАРТОЧКИ ВИДЕО (И АНИМАЦИЯ ЭКВАЛАЙЗЕРА) */
+.video-card { min-width: 220px; width: 220px; }
+.video-card .sc-thumb { aspect-ratio: 16 / 9; }
+
+/* Эквалайзер */
+.equalizer-icon { display: none; align-items: flex-end; gap: 4px; height: 18px; }
+.equalizer-icon span { width: 5px; background: var(--modal-color); border-radius: 2px; animation: eq-play 0.6s infinite ease-in-out alternate; box-shadow: 0 0 8px var(--modal-color); }
+.equalizer-icon span:nth-child(1) { animation-delay: 0.0s; }
+.equalizer-icon span:nth-child(2) { animation-delay: 0.2s; }
+.equalizer-icon span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes eq-play { 0% { height: 4px; } 100% { height: 18px; } }
+
+/* Состояние "Сейчас играет" */
+.video-card.active .sc-overlay { opacity: 1; background: rgba(0,0,0,0.7); }
+.video-card.active .sc-thumb img { filter: grayscale(1) brightness(0.5); transform: scale(1); }
+.video-card.active .play-icon { display: none; }
+.video-card.active .equalizer-icon { display: flex; }
+
+/* СПЕЦИФИКА КАРТОЧКИ ФРАНШИЗЫ */
+.franchise-card { min-width: 140px; width: 140px; padding: 12px; border-color: rgba(255,255,255,0.1); }
+.franchise-card .sc-thumb { aspect-ratio: 2 / 3; }
+.franchise-card .sc-overlay i { font-size: 1.2rem; }
+.franchise-card.is-root-item .sc-thumb::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--modal-color); border-radius: 6px; box-shadow: inset 0 0 15px var(--modal-color); pointer-events: none; }
+.franchise-card.is-root-item .sc-status { color: var(--modal-color); }
+
+/* =========================================
+   БЕСШОВНЫЙ РЕЖИМ "CINEMA" 
+   ========================================= */
+.layout-cinema .modal-video-section { 
+    order: -2; /* Принудительно поднимаем в самый верх */
+    margin: 0; border: none; padding: 0; 
+    background: transparent;
+}
+.layout-cinema .video-header { display: none; /* Скрываем надпись "Медиа" */ }
+
+/* Плеер без границ */
+.layout-cinema .video-container { 
+    border-radius: 16px 16px 0 0; border: none; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9); z-index: 10;
+}
+
+/* Полка сразу под плеером */
+.layout-cinema .horizontal-scroll-list { 
+    padding: 20px 40px; background: rgba(5, 5, 8, 0.6); 
+    border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .modal-franchise-section { padding: 20px; }
+    
+    .layout-cinema .video-container { border-radius: 16px 16px 0 0; }
+    .layout-cinema .horizontal-scroll-list { padding: 15px 20px; }
+    
+    .video-card { min-width: 160px; width: 160px; } 
+    .franchise-card { min-width: 110px; width: 110px; padding: 10px; } 
 }

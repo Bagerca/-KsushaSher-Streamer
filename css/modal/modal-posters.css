@@ -1,17 +1,33 @@
 /* css/modal/modal-posters.css */
+
 .modal-poster-wrapper { position: relative; width: 100%; aspect-ratio: 2/3; z-index: 5; perspective: 1000px; }
+
+/* КАРТИНКИ (3D СТЕК) */
 .modal-poster-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 0; transform-origin: center bottom; }
 .modal-poster-img.is-front { opacity: 1; z-index: 30; transform: translate(-5px, 5px) scale(1); border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); filter: brightness(1); }
 .modal-poster-img.is-back { opacity: 1; z-index: 20; transform: translate(5px, -5px) scale(0.96); filter: brightness(0.6) grayscale(0.4); border-color: rgba(255, 255, 255, 0.05); }
 .modal-poster-img.is-back-2 { opacity: 1; z-index: 10; transform: translate(15px, -15px) scale(0.92); filter: brightness(0.4) grayscale(0.8); border-color: rgba(255, 255, 255, 0.02); }
-.modal-poster-img.is-hidden { opacity: 0; transform: translate(0, 20px) scale(0.8); z-index: 0; }
+.modal-poster-img.is-hidden { opacity: 0; transform: translate(0, 20px) scale(0.8); z-index: 0; pointer-events: none; }
 
 .modal-poster-wrapper.is-interactive { cursor: pointer; }
 .modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-front { transform: translate(-10px, 10px) scale(1.02); border-color: var(--modal-color); box-shadow: -5px 10px 30px rgba(0,0,0,0.5); }
 .modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-back { transform: translate(10px, -10px) scale(0.96); filter: brightness(0.8) grayscale(0.1); z-index: 25; }
 .modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-back-2 { transform: translate(25px, -25px) scale(0.92); filter: brightness(0.6) grayscale(0.5); }
 
-.modal-poster-glow { position: absolute; inset: -30px; background: radial-gradient(circle at center, transparent 30%, var(--modal-color) 100%); opacity: 0.1; pointer-events: none; mix-blend-mode: screen; filter: blur(40px); }
+.modal-poster-glow { position: absolute; inset: -30px; background: radial-gradient(circle at center, transparent 30%, var(--modal-color) 100%); opacity: 0.15; pointer-events: none; mix-blend-mode: screen; filter: blur(40px); }
 
-@media (max-width: 900px) { .modal-poster-wrapper { width: 140px; } }
-@media (max-width: 600px) { .modal-poster-wrapper { width: 100%; aspect-ratio: 16/9; } }
+/* ПАГИНАЦИЯ (ТОЧКИ) */
+.poster-pagination {
+    display: flex; justify-content: center; gap: 8px; margin-top: 15px; height: 10px;
+}
+.poster-dot {
+    width: 8px; height: 8px; border-radius: 4px;
+    background: rgba(255,255,255,0.2); transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.poster-dot.active {
+    width: 24px; background: var(--modal-color); box-shadow: 0 0 10px var(--modal-color);
+}
+
+@media (max-width: 768px) { 
+    .modal-poster-wrapper { width: 250px; } 
+}

@@ -1,6 +1,7 @@
 /* js/media-store.js */
 import { loadData } from './api.js';
 import EventBus from './event-bus.js';
+import { calculateSimilarity } from './utils.js'; // Импорт общей функции!
 
 export const GENRE_MAP = {
     'action': 'Экшен', 'adventure': 'Приключения', 'comedy': 'Комедия', 'drama': 'Драма', 'horror': 'Хоррор', 'thriller': 'Триллер', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези', 'mystery': 'Мистика', 'detective': 'Детектив', 'crime': 'Криминал', 'historical': 'Исторический', 'romance': 'Романтика', 'biography': 'Биография', 'movie': 'Фильм', 'series': 'Сериал', 'mini-series': 'Мини-сериал', 'cartoon': 'Мультфильм', 'anime': 'Аниме', 'anime-series': 'Аниме-сериал', 'short': 'Короткометражка', 'documentary': 'Документалка', 'show': 'ТВ-Шоу', 'animation': 'Анимация', 'superhero': 'Супергероика', 'sitcom': 'Ситком', 'slasher': 'Слэшер', 'musical': 'Мюзикл', 'western': 'Вестерн', 'noir': 'Нуар', 'sport': 'Спорт', 'war': 'Военный', 'family': 'Семейный', 'kids': 'Детский', 'adaptation': 'Экранизация', 'remake': 'Ремейк', 'blockbuster': 'Блокбастер', 'arthouse': 'Артхаус', 'trash': 'Трэш / B-Movie', 'psychological': 'Психологический', 'atmospheric': 'Атмосферный', 'feel-good': 'Добрый / Уютный', 'sad': 'Грустный', 'mind-bending': 'Вынос мозга', 'epic': 'Эпик', 'weird': 'Странное', 'classic': 'Классика', 'cult': 'Культовое', 'rpg': 'РПГ', 'shooter': 'Шутер', 'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка', 'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино', 'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик', 'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир', 'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click', 'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер', 'mmo': 'ММО', 'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'space': 'Космос', 'zombies': 'Зомби', 'retro': 'Ретро/80-е', 'dystopia': 'Антиутопия', 'magic': 'Магия', 'aliens': 'Пришельцы', 'indie': 'Инди', 'aaa': 'AAA', 'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'free': 'Бесплатно', 'early-access': 'Ранний доступ', 'story-rich': 'Сюжетная', 'funny': 'Комедия/Юмор', 'management': 'Менеджмент', 'hardcore': 'Хардкор', 'casual': 'Кэжуал', 'fan-game': 'Фан-игра', 'realistic': 'Реализм', 'relaxing': 'Релакс'
@@ -15,14 +16,39 @@ export const STATUS_MAP = {
 
 export const VALID_STATUSES = ['completed', 'playing', 'watched', 'watching', 'dropped', 'on-hold', 'suggested'];
 
+// Словари для автосмены раскладки
+const EN_TO_RU = {'q':'й', 'w':'ц', 'e':'у', 'r':'к', 't':'е', 'y':'н', 'u':'г', 'i':'ш', 'o':'щ', 'p':'з', '[':'х', ']':'ъ', 'a':'ф', 's':'ы', 'd':'в', 'f':'а', 'g':'п', 'h':'р', 'j':'о', 'k':'л', 'l':'д', ';':'ж', "'":'э', 'z':'я', 'x':'ч', 'c':'с', 'v':'м', 'b':'и', 'n':'т', 'm':'ь', ',':'б', '.':'ю'};
+const RU_TO_EN = {};
+for (let k in EN_TO_RU) RU_TO_EN[EN_TO_RU[k]] = k;
+
+// Словарь для фонетической транслитерации (звук -> английские буквы)
+const RU_TO_EN_PHONETIC = {
+    'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
+    'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
+    'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
+    'ч': 'ch', 'ш': 'sh', 'щ': 'sch', 'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+};
+
+function switchLayout(str) {
+    let res = '';
+    for(let char of str) {
+        if(EN_TO_RU[char]) res += EN_TO_RU[char];
+        else if(RU_TO_EN[char]) res += RU_TO_EN[char];
+        else res += char;
+    }
+    return res;
+}
+
+function transliterate(str) {
+    return str.toLowerCase().split('').map(char => RU_TO_EN_PHONETIC[char] || char).join('');
+}
+
 export class MediaStore {
     constructor() {
         this.currentType = 'games';
         this.dataMain = [];
         this.dataSuggestions = [];
         this.combinedData = [];
-        
-        this.flatSearchIndex = [];
         
         this.activeFilters = new Set(); 
         this.searchQuery = '';
@@ -46,7 +72,6 @@ export class MediaStore {
                 ? rawSuggestions.filter(item => item.type === type) 
                 : [];
                 
-            this.buildFlatSearchIndex();
             this.processData();
             EventBus.emit('MEDIA_STORE_LOADED');
             EventBus.emit('SYS_LOG', { html: `[DB] Загружена база: ${type.toUpperCase()}` });
@@ -54,26 +79,6 @@ export class MediaStore {
             console.error("Ошибка загрузки медиа:", error);
             EventBus.emit('SYS_LOG', { html: `<span class="terminal-err">[DB] Ошибка загрузки ${type}</span>` });
         }
-    }
-
-    buildFlatSearchIndex() {
-        const fullList = [...this.dataMain, ...this.dataSuggestions];
-        this.flatSearchIndex = fullList.map(item => {
-            const genresStr = item.genres ? item.genres.map(g => GENRE_MAP[g] || g).join(' ') : '';
-            let searchableText = `${item.title || ''} ${genresStr} ${item.description || ''} ${STATUS_MAP[item.status] || item.status}`;
-            
-            // Если это коллекция, добавляем в индекс названия всех вложенных игр/фильмов
-            if (item.format === 'collection' && item.items) {
-                item.items.forEach(sub => {
-                    searchableText += ` ${sub.title || ''} ${sub.description || ''}`;
-                });
-            }
-            
-            return {
-                id: item.id,
-                searchableText: searchableText.toLowerCase()
-            };
-        });
     }
 
     getAllGenres() {
@@ -105,7 +110,7 @@ export class MediaStore {
     }
 
     setSearchQuery(query) {
-        this.searchQuery = query.toLowerCase();
+        this.searchQuery = query.toLowerCase().trim();
         this.processData();
         EventBus.emit('MEDIA_STORE_UPDATED');
     }
@@ -125,45 +130,71 @@ export class MediaStore {
         return [...this.dataMain, ...this.dataSuggestions].find(i => i.id === id);
     }
 
-    // ИСПРАВЛЕННЫЙ МЕТОД ПОИСКА (Теперь ищет игры внутри коллекций)
+    // ИНТЕЛЛЕКТУАЛЬНЫЙ ПОИСК (Раскладки + Транслит + Нечеткость)
     getSearchSuggestions(query) {
-        if (query.length < 1) return [];
-        const cleanQuery = query.toLowerCase();
+        if (query.trim().length < 1) return [];
+        const cleanQuery = query.toLowerCase().trim();
+        const layoutSwitched = switchLayout(cleanQuery);
+        const translitQuery = transliterate(cleanQuery);
 
-        // 1. Создаем плоский список, "распаковывая" коллекции
         let flattenedList = [];
         const fullList = [...this.dataMain, ...this.dataSuggestions];
 
         fullList.forEach(item => {
-            // Сначала добавляем саму коллекцию/игру
             flattenedList.push(item);
-            
-            // Если это коллекция, добавляем ее содержимое как отдельные элементы для поиска
             if (item.format === 'collection' && item.items) {
                 item.items.forEach(sub => {
                     flattenedList.push({
                         ...sub,
-                        status: sub.status || item.status, // Наследуем статус родителя, если своего нет
+                        status: sub.status || item.status,
                         isSubItem: true
                     });
                 });
             }
         });
 
-        // 2. Ищем совпадения в распакованном списке
+        const uniqueMap = new Map();
+        flattenedList.forEach(item => {
+            if (!uniqueMap.has(item.id)) uniqueMap.set(item.id, item);
+        });
+        flattenedList = Array.from(uniqueMap.values());
+
         let matches = flattenedList.map(item => {
             let score = 0;
             const title = item.title ? item.title.toLowerCase() : "";
-            
-            if (title === cleanQuery) score = 1.0;
-            else if (title.startsWith(cleanQuery)) score = 0.8;
-            else if (title.includes(cleanQuery)) score = 0.6;
-            else score = this._calculateSimilarity(title, cleanQuery);
-            
-            return { ...item, score };
-        }).filter(item => item.score > 0.35); // Отсекаем мусор
 
-        // Возвращаем топ-5 результатов
+            // 1. Поиск в лоб
+            if (title === cleanQuery) score = 100;
+            else if (title.startsWith(cleanQuery)) score = 80;
+            else if (title.includes(` ${cleanQuery}`)) score = 65;
+            else if (title.includes(cleanQuery)) score = 50;
+
+            // 2. Если ничего не нашли - пробуем другую раскладку
+            if (score === 0) {
+                if (title === layoutSwitched) score = 90;
+                else if (title.startsWith(layoutSwitched)) score = 70;
+                else if (title.includes(layoutSwitched)) score = 45;
+            }
+
+            // 3. Если все еще 0 - пробуем транслитерацию (Фонетика)
+            if (score === 0 && translitQuery !== cleanQuery) {
+                if (title === translitQuery) score = 85;
+                else if (title.startsWith(translitQuery)) score = 65;
+                else if (title.includes(translitQuery)) score = 40;
+            }
+
+            // 4. Если все еще 0, включаем нечеткий поиск (триграммы)
+            if (score === 0 && cleanQuery.length > 2) {
+                const fuzzyOriginal = calculateSimilarity(title, cleanQuery);
+                const fuzzyTranslit = calculateSimilarity(title, translitQuery);
+                const bestFuzzy = Math.max(fuzzyOriginal, fuzzyTranslit);
+                
+                if (bestFuzzy > 0.35) score = bestFuzzy * 40; 
+            }
+
+            return { ...item, score };
+        }).filter(item => item.score > 15); // Отсекаем мусор
+
         return matches.sort((a, b) => b.score - a.score).slice(0, 5);
     }
 
@@ -181,12 +212,29 @@ export class MediaStore {
 
         const filterFn = (item) => {
             let matchScore = 1;
+            
             if (this.searchQuery.length > 0) {
-                const searchIdx = this.flatSearchIndex.find(idx => idx.id === item.id);
-                if (searchIdx && searchIdx.searchableText.includes(this.searchQuery)) {
+                let textToSearch = `${item.title || ''} ${item.description || ''}`.toLowerCase();
+                if (item.format === 'collection' && item.items) {
+                    item.items.forEach(sub => {
+                        textToSearch += ` ${sub.title || ''} ${sub.description || ''}`;
+                    });
+                }
+                
+                const layoutSwitched = switchLayout(this.searchQuery);
+                const translitQuery = transliterate(this.searchQuery);
+
+                if (textToSearch.includes(this.searchQuery)) {
                     matchScore = item.title && item.title.toLowerCase().startsWith(this.searchQuery) ? 0.9 : 0.6;
+                } else if (textToSearch.includes(layoutSwitched)) {
+                    matchScore = 0.5;
+                } else if (textToSearch.includes(translitQuery) && translitQuery !== this.searchQuery) {
+                    matchScore = 0.45;
                 } else {
-                    matchScore = 0;
+                    const fuzzyOriginal = calculateSimilarity(item.title, this.searchQuery);
+                    const fuzzyTranslit = calculateSimilarity(item.title, translitQuery);
+                    const bestFuzzy = Math.max(fuzzyOriginal, fuzzyTranslit);
+                    matchScore = bestFuzzy > 0.35 ? bestFuzzy : 0;
                 }
             }
             item._matchScore = matchScore;
@@ -213,12 +261,10 @@ export class MediaStore {
                 return b._matchScore - a._matchScore;
             }
             
-            // ИСПРАВЛЕНИЕ: Логика сортировки по рейтингу теперь учитывает коллекции
             if (this.sort === 'rating') {
                 let ratingA = a.rating || 0;
                 let ratingB = b.rating || 0;
                 
-                // Если коллекция, считаем средний рейтинг
                 if (a.format === 'collection' && a.items) {
                     let sum = 0, count = 0;
                     a.items.forEach(i => { if (i.rating > 0) { sum += i.rating; count++; } });
@@ -239,24 +285,5 @@ export class MediaStore {
         filteredSuggestions.sort(sortFn);
 
         this.combinedData = [...filteredMain, ...filteredSuggestions];
-    }
-
-    _getTrigrams(text) {
-        if (!text) return [];
-        const cleanText = text.toLowerCase().replace(/[^\wа-яё0-9]/gi, '');
-        if (cleanText.length < 3) return [cleanText];
-        const trigrams = [];
-        for (let i = 0; i < cleanText.length - 2; i++) trigrams.push(cleanText.substring(i, i + 3));
-        return trigrams;
-    }
-
-    _calculateSimilarity(str1, str2) {
-        if (!str1 || !str2) return 0;
-        if (str1.toLowerCase().includes(str2.toLowerCase())) return 1.0;
-        const set1 = this._getTrigrams(str1);
-        const set2 = this._getTrigrams(str2);
-        let matches = 0;
-        for (const trigram of set2) { if (set1.includes(trigram)) matches++; }
-        return (2.0 * matches) / (set1.length + set2.length);
     }
 }

@@ -197,7 +197,6 @@
                 <h2 class="section-title">БАЗА ДАННЫХ</h2>
                 <div class="archive-header-sub">SYSTEM LIBRARY // ACCESS GRANTED</div>
                 
-                <!-- НОВАЯ СИММЕТРИЧНАЯ ПАНЕЛЬ -->
                 <div class="header-control-bar">
                     <div class="sort-switcher">
                         <button class="sort-btn active" data-sort="name" title="По алфавиту"><i class="fas fa-sort-alpha-down sort-icon"></i></button>
@@ -215,22 +214,25 @@
                 </div>
             </div>
             
-            <!-- НОВЫЙ БЛОК ПОИСКА И ФИЛЬТРОВ -->
+            <!-- АПГРЕЙДНУТЫЙ БЛОК ПОИСКА -->
             <div class="archive-controls">
                 <div class="search-row">
-                    <div class="search-module">
-                        <i class="fas fa-search search-icon"></i>
+                    <div class="search-module" id="search-module">
+                        <i class="fas fa-search search-icon" id="search-icon-default"></i>
+                        <i class="fas fa-circle-notch fa-spin search-icon loading-icon" id="search-icon-loading" style="display: none; color: var(--neon-pink);"></i>
                         <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
+                        
+                        <div class="search-hotkey" id="search-hotkey-hint">Ctrl+K</div>
+                        <button class="search-clear-input" id="search-clear-input" title="Очистить" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                     <button id="toggle-genres-btn" class="cyber-btn-outline"><i class="fas fa-filter"></i> <span class="btn-text">ЖАНРЫ</span> <span id="genre-count" class="badge hidden">0</span></button>
-                    <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-times"></i></button>
+                    <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-trash-alt"></i></button>
                 </div>
                 
                 <div class="filters-wrapper">
-                    <!-- Статусы всегда видимы -->
                     <div class="filter-row status-row" id="archive-filters-status"></div>
-                    
-                    <!-- Умный аккордеон для жанров -->
                     <div class="genres-accordion" id="genres-accordion">
                         <div class="accordion-inner">
                             <div class="filter-row genre-row" id="archive-filters-genre"></div>
