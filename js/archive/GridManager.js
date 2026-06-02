@@ -190,8 +190,6 @@ export class GridManager {
         }
 
         controlsDiv.style.display = 'flex';
-        
-        // УСТАНАВЛИВАЕМ КЛАСС ДЛЯ CSS, ЧТОБЫ МЕНЯТЬ ОТСТУПЫ
         controlsDiv.className = `archive-footer-controls mode-${mode}`;
         
         const btn = document.getElementById('archive-toggle-btn');
@@ -221,6 +219,10 @@ export class GridManager {
             const archiveSection = document.getElementById('media-archive');
             
             if (archiveSection) {
+                // Вызываем нативное событие для NavRail
+                EventBus.emit('LAYOUT_CHANGED'); 
+                
+                // Ручной скролл наверх секции
                 const targetY = archiveSection.offsetTop - 50;
                 window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
             }
@@ -249,6 +251,8 @@ export class GridManager {
                         this.toggleExpandButton(true, 'expand');
                         
                         if (this.scrollObserver) this.scrollObserver.disconnect();
+                        
+                        EventBus.emit('LAYOUT_CHANGED'); // Финальный пересчет геометрии
                         this.isAnimating = false;
                         
                     }, 350); 
@@ -283,6 +287,8 @@ export class GridManager {
     }
 
     renderNextBatch() {
+        const perfStart = performance.now();
+        
         const data = this.store.combinedData;
         const start = this.renderedCount;
         const batchSize = this.getDynamicBatchSize();
@@ -292,19 +298,34 @@ export class GridManager {
         
         if (start >= end) return;
 
+        // ПАКЕТНАЯ СБОРКА HTML (ИЗБАВЛЯЕМСЯ ОТ LAYOUT THRASHING)
+        let mainHtmlBuf = '';
+        let suggHtmlBuf = '';
+        let hasSuggested = false;
+
         for (let i = start; i < end; i++) {
             const item = data[i];
             const delay = (i % batchSize) * 35; 
             const html = this.factory.createCardHTML(item, delay);
             
             if (item.status === 'suggested') {
-                this.els.suggestedHeader.style.display = 'flex';
-                this.els.gridSuggested.insertAdjacentHTML('beforeend', html);
+                hasSuggested = true;
+                suggHtmlBuf += html;
             } else {
-                this.els.gridMain.insertAdjacentHTML('beforeend', html);
+                mainHtmlBuf += html;
             }
         }
         
+        // Вставка в DOM происходит ровно 1 раз для каждого контейнера
+        if (hasSuggested) {
+            this.els.suggestedHeader.style.display = 'flex';
+            this.els.gridSuggested.insertAdjacentHTML('beforeend', suggHtmlBuf);
+        }
+        if (mainHtmlBuf) {
+            this.els.gridMain.insertAdjacentHTML('beforeend', mainHtmlBuf);
+        }
+        
+        // Подключаем LazyLoader только к новым карточкам (Экономим процессор)
         const newCards = document.querySelectorAll('.archive-card-container:not(.is-observed)');
         newCards.forEach(card => {
             card.classList.add('is-observed');
@@ -312,5 +333,10 @@ export class GridManager {
         });
 
         this.renderedCount = end;
+        
+        // Оповещаем систему о том, что высота страницы изменилась
+        EventBus.emit('LAYOUT_CHANGED');
+        
+        console.log(`📦 [GridManager] Пакет из ${end - start} карт отрендерен за ${(performance.now() - perfStart).toFixed(2)}мс`);
     }
 }

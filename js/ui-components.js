@@ -1,4 +1,5 @@
 /* js/ui-components.js */
+import EventBus from './event-bus.js';
 
 export function initializeUI() {
     console.log('🎨 [UI] Инициализация базовых компонентов...');
@@ -9,21 +10,20 @@ export function initializeUI() {
 }
 
 /**
- * КИБЕР-ФИЗИКА СКРОЛЛА (Глобальная функция анимации)
- * Использует функцию плавности easeInOutQuart для кинематографичного эффекта
+ * КИБЕР-ФИЗИКА СКРОЛЛА
  */
 function customSmoothScroll(targetPosition, duration = 800) {
     const startPosition = window.scrollY;
     const distance = targetPosition - startPosition;
     let startTime = null;
 
+    document.body.classList.add('is-scrolling');
+
     function animation(currentTime) {
         if (startTime === null) startTime = currentTime;
         const timeElapsed = currentTime - startTime;
         const progress = Math.min(timeElapsed / duration, 1);
 
-        // Математика плавности (Quartic easing in/out)
-        // Медленный старт, быстрое движение посередине, мягкое торможение в конце
         const ease = progress < 0.5 
             ? 8 * progress * progress * progress * progress 
             : 1 - Math.pow(-2 * progress + 2, 4) / 2;
@@ -32,14 +32,13 @@ function customSmoothScroll(targetPosition, duration = 800) {
 
         if (timeElapsed < duration) {
             requestAnimationFrame(animation);
+        } else {
+            document.body.classList.remove('is-scrolling');
         }
     }
     requestAnimationFrame(animation);
 }
 
-/**
- * Менеджер Плавного Скролла (Для обычных якорных ссылок)
- */
 class SmoothScrollManager {
     constructor() {
         this.init();
@@ -61,25 +60,24 @@ class SmoothScrollManager {
         if (!targetEl) return;
 
         const targetRect = targetEl.getBoundingClientRect();
-        const viewOffset = window.innerHeight * 0.15; // Отступ сверху (15% экрана)
+        const viewOffset = window.innerHeight * 0.15; 
         let targetPosition = targetRect.top + window.scrollY - viewOffset;
         
-        // Запускаем нашу кастомную анимацию (скорость 800мс)
         customSmoothScroll(Math.max(0, targetPosition), 800);
     }
 }
 
 /**
- * Менеджер Карты Крипто-Доната
+ * Менеджер Карты Крипто-Доната (REMASTERED 4.0: Non-Breaking Glitch)
  */
 class CryptoCardManager {
     constructor() {
         this.cardElement = document.getElementById('card-number');
-        this.chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%&<>[]/\\";
+        this.chars = "ABCDEFGHJKLNPQRSTUVWXYZ0123456789#$<>[]/\\";
         this.isAnimating = false;
         
         this.rawNumber = '4276 1805 5058 1960';
-        this.cleanNumber = this.rawNumber.replace(/\s/g, '');
+        this.cleanNumber = '4276180550581960';
         this.originalHTML = `<span>4276</span><span>1805</span><span>5058</span><span>1960</span>`;
         this.successText = "СКОПИРОВАНО!";
         
@@ -97,9 +95,15 @@ class CryptoCardManager {
                 this.cardElement.classList.add('copied');
                 this.digitsContainer.classList.add('success-mode');
                 
-                this.runCyberTextEffect(this.successText, false, () => {
+                // Подстраховка через CSS
+                this.digitsContainer.style.whiteSpace = 'nowrap';
+                this.digitsContainer.style.wordBreak = 'keep-all';
+                
+                this.runDecryptEffect(this.successText, () => {
                     setTimeout(() => {
-                        this.runCyberTextEffect(this.rawNumber, true, () => {
+                        this.runDecryptEffect(this.rawNumber, () => {
+                            this.digitsContainer.style.whiteSpace = ''; 
+                            this.digitsContainer.style.wordBreak = ''; 
                             this.digitsContainer.classList.remove('success-mode');
                             this.digitsContainer.innerHTML = this.originalHTML; 
                             this.cardElement.classList.remove('copied');
@@ -111,50 +115,56 @@ class CryptoCardManager {
         });
     }
 
-    runCyberTextEffect(targetText, reverseDirection, onComplete) {
+    runDecryptEffect(targetText, onComplete) {
         const startText = this.digitsContainer.innerText;
         const startLen = startText.length;
-        const endLen = targetText.length;
+        const targetLen = targetText.length;
+        
+        const glitchWidth = 4; // Ширина "волны" случайных символов
+        const maxIters = Math.max(startLen, targetLen) + glitchWidth;
         let iterations = 0;
         
         if (this.intervalId) clearInterval(this.intervalId);
 
         this.intervalId = setInterval(() => {
-            const progress = Math.min(iterations / targetText.length, 1);
-            const currentLen = Math.floor(startLen + (endLen - startLen) * progress);
-            
             let displayText = "";
-            const revealCount = Math.floor(iterations);
-
-            if (!reverseDirection) {
-                const revealedPart = targetText.substring(0, revealCount);
-                displayText = revealedPart + this._generateRandomString(Math.max(0, currentLen - revealedPart.length));
-            } else {
-                const startIdx = Math.max(0, targetText.length - revealCount);
-                const revealedPart = targetText.substring(startIdx);
-                displayText = this._generateRandomString(Math.max(0, currentLen - revealedPart.length)) + revealedPart;
+            const progress = Math.min(iterations / maxIters, 1);
+            
+            // Плавное изменение длины строки от 19 символов к 12 (или наоборот)
+            const currentLen = Math.floor(startLen + (targetLen - startLen) * progress);
+            
+            for (let i = 0; i < currentLen; i++) {
+                if (i < iterations - glitchWidth) {
+                    // Зона 1: Расшифровано (Слева)
+                    displayText += targetText[i] !== undefined ? targetText[i] : "";
+                } else if (i < iterations) {
+                    // Зона 2: Волна глитча (По центру)
+                    displayText += this.chars[Math.floor(Math.random() * this.chars.length)];
+                } else {
+                    // Зона 3: Старый текст не тронут (Справа)
+                    displayText += startText[i] !== undefined ? startText[i] : "";
+                }
             }
             
-            this.digitsContainer.innerText = displayText;
+            // АБСОЛЮТНАЯ ЗАЩИТА ОТ ПЕРЕНОСОВ СТРОК:
+            // Заменяем все пробелы на неразрывные пробелы (\u00A0). 
+            // textContent используется вместо innerText, чтобы браузер не пытался парсить HTML
+            this.digitsContainer.textContent = displayText.replace(/ /g, '\u00A0');
             
-            if (iterations >= targetText.length) { 
+            iterations += 0.5; // Скорость волны
+            
+            if (iterations >= maxIters) { 
                 clearInterval(this.intervalId);
-                this.digitsContainer.innerText = targetText; 
+                // Финальный текст тоже вставляем с защитой от переносов
+                this.digitsContainer.textContent = targetText.replace(/ /g, '\u00A0'); 
                 if (onComplete) onComplete();
             }
-            iterations += 0.5; 
         }, 30); 
-    }
-
-    _generateRandomString(length) {
-        let res = "";
-        for (let i = 0; i < length; i++) res += this.chars[Math.floor(Math.random() * this.chars.length)];
-        return res;
     }
 }
 
 /**
- * Менеджер Навигационного Луча (PROXIMITY ENGINE 4.0 - Кастомный скролл и динамика)
+ * Менеджер Навигационного Луча
  */
 class NavRailManager {
     constructor() {
@@ -167,17 +177,18 @@ class NavRailManager {
             { id: 'donation', label: 'ДОНАТ' }
         ];
         
+        this.geometryCache = {}; 
+        this.ticking = false;    
+        
         this.init();
     }
 
     init() {
-        // 1. Создаем DOM элемент рельса
         this.rail = document.createElement('div');
         this.rail.className = 'cyber-nav-rail';
         this.rail.id = 'cyber-nav-rail';
         document.body.appendChild(this.rail);
 
-        // 2. Создаем маркеры
         this.sections.forEach(sec => {
             const marker = document.createElement('div');
             marker.className = 'nav-marker';
@@ -186,42 +197,75 @@ class NavRailManager {
 
             marker.innerHTML = `<div class="nav-shape"></div><div class="nav-tooltip">${sec.label}</div>`;
             
-            // Идеальный клик-скролл с использованием свежей математики
             marker.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Рассчитываем актуальную позицию прямо в момент клика
+                this.updateGeometryCache();
                 const targetScroll = this.calculateExactTarget(sec.id);
-                // Запускаем плавную кинематографичную анимацию
                 customSmoothScroll(targetScroll, 1000); 
             });
             
             this.rail.appendChild(marker);
         });
         
-        // 3. Биндим слушатели
         this.updatePositions = this.updatePositions.bind(this);
-        window.addEventListener('scroll', this.updatePositions, { passive: true });
-        new ResizeObserver(() => requestAnimationFrame(this.updatePositions)).observe(document.body);
+        
+        window.addEventListener('scroll', () => {
+            if (!this.ticking) {
+                window.requestAnimationFrame(() => {
+                    this.updatePositions();
+                    this.ticking = false;
+                });
+                this.ticking = true;
+            }
+        }, { passive: true });
 
-        setTimeout(this.updatePositions, 100);
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.updateGeometryCache();
+                this.updatePositions();
+            }, 200);
+        });
+
+        EventBus.on('LAYOUT_CHANGED', () => {
+            setTimeout(() => {
+                this.updateGeometryCache();
+                this.updatePositions();
+            }, 300); 
+        });
+
+        setTimeout(() => {
+            this.updateGeometryCache();
+            this.updatePositions();
+        }, 500);
     }
 
-    /**
-     * Вычисляет идеальную позицию для скролла к секции, учитывая динамическую высоту контента
-     */
+    updateGeometryCache() {
+        try {
+            const startTime = performance.now();
+            this.sections.forEach(sec => {
+                const el = document.getElementById(sec.id);
+                if (el) {
+                    this.geometryCache[sec.id] = el.offsetTop;
+                }
+            });
+        } catch(e) {
+            console.warn("⚠️ [NavRail] Ошибка обновления кэша:", e);
+        }
+    }
+
     calculateExactTarget(sectionId) {
-        const element = document.getElementById(sectionId);
-        if (!element) return 0;
+        if (this.geometryCache[sectionId] === undefined) return 0;
 
         const docHeight = document.documentElement.scrollHeight;
         const winHeight = window.innerHeight;
         const scrollableHeight = Math.max(1, docHeight - winHeight);
         
-        const topPos = element.offsetTop;
-        const viewOffset = winHeight * 0.15; // Центрирование заголовка
+        const topPos = this.geometryCache[sectionId];
+        const viewOffset = winHeight * 0.15; 
         let targetScroll = topPos - viewOffset;
 
-        // Жесткая привязка краев
         if (sectionId === this.sections[0].id) targetScroll = 0;
         if (sectionId === this.sections[this.sections.length - 1].id) targetScroll = scrollableHeight;
 
@@ -234,7 +278,6 @@ class NavRailManager {
         const scrollableHeight = Math.max(1, docHeight - winHeight);
         const scrolled = window.scrollY;
 
-        // Позиция центра лазера в процентах от скролла (от 0 до 100%)
         let percentLine = (scrolled / scrollableHeight) * 100;
         percentLine = Math.max(0, Math.min(100, percentLine));
         this.rail.style.setProperty('--line-pos', `${percentLine}%`);
@@ -245,21 +288,17 @@ class NavRailManager {
         this.sections.forEach(sec => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
             if (marker) {
-                // Вычисляем актуальный таргет для рендера
                 const targetScroll = this.calculateExactTarget(sec.id);
                 
-                // Переводим targetScroll в проценты для позиционирования маркера на рельсе
                 let markerPercent = (targetScroll / scrollableHeight) * 100;
                 marker.style.top = `${markerPercent}%`;
 
-                // PROXIMITY ЭФФЕКТ (Определение близости лазера)
                 let distancePct = Math.abs(percentLine - markerPercent);
                 let proximity = Math.max(0, 1 - (distancePct / 15));
-                proximity = Math.pow(proximity, 2).toFixed(3); // Квадратичное затухание
+                proximity = Math.pow(proximity, 2).toFixed(3);
                 
                 marker.style.setProperty('--proximity', proximity);
 
-                // Вычисление активной секции (кто ближе всего к текущему скроллу)
                 const absDist = Math.abs(scrolled - targetScroll);
                 if (absDist < closestDist) {
                     closestDist = absDist;
@@ -268,12 +307,9 @@ class NavRailManager {
             }
         });
 
-        // Обновляем UI активной секции
         this.sections.forEach(sec => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
-            if (marker) {
-                marker.classList.toggle('active', sec.id === currentId);
-            }
+            if (marker) marker.classList.toggle('active', sec.id === currentId);
         });
     }
 }

@@ -63,7 +63,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html {
-    /* Оставляем auto, чтобы нативный скролл браузера не конфликтовал с нашим кастомным JS-движком анимации */
+    /* Оставляем auto, чтобы JS кастомный скролл работал безупречно */
     scroll-behavior: auto; 
     background-color: var(--dark-bg); 
 }
@@ -76,6 +76,19 @@ body {
     overflow-x: hidden; 
     min-height: 100vh;
     position: relative;
+}
+
+/* 
+   АППАРАТНАЯ ОПТИМИЗАЦИЯ ПРИ КИНЕМАТОГРАФИЧНОМ СКРОЛЛЕ
+   Отключаем события мыши на карточках, пока летит камера, 
+   чтобы процессор не пытался вычислять сложные 3D-ховеры. 
+*/
+body.is-scrolling .archive-card-container,
+body.is-scrolling .cmd-panel,
+body.is-scrolling .spec-card,
+body.is-scrolling .holo-card,
+body.is-scrolling .donate-card {
+    pointer-events: none !important;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.3s; }
@@ -104,6 +117,8 @@ section { padding: 80px 0; position: relative; z-index: 10; scroll-margin-top: 0
 .cyber-nav-rail {
     position: fixed; top: 0; right: 20px; width: 40px; height: 100vh;
     z-index: 9990; display: flex; flex-direction: column; pointer-events: none;
+    /* Выделяем отдельный слой на GPU */
+    will-change: transform;
 }
 
 /* Тусклая фоновая струна */
