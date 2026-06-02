@@ -63,7 +63,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html {
-    scroll-behavior: auto !important; 
+    /* Оставляем auto, чтобы нативный скролл браузера не конфликтовал с нашим кастомным JS-движком анимации */
+    scroll-behavior: auto; 
     background-color: var(--dark-bg); 
 }
 

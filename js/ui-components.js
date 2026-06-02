@@ -9,7 +9,36 @@ export function initializeUI() {
 }
 
 /**
- * Менеджер Плавного Скролла
+ * КИБЕР-ФИЗИКА СКРОЛЛА (Глобальная функция анимации)
+ * Использует функцию плавности easeInOutQuart для кинематографичного эффекта
+ */
+function customSmoothScroll(targetPosition, duration = 800) {
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    let startTime = null;
+
+    function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+
+        // Математика плавности (Quartic easing in/out)
+        // Медленный старт, быстрое движение посередине, мягкое торможение в конце
+        const ease = progress < 0.5 
+            ? 8 * progress * progress * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 4) / 2;
+
+        window.scrollTo(0, startPosition + distance * ease);
+
+        if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+        }
+    }
+    requestAnimationFrame(animation);
+}
+
+/**
+ * Менеджер Плавного Скролла (Для обычных якорных ссылок)
  */
 class SmoothScrollManager {
     constructor() {
@@ -19,26 +48,24 @@ class SmoothScrollManager {
     init() {
         document.addEventListener('click', (e) => {
             const anchor = e.target.closest('a[href^="#"]');
-            if (anchor) {
+            if (anchor && anchor.getAttribute('href') !== '#') {
                 e.preventDefault();
-                const targetId = anchor.getAttribute('href');
-                if (targetId !== '#') this.scrollTo(targetId);
+                const targetId = anchor.getAttribute('href').substring(1);
+                this.scrollTo(targetId);
             }
         });
     }
 
-    scrollTo(targetSelector) {
-        const targetEl = typeof targetSelector === 'string' ? document.querySelector(targetSelector) : targetSelector;
+    scrollTo(targetId) {
+        const targetEl = document.getElementById(targetId);
         if (!targetEl) return;
 
         const targetRect = targetEl.getBoundingClientRect();
-        let targetPosition = targetRect.top + window.scrollY;
+        const viewOffset = window.innerHeight * 0.15; // Отступ сверху (15% экрана)
+        let targetPosition = targetRect.top + window.scrollY - viewOffset;
         
-        if (targetRect.height < window.innerHeight) {
-            targetPosition -= (window.innerHeight - targetRect.height) / 2;
-        }
-
-        window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
+        // Запускаем нашу кастомную анимацию (скорость 800мс)
+        customSmoothScroll(Math.max(0, targetPosition), 800);
     }
 }
 
@@ -127,7 +154,7 @@ class CryptoCardManager {
 }
 
 /**
- * Менеджер Навигационного Луча (PROXIMITY ENGINE 3.0 - Точный маппинг)
+ * Менеджер Навигационного Луча (PROXIMITY ENGINE 4.0 - Кастомный скролл и динамика)
  */
 class NavRailManager {
     constructor() {
@@ -155,18 +182,17 @@ class NavRailManager {
             const marker = document.createElement('div');
             marker.className = 'nav-marker';
             marker.id = `nav-marker-${sec.id}`; 
-            marker.dataset.targetId = sec.id;
             marker.style.top = '0%'; 
 
             marker.innerHTML = `<div class="nav-shape"></div><div class="nav-tooltip">${sec.label}</div>`;
             
-            // Идеальный клик-скролл на вычисленную позицию
+            // Идеальный клик-скролл с использованием свежей математики
             marker.addEventListener('click', (e) => {
                 e.preventDefault();
-                const targetScroll = parseFloat(marker.dataset.targetScroll);
-                if (!isNaN(targetScroll)) {
-                    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-                }
+                // Рассчитываем актуальную позицию прямо в момент клика
+                const targetScroll = this.calculateExactTarget(sec.id);
+                // Запускаем плавную кинематографичную анимацию
+                customSmoothScroll(targetScroll, 1000); 
             });
             
             this.rail.appendChild(marker);
@@ -180,6 +206,28 @@ class NavRailManager {
         setTimeout(this.updatePositions, 100);
     }
 
+    /**
+     * Вычисляет идеальную позицию для скролла к секции, учитывая динамическую высоту контента
+     */
+    calculateExactTarget(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (!element) return 0;
+
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const scrollableHeight = Math.max(1, docHeight - winHeight);
+        
+        const topPos = element.offsetTop;
+        const viewOffset = winHeight * 0.15; // Центрирование заголовка
+        let targetScroll = topPos - viewOffset;
+
+        // Жесткая привязка краев
+        if (sectionId === this.sections[0].id) targetScroll = 0;
+        if (sectionId === this.sections[this.sections.length - 1].id) targetScroll = scrollableHeight;
+
+        return Math.max(0, Math.min(scrollableHeight, targetScroll));
+    }
+
     updatePositions() {
         const docHeight = document.documentElement.scrollHeight;
         const winHeight = window.innerHeight;
@@ -191,49 +239,27 @@ class NavRailManager {
         percentLine = Math.max(0, Math.min(100, percentLine));
         this.rail.style.setProperty('--line-pos', `${percentLine}%`);
 
-        // Оптимальный вид: мы хотим, чтобы при клике заголовок секции 
-        // оказывался чуть ниже верха экрана (на 15% высоты окна)
-        const viewOffset = winHeight * 0.15;
-
         let currentId = 'hero';
         let closestDist = Infinity;
 
-        this.sections.forEach((sec, index) => {
-            const element = document.getElementById(sec.id);
+        this.sections.forEach(sec => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
-            
-            if (element && marker) {
-                // 1. УМНЫЙ МАППИНГ 
-                const topPos = element.offsetTop;
-                let targetScroll = topPos - viewOffset;
+            if (marker) {
+                // Вычисляем актуальный таргет для рендера
+                const targetScroll = this.calculateExactTarget(sec.id);
                 
-                // Жесткая привязка краев (Первая секция - всегда 0%, Последняя - всегда 100%)
-                if (index === 0) targetScroll = 0;
-                if (index === this.sections.length - 1) targetScroll = scrollableHeight;
-
-                // Не даем значению выйти за пределы возможного скролла
-                targetScroll = Math.max(0, Math.min(scrollableHeight, targetScroll));
-                
-                // Сохраняем это идеальное значение скролла для обработчика клика
-                marker.dataset.targetScroll = targetScroll;
-
                 // Переводим targetScroll в проценты для позиционирования маркера на рельсе
                 let markerPercent = (targetScroll / scrollableHeight) * 100;
                 marker.style.top = `${markerPercent}%`;
 
-                // 2. PROXIMITY ЭФФЕКТ (Определение близости лазера)
-                // Разница между лазером и маркером (в процентах экрана)
+                // PROXIMITY ЭФФЕКТ (Определение близости лазера)
                 let distancePct = Math.abs(percentLine - markerPercent);
-                
-                // Лазер "чувствует" маркер в радиусе 15% 
                 let proximity = Math.max(0, 1 - (distancePct / 15));
-                
-                // Смягчаем кривую затухания для плавности (квадратичная функция)
-                proximity = Math.pow(proximity, 2).toFixed(3);
+                proximity = Math.pow(proximity, 2).toFixed(3); // Квадратичное затухание
                 
                 marker.style.setProperty('--proximity', proximity);
 
-                // 3. Вычисление активной секции (кто ближе всего к текущему скроллу)
+                // Вычисление активной секции (кто ближе всего к текущему скроллу)
                 const absDist = Math.abs(scrolled - targetScroll);
                 if (absDist < closestDist) {
                     closestDist = absDist;
@@ -243,8 +269,11 @@ class NavRailManager {
         });
 
         // Обновляем UI активной секции
-        document.querySelectorAll('.nav-marker').forEach(m => {
-            m.classList.toggle('active', m.dataset.targetId === currentId);
+        this.sections.forEach(sec => {
+            const marker = document.getElementById(`nav-marker-${sec.id}`);
+            if (marker) {
+                marker.classList.toggle('active', sec.id === currentId);
+            }
         });
     }
 }
