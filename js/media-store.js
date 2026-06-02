@@ -3,7 +3,7 @@ import { loadData } from './api.js';
 import EventBus from './event-bus.js';
 
 export const GENRE_MAP = {
-    'action': 'Экшен', 'adventure': 'Приключения', 'comedy': 'Комедия', 'drama': 'Драма', 'horror': 'Хоррор', 'thriller': 'Триллер', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези', 'mystery': 'Мистика', 'detective': 'Детектив', 'crime': 'Криминал', 'historical': 'Исторический', 'romance': 'Романтика', 'biography': 'Биография', 'movie': 'Фильм', 'series': 'Сериал', 'mini-series': 'Мини-сериал', 'cartoon': 'Мультфильм', 'anime': 'Аниме', 'anime-series': 'Аниме-сериал', 'short': 'Короткометражка', 'documentary': 'Документалка', 'show': 'ТВ-Шоу', 'animation': 'Анимация', 'superhero': 'Супергероика', 'sitcom': 'Ситком', 'slasher': 'Слэшер', 'musical': 'Мюзикл', 'western': 'Вестерн', 'noir': 'Нуар', 'sport': 'Спорт', 'war': 'Военный', 'family': 'Семейный', 'kids': 'Детский', 'adaptation': 'Экранизация', 'remake': 'Ремейк', 'blockbuster': 'Блокбастер', 'arthouse': 'Артхаус', 'trash': 'Трэш / B-Movie', 'psychological': 'Психологический', 'atmospheric': 'Атмосферный', 'feel-good': 'Добрый / Уютный', 'sad': 'Грустный', 'mind-bending': 'Вынос мозга', 'epic': 'Эпик', 'weird': 'Странное', 'classic': 'Классика', 'cult': 'Культовое', 'rpg': 'РПГ', 'shooter': 'Шутер', 'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка', 'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино', 'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик', 'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир', 'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click', 'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер', 'mmo': 'ММО', 'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'space': 'Космос', 'zombies': 'Зомби', 'retro': 'Ретро/80-е', 'dystopia': 'Антиутопия', 'magic': 'Магия', 'aliens': 'Пришельцы', 'indie': 'Инди', 'aaa': 'AAA', 'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'free': 'Бесплатно', 'early-access': 'Ранний доступ', 'story-rich': 'Сюжетная', 'funny': 'Комедия/Юмор'
+    'action': 'Экшен', 'adventure': 'Приключения', 'comedy': 'Комедия', 'drama': 'Драма', 'horror': 'Хоррор', 'thriller': 'Триллер', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези', 'mystery': 'Мистика', 'detective': 'Детектив', 'crime': 'Криминал', 'historical': 'Исторический', 'romance': 'Романтика', 'biography': 'Биография', 'movie': 'Фильм', 'series': 'Сериал', 'mini-series': 'Мини-сериал', 'cartoon': 'Мультфильм', 'anime': 'Аниме', 'anime-series': 'Аниме-сериал', 'short': 'Короткометражка', 'documentary': 'Документалка', 'show': 'ТВ-Шоу', 'animation': 'Анимация', 'superhero': 'Супергероика', 'sitcom': 'Ситком', 'slasher': 'Слэшер', 'musical': 'Мюзикл', 'western': 'Вестерн', 'noir': 'Нуар', 'sport': 'Спорт', 'war': 'Военный', 'family': 'Семейный', 'kids': 'Детский', 'adaptation': 'Экранизация', 'remake': 'Ремейк', 'blockbuster': 'Блокбастер', 'arthouse': 'Артхаус', 'trash': 'Трэш / B-Movie', 'psychological': 'Психологический', 'atmospheric': 'Атмосферный', 'feel-good': 'Добрый / Уютный', 'sad': 'Грустный', 'mind-bending': 'Вынос мозга', 'epic': 'Эпик', 'weird': 'Странное', 'classic': 'Классика', 'cult': 'Культовое', 'rpg': 'РПГ', 'shooter': 'Шутер', 'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка', 'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино', 'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик', 'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир', 'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click', 'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер', 'mmo': 'ММО', 'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'space': 'Космос', 'zombies': 'Зомби', 'retro': 'Ретро/80-е', 'dystopia': 'Антиутопия', 'magic': 'Магия', 'aliens': 'Пришельцы', 'indie': 'Инди', 'aaa': 'AAA', 'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'free': 'Бесплатно', 'early-access': 'Ранний доступ', 'story-rich': 'Сюжетная', 'funny': 'Комедия/Юмор', 'management': 'Менеджмент', 'hardcore': 'Хардкор', 'casual': 'Кэжуал', 'fan-game': 'Фан-игра', 'realistic': 'Реализм', 'relaxing': 'Релакс'
 };
 
 export const STATUS_MAP = {
@@ -125,31 +125,46 @@ export class MediaStore {
         return [...this.dataMain, ...this.dataSuggestions].find(i => i.id === id);
     }
 
+    // ИСПРАВЛЕННЫЙ МЕТОД ПОИСКА (Теперь ищет игры внутри коллекций)
     getSearchSuggestions(query) {
         if (query.length < 1) return [];
         const cleanQuery = query.toLowerCase();
+
+        // 1. Создаем плоский список, "распаковывая" коллекции
+        let flattenedList = [];
         const fullList = [...this.dataMain, ...this.dataSuggestions];
-        
-        const matchingIds = new Set(
-            this.flatSearchIndex
-                .filter(entry => entry.searchableText.includes(cleanQuery))
-                .map(entry => entry.id)
-        );
 
-        let matches = fullList.filter(item => matchingIds.has(item.id))
-            .map(item => {
-                let score = 0;
-                if (item.title) {
-                    const cleanTitle = item.title.toLowerCase();
-                    if (cleanTitle === cleanQuery) score = 1.0;
-                    else if (cleanTitle.startsWith(cleanQuery)) score = 0.8;
-                    else if (cleanTitle.includes(cleanQuery)) score = 0.6;
-                    else score = this._calculateSimilarity(cleanTitle, cleanQuery);
-                }
-                return { ...item, score };
-            });
+        fullList.forEach(item => {
+            // Сначала добавляем саму коллекцию/игру
+            flattenedList.push(item);
+            
+            // Если это коллекция, добавляем ее содержимое как отдельные элементы для поиска
+            if (item.format === 'collection' && item.items) {
+                item.items.forEach(sub => {
+                    flattenedList.push({
+                        ...sub,
+                        status: sub.status || item.status, // Наследуем статус родителя, если своего нет
+                        isSubItem: true
+                    });
+                });
+            }
+        });
 
-        return matches.sort((a, b) => b.score - a.score).slice(0, 4);
+        // 2. Ищем совпадения в распакованном списке
+        let matches = flattenedList.map(item => {
+            let score = 0;
+            const title = item.title ? item.title.toLowerCase() : "";
+            
+            if (title === cleanQuery) score = 1.0;
+            else if (title.startsWith(cleanQuery)) score = 0.8;
+            else if (title.includes(cleanQuery)) score = 0.6;
+            else score = this._calculateSimilarity(title, cleanQuery);
+            
+            return { ...item, score };
+        }).filter(item => item.score > 0.35); // Отсекаем мусор
+
+        // Возвращаем топ-5 результатов
+        return matches.sort((a, b) => b.score - a.score).slice(0, 5);
     }
 
     processData() {
@@ -197,15 +212,32 @@ export class MediaStore {
             if (this.searchQuery.length > 0 && Math.abs(a._matchScore - b._matchScore) > 0.1) {
                 return b._matchScore - a._matchScore;
             }
-            if (this.sort === 'rating') return ((parseFloat(a.rating) || 0) - (parseFloat(b.rating) || 0)) * dir;
+            
+            // ИСПРАВЛЕНИЕ: Логика сортировки по рейтингу теперь учитывает коллекции
+            if (this.sort === 'rating') {
+                let ratingA = a.rating || 0;
+                let ratingB = b.rating || 0;
+                
+                // Если коллекция, считаем средний рейтинг
+                if (a.format === 'collection' && a.items) {
+                    let sum = 0, count = 0;
+                    a.items.forEach(i => { if (i.rating > 0) { sum += i.rating; count++; } });
+                    if (count > 0) ratingA = sum / count;
+                }
+                if (b.format === 'collection' && b.items) {
+                    let sum = 0, count = 0;
+                    b.items.forEach(i => { if (i.rating > 0) { sum += i.rating; count++; } });
+                    if (count > 0) ratingB = sum / count;
+                }
+                
+                return (ratingA - ratingB) * dir;
+            }
             return (a.title || "").localeCompare(b.title || "") * dir;
         };
 
         filteredMain.sort(sortFn);
         filteredSuggestions.sort(sortFn);
 
-        // Мы больше не добавляем искусственные разделители (Divider) в массив.
-        // UI сам распределит карточки по нужным flex-контейнерам
         this.combinedData = [...filteredMain, ...filteredSuggestions];
     }
 

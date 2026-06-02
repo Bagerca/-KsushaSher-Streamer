@@ -60,6 +60,39 @@
     ]
   },
   {
+    "id": "hollow-knight-franchise",
+    "format": "collection",
+    "title": "Hollow Knight Universe",
+    "status": "on-hold",
+    "customColor": "#a2b5c6",
+    "image": "assets/images/games/hollow-knight.webp",
+    "items": [
+      {
+        "id": "hollow-knight",
+        "title": "Hollow Knight",
+        "rating": 0,
+        "description": "Мрачная и красивая метроидвания с хардкорными боссами и глубоким лором.",
+        "image": "assets/images/games/hollow-knight.webp",
+        "genres": ["metroidvania", "souls-like", "platformer", "action", "hardcore", "indie"],
+        "status": "on-hold"
+      },
+      {
+        "id": "hollow-knight-silksong",
+        "title": "Hollow Knight: Silksong",
+        "rating": 3.0,
+        "description": "Приятная картинка и наличие кооператива. Но геймплей оказался слишком жестким для меня.",
+        "image": "assets/images/games/hollow-knight-silksong.webp",
+        "genres": ["metroidvania", "souls-like", "platformer", "action", "indie", "coop", "atmospheric"],
+        "status": "dropped",
+        "videos": [
+          "https://youtu.be/JPGKia9djuA",
+          "https://youtu.be/deMaQZA9Vc4",
+          "https://youtu.be/7xn2mNWE4Pw"
+        ]
+      }
+    ]
+  },
+  {
     "id": "the-floor-above-demo",
     "title": "The Floor Above (Demo)",
     "rating": 4.0,
@@ -238,21 +271,6 @@
     ]
   },
   {
-    "id": "hollow-knight-silksong",
-    "title": "Hollow Knight: Silksong",
-    "rating": 3.0,
-    "description": "Приятная картинка и наличие кооператива. Но геймплей оказался слишком жестким для меня.",
-    "image": "assets/images/games/hollow-knight-silksong.webp",
-    "genres": ["metroidvania", "souls-like", "platformer", "action", "indie", "coop", "atmospheric"],
-    "status": "dropped",
-    "customColor": "#e65e3b",
-    "videos": [
-      "https://youtu.be/JPGKia9djuA",
-      "https://youtu.be/deMaQZA9Vc4",
-      "https://youtu.be/7xn2mNWE4Pw"
-    ]
-  },
-  {
     "id": "bad-cheese",
     "title": "Bad Cheese",
     "rating": 1.5,
@@ -338,16 +356,6 @@
     "genres": ["platformer", "adventure", "atmospheric", "relaxing", "puzzle", "indie"],
     "status": "on-hold",
     "customColor": "#79c5ce"
-  },
-  {
-    "id": "hollow-knight",
-    "title": "Hollow Knight",
-    "rating": 0,
-    "description": "Мрачная и красивая метроидвания.",
-    "image": "assets/images/games/hollow-knight.webp",
-    "genres": ["metroidvania", "souls-like", "platformer", "action", "hardcore", "indie"],
-    "status": "on-hold",
-    "customColor": "#c3bebb"
   },
   {
     "id": "content-warning",

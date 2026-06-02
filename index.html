@@ -22,13 +22,13 @@
     <link rel="stylesheet" href="css/content.css">          
     <link rel="stylesheet" href="css/command-center.css">   
     
-    <!-- НОВЫЕ МОДУЛИ БАЗЫ ДАННЫХ (SOLID АРХИТЕКТУРА) -->
+    <!-- МОДУЛИ БАЗЫ ДАННЫХ -->
     <link rel="stylesheet" href="css/archive-layout.css">
     <link rel="stylesheet" href="css/archive-controls.css">
     <link rel="stylesheet" href="css/archive-card.css">
     <link rel="stylesheet" href="css/archive-stacks-3d.css">
     
-    <!-- НОВЫЕ МОДУЛИ МОДАЛЬНОГО ОКНА -->
+    <!-- МОДУЛИ МОДАЛЬНОГО ОКНА -->
     <link rel="stylesheet" href="css/modal/modal-base.css"> 
     <link rel="stylesheet" href="css/modal/modal-posters.css"> 
     <link rel="stylesheet" href="css/modal/modal-player.css"> 
@@ -136,11 +136,10 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ 3: DASHBOARD (NETWORK HUB) -->
+    <!-- СЕКЦИЯ 3: DASHBOARD -->
     <section id="command-center" class="command-center-section">
         <div class="hud-grid-bg"></div>
         <div class="container">
-            
             <div class="command-header">
                 <div class="cyber-header-wrapper">
                     <div class="cyber-header-sub">MISSION_CONTROL // NETWORK_HUB</div>
@@ -148,34 +147,20 @@
                     <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
                 </div>
             </div>
-
             <div class="hub-grid">
-                
-                <!-- Статистика канала -->
+                <!-- Статистика -->
                 <div class="cmd-panel stats-panel">
                     <div class="hud-bracket top-left"></div>
                     <div class="hud-bracket bottom-right"></div>
                     <div class="stats-grid-container">
-                        <div class="stat-box">
-                            <i class="fas fa-users stat-icon" style="color: var(--neon-green);"></i>
-                            <div class="stat-info"><div class="stat-label">АГЕНТЫ В СЕТИ</div><div class="stat-value" id="stat-followers">----</div></div>
-                        </div>
-                        <div class="stat-box">
-                            <i class="fas fa-eye stat-icon" id="stat-icon-viewers" style="color: #00ccff;"></i>
-                            <div class="stat-info"><div class="stat-label" id="stat-label-viewers">СТАТУС</div><div class="stat-value" id="stat-viewers">----</div></div>
-                        </div>
-                        <div class="stat-box">
-                            <i class="fas fa-gamepad stat-icon" style="color: var(--neon-pink);"></i>
-                            <div class="stat-info"><div class="stat-label" id="stat-label-game">ПОСЛЕДНЯЯ БАЗА</div><div class="stat-value small" id="stat-game">----</div></div>
-                        </div>
-                        <div class="stat-box">
-                            <i class="fas fa-clock stat-icon" id="stat-icon-time" style="color: #ffd700;"></i>
-                            <div class="stat-info"><div class="stat-label" id="stat-label-time">ПОСЛЕДНИЙ ВХОД</div><div class="stat-value" id="stat-time">----</div></div>
-                        </div>
+                        <div class="stat-box"><i class="fas fa-users stat-icon" style="color: var(--neon-green);"></i><div class="stat-info"><div class="stat-label">АГЕНТЫ В СЕТИ</div><div class="stat-value" id="stat-followers">----</div></div></div>
+                        <div class="stat-box"><i class="fas fa-eye stat-icon" id="stat-icon-viewers" style="color: #00ccff;"></i><div class="stat-info"><div class="stat-label" id="stat-label-viewers">СТАТУС</div><div class="stat-value" id="stat-viewers">----</div></div></div>
+                        <div class="stat-box"><i class="fas fa-gamepad stat-icon" style="color: var(--neon-pink);"></i><div class="stat-info"><div class="stat-label" id="stat-label-game">ПОСЛЕДНЯЯ БАЗА</div><div class="stat-value small" id="stat-game">----</div></div></div>
+                        <div class="stat-box"><i class="fas fa-clock stat-icon" id="stat-icon-time" style="color: #ffd700;"></i><div class="stat-info"><div class="stat-label" id="stat-label-time">ПОСЛЕДНИЙ ВХОД</div><div class="stat-value" id="stat-time">----</div></div></div>
                     </div>
                 </div>
 
-                <!-- Левая колонка (Плеер и Чат) -->
+                <!-- Левая колонка -->
                 <div class="hub-col-main">
                     <div class="cmd-panel player-panel">
                         <div class="hud-bracket top-left"></div>
@@ -188,7 +173,7 @@
                     </div>
                 </div>
 
-                <!-- Правая колонка (Радар и Расписание) -->
+                <!-- Правая колонка -->
                 <div class="hub-col-side">
                     <div class="cmd-panel network-panel">
                         <div class="hud-bracket top-right"></div>
@@ -201,7 +186,6 @@
                         <div class="mission-timeline" id="schedule-container"><div class="network-loading">СИНХРОНИЗАЦИЯ С TWITCH...</div></div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -213,24 +197,48 @@
                 <h2 class="section-title">БАЗА ДАННЫХ</h2>
                 <div class="archive-header-sub">SYSTEM LIBRARY // ACCESS GRANTED</div>
                 
+                <!-- НОВАЯ СИММЕТРИЧНАЯ ПАНЕЛЬ -->
                 <div class="header-control-bar">
-                    <button class="sort-side-btn active" data-sort="name"><span class="btn-label">НАЗВАНИЕ</span><i class="fas fa-sort-alpha-down sort-icon"></i></button>
+                    <div class="sort-switcher">
+                        <button class="sort-btn active" data-sort="name" title="По алфавиту"><i class="fas fa-sort-alpha-down sort-icon"></i></button>
+                        <button class="sort-btn" data-sort="rating" title="По рейтингу"><i class="fas fa-star sort-icon"></i></button>
+                    </div>
                     <div class="type-switcher">
                         <div class="switcher-bg"></div>
                         <button class="switcher-btn active" data-type="games"><i class="fas fa-gamepad"></i> ИГРЫ</button>
                         <button class="switcher-btn" data-type="movies"><i class="fas fa-film"></i> КИНО</button>
                     </div>
-                    <button class="sort-side-btn" data-sort="rating"><span class="btn-label">РЕЙТИНГ</span><i class="fas fa-sort-amount-down sort-icon"></i></button>
-                    <!-- Кнопки плотности сетки (Detailed/Compact) рендерятся тут через JS (FilterController) -->
+                    <div class="density-switcher">
+                        <button class="density-btn active" data-mode="detailed" title="Подробная сетка"><i class="fas fa-th-large"></i></button>
+                        <button class="density-btn" data-mode="compact" title="Компактная сетка"><i class="fas fa-th"></i></button>
+                    </div>
                 </div>
             </div>
             
+            <!-- НОВЫЙ БЛОК ПОИСКА И ФИЛЬТРОВ -->
             <div class="archive-controls">
-                <div class="search-module"><i class="fas fa-search search-icon"></i><input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off"></div>
-                <div class="filters-wrapper"><div class="filter-row status-row" id="archive-filters-status"></div><div class="filter-row genre-row" id="archive-filters-genre"></div></div>
+                <div class="search-row">
+                    <div class="search-module">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
+                    </div>
+                    <button id="toggle-genres-btn" class="cyber-btn-outline"><i class="fas fa-filter"></i> <span class="btn-text">ЖАНРЫ</span> <span id="genre-count" class="badge hidden">0</span></button>
+                    <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <div class="filters-wrapper">
+                    <!-- Статусы всегда видимы -->
+                    <div class="filter-row status-row" id="archive-filters-status"></div>
+                    
+                    <!-- Умный аккордеон для жанров -->
+                    <div class="genres-accordion" id="genres-accordion">
+                        <div class="accordion-inner">
+                            <div class="filter-row genre-row" id="archive-filters-genre"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <!-- Контейнер для двух сеток (Основная и Предложка). Заполняется через JS GridManager -->
             <div class="archive-full-grid-wrapper"></div>
             
         </div>

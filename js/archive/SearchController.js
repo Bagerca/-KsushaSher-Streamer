@@ -71,12 +71,18 @@ export class SearchController {
 
     renderSuggestions(matches, query) {
         if (matches.length === 0) {
-            this.suggestionsBox.innerHTML = `<div class="suggestion-empty"><i class="far fa-sad-tear"></i><span>По запросу "${query}" ничего не найдено</span></div>`;
+            this.suggestionsBox.innerHTML = `
+                <div class="suggestion-empty">
+                    <i class="far fa-sad-tear"></i>
+                    <span>По запросу "${query}" ничего не найдено</span>
+                </div>`;
             return;
         }
 
         const cleanQuery = query.toLowerCase();
+        
         this.suggestionsBox.innerHTML = matches.map(item => {
+            // Подсветка совпадения в тексте
             const titleText = item.title || "";
             const index = titleText.toLowerCase().indexOf(cleanQuery);
             let titleHtml = titleText;
@@ -86,21 +92,49 @@ export class SearchController {
                            titleText.substring(index + query.length);
             }
 
-            let thumbUrl = item.image;
-            if (item.format === 'collection' && item.items && item.items.length > 0) {
-                 thumbUrl = thumbUrl || item.items[0].image;
-            } else if (item.videos && item.videos.length > 0) {
-                 thumbUrl = `https://img.youtube.com/vi/${getYouTubeId(typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url)}/mqdefault.jpg`;
+            // ИСПРАВЛЕННАЯ ЛОГИКА КАРТИНОК
+            let thumbUrl = item.image; // Приоритет №1: Явно указанная обложка
+            
+            if (!thumbUrl) {
+                // Если обложки нет, пытаемся достать из вложений
+                if (item.format === 'collection' && item.items && item.items.length > 0) {
+                     thumbUrl = item.items[0].image;
+                } else if (item.videos && item.videos.length > 0) {
+                     const vUrl = typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url;
+                     const ytId = getYouTubeId(vUrl);
+                     if (ytId) thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+                }
             }
+            // Фолбэк, если совсем ничего нет
+            if (!thumbUrl) thumbUrl = 'https://via.placeholder.com/60x85?text=NO+IMG';
+
+            // ИСПРАВЛЕННАЯ ЛОГИКА РЕЙТИНГА
+            let displayRating = item.rating || 0;
+            
+            // Если это коллекция, считаем средний балл
+            if (item.format === 'collection' && item.items) {
+                let sum = 0, count = 0;
+                item.items.forEach(sub => {
+                    if (sub.rating && sub.rating > 0) {
+                        sum += sub.rating; count++;
+                    }
+                });
+                if (count > 0) displayRating = sum / count;
+            }
+
+            // Скрываем рейтинг, если он 0
+            const ratingHtml = displayRating > 0 
+                ? `<span class="sugg-rating"><i class="fas fa-star" style="color: #ffd700;"></i> ${displayRating.toFixed(1)}</span>`
+                : '';
 
             return `
                 <div class="suggestion-item" data-title="${item.title}">
-                    <img src="${thumbUrl}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/6x85'">
+                    <img src="${thumbUrl}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/60x85?text=ERR'">
                     <div class="sugg-info">
                         <span class="sugg-title">${titleHtml}</span>
-                        <div class="sugg-meta">
+                        <div class="sugg-meta" style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
                             <span class="sugg-status" data-status="${item.status}">${STATUS_MAP[item.status] || item.status}</span>
-                            <span class="sugg-rating"><i class="fas fa-star"></i> ${item.rating || 0}</span>
+                            ${ratingHtml}
                         </div>
                     </div>
                 </div>
