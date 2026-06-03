@@ -3,7 +3,7 @@ import EventBus from './event-bus.js';
 
 export class HubController {
     constructor() {
-        this.mainChannel = 'bagercaa'; 
+        this.mainChannel = 'ksusha__sher'; 
         // Список логинов друзей (через запятую, без пробелов!)
         this.allies = 'Tetlabot,bagercaa,to_be_ang,kiriika1'; 
         
