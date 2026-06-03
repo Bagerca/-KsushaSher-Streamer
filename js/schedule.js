@@ -3,7 +3,7 @@
 export class ScheduleManager {
     constructor() {
         this.container = document.getElementById('schedule-container');
-        this.channelName = 'bagercaa'; // ИЛИ bagercaa
+        this.channelName = 'ksusha__sherц'; // ИЛИ bagercaa
         this.clientId = 'kimne78kx3ncx6brgo4mv6wki5h1ko'; 
     }
 

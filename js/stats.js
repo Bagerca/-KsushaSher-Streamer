@@ -3,7 +3,7 @@ import EventBus from './event-bus.js';
 
 export class StatsManager {
     constructor() {
-        this.channelName = 'bagercaa';
+        this.channelName = 'ksusha__sher';
         this.uptimeInterval = null;
     }
 
