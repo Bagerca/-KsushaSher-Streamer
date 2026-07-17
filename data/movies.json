@@ -1,16 +1,25 @@
 [
   {
     "id": "garfield-collection",
-    "title": "Garfield 1 & 2 / Гарфилд",
-    "rating": 5.0,
-    "description": "Фильмы детства с тем самым рыжим котом. Классный юмор, ностальгия и только положительные эмоции. Придраться невозможно.",
-    "images": [
-      "assets/images/movies/garfield-2.jpg",
-      "assets/images/movies/garfield-1.jpg"
-    ],
-    "genres": ["movie", "comedy", "family", "adaptation", "feel-good", "classic"],
-    "status": "watched",
-    "customColor": "#1275bc"
+    "format": "collection",
+    "items": [
+      {
+        "id": "garfield-1",
+        "title": "Garfield / Гарфилд",
+        "rating": 5.0,
+        "description": "Фильм детства с тем самым рыжим котом. Классный юмор, ностальгия и только положительные эмоции.",
+        "image": "assets/images/movies/garfield-1.jpg",
+        "status": "watched"
+      },
+      {
+        "id": "garfield-2",
+        "title": "Garfield: A Tail of Two Kitties / Гарфилд 2",
+        "rating": 5.0,
+        "description": "Вторая часть. Приключения в Англии.",
+        "image": "assets/images/movies/garfield-2.jpg",
+        "status": "watched"
+      }
+    ]
   },
   {
     "id": "shrek-2",
@@ -18,9 +27,7 @@
     "rating": 5.0,
     "description": "Абсолютная классика. Сочная графика, глубокий смысл, скрытый за отличным юмором. Вызывает чистую ностальгию.",
     "image": "assets/images/movies/shrek-2.jpg",
-    "genres": ["cartoon", "comedy", "fantasy", "family", "adventure", "classic"],
-    "status": "watched",
-    "customColor": "#929449"
+    "status": "watched"
   },
   {
     "id": "shark-tale",
@@ -28,62 +35,47 @@
     "rating": 5.0,
     "description": "Мультфильм детства. Обожаю подводный мир и этот стиль. Вызывает исключительно теплые чувства.",
     "image": "assets/images/movies/shark-tale.jpg",
-    "genres": ["cartoon", "comedy", "family", "adventure", "feel-good"],
-    "status": "watched",
-    "customColor": "#2696d1"
+    "status": "watched"
   },
   {
     "id": "arcane",
     "title": "Arcane / Аркейн",
     "rating": 4.0,
-    "description": "Красивая и сочная рисованная графика, отличная музыка. Сюжет интересный, но нашлись пара логических дыр (или моя логика отличается).",
-    "images": [
-      "assets/images/movies/arcane-s2.jpg",
-      "assets/images/movies/arcane-s1.jpg"
-    ],
-    "genres": ["series", "animation", "fantasy", "scifi", "action", "drama", "adaptation", "epic"],
-    "status": "watched",
-    "customColor": "#abb5b5"
+    "description": "Красивая и сочная рисованная графика, отличная музыка.",
+    "image": "assets/images/movies/arcane-s1.jpg",
+    "status": "watched"
   },
   {
     "id": "wild-robot",
     "title": "The Wild Robot / Дикий робот",
     "rating": 4.0,
-    "description": "Очень трогательный сюжет, пробивает на слёзы. Приятная графика. Логика иногда возмущается, но редко.",
+    "description": "Очень трогательный сюжет, пробивает на слёзы. Приятная графика.",
     "image": "assets/images/movies/wild-robot.jpg",
-    "genres": ["cartoon", "scifi", "adventure", "drama", "family", "atmospheric", "survival"],
-    "status": "watched",
-    "customColor": "#2f422f"
+    "status": "watched"
   },
   {
     "id": "gravity-falls",
     "title": "Gravity Falls / Гравити Фолз",
     "rating": 3.5,
-    "description": "Люблю теории заговора и легкое повествование. Но моментами показался слишком детским или глупым.",
+    "description": "Люблю теории заговора и легкое повествование.",
     "image": "assets/images/movies/gravity-falls.jpg",
-    "genres": ["series", "cartoon", "mystery", "comedy", "fantasy", "family", "cult"],
-    "status": "watched",
-    "customColor": "#c1a773"
+    "status": "watched"
   },
   {
     "id": "indie-cross",
     "title": "Indie Cross",
     "rating": 3.5,
-    "description": "Прикольная задумка и ностальгия по играм. Но если мало пройдено оригинальных игр, можно потеряться в сюжете.",
+    "description": "Прикольная задумка и ностальгия по играм.",
     "image": "assets/images/movies/indie-cross.jpg",
-    "genres": ["animation", "short", "action", "fantasy", "indie", "adaptation"],
-    "status": "watched",
-    "customColor": "#604d8d"
+    "status": "watched"
   },
   {
     "id": "nine",
     "title": "9 / Девять",
     "rating": 2.5,
-    "description": "Приятная картинка и звук, есть моменты на подумать. Но сюжет полон логических несостыковок (либо я не понял).",
+    "description": "Приятная картинка и звук, есть моменты на подумать.",
     "image": "assets/images/movies/nine.jpg",
-    "genres": ["cartoon", "scifi", "post-apocalyptic", "atmospheric", "thriller", "action"],
-    "status": "watched",
-    "customColor": "#80b454"
+    "status": "watched"
   },
   {
     "id": "heroes-of-envell",
@@ -91,8 +83,38 @@
     "rating": 2.0,
     "description": "Неплохой сюжет, но рисовка показалась слишком детской. Не зашло.",
     "image": "assets/images/movies/heroes-of-envell.jpg",
-    "genres": ["series", "cartoon", "adventure", "fantasy", "kids", "rpg"],
-    "status": "dropped",
-    "customColor": "#e19e5c"
+    "status": "dropped"
+  },
+  {
+    "id": "spider-man-noir",
+    "title": "Spider-Man Noir / Паук-Нуар",
+    "rating": 0,
+    "description": "",
+    "image": "assets/images/movies/spider-man-noir.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "lego-movie",
+    "title": "The LEGO Movie / ЛЕГО Фильм",
+    "rating": 0,
+    "description": "",
+    "image": "assets/images/movies/lego-movie.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "lego-batman",
+    "title": "The LEGO Batman Movie / Лего Фильм: Бэтмен",
+    "rating": 0,
+    "description": "",
+    "image": "assets/images/movies/lego-batman.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "ready-player-one",
+    "title": "Ready Player One / Первому игроку приготовиться",
+    "rating": 0,
+    "description": "",
+    "image": "assets/images/movies/ready-player-one.jpg",
+    "status": "on-hold"
   }
 ]

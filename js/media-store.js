@@ -3,10 +3,6 @@ import { loadData } from './api.js';
 import EventBus from './event-bus.js';
 import { calculateSimilarity } from './utils.js';
 
-export const GENRE_MAP = {
-    'action': 'Экшен', 'adventure': 'Приключения', 'comedy': 'Комедия', 'drama': 'Драма', 'horror': 'Хоррор', 'thriller': 'Триллер', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези', 'mystery': 'Мистика', 'detective': 'Детектив', 'crime': 'Криминал', 'historical': 'Исторический', 'romance': 'Романтика', 'biography': 'Биография', 'movie': 'Фильм', 'series': 'Сериал', 'mini-series': 'Мини-сериал', 'cartoon': 'Мультфильм', 'anime': 'Аниме', 'anime-series': 'Аниме-сериал', 'short': 'Короткометражка', 'documentary': 'Документалка', 'show': 'ТВ-Шоу', 'animation': 'Анимация', 'superhero': 'Супергероика', 'sitcom': 'Ситком', 'slasher': 'Слэшер', 'musical': 'Мюзикл', 'western': 'Вестерн', 'noir': 'Нуар', 'sport': 'Спорт', 'war': 'Военный', 'family': 'Семейный', 'kids': 'Детский', 'adaptation': 'Экранизация', 'remake': 'Ремейк', 'blockbuster': 'Блокбастер', 'arthouse': 'Артхаус', 'trash': 'Трэш / B-Movie', 'psychological': 'Психологический', 'atmospheric': 'Атмосферный', 'feel-good': 'Добрый / Уютный', 'sad': 'Грустный', 'mind-bending': 'Вынос мозга', 'epic': 'Эпик', 'weird': 'Странное', 'classic': 'Классика', 'cult': 'Культовое', 'rpg': 'РПГ', 'shooter': 'Шутер', 'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка', 'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино', 'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик', 'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир', 'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click', 'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер', 'mmo': 'ММО', 'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'space': 'Космос', 'zombies': 'Зомби', 'retro': 'Ретро/80-е', 'dystopia': 'Антиутопия', 'magic': 'Магия', 'aliens': 'Пришельцы', 'indie': 'Инди', 'aaa': 'AAA', 'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'free': 'Бесплатно', 'early-access': 'Ранний доступ', 'story-rich': 'Сюжетная', 'funny': 'Комедия/Юмор', 'management': 'Менеджмент', 'hardcore': 'Хардкор', 'casual': 'Кэжуал', 'fan-game': 'Фан-игра', 'realistic': 'Реализм', 'relaxing': 'Релакс'
-};
-
 export const STATUS_MAP = {
     'completed': 'ПРОЙДЕНО', 'watched': 'ПОСМОТРЕНО',
     'playing': 'В ПРОЦЕССЕ', 'watching': 'СМОТРИМ',
@@ -70,7 +66,6 @@ export class MediaStore {
                 ? rawSuggestions.filter(item => item.type === type) 
                 : [];
             
-            // НОРМАЛИЗАЦИЯ ДАННЫХ (Поднятие свойств для коллекций)
             this.preprocessData(this.dataMain);
             this.preprocessData(this.dataSuggestions);
                 
@@ -87,46 +82,20 @@ export class MediaStore {
         list.forEach(item => {
             if (item.format === 'collection' && item.items && item.items.length > 0) {
                 const firstGame = item.items[0];
-                
-                // Прокидываем свойства первой игры на уровень коллекции
                 item.title = firstGame.title;
                 item.description = firstGame.description;
                 item.image = firstGame.image;
-                item.customColor = firstGame.customColor;
                 item.status = firstGame.status;
-                
-                // Объединяем жанры всех частей для корректной фильтрации
-                const allGenres = new Set(firstGame.genres || []);
-                item.items.forEach(sub => {
-                    if (sub.genres) sub.genres.forEach(g => allGenres.add(g));
-                });
-                item.genres = Array.from(allGenres);
             }
         });
-    }
-
-    getAllGenres() {
-        const allGenres = new Set();
-        [...this.dataMain, ...this.dataSuggestions].forEach(item => { 
-            if (item.genres && Array.isArray(item.genres)) {
-                item.genres.forEach(g => allGenres.add(g)); 
-            }
-        });
-        return Array.from(allGenres).sort((a, b) => (GENRE_MAP[a] || a).localeCompare(GENRE_MAP[b] || b));
     }
 
     toggleFilter(val) {
         if (this.activeFilters.has(val)) {
             this.activeFilters.delete(val);
         } else {
-            if (VALID_STATUSES.includes(val)) {
-                const currentGenres = [];
-                this.activeFilters.forEach(f => {
-                    if (!VALID_STATUSES.includes(f)) currentGenres.push(f);
-                });
-                this.activeFilters.clear();
-                currentGenres.forEach(g => this.activeFilters.add(g));
-            }
+            // Разрешаем только один статус за раз
+            this.activeFilters.clear();
             this.activeFilters.add(val);
         }
         this.processData();
@@ -207,7 +176,6 @@ export class MediaStore {
                 const fuzzyOriginal = calculateSimilarity(title, cleanQuery);
                 const fuzzyTranslit = calculateSimilarity(title, translitQuery);
                 const bestFuzzy = Math.max(fuzzyOriginal, fuzzyTranslit);
-                
                 if (bestFuzzy > 0.35) score = bestFuzzy * 40; 
             }
 
@@ -218,16 +186,7 @@ export class MediaStore {
     }
 
     processData() {
-        const activeStatuses = new Set();
-        const activeGenres = new Set();
         const isAllSelected = this.activeFilters.size === 0;
-
-        if (!isAllSelected) {
-            this.activeFilters.forEach(filter => {
-                if (VALID_STATUSES.includes(filter)) activeStatuses.add(filter);
-                else activeGenres.add(filter);
-            });
-        }
 
         const filterFn = (item) => {
             let matchScore = 1;
@@ -261,14 +220,8 @@ export class MediaStore {
             if (this.searchQuery.length > 0 && matchScore === 0) return false;
             if (isAllSelected) return true;
 
-            let statusMatch = activeStatuses.size > 0 ? activeStatuses.has(item.status) : true;
-            let genreMatch = true;
-            if (activeGenres.size > 0) {
-                if (!item.genres || item.genres.length === 0) genreMatch = false;
-                else genreMatch = item.genres.some(g => activeGenres.has(g));
-            }
-            
-            return statusMatch && genreMatch;
+            // Фильтруем только по статусу
+            return this.activeFilters.has(item.status);
         };
 
         let filteredMain = this.dataMain.filter(filterFn);

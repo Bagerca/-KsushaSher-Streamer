@@ -8,55 +8,41 @@
         "title": "Bendy and the Ink Machine",
         "rating": 0,
         "description": "Первая часть. Атмосферный хоррор про ожившие чернила и заброшенную анимационную студию.",
-        "image": "https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png",
-        "genres": ["horror", "puzzle", "adventure", "story-rich", "indie", "retro"],
+        "image": "assets/images/games/bendy-ink-machine.jpg",
         "status": "on-hold",
-        "customColor": "#f4d03f",
-        "videos": [
-          "https://youtu.be/vAEKtyPSgz0",
-          "https://youtu.be/_aJV27IXlwU",
-          "https://youtu.be/RtRBWSAvdMY"
-        ]
+        "videos": ["https://youtu.be/vAEKtyPSgz0", "https://youtu.be/_aJV27IXlwU", "https://youtu.be/RtRBWSAvdMY"]
       },
       {
         "id": "bendy-dark-revival",
         "title": "Bendy and the Dark Revival",
         "rating": 0,
         "description": "Полноценный сиквел. Графика стала более реалистичной, появилась механика скрытности и новая боевка.",
-        "image": "https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png",
-        "genres": ["horror", "adventure", "puzzle", "story-rich", "atmospheric", "indie"],
-        "status": "on-hold",
-        "customColor": "#dfa320"
+        "image": "assets/images/games/bendy-dark-revival.jpg",
+        "status": "on-hold"
       },
       {
         "id": "bendy-lone-wolf",
         "title": "Bendy: Lone Wolf",
         "rating": 0,
         "description": "Новый таинственный проект во вселенной. Ждем больше информации.",
-        "image": "https://cdn2.steamgriddb.com/grid/29eae898bbf4086376aa8fd60007aaaa.png",
-        "genres": ["horror", "survival", "roguelike", "indie", "retro"],
-        "status": "on-hold",
-        "customColor": "#b8860b"
+        "image": "assets/images/games/bendy-lone-wolf.jpg",
+        "status": "on-hold"
       },
       {
         "id": "boris-and-the-dark-survival",
         "title": "Boris and the Dark Survival",
         "rating": 0,
         "description": "Спин-офф про волка Бориса. Бегаем по уровням, собираем припасы и прячемся от чернильного демона.",
-        "image": "https://cdn2.steamgriddb.com/grid/216085f7b9a7e1484e2b0802bc4f1bb8.png",
-        "genres": ["horror", "survival", "roguelike", "indie", "strategy"],
-        "status": "on-hold",
-        "customColor": "#a67b27"
+        "image": "assets/images/games/boris-and-the-dark-survival.jpg",
+        "status": "on-hold"
       },
       {
         "id": "bendy-secrets-of-the-machine",
         "title": "Bendy: Secrets of the Machine",
         "rating": 0,
         "description": "Интерактивный тизер следующей части с пространственными головоломками.",
-        "image": "https://cdn2.steamgriddb.com/grid/419f51a7b50c04bb38fd5870da376a5a.jpg",
-        "genres": ["horror", "puzzle", "mystery", "indie"],
-        "status": "on-hold",
-        "customColor": "#8a6e35"
+        "image": "assets/images/games/bendy-secrets-of-the-machine.jpg",
+        "status": "on-hold"
       }
     ]
   },
@@ -70,9 +56,7 @@
         "rating": 0,
         "description": "Мрачная и красивая метроидвания с хардкорными боссами и глубоким лором.",
         "image": "assets/images/games/hollow-knight.webp",
-        "genres": ["metroidvania", "souls-like", "platformer", "action", "hardcore", "indie"],
-        "status": "on-hold",
-        "customColor": "#a2b5c6"
+        "status": "on-hold"
       },
       {
         "id": "hollow-knight-silksong",
@@ -80,14 +64,8 @@
         "rating": 3.0,
         "description": "Приятная картинка и наличие кооператива. Но геймплей оказался слишком жестким для меня.",
         "image": "assets/images/games/hollow-knight-silksong.webp",
-        "genres": ["metroidvania", "souls-like", "platformer", "action", "indie", "coop", "atmospheric"],
         "status": "dropped",
-        "customColor": "#c43c4e",
-        "videos": [
-          "https://youtu.be/JPGKia9djuA",
-          "https://youtu.be/deMaQZA9Vc4",
-          "https://youtu.be/7xn2mNWE4Pw"
-        ]
+        "videos": ["https://youtu.be/JPGKia9djuA"]
       }
     ]
   },
@@ -95,163 +73,89 @@
     "id": "the-floor-above-demo",
     "title": "The Floor Above (Demo)",
     "rating": 4.0,
-    "description": "Атмосферный хоррор с новогодним вайбом. Неплохие скримеры разбавлены мемами, что радует. Из минусов — механика поиска аномалий неочевидна, приходится просто заучивать обстановку.",
+    "description": "Атмосферный хоррор с новогодним вайбом. Неплохие скримеры разбавлены мемами, что радует.",
     "image": "assets/images/games/the-floor-above-demo.jpg",
-    "genres": ["horror", "puzzle", "indie", "atmospheric", "funny"],
-    "status": "completed",
-    "customColor": "#cc2a1b"
+    "status": "completed"
   },
   {
     "id": "stick-fight-the-game",
     "title": "Stick Fight: The Game",
     "rating": 4.0,
-    "description": "Залипательный кооп с очень приятной музыкой. Играется весело, но контента хватило ненадолго — уровней маловато.",
+    "description": "Залипательный кооп с очень приятной музыкой. Играется весело, но контента хватило ненадолго.",
     "image": "assets/images/games/stick-fight-the-game.jpg",
-    "genres": ["fighting", "coop", "funny", "indie", "action"],
-    "status": "completed",
-    "customColor": "#1b7fa9",
-    "videos": [
-      "https://youtu.be/o1QJ3pcpeUM?si=qvEsbc1AVkUxmd_g"
-    ]
+    "status": "completed"
   },
   {
     "id": "supernatural-the-game",
     "title": "Supernatural: The Game",
     "rating": 4.0,
-    "description": "Как фанатке сериала, мне очень зашло. Озвучка героев аутентичная, есть приятная привязка к лору. Игра заметно лагает и сюжет короткий, но это простительно в ожидании полнометражной версии.",
+    "description": "Как фанатке сериала, мне очень зашло. Озвучка героев аутентичная.",
     "image": "assets/images/games/supernatural-the-game.jpg",
-    "genres": ["horror", "adventure", "action", "story-rich", "fan-game", "atmospheric"],
-    "status": "completed",
-    "customColor": "#948c08",
-    "videos": [
-      "https://youtu.be/f2Mbj35lirQ?si=cZneYfO7FQFqSLCC"
-    ]
+    "status": "completed"
   },
   {
     "id": "cursed-digicam",
     "title": "Cursed Digicam",
     "rating": 5.0,
-    "description": "Отличный хоррор с хорошим сюжетом, качественными скримерами и интересными головоломками. Есть даже забавные моменты. Минусов замечено не было.",
+    "description": "Отличный хоррор с хорошим сюжетом, качественными скримерами и интересными головоломками.",
     "image": "assets/images/games/cursed-digicam.jpg",
-    "genres": ["horror", "psychological", "indie", "puzzle", "simulation", "realistic"],
-    "status": "completed",
-    "customColor": "#8f8c38",
-    "videos": [
-      "https://youtu.be/9jQw2NCywLU?si=t-B8GpNMwxi6ebUM"
-    ]
+    "status": "completed"
   },
   {
     "id": "the-maid",
     "title": "The Maid",
     "rating": 3.0,
-    "description": "Игра порадовала хорошими скримерами, но геймплей показался слишком затянутым из-за постоянной необходимости ходить туда-сюда в поисках предметов.",
+    "description": "Игра порадовала хорошими скримерами, но геймплей показался слишком затянутым.",
     "image": "assets/images/games/the-maid.jpg",
-    "genres": ["horror", "indie", "walking-sim", "psychological", "puzzle"],
-    "status": "completed",
-    "customColor": "#923f2c",
-    "videos": [
-      "https://youtu.be/zwQGqgZrBKo?si=aO8nUD2Dlig9paLw"
-    ]
+    "status": "completed"
   },
   {
     "id": "the-cabin-factory",
     "title": "The Cabin Factory",
     "rating": 4.0,
-    "description": "Хоррор с хорошими скримерами и интересной фишкой — взаимодействием с чатом во время игры. Единственный минус — сюжет довольно короткий.",
+    "description": "Хоррор с хорошими скримерами и интересной фишкой — взаимодействием с чатом во время игры.",
     "image": "assets/images/games/the-cabin-factory.jpg",
-    "genres": ["horror", "simulation", "indie", "short", "psychological"],
-    "status": "completed",
-    "customColor": "#c51919",
-    "videos": [
-      "https://youtu.be/qZqk1O8p9BU?si=6EfyjmwmUbub2LwS"
-    ]
+    "status": "completed"
   },
   {
     "id": "silent-hill-f",
     "title": "Silent Hill f",
     "rating": 2.0,
-    "description": "Красивая картинка и интересный сюжет. Однако боевка отвратительная, а сама игра ощущается как нетипичный Сайлент Хилл, вызывая двоякие ощущения.",
+    "description": "Красивая картинка и интересный сюжет. Однако боевка отвратительная.",
     "image": "assets/images/games/silent-hill-f.png",
-    "genres": ["horror", "psychological", "story-rich", "atmospheric", "survival", "action"],
-    "status": "completed",
-    "customColor": "#b7242b",
-    "videos": [
-      "https://youtu.be/M-xk2GDhAhc?si=y5hUgVkZux0oXZfe",
-      "https://youtu.be/L7KIwjXuCao?si=3BSo-PciBeF5jOxH",
-      "https://youtu.be/NdSCznUi0ek?si=nbm1YXGlCtbXLQ3H",
-      "https://youtu.be/Bf2IdJrUPmY?si=-0cchlrvdu0ISgIu",
-      "https://youtu.be/EBaPeWK11BU?si=Z3Yca9f2jn1tu9H3",
-      "https://youtu.be/IMz4cLhEQzE?si=xyBdr4N2yIk1t9ya",
-      "https://youtu.be/PUUXPIuBVT4?si=9z9A94rTngvm8kq_",
-      "https://youtu.be/r2CsTzv1bKE?si=QLd-Tvw5tfoyEtIi"
-    ]
+    "status": "completed"
   },
   {
     "id": "vacation-cafe-simulator",
     "title": "Vacation Cafe Simulator (Demo)",
     "rating": 4.0,
-    "description": "Красивые виды и возможность плавать под водой. Геймплей приятный и несложный. В демке пока много багов и мало функций, поэтому ждем полную версию.",
+    "description": "Красивые виды и возможность плавать под водой. Геймплей приятный и несложный.",
     "image": "assets/images/games/vacation-cafe-simulator.jpg",
-    "genres": ["simulation", "casual", "relaxing", "indie", "management"],
-    "status": "playing",
-    "customColor": "#84b4c1",
-    "videos": [
-      "https://youtu.be/8vjTPSYiOuM?si=QyRJdliU72-VzzX_"
-    ]
+    "status": "playing"
   },
   {
     "id": "the-forest",
     "title": "The Forest",
     "rating": 4.0,
-    "description": "Залипательная песочница с поддержкой Chaos Tricks (интерактив за баллы и донаты). Сюжет интересный, но довольно короткий.",
+    "description": "Залипательная песочница с поддержкой Chaos Tricks (интерактив за баллы и донаты).",
     "image": "assets/images/games/the-forest.png",
-    "genres": ["survival", "horror", "open-world", "sandbox", "coop", "adventure", "indie"],
-    "status": "completed",
-    "customColor": "#e0bf08",
-    "videos": [
-      "https://youtu.be/NooBjWBm8oE?si=p_wZkbis61-Uduv7",
-      "https://youtu.be/TMhmn2_8grg?si=pwNKE9Ax6Pgv2Iez"
-    ]
+    "status": "completed"
   },
   {
     "id": "dead-island-2",
     "title": "Dead Island 2",
     "rating": 5.0,
-    "description": "Сочная картинка, классная музыка и залипательное лутание. Разрушаемость зомби на высоте, но звуки ломающейся мебели немного подкачали.",
+    "description": "Сочная картинка, классная музыка и залипательное лутание.",
     "image": "assets/images/games/dead-island-2.png",
-    "genres": ["zombies", "action", "rpg", "coop", "hack-and-slash", "shooter", "open-world", "aaa", "horror", "funny"],
-    "status": "completed",
-    "customColor": "#266ab1",
-    "videos": [
-      "https://youtu.be/_LQRER2rOWg?si=3Xgj5NQc-a4-7iLk",
-      "https://youtu.be/f7DoiosG1dI?si=tSTFky-cmyqA_FBk",
-      "https://youtu.be/C3ZrneATygY?si=af71ZAwy2CJ4UxB6",
-      "https://youtu.be/m-xfz0YISEg?si=ph1DTW8zopY_8qMt",
-      "https://youtu.be/qrRPE5mdCLU?si=5laSo4u09kb8ovjn",
-      "https://youtu.be/4nWV0EqxfGA?si=LddVRqKGTUZOmoLE",
-      "https://youtu.be/2DiQEA11Vps?si=x879vae6mhk1zPtO",
-      "https://youtu.be/QZKG8PHAxsA?si=zDpuJ8nsrFL27ja5",
-      "https://youtu.be/56AmmuvlppE?si=EgfK1VXk_MCKJ_s4"
-    ]
+    "status": "completed"
   },
   {
     "id": "repo",
     "title": "R.E.P.O.",
     "rating": 5.0,
-    "description": "Прикольные монстры и залипательное лутание. Есть поддержка Chaos Tricks (плюшки за баллы канала или донаты). Из минусов — в последнее время ужасный пинг.",
+    "description": "Прикольные монстры и залипательное лутание.",
     "image": "assets/images/games/repo.png",
-    "genres": ["horror", "coop", "roguelike", "funny", "indie", "scifi", "shooter", "action"],
-    "status": "playing",
-    "customColor": "#ce8219",
-    "videos": [
-      "https://youtu.be/INxLtYGWWNI",
-      "https://youtu.be/-Io-aMBFqWg",
-      "https://youtu.be/UKgEd3xHn5g",
-      "https://youtu.be/BUkbzbvlQ44",
-      "https://youtu.be/oudyoE8akHk",
-      "https://youtu.be/PdA7Ebci5lA",
-      "https://youtu.be/YppmFYy0PSk"
-    ]
+    "status": "playing"
   },
   {
     "id": "unturned",
@@ -259,258 +163,222 @@
     "rating": 4.0,
     "description": "Залипательная боевка и приятный геймплей. Есть кооп, но загрузка — жуть какая долгая.",
     "image": "assets/images/games/unturned.png",
-    "genres": ["survival", "zombies", "open-world", "sandbox", "coop", "free", "indie", "shooter", "action"],
-    "status": "playing",
-    "customColor": "#71b64a",
-    "videos": [
-      "https://youtu.be/rzfnAtjE4as",
-      "https://youtu.be/SMsvjKDwdZw",
-      "https://youtu.be/F1nUsoEGR6U",
-      "https://youtu.be/LJa-1BoEbMc"
-    ]
+    "status": "playing"
   },
   {
     "id": "bad-cheese",
     "title": "Bad Cheese",
     "rating": 1.5,
-    "description": "Начало интригует, но дальше начинается сложная психоделика. Звук несбалансирован, но шлепки приятные. Стиль 1920-х.",
+    "description": "Начало интригует, но дальше начинается сложная психоделика.",
     "image": "assets/images/games/bad-cheese.jpg",
-    "genres": ["horror", "trash", "retro", "psychological", "indie"],
-    "status": "completed",
-    "customColor": "#e3ea04",
-    "videos": [
-      "https://youtu.be/PIyCxvZzeDA"
-    ]
+    "status": "completed"
   },
   {
     "id": "state-of-decay-2",
     "title": "State of Decay 2",
     "rating": 4.5,
-    "description": "Топовое выживание. Строим базу, лутаем, давим зомби. В коопе весело, хоть роль гостя и урезана.",
+    "description": "Топовое выживание. Строим базу, лутаем, давим зомби.",
     "image": "assets/images/games/state-of-decay-2.jpg",
-    "genres": ["survival", "zombies", "coop", "open-world", "shooter", "action"],
-    "status": "dropped",
-    "customColor": "#b79967",
-    "videos": [
-      "https://www.youtube.com/watch?v=4V4y8rO75mA"
-    ]
+    "status": "dropped"
   },
   {
     "id": "fuck-you-witch",
     "title": "Fuck You Witch",
     "rating": 2.5,
-    "description": "Мемный хоррор, где нужно орать матом в микрофон, чтобы отпугнуть ведьму. Технически сыро, но весело.",
+    "description": "Мемный хоррор, где нужно орать матом в микрофон, чтобы отпугнуть ведьму.",
     "image": "assets/images/games/fuck-you-witch.jpg",
-    "genres": ["horror", "trash", "funny", "indie", "simulation"],
-    "status": "completed",
-    "customColor": "#a43c2e",
-    "videos": [
-      "https://youtu.be/07lzMJrVDjg"
-    ]
+    "status": "completed"
   },
   {
     "id": "lethal-company",
     "title": "Lethal Company",
     "rating": 5.0,
-    "description": "Классика нашего кооператива. Процесс сбора лута невероятно затягивает. Единственный минус — малая вместимость лобби в ванильной версии, нужны моды.",
+    "description": "Классика нашего кооператива. Процесс сбора лута невероятно затягивает.",
     "image": "assets/images/games/lethal-company.webp",
-    "genres": ["horror", "coop", "survival", "scifi", "funny", "indie"],
-    "status": "playing",
-    "customColor": "#cc050d",
-    "videos": [
-      "https://youtu.be/8rQTRqSYB9I",
-      "https://youtu.be/poR5ososvEw",
-      "https://youtu.be/oGM9v8Mx_mI",
-      "https://youtu.be/yzZkGAWhuaE",
-      "https://youtu.be/hVI6wmxfDXw",
-      "https://youtu.be/OCBMaHUegZ4",
-      "https://youtu.be/spYKfCO6G7Q",
-      "https://youtu.be/7YhFVjOU2-w",
-      "https://youtu.be/QDvf0aRlnjM",
-      "https://youtu.be/pjLLbazxijc",
-      "https://youtu.be/xnyfzVJ_ofU",
-      "https://youtu.be/jRCkXl96YgY"
-    ]
+    "status": "playing"
   },
   {
     "id": "unmourned",
     "title": "Unmourned",
     "rating": 4.0,
-    "description": "Приятная картинка и действительно качественные скримеры. Но персонаж бегает слишком медленно, из-за чего прохождение ощущается искусственно затянутым.",
+    "description": "Приятная картинка и действительно качественные скримеры.",
     "image": "assets/images/games/unmourned.jpg",
-    "genres": ["horror", "walking-sim", "psychological", "indie", "detective"],
-    "status": "completed",
-    "customColor": "#2f3b32",
-    "videos": [
-      "https://youtu.be/ytz5jMFVGdQ",
-      "https://youtu.be/vih6bH6ebSo"
-    ]
+    "status": "completed"
+  },
+  {
+    "id": "bioshock-infinite",
+    "title": "BioShock Infinite",
+    "rating": 4.0,
+    "description": "Красивая графика и расслабляющая стрельба.",
+    "image": "assets/images/games/bioshock-infinite.png",
+    "status": "completed"
   },
   {
     "id": "gris",
     "title": "GRIS",
     "rating": 0,
     "description": "Медитативный платформер с потрясающим акварельным визуалом.",
-    "image": "https://cdn2.steamgriddb.com/grid/28c3c3e591be4d57567ec7830f7b3b46.webp",
-    "genres": ["platformer", "adventure", "atmospheric", "relaxing", "puzzle", "indie"],
-    "status": "on-hold",
-    "customColor": "#79c5ce"
+    "image": "assets/images/games/gris.webp",
+    "status": "on-hold"
   },
   {
     "id": "content-warning",
     "title": "Content Warning",
     "rating": 0,
     "description": "Снимаем видео с монстрами, чтобы стать популярными.",
-    "image": "https://cdn2.steamgriddb.com/grid/ec6fbf0d38ffc435686348723a08c839.png",
-    "genres": ["coop", "horror", "simulation", "funny", "indie"],
-    "status": "on-hold",
-    "customColor": "#e1ff00"
+    "image": "assets/images/games/content-warning.jpg",
+    "status": "on-hold"
   },
   {
     "id": "minecraft",
     "title": "Minecraft",
     "rating": 0,
     "description": "Бесконечная кубическая песочница.",
-    "image": "https://cdn2.steamgriddb.com/grid/53344d4d9596276b9b7f70158bf95779.webp",
-    "genres": ["sandbox", "survival", "open-world", "coop", "adventure"],
-    "status": "on-hold",
-    "customColor": "#39ff14"
+    "image": "assets/images/games/minecraft.jpg",
+    "status": "on-hold"
   },
   {
     "id": "portal-2",
     "title": "Portal 2",
     "rating": 0,
     "description": "Лучшая головоломка с порталами и кооперативом.",
-    "image": "https://cdn2.steamgriddb.com/grid/24be7c4485d63a3d70e038692172adce.png",
-    "genres": ["puzzle", "coop", "adventure", "story-rich", "funny", "scifi", "aaa"],
-    "status": "on-hold",
-    "customColor": "#00a2ff"
+    "image": "assets/images/games/portal-2.jpg",
+    "status": "on-hold"
   },
   {
     "id": "cs2",
     "title": "Counter-Strike 2",
     "rating": 0,
     "description": "Соревновательный тактический шутер.",
-    "image": "https://cdn2.steamgriddb.com/grid/0662aa1719017e0efa5fa8daf0880c6e.png",
-    "genres": ["shooter", "multiplayer", "action", "strategy", "aaa"],
-    "status": "on-hold",
-    "customColor": "#ffa500"
+    "image": "assets/images/games/cs2.jpg",
+    "status": "on-hold"
   },
   {
     "id": "sally-face",
     "title": "Sally Face",
     "rating": 0,
     "description": "Мрачная приключенческая игра о мальчике с протезом на лице.",
-    "image": "https://cdn2.steamgriddb.com/grid/9e729118dec145b90ce23e1f973a29b2.png",
-    "genres": ["adventure", "horror", "story-rich", "psychological", "indie", "point-click"],
-    "status": "on-hold",
-    "customColor": "#79c5ce"
-  },
-  {
-    "id": "bioshock-infinite",
-    "title": "BioShock Infinite",
-    "rating": 4.0,
-    "description": "Красивая графика и расслабляющая стрельба. Механика перемещения во времени делает геймплей интересным. Но сюжет показался слишком сложным — пока не совсем понятно, что к чему.",
-    "image": "assets/images/games/bioshock-infinite.png",
-    "genres": ["shooter", "action", "story-rich", "scifi", "adventure", "aaa"],
-    "status": "completed",
-    "customColor": "#dfc4ac",
-    "videos": [
-      "https://youtu.be/wvlF0sBKpgA",
-      "https://youtu.be/KsBProOxvpY",
-      "https://youtu.be/mFQjB_5FQNs",
-      "https://youtu.be/cXXcKHYQJ2c",
-      "https://youtu.be/jBobUycOKEM"
-    ]
+    "image": "assets/images/games/sally-face.jpg",
+    "status": "on-hold"
   },
   {
     "id": "beholder",
     "title": "Beholder",
     "rating": 0,
     "description": "Симулятор управдома в тоталитарном государстве.",
-    "image": "https://cdn2.steamgriddb.com/grid/5ea7aaa4eaff9e67e37e174ccf82b56b.jpg",
-    "genres": ["strategy", "simulation", "story-rich", "indie", "atmospheric"],
-    "status": "on-hold",
-    "customColor": "#2c3e50"
+    "image": "assets/images/games/beholder.webp",
+    "status": "on-hold"
   },
   {
     "id": "mouthwashing",
     "title": "Mouthwashing",
     "rating": 0,
     "description": "Психологический хоррор от первого лица в космосе.",
-    "image": "https://cdn2.steamgriddb.com/grid/20b9686ae90039dd7216f07c6bdd3211.png",
-    "genres": ["horror", "psychological", "story-rich", "retro", "scifi", "indie"],
-    "status": "on-hold",
-    "customColor": "#ff2d95"
+    "image": "assets/images/games/mouthwashing.jpg",
+    "status": "on-hold"
   },
   {
     "id": "cuphead",
     "title": "Cuphead",
     "rating": 0,
     "description": "Сложный босс-раш платформер в стиле ретро-анимации 30-х годов.",
-    "image": "https://cdn2.steamgriddb.com/grid/23d2d7ff1a670a1ac0f181516bd58520.png",
-    "genres": ["platformer", "action", "hardcore", "coop", "indie", "retro"],
-    "status": "on-hold",
-    "customColor": "#c0392b"
+    "image": "assets/images/games/cuphead.jpg",
+    "status": "on-hold"
   },
   {
     "id": "buckshot-roulette",
     "title": "Buckshot Roulette",
     "rating": 0,
     "description": "Русская рулетка с дробовиком.",
-    "image": "https://cdn2.steamgriddb.com/grid/15dedec079bd674cc309564d63c8db2c.png",
-    "genres": ["horror", "strategy", "psychological", "indie", "roguelike"],
-    "status": "on-hold",
-    "customColor": "#27ae60"
+    "image": "assets/images/games/buckshot-roulette.jpg",
+    "status": "on-hold"
   },
   {
     "id": "undertale",
     "title": "Undertale",
     "rating": 0,
     "description": "Легендарная RPG, где никого не обязательно убивать.",
-    "image": "https://cdn2.steamgriddb.com/grid/bbd30950ec6c745947d21a08d002f782.png",
-    "genres": ["rpg", "story-rich", "adventure", "funny", "retro", "indie"],
-    "status": "on-hold",
-    "customColor": "#9b59b6"
+    "image": "assets/images/games/undertale.jpg",
+    "status": "on-hold"
   },
   {
     "id": "vrchat",
     "title": "VRChat",
     "rating": 0,
     "description": "Социальная песочница в виртуальной реальности.",
-    "image": "https://cdn2.steamgriddb.com/grid/295b5d1a1f98d2c6c64569ed889378d7.png",
-    "genres": ["simulation", "multiplayer", "sandbox", "anime", "free"],
-    "status": "on-hold",
-    "customColor": "#1abc9c"
+    "image": "assets/images/games/vrchat.webp",
+    "status": "on-hold"
   },
   {
     "id": "alice-madness-returns",
     "title": "Alice: Madness Returns",
     "rating": 0,
     "description": "Мрачное переосмысление Алисы в Стране Чудес.",
-    "image": "https://cdn2.steamgriddb.com/grid/18c1932d87fb2d0250f2b3235f3802c9.png",
-    "genres": ["action", "platformer", "horror", "psychological", "fantasy", "hack-and-slash"],
-    "status": "on-hold",
-    "customColor": "#8e44ad"
+    "image": "assets/images/games/alice-madness-returns.jpg",
+    "status": "on-hold"
   },
   {
     "id": "abyssus",
     "title": "Abyssus",
     "rating": 0,
     "description": "Экшен в подводном сеттинге.",
-    "image": "https://cdn2.steamgriddb.com/grid/ad65411e5914ebe1d688874f6f9f865a.jpg",
-    "genres": ["shooter", "action", "roguelike", "scifi", "indie"],
-    "status": "on-hold",
-    "customColor": "#16a085"
+    "image": "assets/images/games/abyssus.jpg",
+    "status": "on-hold"
   },
   {
     "id": "helltaker",
     "title": "Helltaker",
     "rating": 0,
     "description": "Короткая игра-головоломка про сбор гарема из демониц.",
-    "image": "https://cdn2.steamgriddb.com/grid/8ca2ddca9fd5b429152341f9c56cde20.png",
-    "genres": ["puzzle", "adventure", "funny", "anime", "indie", "free"],
-    "status": "on-hold",
-    "customColor": "#bdc3c7"
+    "image": "assets/images/games/helltaker.webp",
+    "status": "on-hold"
+  },
+  {
+    "id": "valorant",
+    "title": "Valorant",
+    "rating": 0,
+    "description": "Тактический командный шутер с уникальными способностями.",
+    "image": "assets/images/games/valorant.webp",
+    "status": "on-hold"
+  },
+  {
+    "id": "tomodachi-life-living-the-dream",
+    "title": "Tomodachi Life: Living the Dream 2026",
+    "rating": 0,
+    "description": "",
+    "image": "assets/images/games/tomodachi-life.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "xenofeels",
+    "title": "Xenofeels",
+    "rating": 0,
+    "description": "",
+    "image": "assets/images/games/xenofeels.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "war-thunder",
+    "title": "War Thunder",
+    "rating": 0,
+    "description": "Масштабные сражения на танках, самолетах и кораблях.",
+    "image": "assets/images/games/war-thunder.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "dome-keeper",
+    "title": "Dome Keeper",
+    "rating": 0,
+    "description": "Копаем недра, добываем ресурсы и защищаем купол от монстров.",
+    "image": "assets/images/games/dome-keeper.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "subnautica",
+    "title": "Subnautica",
+    "rating": 0,
+    "description": "Выживание на планете, полностью покрытой водой.",
+    "image": "assets/images/games/subnautica.jpg",
+    "status": "on-hold"
   }
 ]

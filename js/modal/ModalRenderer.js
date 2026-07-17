@@ -1,5 +1,4 @@
 /* js/modal/ModalRenderer.js */
-import { GENRE_MAP } from '../media-store.js';
 
 const STATUS_TEXT_MAP = {
     'completed': 'ЗАВЕРШЕНО', 'watched': 'ПРОСМОТРЕНО',
@@ -50,7 +49,6 @@ export class ModalRenderer {
 
         if (effectiveStatus === 'suggested') {
             this.els.ratingBox.style.display = 'none';
-            this.els.genres.innerHTML = '';
         } else {
             this.els.ratingBox.style.display = 'flex';
             let rating = currentItem.rating || 0;
@@ -70,8 +68,6 @@ export class ModalRenderer {
                 this.els.ratingVal.style.color = "#666";
                 this.els.segments.innerHTML = `<span style="font-family:monospace;font-size:0.7rem;color:#666;">NO_DATA</span>`;
             }
-            
-            this.els.genres.innerHTML = currentItem.genres ? currentItem.genres.map(g => `<span class="modal-genre-tag">${GENRE_MAP[g] || g}</span>`).join('') : '';
         }
         
         return effectiveStatus; 

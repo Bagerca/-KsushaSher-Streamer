@@ -91,7 +91,8 @@ export class GridManager {
                 const item = this.store.getItemById(id);
                 if (item) {
                     EventBus.emit('PLAY_SOUND', 'expand');
-                    EventBus.emit('MODAL_OPEN_MEDIA', { item, type: this.store.currentType });
+                    // ПЕРЕДАЕМ triggerElement, ЧТОБЫ МОДАЛКА СРАЗУ ВЗЯЛА ЦВЕТ КАРТОЧКИ
+                    EventBus.emit('MODAL_OPEN_MEDIA', { item, type: this.store.currentType, triggerElement: card });
                 }
             }
         });
@@ -104,7 +105,7 @@ export class GridManager {
             lazyBackLayers.forEach(layer => {
                 const bgUrl = layer.dataset.lazyBg;
                 if (bgUrl && !layer.style.backgroundImage) {
-                    this.lazyLoader._safeImageLoad(bgUrl, card.classList.contains('is-youtube'), layer, null);
+                    this.lazyLoader._safeImageLoad(bgUrl, card.classList.contains('is-youtube'), layer, null, null);
                     layer.removeAttribute('data-lazy-bg');
                 }
             });
@@ -219,10 +220,7 @@ export class GridManager {
             const archiveSection = document.getElementById('media-archive');
             
             if (archiveSection) {
-                // Вызываем нативное событие для NavRail
                 EventBus.emit('LAYOUT_CHANGED'); 
-                
-                // Ручной скролл наверх секции
                 const targetY = archiveSection.offsetTop - 50;
                 window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
             }
@@ -252,7 +250,7 @@ export class GridManager {
                         
                         if (this.scrollObserver) this.scrollObserver.disconnect();
                         
-                        EventBus.emit('LAYOUT_CHANGED'); // Финальный пересчет геометрии
+                        EventBus.emit('LAYOUT_CHANGED'); 
                         this.isAnimating = false;
                         
                     }, 350); 
@@ -298,7 +296,6 @@ export class GridManager {
         
         if (start >= end) return;
 
-        // ПАКЕТНАЯ СБОРКА HTML (ИЗБАВЛЯЕМСЯ ОТ LAYOUT THRASHING)
         let mainHtmlBuf = '';
         let suggHtmlBuf = '';
         let hasSuggested = false;
@@ -316,7 +313,6 @@ export class GridManager {
             }
         }
         
-        // Вставка в DOM происходит ровно 1 раз для каждого контейнера
         if (hasSuggested) {
             this.els.suggestedHeader.style.display = 'flex';
             this.els.gridSuggested.insertAdjacentHTML('beforeend', suggHtmlBuf);
@@ -325,7 +321,6 @@ export class GridManager {
             this.els.gridMain.insertAdjacentHTML('beforeend', mainHtmlBuf);
         }
         
-        // Подключаем LazyLoader только к новым карточкам (Экономим процессор)
         const newCards = document.querySelectorAll('.archive-card-container:not(.is-observed)');
         newCards.forEach(card => {
             card.classList.add('is-observed');
@@ -333,8 +328,6 @@ export class GridManager {
         });
 
         this.renderedCount = end;
-        
-        // Оповещаем систему о том, что высота страницы изменилась
         EventBus.emit('LAYOUT_CHANGED');
         
         console.log(`📦 [GridManager] Пакет из ${end - start} карт отрендерен за ${(performance.now() - perfStart).toFixed(2)}мс`);

@@ -7,11 +7,9 @@ import { ModalRenderer } from './ModalRenderer.js';
 export class MediaModalManager {
     constructor() {
         this.buildDOM();
-        
         this.posters = new ModalPosters(this.els.posterWrapper, this.els.posterDots, this.els.cinematicBg);
         this.player = new ModalPlayer(this.els.videoSection, this.els.iframe, this.els.videoPlaylist);
         this.renderer = new ModalRenderer(this.els);
-
         this.initListeners();
     }
 
@@ -23,7 +21,6 @@ export class MediaModalManager {
         this.overlay.innerHTML = `
             <div class="modal-cinematic-bg" id="modal-cinematic-bg"></div>
             <button class="modal-close-btn" title="Закрыть (Esc)"><i class="fas fa-times"></i></button>
-            
             <div class="media-modal-content">
                 <div class="modal-layout" id="modal-layout">
                     <div class="modal-col-sidebar" id="modal-col-sidebar">
@@ -37,7 +34,6 @@ export class MediaModalManager {
                             </div>
                         </div>
                     </div>
-                    
                     <div class="modal-col-main" id="modal-col-main">
                         <div class="modal-dynamic-zone" id="modal-dynamic-zone">
                             <div class="modal-header">
@@ -50,17 +46,14 @@ export class MediaModalManager {
                                 </div>
                                 <div class="modal-meta-row">
                                     <span class="modal-status-badge" id="modal-status">STATUS</span>
-                                    <div class="modal-genres-container" id="modal-genres"></div>
                                 </div>
                             </div>
-                            
                             <div class="modal-body">
                                 <div class="modal-desc-wrapper">
                                     <p class="modal-desc" id="modal-desc"></p>
                                     <div class="modal-desc-full" id="modal-desc-full"></div>
                                 </div>
                             </div>
-
                             <div class="modal-video-section" id="modal-video-section" style="display: none;">
                                 <div class="video-header"><i class="fas fa-play-circle"></i> <span>МЕДИА АРХИВ</span></div>
                                 <div class="video-container" id="modal-player-container"><iframe id="modal-iframe" src="" frameborder="0" allowfullscreen></iframe></div>
@@ -88,7 +81,6 @@ export class MediaModalManager {
             segments: document.getElementById('modal-segments'),
             status: document.getElementById('modal-status'),
             title: document.getElementById('modal-title'),
-            genres: document.getElementById('modal-genres'),
             desc: document.getElementById('modal-desc'),
             descFull: document.getElementById('modal-desc-full'),
             id: document.getElementById('modal-id'),
@@ -101,19 +93,23 @@ export class MediaModalManager {
 
     initListeners() {
         this.closeBtn.addEventListener('click', () => { EventBus.emit('PLAY_SOUND', 'click'); this.close(); });
-        this.overlay.addEventListener('click', (e) => { 
-            if (e.target === this.overlay || e.target === this.els.cinematicBg) this.close(); 
-        });
+        this.overlay.addEventListener('click', (e) => { if (e.target === this.overlay || e.target === this.els.cinematicBg) this.close(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.overlay.classList.contains('active')) this.close(); });
-        EventBus.on('MODAL_OPEN_MEDIA', ({ item, type }) => this.open(item, type));
+        
+        // ПРИХВАТЫВАЕМ ЦВЕТ ИЗ СЕТКИ, ЕСЛИ ОН УЖЕ ВЫЧИСЛЕН (оптимизация)
+        EventBus.on('MODAL_OPEN_MEDIA', ({ item, type, triggerElement }) => {
+            const precalculatedColor = triggerElement ? triggerElement.dataset.extractedColor : null;
+            this.open(item, type, precalculatedColor);
+        });
     }
 
     updateThemeColor(color) {
+        if (!color) return;
         this.content.style.setProperty('--modal-color', color);
         this.overlay.style.setProperty('--modal-color', color); 
     }
 
-    open(item, type) {
+    open(item, type, precalculatedColor) {
         this.player.stop();
         this.renderer.setLayoutMode(item.format, this.overlay);
 
@@ -125,26 +121,35 @@ export class MediaModalManager {
             stackData = images.map(img => ({ ...item, isImageOnly: true, overrideImage: img }));
         }
 
-        const initialColor = stackData[0].customColor || '#fff';
-        this.updateThemeColor(initialColor);
+        // Ставим цвет из сетки (или дефолтный), пока грузится картинка
+        const fallbackColor = precalculatedColor || item.customColor || '#ff2d95';
+        this.updateThemeColor(fallbackColor);
 
-        const handleSlideChange = (currentItem) => {
-            const newColor = currentItem.customColor || '#fff';
-            this.updateThemeColor(newColor);
-
+        // Колбэк на клик (смена плаката)
+        const handleSlideChange = (currentItem, extractedColor) => {
+            this.updateThemeColor(extractedColor);
             this.renderer.triggerGlitchTransition(() => {
-                // Передаем только текущую игру!
-                const effectiveStatus = this.renderer.updateText(currentItem, type, newColor);
+                const effectiveStatus = this.renderer.updateText(currentItem, type, extractedColor);
                 this.player.render(currentItem, effectiveStatus, (newTitle) => {
                     this.els.title.textContent = newTitle;
                 });
             });
         };
 
-        this.posters.init(stackData, handleSlideChange);
+        // Колбэк на асинхронную загрузку картинки (авто-перекраска)
+        const handleImageLoadedColor = (extractedColor) => {
+            this.updateThemeColor(extractedColor);
+            // Тихо перекрашиваем рейтинг
+            this.els.ratingVal.style.color = extractedColor;
+            this.els.segments.querySelectorAll('.filled').forEach(seg => {
+                seg.style.color = extractedColor;
+            });
+        };
+
+        this.posters.init(stackData, handleSlideChange, handleImageLoadedColor);
         
         // Стартовый рендер
-        const initStatus = this.renderer.updateText(stackData[0], type, initialColor);
+        const initStatus = this.renderer.updateText(stackData[0], type, fallbackColor);
         this.player.render(stackData[0], initStatus, (newTitle) => {
             this.els.title.textContent = newTitle;
         });

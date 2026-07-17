@@ -1,6 +1,6 @@
 /* js/archive/FilterController.js */
 import EventBus from '../event-bus.js';
-import { GENRE_MAP, STATUS_MAP } from '../media-store.js';
+import { STATUS_MAP } from '../media-store.js';
 
 export class FilterController {
     constructor(store, gridManager) {
@@ -9,15 +9,10 @@ export class FilterController {
 
         this.els = {
             statusFilters: document.getElementById('archive-filters-status'),
-            genreFilters: document.getElementById('archive-filters-genre'),
             typeSwitcher: document.querySelector('.type-switcher'),
             typeBtns: document.querySelectorAll('.switcher-btn'),
             sortBtns: document.querySelectorAll('.sort-btn'),
             densityBtns: document.querySelectorAll('.density-btn'),
-            
-            toggleGenresBtn: document.getElementById('toggle-genres-btn'),
-            genresAccordion: document.getElementById('genres-accordion'),
-            genreCountBadge: document.getElementById('genre-count'),
             clearFiltersBtn: document.getElementById('clear-filters-btn')
         };
 
@@ -28,7 +23,6 @@ export class FilterController {
         EventBus.on('MEDIA_STORE_LOADED', () => this.updateUI());
         EventBus.on('MEDIA_STORE_UPDATED', () => this.updateUI());
 
-        // Переключатель типа (Игры/Кино)
         this.els.typeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const type = btn.dataset.type;
@@ -40,7 +34,6 @@ export class FilterController {
             });
         });
 
-        // Сортировка
         this.els.sortBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
@@ -49,7 +42,6 @@ export class FilterController {
             });
         });
 
-        // Плотность сетки
         this.els.densityBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const mode = btn.dataset.mode;
@@ -62,22 +54,11 @@ export class FilterController {
             });
         });
 
-        // Аккордеон жанров
-        if (this.els.toggleGenresBtn && this.els.genresAccordion) {
-            this.els.toggleGenresBtn.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'expand');
-                this.els.genresAccordion.classList.toggle('expanded');
-                this.els.toggleGenresBtn.classList.toggle('active');
-            });
-        }
-
-        // Кнопка сброса фильтров
         if (this.els.clearFiltersBtn) {
             this.els.clearFiltersBtn.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
                 this.store.activeFilters.clear();
                 
-                // Очищаем поиск тоже
                 const searchInput = document.getElementById('archive-search');
                 if (searchInput) searchInput.value = '';
                 this.store.searchQuery = '';
@@ -98,7 +79,7 @@ export class FilterController {
     }
 
     renderChips() {
-        if (!this.els.statusFilters || !this.els.genreFilters) return;
+        if (!this.els.statusFilters) return;
 
         let statusesOrder = this.store.currentType === 'games' 
             ? ['completed', 'playing', 'suggested', 'on-hold', 'dropped']
@@ -106,19 +87,12 @@ export class FilterController {
         
         const isActive = (val) => this.store.activeFilters.has(val) ? 'active' : '';
 
-        // Отрисовка статусов
         this.els.statusFilters.innerHTML = statusesOrder.map(s => `
             <div class="filter-chip is-status ${s === 'suggested' ? 'status-suggested' : `status-${s}`} ${isActive(s)}" data-filter="${s}">
                 ${STATUS_MAP[s] || s}
             </div>
         `).join('');
 
-        // Отрисовка жанров
-        this.els.genreFilters.innerHTML = this.store.getAllGenres().map(g => `
-            <div class="filter-chip genre-chip ${isActive(g)}" data-filter="${g}">${GENRE_MAP[g] || g}</div>
-        `).join('');
-
-        // Добавляем листенеры на чипы
         document.querySelectorAll('.filter-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
@@ -126,21 +100,6 @@ export class FilterController {
             });
         });
 
-        // Подсчет активных жанров для бейджа
-        const activeGenresCount = Array.from(this.store.activeFilters).filter(f => !Object.keys(STATUS_MAP).includes(f)).length;
-        
-        if (this.els.genreCountBadge) {
-            this.els.genreCountBadge.textContent = activeGenresCount;
-            if (activeGenresCount > 0) {
-                this.els.genreCountBadge.classList.remove('hidden');
-                this.els.toggleGenresBtn.classList.add('has-filters');
-            } else {
-                this.els.genreCountBadge.classList.add('hidden');
-                this.els.toggleGenresBtn.classList.remove('has-filters');
-            }
-        }
-
-        // Показ/Скрытие кнопки сброса фильтров
         if (this.els.clearFiltersBtn) {
             if (this.store.activeFilters.size > 0 || this.store.searchQuery.length > 0) {
                 this.els.clearFiltersBtn.classList.remove('hidden');
@@ -160,12 +119,7 @@ export class FilterController {
                 btn.classList.add('active');
                 let newIconClass = btn.dataset.sort === 'name' 
                     ? (this.store.sortDirection === 'asc' ? 'fas fa-sort-alpha-down' : 'fas fa-sort-alpha-up')
-                    : (this.store.sortDirection === 'desc' ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up');
-                
-                // Если рейтинг, используем другие иконки
-                if (btn.dataset.sort === 'rating') {
-                    newIconClass = this.store.sortDirection === 'desc' ? 'fas fa-sort-numeric-down-alt' : 'fas fa-sort-numeric-up-alt';
-                }
+                    : (this.store.sortDirection === 'desc' ? 'fas fa-sort-numeric-down-alt' : 'fas fa-sort-numeric-up-alt');
                 
                 if (icon) {
                     icon.classList.add('flipping');

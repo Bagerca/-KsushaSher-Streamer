@@ -1,4 +1,5 @@
 /* js/archive/LazyLoader.js */
+import { extractColorFromImage } from '../utils.js';
 
 export class LazyLoader {
     constructor(gridModeRef) {
@@ -10,7 +11,7 @@ export class LazyLoader {
                     this.observer.unobserve(entry.target);
                 }
             });
-        }, { rootMargin: '400px' }); // Увеличили марджин, чтобы начинало грузить чуть раньше
+        }, { rootMargin: '400px' }); 
     }
 
     observe(card) {
@@ -25,39 +26,50 @@ export class LazyLoader {
         const placeholder = frontLayer.querySelector('.procedural-placeholder');
         const imgBg = frontLayer.querySelector('.layer-img-bg');
 
+        // ГРУЗИМ ПЕРЕДНИЙ СЛОЙ (и извлекаем из него цвет!)
         if (primaryUrl && imgBg) {
-            this._safeImageLoad(primaryUrl, isYouTube, imgBg, placeholder);
+            this._safeImageLoad(primaryUrl, isYouTube, imgBg, placeholder, card);
             frontLayer.removeAttribute('data-lazy-bg');
         }
 
+        // ГРУЗИМ ЗАДНИЕ СЛОИ (без извлечения цвета)
         if (this.getGridMode() !== 'compact') {
             const backLayers = card.querySelectorAll('.layer-back, .layer-back-deep');
             backLayers.forEach(layer => {
                 const bgUrl = layer.dataset.lazyBg;
                 if (bgUrl) {
-                    // Для задних слоев заглушку не убираем (её там нет), просто грузим
-                    this._safeImageLoad(bgUrl, isYouTube, layer, null);
+                    this._safeImageLoad(bgUrl, isYouTube, layer, null, null);
                     layer.removeAttribute('data-lazy-bg');
                 }
             });
         }
     }
 
-    _safeImageLoad(url, isYouTube, targetEl, placeholderEl) {
+    _safeImageLoad(url, isYouTube, targetEl, placeholderEl, parentCard) {
         const img = new Image();
         
+        // ВАЖНО: Разрешаем CORS, чтобы можно было прочитать пиксели
+        img.crossOrigin = "Anonymous";
+        
         img.onload = () => {
-            // Ютуб хак: если ютуб отдает картинку шириной 120px, значит maxresdefault.jpg не существует (ошибка 404 Ютуба)
             if (isYouTube && url.includes('maxresdefault') && img.naturalWidth <= 120) {
-                this._safeImageLoad(url.replace('maxresdefault', 'hqdefault'), false, targetEl, placeholderEl);
+                this._safeImageLoad(url.replace('maxresdefault', 'hqdefault'), false, targetEl, placeholderEl, parentCard);
                 return;
             }
             
-            // Успешно загрузили
             targetEl.style.backgroundImage = `url('${img.src}')`;
             targetEl.style.opacity = '1';
             
-            // Плавно прячем CSS-заглушку с буквой
+            // МАГИЯ АВТО-ЦВЕТА (Только для передней картинки)
+            if (parentCard) {
+                const neonColor = extractColorFromImage(img);
+                if (neonColor) {
+                    parentCard.style.setProperty('--custom-color', neonColor);
+                    // Сохраняем цвет в dataset, чтобы модалка могла его забрать
+                    parentCard.dataset.extractedColor = neonColor;
+                }
+            }
+            
             if (placeholderEl) {
                 placeholderEl.style.opacity = '0';
                 setTimeout(() => placeholderEl.style.display = 'none', 400);
@@ -66,8 +78,6 @@ export class LazyLoader {
 
         img.onerror = () => {
             console.warn(`[LazyLoader] Ошибка загрузки картинки: ${url}`);
-            // Если ошибка, картинка не появится, НО процедурная заглушка (placeholderEl) 
-            // с первой буквой названия останется на месте! Это выглядит как фича, а не баг.
             targetEl.style.opacity = '0';
         };
 

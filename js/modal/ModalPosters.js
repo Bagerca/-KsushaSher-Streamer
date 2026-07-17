@@ -1,5 +1,6 @@
 /* js/modal/ModalPosters.js */
 import EventBus from '../event-bus.js';
+import { extractColorFromImage } from '../utils.js';
 
 export class ModalPosters {
     constructor(wrapperEl, dotsEl, cinematicBgEl) {
@@ -11,7 +12,7 @@ export class ModalPosters {
         this.stackData = [];
     }
 
-    init(stackData, onChangeCallback) {
+    init(stackData, onChangeCallback, onColorExtractedCallback) {
         this.stackData = stackData;
         this.currentIndex = 0;
         
@@ -19,8 +20,21 @@ export class ModalPosters {
         this.dotsContainer.innerHTML = '';
         this.imgElements = [];
 
-        this.stackData.forEach((data) => {
+        this.stackData.forEach((data, index) => {
             const img = document.createElement('img');
+            img.crossOrigin = "Anonymous"; // Важно для CORS!
+            
+            img.onload = () => {
+                // Извлекаем цвет
+                const neonColor = extractColorFromImage(img) || data.customColor || '#ff2d95';
+                img.dataset.neonColor = neonColor;
+                
+                // Если загрузилась именно ТЕКУЩАЯ картинка — перекрашиваем модалку!
+                if (index === this.currentIndex && onColorExtractedCallback) {
+                    onColorExtractedCallback(neonColor);
+                }
+            };
+            
             img.src = data.overrideImage || data.image || 'https://via.placeholder.com/600x900?text=NO+IMAGE';
             img.className = 'modal-poster-img'; 
             this.wrapper.appendChild(img); 
@@ -43,12 +57,17 @@ export class ModalPosters {
                 this.updateVisuals(); 
                 
                 const currentItem = this.stackData[this.currentIndex];
+                const activeImg = this.imgElements[this.currentIndex];
+                
+                // Передаем извлеченный цвет (или дефолтный, если еще грузится)
+                const currentExtractedColor = activeImg.dataset.neonColor || '#ff2d95';
                 
                 if (!currentItem.isImageOnly && onChangeCallback) {
-                    onChangeCallback(currentItem);
+                    onChangeCallback(currentItem, currentExtractedColor);
                 } else {
                     const bgImg = currentItem.overrideImage || currentItem.image;
                     if (bgImg && this.cinematicBg) this.cinematicBg.style.backgroundImage = `url('${bgImg}')`;
+                    if (onColorExtractedCallback) onColorExtractedCallback(currentExtractedColor);
                 }
             };
         } else {

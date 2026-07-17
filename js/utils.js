@@ -69,3 +69,61 @@ function getTrigrams(text) {
     for (let i = 0; i < cleanText.length - 2; i++) trigrams.push(cleanText.substring(i, i + 3));
     return trigrams;
 }
+
+/* js/utils.js */
+
+/**
+ * Конвертирует RGB в неоновый HSL
+ * Увеличивает насыщенность (Saturation) и фиксирует яркость (Lightness), 
+ * чтобы цвет всегда был сочным и подходил для киберпанк-темы.
+ */
+function makeNeon(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0; 
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    
+    // Форсируем сочность: Saturation 85-100%, Lightness 55-65%
+    const hue = Math.round(h * 360);
+    const saturation = 90; // Очень сочный
+    const lightness = 60;  // Оптимально для темного фона
+    
+    // Если картинка была чисто черно-белой (saturation 0) — делаем цвет серым/белым
+    if (s < 0.1) return `hsl(0, 0%, 70%)`;
+
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+/**
+ * Аппаратное извлечение среднего цвета из загруженной картинки
+ */
+export function extractColorFromImage(imgEl) {
+    if (!imgEl.complete || imgEl.naturalWidth === 0) return null;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    
+    canvas.width = 1;
+    canvas.height = 1;
+
+    try {
+        ctx.drawImage(imgEl, 0, 0, 1, 1);
+        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+        return makeNeon(r, g, b);
+    } catch (e) {
+        // Если картинка загружена со стороннего сервера без CORS
+        return null;
+    }
+}
