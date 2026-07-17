@@ -164,7 +164,7 @@ class CryptoCardManager {
 }
 
 /**
- * Менеджер Навигационного Луча
+ * Менеджер Навигационного Луча (С идеальной ScrollSpy логикой)
  */
 class NavRailManager {
     constructor() {
@@ -193,7 +193,7 @@ class NavRailManager {
             const marker = document.createElement('div');
             marker.className = 'nav-marker';
             marker.id = `nav-marker-${sec.id}`; 
-            marker.style.top = '0%'; 
+            marker.style.setProperty('--marker-decimal', 0); 
 
             marker.innerHTML = `<div class="nav-shape"></div><div class="nav-tooltip">${sec.label}</div>`;
             
@@ -228,11 +228,12 @@ class NavRailManager {
             }, 200);
         });
 
+        // Обновляем кэш при открытии/закрытии модалок или развороте базы
         EventBus.on('LAYOUT_CHANGED', () => {
             setTimeout(() => {
                 this.updateGeometryCache();
                 this.updatePositions();
-            }, 300); 
+            }, 350); 
         });
 
         setTimeout(() => {
@@ -243,7 +244,6 @@ class NavRailManager {
 
     updateGeometryCache() {
         try {
-            const startTime = performance.now();
             this.sections.forEach(sec => {
                 const el = document.getElementById(sec.id);
                 if (el) {
@@ -263,9 +263,11 @@ class NavRailManager {
         const scrollableHeight = Math.max(1, docHeight - winHeight);
         
         const topPos = this.geometryCache[sectionId];
+        // Отступ сверху, чтобы заголовок не прилипал к краю экрана при клике
         const viewOffset = winHeight * 0.15; 
         let targetScroll = topPos - viewOffset;
 
+        // Жесткие якоря для первой и последней секции
         if (sectionId === this.sections[0].id) targetScroll = 0;
         if (sectionId === this.sections[this.sections.length - 1].id) targetScroll = scrollableHeight;
 
@@ -278,35 +280,39 @@ class NavRailManager {
         const scrollableHeight = Math.max(1, docHeight - winHeight);
         const scrolled = window.scrollY;
 
-        let percentLine = (scrolled / scrollableHeight) * 100;
-        percentLine = Math.max(0, Math.min(100, percentLine));
-        this.rail.style.setProperty('--line-pos', `${percentLine}%`);
+        // 1. Позиция лазера
+        let decimalPos = scrolled / scrollableHeight;
+        decimalPos = Math.max(0, Math.min(1, decimalPos));
+        this.rail.style.setProperty('--line-decimal', decimalPos);
 
-        let currentId = 'hero';
-        let closestDist = Infinity;
+        let currentId = this.sections[0].id; // По умолчанию активна первая секция
 
-        this.sections.forEach(sec => {
+        this.sections.forEach((sec) => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
             if (marker) {
                 const targetScroll = this.calculateExactTarget(sec.id);
                 
-                let markerPercent = (targetScroll / scrollableHeight) * 100;
-                marker.style.top = `${markerPercent}%`;
+                // 2. Расставляем точки по их реальным координатам
+                let markerDecimal = targetScroll / scrollableHeight;
+                marker.style.setProperty('--marker-decimal', markerDecimal);
 
-                let distancePct = Math.abs(percentLine - markerPercent);
-                let proximity = Math.max(0, 1 - (distancePct / 15));
+                // 3. Вычисляем свечение (Proximity). Светится, если лазер рядом.
+                let distancePct = Math.abs((decimalPos * 100) - (markerDecimal * 100));
+                let proximity = Math.max(0, 1 - (distancePct / 15)); // Радиус свечения 15%
                 proximity = Math.pow(proximity, 2).toFixed(3);
-                
                 marker.style.setProperty('--proximity', proximity);
 
-                const absDist = Math.abs(scrolled - targetScroll);
-                if (absDist < closestDist) {
-                    closestDist = absDist;
+                // 4. НОВАЯ ЛОГИКА АКТИВНОСТИ (ScrollSpy)
+                // Если мы проскроллили ниже начала этой секции (с небольшим буфером в 50px),
+                // значит мы находимся в ней. Цикл идет сверху вниз, поэтому последняя 
+                // пройденная секция перезапишет currentId и станет активной.
+                if (scrolled >= targetScroll - 50) {
                     currentId = sec.id;
                 }
             }
         });
 
+        // 5. Применяем активный класс
         this.sections.forEach(sec => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
             if (marker) marker.classList.toggle('active', sec.id === currentId);

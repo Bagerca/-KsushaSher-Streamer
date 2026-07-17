@@ -1,84 +1,78 @@
 /* js/schedule.js */
+import { loadData } from './api.js';
 
 export class ScheduleManager {
     constructor() {
         this.container = document.getElementById('schedule-container');
-        this.channelName = 'ksusha__sherц'; // ИЛИ bagercaa
-        this.clientId = 'kimne78kx3ncx6brgo4mv6wki5h1ko'; 
+    }
+
+    getDayIndex(dayStr) {
+        const d = dayStr.toLowerCase();
+        if (d.includes('пон') || d === 'пн') return 1;
+        if (d.includes('вто') || d === 'вт') return 2;
+        if (d.includes('сре') || d === 'ср') return 3;
+        if (d.includes('чет') || d === 'чт') return 4;
+        if (d.includes('пят') || d === 'пт') return 5;
+        if (d.includes('суб') || d === 'сб') return 6;
+        if (d.includes('вос') || d === 'вс') return 0;
+        return -1;
     }
 
     async init() {
         if (!this.container) return;
 
         try {
-            console.log(`📅 [Schedule] Запрашиваем расписание для канала: ${this.channelName}`);
+            console.log(`📅 [Schedule] Загрузка локального расписания из базы данных...`);
             
-            // НОВАЯ СХЕМА ЗАПРОСА (Без edges и nodes)
-            const query = `
-            query {
-                user(login: "${this.channelName}") {
-                    channel {
-                        schedule {
-                            segments {
-                                title
-                                startAt
-                                endAt
-                                category { name }
-                            }
-                        }
-                    }
-                }
-            }`;
-
-            const response = await fetch('https://gql.twitch.tv/gql', {
-                method: 'POST',
-                headers: { 'Client-ID': this.clientId },
-                body: JSON.stringify({ query })
-            });
-
-            if (!response.ok) throw new Error("Ошибка сети при обращении к Twitch");
-
-            const rawData = await response.json();
-            const segments = rawData?.data?.user?.channel?.schedule?.segments || [];
+            const rawData = await loadData('schedule.json', { schedule: [] });
+            const segments = Array.isArray(rawData) ? rawData : (rawData.schedule || []);
 
             if (segments.length === 0) {
                 this.container.innerHTML = `
                     <div class="schedule-empty">
-                        <i class="fas fa-satellite-dish"></i>
-                        <span>РАСПИСАНИЕ ПУСТО.<br>Трансляции не запланированы.</span>
+                        <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 10px; color: #444;"></i>
+                        <br>
+                        <span>БАЗА ПУСТА.<br>Трансляции не запланированы.</span>
                     </div>`;
                 return;
             }
 
-            // Ограничиваем количество выводимых стримов до 6 (чтобы не перегружать интерфейс)
-            const displaySegments = segments.slice(0, 6);
+            const currentDayIndex = new Date().getDay(); 
 
-            this.container.innerHTML = displaySegments.map(segment => {
-                const startDate = new Date(segment.startAt);
+            this.container.innerHTML = segments.map(segment => {
+                const dayStr = segment.day || "ТБА";
+                const timeStr = segment.time || "Время неизвестно";
+                const gameName = segment.game || "Секретная трансляция";
+                const streamTitle = segment.description || "";
                 
-                const timeStr = startDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-                const dayStr = startDate.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' });
-                
-                const gameName = segment.category ? segment.category.name : 'Just Chatting';
-                const streamTitle = segment.title || 'Трансляция';
+                const segmentDayIdx = this.getDayIndex(dayStr);
+                const isToday = segmentDayIdx === currentDayIndex;
 
+                let cardClass = 'sched-card';
+                if (isToday) cardClass += ' is-today';
+                else if (segment.highlighted) cardClass += ' is-highlighted';
+
+                // НОВАЯ РАЗМЕТКА:
+                // sched-indicator (слева) -> sched-content (центр) -> sched-datetime (справа)
                 return `
-                <div class="timeline-item">
-                    <div class="tl-dot"></div>
-                    <div class="tl-time">
-                        <span class="tl-day">${dayStr.toUpperCase()}</span>
-                        <span class="tl-hour">${timeStr}</span>
+                <div class="${cardClass}">
+                    <div class="sched-indicator">
+                        <div class="sched-dot"></div>
                     </div>
-                    <div class="tl-content">
-                        <div class="tl-game">${gameName}</div>
-                        <div class="tl-title">${streamTitle}</div>
+                    <div class="sched-content">
+                        <div class="sched-game">${gameName}</div>
+                        ${streamTitle ? `<div class="sched-desc">${streamTitle}</div>` : ''}
+                    </div>
+                    <div class="sched-datetime">
+                        <div class="sched-day">${dayStr.toUpperCase()}</div>
+                        <div class="sched-time"><i class="far fa-clock"></i> ${timeStr}</div>
                     </div>
                 </div>`;
             }).join('');
             
         } catch (error) {
-            console.error('❌ [Schedule] Ошибка рендера расписания:', error);
-            this.container.innerHTML = '<div class="network-loading" style="color:#ff6464;">ОШИБКА ДОСТУПА К TWITCH API</div>';
+            console.error('❌ [Schedule] Ошибка рендера локального расписания:', error);
+            this.container.innerHTML = '<div class="network-loading" style="color:#ff4444;">ОШИБКА ЧТЕНИЯ БАЗЫ ДАННЫХ</div>';
         }
     }
 }

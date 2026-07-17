@@ -1,7 +1,7 @@
 /* js/media-store.js */
 import { loadData } from './api.js';
 import EventBus from './event-bus.js';
-import { calculateSimilarity } from './utils.js'; // Импорт общей функции!
+import { calculateSimilarity } from './utils.js';
 
 export const GENRE_MAP = {
     'action': 'Экшен', 'adventure': 'Приключения', 'comedy': 'Комедия', 'drama': 'Драма', 'horror': 'Хоррор', 'thriller': 'Триллер', 'scifi': 'Sci-Fi', 'fantasy': 'Фэнтези', 'mystery': 'Мистика', 'detective': 'Детектив', 'crime': 'Криминал', 'historical': 'Исторический', 'romance': 'Романтика', 'biography': 'Биография', 'movie': 'Фильм', 'series': 'Сериал', 'mini-series': 'Мини-сериал', 'cartoon': 'Мультфильм', 'anime': 'Аниме', 'anime-series': 'Аниме-сериал', 'short': 'Короткометражка', 'documentary': 'Документалка', 'show': 'ТВ-Шоу', 'animation': 'Анимация', 'superhero': 'Супергероика', 'sitcom': 'Ситком', 'slasher': 'Слэшер', 'musical': 'Мюзикл', 'western': 'Вестерн', 'noir': 'Нуар', 'sport': 'Спорт', 'war': 'Военный', 'family': 'Семейный', 'kids': 'Детский', 'adaptation': 'Экранизация', 'remake': 'Ремейк', 'blockbuster': 'Блокбастер', 'arthouse': 'Артхаус', 'trash': 'Трэш / B-Movie', 'psychological': 'Психологический', 'atmospheric': 'Атмосферный', 'feel-good': 'Добрый / Уютный', 'sad': 'Грустный', 'mind-bending': 'Вынос мозга', 'epic': 'Эпик', 'weird': 'Странное', 'classic': 'Классика', 'cult': 'Культовое', 'rpg': 'РПГ', 'shooter': 'Шутер', 'strategy': 'Стратегия', 'simulation': 'Симулятор', 'puzzle': 'Головоломка', 'platformer': 'Платформер', 'fighting': 'Файтинг', 'racing': 'Гонки', 'visual-novel': 'Виз. новелла', 'interactive-movie': 'Интерактивное кино', 'survival': 'Выживание', 'stealth': 'Стелс', 'roguelike': 'Рогалик', 'metroidvania': 'Метроидвания', 'souls-like': 'Соулс-лайк', 'open-world': 'Открытый мир', 'sandbox': 'Песочница', 'battle-royale': 'Батл-рояль', 'point-click': 'Point & Click', 'rhythm': 'Ритм', 'walking-sim': 'Сим. ходьбы', 'hack-and-slash': 'Слэшер', 'mmo': 'ММО', 'cyberpunk': 'Киберпанк', 'post-apocalyptic': 'Постапокалипсис', 'space': 'Космос', 'zombies': 'Зомби', 'retro': 'Ретро/80-е', 'dystopia': 'Антиутопия', 'magic': 'Магия', 'aliens': 'Пришельцы', 'indie': 'Инди', 'aaa': 'AAA', 'singleplayer': 'Одиночная', 'coop': 'Кооператив', 'multiplayer': 'Мультиплеер', 'free': 'Бесплатно', 'early-access': 'Ранний доступ', 'story-rich': 'Сюжетная', 'funny': 'Комедия/Юмор', 'management': 'Менеджмент', 'hardcore': 'Хардкор', 'casual': 'Кэжуал', 'fan-game': 'Фан-игра', 'realistic': 'Реализм', 'relaxing': 'Релакс'
@@ -16,12 +16,10 @@ export const STATUS_MAP = {
 
 export const VALID_STATUSES = ['completed', 'playing', 'watched', 'watching', 'dropped', 'on-hold', 'suggested'];
 
-// Словари для автосмены раскладки
 const EN_TO_RU = {'q':'й', 'w':'ц', 'e':'у', 'r':'к', 't':'е', 'y':'н', 'u':'г', 'i':'ш', 'o':'щ', 'p':'з', '[':'х', ']':'ъ', 'a':'ф', 's':'ы', 'd':'в', 'f':'а', 'g':'п', 'h':'р', 'j':'о', 'k':'л', 'l':'д', ';':'ж', "'":'э', 'z':'я', 'x':'ч', 'c':'с', 'v':'м', 'b':'и', 'n':'т', 'm':'ь', ',':'б', '.':'ю'};
 const RU_TO_EN = {};
 for (let k in EN_TO_RU) RU_TO_EN[EN_TO_RU[k]] = k;
 
-// Словарь для фонетической транслитерации (звук -> английские буквы)
 const RU_TO_EN_PHONETIC = {
     'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
     'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
@@ -71,6 +69,10 @@ export class MediaStore {
             this.dataSuggestions = Array.isArray(rawSuggestions) 
                 ? rawSuggestions.filter(item => item.type === type) 
                 : [];
+            
+            // НОРМАЛИЗАЦИЯ ДАННЫХ (Поднятие свойств для коллекций)
+            this.preprocessData(this.dataMain);
+            this.preprocessData(this.dataSuggestions);
                 
             this.processData();
             EventBus.emit('MEDIA_STORE_LOADED');
@@ -79,6 +81,28 @@ export class MediaStore {
             console.error("Ошибка загрузки медиа:", error);
             EventBus.emit('SYS_LOG', { html: `<span class="terminal-err">[DB] Ошибка загрузки ${type}</span>` });
         }
+    }
+
+    preprocessData(list) {
+        list.forEach(item => {
+            if (item.format === 'collection' && item.items && item.items.length > 0) {
+                const firstGame = item.items[0];
+                
+                // Прокидываем свойства первой игры на уровень коллекции
+                item.title = firstGame.title;
+                item.description = firstGame.description;
+                item.image = firstGame.image;
+                item.customColor = firstGame.customColor;
+                item.status = firstGame.status;
+                
+                // Объединяем жанры всех частей для корректной фильтрации
+                const allGenres = new Set(firstGame.genres || []);
+                item.items.forEach(sub => {
+                    if (sub.genres) sub.genres.forEach(g => allGenres.add(g));
+                });
+                item.genres = Array.from(allGenres);
+            }
+        });
     }
 
     getAllGenres() {
@@ -130,7 +154,6 @@ export class MediaStore {
         return [...this.dataMain, ...this.dataSuggestions].find(i => i.id === id);
     }
 
-    // ИНТЕЛЛЕКТУАЛЬНЫЙ ПОИСК (Раскладки + Транслит + Нечеткость)
     getSearchSuggestions(query) {
         if (query.trim().length < 1) return [];
         const cleanQuery = query.toLowerCase().trim();
@@ -163,27 +186,23 @@ export class MediaStore {
             let score = 0;
             const title = item.title ? item.title.toLowerCase() : "";
 
-            // 1. Поиск в лоб
             if (title === cleanQuery) score = 100;
             else if (title.startsWith(cleanQuery)) score = 80;
             else if (title.includes(` ${cleanQuery}`)) score = 65;
             else if (title.includes(cleanQuery)) score = 50;
 
-            // 2. Если ничего не нашли - пробуем другую раскладку
             if (score === 0) {
                 if (title === layoutSwitched) score = 90;
                 else if (title.startsWith(layoutSwitched)) score = 70;
                 else if (title.includes(layoutSwitched)) score = 45;
             }
 
-            // 3. Если все еще 0 - пробуем транслитерацию (Фонетика)
             if (score === 0 && translitQuery !== cleanQuery) {
                 if (title === translitQuery) score = 85;
                 else if (title.startsWith(translitQuery)) score = 65;
                 else if (title.includes(translitQuery)) score = 40;
             }
 
-            // 4. Если все еще 0, включаем нечеткий поиск (триграммы)
             if (score === 0 && cleanQuery.length > 2) {
                 const fuzzyOriginal = calculateSimilarity(title, cleanQuery);
                 const fuzzyTranslit = calculateSimilarity(title, translitQuery);
@@ -193,7 +212,7 @@ export class MediaStore {
             }
 
             return { ...item, score };
-        }).filter(item => item.score > 15); // Отсекаем мусор
+        }).filter(item => item.score > 15);
 
         return matches.sort((a, b) => b.score - a.score).slice(0, 5);
     }

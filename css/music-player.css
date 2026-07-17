@@ -13,28 +13,49 @@
     cursor: pointer;
     transition: all 0.2s ease;
     opacity: 0.7;
+    
+    /* Сброс дефолтных отступов кнопок для идеального центрирования */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
 }
 
 .music-btn:hover {
     opacity: 1;
     text-shadow: 0 0 10px var(--neon-pink);
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
 
 .music-btn.play-btn {
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--neon-pink);
+    font-size: 1.15rem; /* Чуть аккуратнее относительно рамки */
+    width: 44px; /* Сделали кнопку чуть крупнее */
+    height: 44px;
+    border: 1px solid rgba(255, 45, 149, 0.4); /* Мягкая базовая рамка */
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 10px rgba(255, 45, 149, 0.2);
+    box-shadow: 0 0 10px rgba(255, 45, 149, 0.15);
+    position: relative;
 }
 
+/* МАГИЯ ОПТИЧЕСКОЙ КОМПЕНСАЦИИ: 
+   Треугольник Play визуально заваливается влево. Сдвигаем его на 2px вправо. */
+.music-btn.play-btn i.fa-play {
+    transform: translateX(2px);
+}
+
+/* Иконка паузы симметричная, ее сдвигать не нужно */
+.music-btn.play-btn i.fa-pause {
+    transform: translateX(0);
+}
+
+/* Премиальный ховер (вместо сплошного цвета - неоновое стекло) */
 .music-btn.play-btn:hover {
-    background: var(--neon-pink);
-    color: #000;
-    box-shadow: 0 0 20px var(--neon-pink);
+    background: rgba(255, 45, 149, 0.15);
+    color: var(--neon-pink);
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255, 45, 149, 0.6), inset 0 0 10px rgba(255, 45, 149, 0.3);
+    transform: scale(1.1);
 }
 
 /* Плейлист (справа) */

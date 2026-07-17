@@ -10,6 +10,9 @@ export class AudioVisualizer {
         this.ringRot1 = 0;
         this.ringRot2 = 0;
         this.ringRot3 = 0;
+        
+        // Массив для хранения сглаженных значений маркеров
+        this.smoothedMarkers = [0, 0, 0, 0, 0, 0];
 
         this.els = {
             waveformContainer: document.querySelector('.sync-waveform'),
@@ -61,7 +64,6 @@ export class AudioVisualizer {
     }
 
     start() {
-        // Подхватываем текущий угол вращения CSS-анимации, чтобы JS не дергал кольца
         this.ringRot1 = this.getComputedRotation(this.els.ring1);
         this.ringRot2 = this.getComputedRotation(this.els.ring2);
         this.ringRot3 = this.getComputedRotation(this.els.ring3);
@@ -70,6 +72,7 @@ export class AudioVisualizer {
             if (el) el.style.animation = 'none';
         });
 
+        this.smoothedMarkers.fill(0);
         this.loop();
     }
 
@@ -85,7 +88,6 @@ export class AudioVisualizer {
         if (this.els.mainAvatar) this.els.mainAvatar.style.filter = '';
         if (this.els.ringsContainer) this.els.ringsContainer.style.transform = '';
 
-        // Возврат плавного CSS вращения с текущей точки
         if (this.els.ring1) {
             this.els.ring1.style.setProperty('--rot-start', `${this.ringRot1 % 360}deg`);
             this.els.ring1.style.animationName = 'rotate-seamless';
@@ -102,10 +104,11 @@ export class AudioVisualizer {
             this.els.ring3.style.transform = '';
         }
 
-        // Сброс маркеров навигации
+        // Сброс маркеров: Очищаем CSS переменные музыки
         document.querySelectorAll('.nav-marker .nav-shape').forEach(shape => {
-            if (shape.dataset.pulseTimer) clearTimeout(parseInt(shape.dataset.pulseTimer));
-            shape.style = '';
+            shape.style.removeProperty('--audio-scale');
+            shape.style.removeProperty('--audio-glow');
+            shape.style.removeProperty('--audio-color');
         });
     }
 
@@ -116,7 +119,6 @@ export class AudioVisualizer {
         const dataArray = this.core.getFrequencyData();
         
         if (!dataArray) {
-            // Если звук на паузе, но режим активен
             this.els.waveformBars.forEach(bar => { bar.style.height = '4px'; });
             if (this.els.waveformContainer) this.els.waveformContainer.classList.remove('js-controlled');
             if (this.els.mainAvatar) this.els.mainAvatar.style.filter = '';
@@ -136,30 +138,44 @@ export class AudioVisualizer {
         });
         if (this.els.waveformContainer) this.els.waveformContainer.classList.add('js-controlled');
 
-        // 2. Навигационные маркеры
+        // 2. ИДЕАЛЬНЫЕ ТАНЦУЮЩИЕ МАРКЕРЫ (Сглаживание Lerp)
         const liveShapes = document.querySelectorAll('.nav-marker .nav-shape');
         if (liveShapes.length > 0) {
-            const freqBands = [
-                { start: 0, end: 4, threshold: 0.4 }, { start: 2, end: 6, threshold: 0.35 },
-                { start: 4, end: 8, threshold: 0.3 }, { start: 6, end: 12, threshold: 0.3 },
-                { start: 8, end: 16, threshold: 0.3 }, { start: 0, end: 5, threshold: 0.4 }
+            // Распределяем 6 маркеров по частотам (От саб-баса до хай-хэтов)
+            const bands = [
+                { start: 0, end: 2 },   // Маркер 1: Глубокий Бас
+                { start: 3, end: 5 },   // Маркер 2: Бас
+                { start: 6, end: 10 },  // Маркер 3: Нижняя середина
+                { start: 11, end: 16 }, // Маркер 4: Середина (Синты/Вокал)
+                { start: 17, end: 24 }, // Маркер 5: Верхняя середина
+                { start: 25, end: 31 }  // Маркер 6: Высокие (Тарелочки)
             ];
 
             liveShapes.forEach((shape, i) => {
-                const band = freqBands[i % freqBands.length];
+                const band = bands[i % bands.length];
                 let energy = 0;
-                for (let j = band.start; j <= Math.min(band.end, dataArray.length - 1); j++) energy += dataArray[j];
-                
-                const avgIntensity = (energy / (band.end - band.start + 1)) / 255;
+                for (let j = band.start; j <= band.end; j++) {
+                    energy += (dataArray[j] || 0);
+                }
+                const rawIntensity = (energy / (band.end - band.start + 1)) / 255;
 
-                if (avgIntensity > band.threshold) {
-                    if (shape.dataset.pulseTimer) clearTimeout(parseInt(shape.dataset.pulseTimer));
-                    shape.style.borderColor = 'var(--neon-green)';
-                    shape.style.backgroundColor = 'var(--neon-green)';
-                    shape.style.boxShadow = `0 0 ${25 * avgIntensity}px var(--neon-green)`;
-                    shape.style.transform = `rotate(45deg) scale(${1.1 + (avgIntensity * 0.5)})`;
-                    
-                    shape.dataset.pulseTimer = setTimeout(() => { shape.style = ''; }, 100);
+                // Линейная интерполяция (Lerp): 
+                // Взлетаем быстро (0.6), опадаем плавно (0.1) - это дает эффект дыхания/танца
+                const smoothing = rawIntensity > this.smoothedMarkers[i] ? 0.6 : 0.1;
+                this.smoothedMarkers[i] += (rawIntensity - this.smoothedMarkers[i]) * smoothing;
+
+                const finalValue = this.smoothedMarkers[i];
+
+                if (finalValue > 0.05) {
+                    // Передаем переменные в CSS, не затирая стили скролла!
+                    shape.style.setProperty('--audio-scale', finalValue * 0.8);
+                    shape.style.setProperty('--audio-glow', `${finalValue * 25}px`);
+                    // Цвет пульсирует от розового к горячему фиолетовому
+                    shape.style.setProperty('--audio-color', `rgba(255, 45, 149, ${0.4 + finalValue * 0.6})`);
+                } else {
+                    shape.style.setProperty('--audio-scale', 0);
+                    shape.style.setProperty('--audio-glow', '0px');
+                    shape.style.removeProperty('--audio-color');
                 }
             });
         }

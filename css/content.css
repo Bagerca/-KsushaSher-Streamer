@@ -180,17 +180,31 @@
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
-/* ИСПРАВЛЕНА КАРУСЕЛЬ (Поддержка JS Drag движка) */
+/* ИСПРАВЛЕНА КАРУСЕЛЬ (Поддержка JS Drag движка + Инерция) */
 .marquee-track {
     display: flex; gap: 80px; width: max-content;
     padding: 0 80px; align-items: center;
     cursor: grab;
     will-change: transform;
+    
+    /* Броня от случайного выделения текста */
+    user-select: none;
+    -webkit-user-select: none;
+    /* На мобилках разрешаем скроллить саму страницу вниз-вверх поверх карусели */
+    touch-action: pan-y;
 }
 
+/* Когда мы тащим мышку */
 .marquee-track.is-dragging {
     cursor: grabbing;
-    pointer-events: none; 
+}
+
+/* КРИТИЧНО: При драге полностью отключаем клики и события на всех карточках внутри, 
+   чтобы браузер не попытался выделить картинку или нажать на текст */
+.marquee-track.is-dragging * {
+    pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
 }
 
 .holo-card {

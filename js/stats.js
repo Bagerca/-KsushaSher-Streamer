@@ -20,7 +20,7 @@ export class StatsManager {
             const user = data[0];
             const isLive = user.stream !== null;
 
-            // DOM Элементы
+            // DOM Элементы Командного Центра
             const elFollowers = document.getElementById('stat-followers');
             const elViewersLabel = document.getElementById('stat-label-viewers');
             const elViewersVal = document.getElementById('stat-viewers');
@@ -32,15 +32,23 @@ export class StatsManager {
             const elTimeLabel = document.getElementById('stat-label-time');
             const elTimeVal = document.getElementById('stat-time');
             const elIconTime = document.getElementById('stat-icon-time');
+            
+            // DOM Элемент Биографии в секции "Обо мне"
+            const elBioText = document.getElementById('twitch-bio-text');
 
-            // 1. Фолловеры (Всегда)
+            // 0. ОБНОВЛЯЕМ БИОГРАФИЮ
+            if (elBioText && user.bio) {
+                elBioText.innerHTML = `Привет! Я <span class="neon-highlight">Ksusha Sher</span>. ${user.bio}`;
+            }
+
+            // 1. ФОЛЛОВЕРЫ (Всегда доступны)
             if (elFollowers) elFollowers.textContent = this.formatNumber(user.followers);
 
             // Очищаем старый таймер
             if (this.uptimeInterval) clearInterval(this.uptimeInterval);
 
             if (isLive) {
-                // СТРИМ ИДЕТ
+                // СТРИМ ИДЕТ (Онлайн)
                 elViewersLabel.textContent = "ЗРИТЕЛЕЙ СЕЙЧАС";
                 elViewersVal.textContent = this.formatNumber(user.stream.viewersCount);
                 elViewersVal.style.color = "var(--neon-green)";
@@ -48,7 +56,8 @@ export class StatsManager {
                 elIconViewers.style.color = "var(--neon-green)";
 
                 elGameLabel.textContent = "ТЕКУЩАЯ ЦЕЛЬ";
-                elGameVal.textContent = user.stream.game ? user.stream.game.displayName : "Just Chatting";
+                elGameVal.textContent = user.stream.game ? user.stream.game.displayName : "Неизвестно";
+                elGameVal.title = elGameVal.textContent;
                 elGameVal.style.color = "var(--neon-pink)";
 
                 elTimeLabel.textContent = "ВРЕМЯ В ЭФИРЕ";
@@ -71,14 +80,18 @@ export class StatsManager {
 
             } else {
                 // СТРИМ ОФЛАЙН
-                elViewersLabel.textContent = "СТАТУС СИСТЕМЫ";
-                elViewersVal.textContent = "ОФЛАЙН";
-                elViewersVal.style.color = "#666";
-                elIconViewers.className = "fas fa-power-off stat-icon";
-                elIconViewers.style.color = "#666";
+                elViewersLabel.textContent = "ЛЮДЕЙ В ЧАТЕ";
+                // Используем chatterCount из IVR API
+                elViewersVal.textContent = user.chatterCount ? this.formatNumber(user.chatterCount) : "0";
+                elViewersVal.style.color = "#00ccff";
+                elIconViewers.className = "fas fa-comment-dots stat-icon";
+                elIconViewers.style.color = "#00ccff";
 
-                elGameLabel.textContent = "ПОСЛЕДНЯЯ БАЗА";
-                elGameVal.textContent = user.lastBroadcast.game ? user.lastBroadcast.game.displayName : "Just Chatting";
+                elGameLabel.textContent = "НАЗВАНИЕ СТРИМА";
+                // Используем название последней трансляции (т.к. игры в оффлайне нет)
+                const lastTitle = user.lastBroadcast?.title || "ДАННЫЕ ЗАСЕКРЕЧЕНЫ";
+                elGameVal.textContent = lastTitle;
+                elGameVal.title = lastTitle; // Чтобы можно было навести мышку и прочитать полностью
                 elGameVal.style.color = "#fff";
 
                 elTimeLabel.textContent = "ПОСЛЕДНИЙ ВХОД";
@@ -87,18 +100,20 @@ export class StatsManager {
                 elTimeVal.style.color = "#888";
 
                 // Считаем сколько дней назад был стрим
-                if (user.lastBroadcast.startedAt) {
+                if (user.lastBroadcast?.startedAt) {
                     const lastDate = new Date(user.lastBroadcast.startedAt);
                     const diffDays = Math.floor((new Date() - lastDate) / (1000 * 60 * 60 * 24));
+                    
                     if (diffDays === 0) elTimeVal.textContent = "СЕГОДНЯ";
                     else if (diffDays === 1) elTimeVal.textContent = "ВЧЕРА";
+                    else if (diffDays < 0) elTimeVal.textContent = "В БУДУЩЕМ"; // Защита на случай багнутой даты 2026 года
                     else elTimeVal.textContent = `${diffDays} ДН. НАЗАД`;
                 } else {
                     elTimeVal.textContent = "НЕИЗВЕСТНО";
                 }
             }
 
-            EventBus.emit('SYS_LOG', { html: `[STATS] Данные трансляции обновлены.` });
+            EventBus.emit('SYS_LOG', { html: `[STATS] Данные трансляции и био обновлены.` });
             
         } catch (error) {
             console.error('❌ [Stats] Ошибка получения данных:', error);
@@ -106,7 +121,7 @@ export class StatsManager {
     }
 
     formatNumber(num) {
-        if (!num) return "0";
+        if (num == null) return "0";
         return num >= 1000 ? (num / 1000).toFixed(1) + 'K' : num.toLocaleString('ru-RU');
     }
 }

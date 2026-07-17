@@ -71,10 +71,10 @@
                     <div id="live-status-container" style="display: flex; align-items: center;">
                         <span class="status-indicator"></span><span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
                     </div>
-                    <div id="music-controls-container" style="display: none; align-items: center; gap: 15px;">
-                        <button class="music-btn" id="btn-prev"><i class="fas fa-backward"></i></button>
-                        <button class="music-btn play-btn" id="btn-play"><i class="fas fa-play"></i></button>
-                        <button class="music-btn" id="btn-next"><i class="fas fa-forward"></i></button>
+                    <div id="music-controls-container" style="display: none; align-items: center; gap: 20px; padding: 2px 10px;">
+                        <button class="music-btn" id="btn-prev" title="Предыдущий трек"><i class="fas fa-backward-step"></i></button>
+                        <button class="music-btn play-btn" id="btn-play" title="Играть/Пауза"><i class="fas fa-play"></i></button>
+                        <button class="music-btn" id="btn-next" title="Следующий трек"><i class="fas fa-forward-step"></i></button>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,8 @@
                 <div class="about-top-row">
                     <div class="dossier-text">
                         <div class="bio-header"><span class="bio-icon"><i class="fas fa-terminal"></i></span><h3 class="bio-title">БИОГРАФИЯ</h3></div>
-                        <p>Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
+                        <!-- ДОБАВЛЕН ID ДЛЯ СИНХРОНИЗАЦИИ С TWITCH -->
+                        <p id="twitch-bio-text">Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
                         <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="twitch-link">Twitch</a>.</p>
                         <div class="dossier-stats"><div class="stat-tag">🎮 Variety</div><div class="stat-tag">💬 Just Chatting</div><div class="stat-tag">👻 Horror</div></div>
                     </div>
@@ -153,9 +154,10 @@
                     <div class="hud-bracket top-left"></div>
                     <div class="hud-bracket bottom-right"></div>
                     <div class="stats-grid-container">
+                        <!-- Изменил метки под новые метрики с IVR -->
                         <div class="stat-box"><i class="fas fa-users stat-icon" style="color: var(--neon-green);"></i><div class="stat-info"><div class="stat-label">АГЕНТЫ В СЕТИ</div><div class="stat-value" id="stat-followers">----</div></div></div>
-                        <div class="stat-box"><i class="fas fa-eye stat-icon" id="stat-icon-viewers" style="color: #00ccff;"></i><div class="stat-info"><div class="stat-label" id="stat-label-viewers">СТАТУС</div><div class="stat-value" id="stat-viewers">----</div></div></div>
-                        <div class="stat-box"><i class="fas fa-gamepad stat-icon" style="color: var(--neon-pink);"></i><div class="stat-info"><div class="stat-label" id="stat-label-game">ПОСЛЕДНЯЯ БАЗА</div><div class="stat-value small" id="stat-game">----</div></div></div>
+                        <div class="stat-box"><i class="fas fa-comment-dots stat-icon" id="stat-icon-viewers" style="color: #00ccff;"></i><div class="stat-info"><div class="stat-label" id="stat-label-viewers">АКТИВНОСТЬ ЧАТА</div><div class="stat-value" id="stat-viewers">----</div></div></div>
+                        <div class="stat-box"><i class="fas fa-quote-left stat-icon" style="color: var(--neon-pink);"></i><div class="stat-info"><div class="stat-label" id="stat-label-game">ПОСЛЕДНИЙ ЭФИР</div><div class="stat-value small" id="stat-game">----</div></div></div>
                         <div class="stat-box"><i class="fas fa-clock stat-icon" id="stat-icon-time" style="color: #ffd700;"></i><div class="stat-info"><div class="stat-label" id="stat-label-time">ПОСЛЕДНИЙ ВХОД</div><div class="stat-value" id="stat-time">----</div></div></div>
                     </div>
                 </div>
@@ -214,7 +216,6 @@
                 </div>
             </div>
             
-            <!-- АПГРЕЙДНУТЫЙ БЛОК ПОИСКА -->
             <div class="archive-controls">
                 <div class="search-row">
                     <div class="search-module" id="search-module">

@@ -2,10 +2,6 @@
   {
     "id": "bendy-franchise",
     "format": "collection",
-    "title": "Bendy Universe",
-    "status": "on-hold",
-    "customColor": "#f4d03f",
-    "image": "https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png",
     "items": [
       {
         "id": "bendy-ink-machine",
@@ -15,6 +11,7 @@
         "image": "https://cdn2.steamgriddb.com/grid/ce4a1312b1f8175eb808eb101eccce0c.png",
         "genres": ["horror", "puzzle", "adventure", "story-rich", "indie", "retro"],
         "status": "on-hold",
+        "customColor": "#f4d03f",
         "videos": [
           "https://youtu.be/vAEKtyPSgz0",
           "https://youtu.be/_aJV27IXlwU",
@@ -28,7 +25,8 @@
         "description": "Полноценный сиквел. Графика стала более реалистичной, появилась механика скрытности и новая боевка.",
         "image": "https://cdn2.steamgriddb.com/grid/b882ca7b76297dd7e2ad9d0d464a10fd.png",
         "genres": ["horror", "adventure", "puzzle", "story-rich", "atmospheric", "indie"],
-        "status": "on-hold"
+        "status": "on-hold",
+        "customColor": "#dfa320"
       },
       {
         "id": "bendy-lone-wolf",
@@ -37,7 +35,8 @@
         "description": "Новый таинственный проект во вселенной. Ждем больше информации.",
         "image": "https://cdn2.steamgriddb.com/grid/29eae898bbf4086376aa8fd60007aaaa.png",
         "genres": ["horror", "survival", "roguelike", "indie", "retro"],
-        "status": "on-hold"
+        "status": "on-hold",
+        "customColor": "#b8860b"
       },
       {
         "id": "boris-and-the-dark-survival",
@@ -46,7 +45,8 @@
         "description": "Спин-офф про волка Бориса. Бегаем по уровням, собираем припасы и прячемся от чернильного демона.",
         "image": "https://cdn2.steamgriddb.com/grid/216085f7b9a7e1484e2b0802bc4f1bb8.png",
         "genres": ["horror", "survival", "roguelike", "indie", "strategy"],
-        "status": "on-hold"
+        "status": "on-hold",
+        "customColor": "#a67b27"
       },
       {
         "id": "bendy-secrets-of-the-machine",
@@ -55,17 +55,14 @@
         "description": "Интерактивный тизер следующей части с пространственными головоломками.",
         "image": "https://cdn2.steamgriddb.com/grid/419f51a7b50c04bb38fd5870da376a5a.jpg",
         "genres": ["horror", "puzzle", "mystery", "indie"],
-        "status": "on-hold"
+        "status": "on-hold",
+        "customColor": "#8a6e35"
       }
     ]
   },
   {
     "id": "hollow-knight-franchise",
     "format": "collection",
-    "title": "Hollow Knight Universe",
-    "status": "on-hold",
-    "customColor": "#a2b5c6",
-    "image": "assets/images/games/hollow-knight.webp",
     "items": [
       {
         "id": "hollow-knight",
@@ -74,7 +71,8 @@
         "description": "Мрачная и красивая метроидвания с хардкорными боссами и глубоким лором.",
         "image": "assets/images/games/hollow-knight.webp",
         "genres": ["metroidvania", "souls-like", "platformer", "action", "hardcore", "indie"],
-        "status": "on-hold"
+        "status": "on-hold",
+        "customColor": "#a2b5c6"
       },
       {
         "id": "hollow-knight-silksong",
@@ -84,6 +82,7 @@
         "image": "assets/images/games/hollow-knight-silksong.webp",
         "genres": ["metroidvania", "souls-like", "platformer", "action", "indie", "coop", "atmospheric"],
         "status": "dropped",
+        "customColor": "#c43c4e",
         "videos": [
           "https://youtu.be/JPGKia9djuA",
           "https://youtu.be/deMaQZA9Vc4",

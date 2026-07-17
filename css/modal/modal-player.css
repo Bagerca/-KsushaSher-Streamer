@@ -1,7 +1,7 @@
 /* css/modal/modal-player.css */
 
 /* =========================================
-   ЗОНА 2: ВИДЕО ПЛЕЕР
+   ВИДЕО ПЛЕЕР И ПЛЕЙЛИСТ
    ========================================= */
 .modal-video-section { 
     border-top: 1px solid rgba(255, 255, 255, 0.1); 
@@ -10,31 +10,22 @@
     width: 100%; 
     display: flex; flex-direction: column; gap: 15px; 
 }
-.video-header { font-family: 'Orbitron', sans-serif; color: var(--modal-color); font-size: 1.1rem; display: flex; align-items: center; gap: 10px; opacity: 0.9; letter-spacing: 1px; }
+.video-header { 
+    font-family: 'Orbitron', sans-serif; color: var(--modal-color); 
+    font-size: 1.1rem; display: flex; align-items: center; gap: 10px; 
+    opacity: 0.9; letter-spacing: 1px; 
+}
 
-.video-container { position: relative; width: 100%; background: #000; overflow: hidden; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); }
+.video-container { 
+    position: relative; width: 100%; background: #000; overflow: hidden; 
+    border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); 
+}
 .video-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
 .video-container::before { content: ""; display: block; padding-bottom: 56.25%; /* 16:9 Aspect Ratio */ }
 
 /* =========================================
-   ЗОНА 3: ПОЛКА ФРАНШИЗЫ
-   ========================================= */
-.modal-franchise-section {
-    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%);
-    border-top: 2px solid var(--modal-color);
-    padding: 20px 40px;
-    margin-top: auto; 
-}
-
-.franchise-header {
-    font-family: 'Orbitron', sans-serif; color: #fff; font-size: 0.9rem; 
-    letter-spacing: 2px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
-    opacity: 0.7; text-transform: uppercase;
-}
-.franchise-header i { color: var(--modal-color); }
-
-/* =========================================
-   ГОРИЗОНТАЛЬНЫЕ СПИСКИ (НОВЫЙ СКРОЛЛ)
+   ГОРИЗОНТАЛЬНЫЙ СПИСОК YOUTUBE
    ========================================= */
 .horizontal-scroll-list { 
     display: flex; gap: 15px; 
@@ -42,22 +33,25 @@
     padding-bottom: 15px; padding-top: 5px;
     -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
     
-    /* Переменные для глобальной системы скроллов */
     --scroll-size: 6px;
     --scroll-thumb: var(--modal-color);
     --scroll-track: rgba(255, 255, 255, 0.02);
 }
 
-/* КАРТОЧКА ВНУТРИ СПИСКА */
 .scroll-card { 
     display: flex; flex-direction: column; gap: 10px; 
     background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); 
     border-radius: 8px; padding: 10px; cursor: pointer; transition: 0.3s; 
-    position: relative; overflow: hidden;
-    flex: 0 0 auto;
+    position: relative; overflow: hidden; flex: 0 0 auto;
 }
-.scroll-card:hover { background: rgba(255, 255, 255, 0.05); transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.2); }
-.scroll-card.active { background: rgba(0,0,0,0.5); border-color: var(--modal-color); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); }
+.scroll-card:hover { 
+    background: rgba(255, 255, 255, 0.05); transform: translateY(-5px); 
+    border-color: rgba(255, 255, 255, 0.2); 
+}
+.scroll-card.active { 
+    background: rgba(0,0,0,0.5); border-color: var(--modal-color); 
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); 
+}
 
 .sc-thumb { border-radius: 6px; overflow: hidden; position: relative; background: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.5); width: 100%; }
 .sc-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: filter 0.3s, transform 0.3s; }
@@ -90,20 +84,11 @@
 .video-card.active .play-icon { display: none; }
 .video-card.active .equalizer-icon { display: flex; }
 
-/* СПЕЦИФИКА КАРТОЧКИ ФРАНШИЗЫ */
-.franchise-card { min-width: 140px; width: 140px; padding: 12px; border-color: rgba(255,255,255,0.1); }
-.franchise-card .sc-thumb { aspect-ratio: 2 / 3; }
-.franchise-card .sc-overlay i { font-size: 1.2rem; }
-.franchise-card.is-root-item .sc-thumb::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--modal-color); border-radius: 6px; box-shadow: inset 0 0 15px var(--modal-color); pointer-events: none; }
-.franchise-card.is-root-item .sc-status { color: var(--modal-color); }
-
 /* =========================================
-   БЕСШОВНЫЙ РЕЖИМ "CINEMA" 
+   БЕСШОВНЫЙ РЕЖИМ "CINEMA" (ДЛЯ ПРЕДЛОЖКИ)
    ========================================= */
 .layout-cinema .modal-video-section { 
-    order: -2; 
-    margin: 0; border: none; padding: 0; 
-    background: transparent;
+    order: -2; margin: 0; border: none; padding: 0; background: transparent;
 }
 .layout-cinema .video-header { display: none; }
 
@@ -119,9 +104,7 @@
 
 /* Адаптив */
 @media (max-width: 768px) {
-    .modal-franchise-section { padding: 20px; }
     .layout-cinema .video-container { border-radius: 16px 16px 0 0; }
     .layout-cinema .horizontal-scroll-list { padding: 15px 20px; }
     .video-card { min-width: 160px; width: 160px; } 
-    .franchise-card { min-width: 110px; width: 110px; padding: 10px; } 
 }

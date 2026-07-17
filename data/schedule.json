@@ -8,25 +8,46 @@
       "highlighted": false
     },
     {
-      "day": "Вторник", 
-      "time": "16:00 - 19:00+",
-      "game": "Hollow Knight: Silksong",
-      "description": "Новые приключения в Халлоунесте",
+      "day": "Вторник",
+      "time": "17:00",
+      "game": "Just Chatting",
+      "description": "Смотрим видосы, общаемся",
       "highlighted": false
     },
     {
       "day": "Среда",
-      "time": "16:00 - 19:00+",
-      "game": "Dead Island 2",
-      "description": "Продолжение зомби-апокалипсиса",
-      "highlighted": false
+      "time": "16:00",
+      "game": "Lethal Company",
+      "description": "Идем лутать планеты с отрядом",
+      "highlighted": true
     },
     {
       "day": "Четверг",
-      "time": "16:00 - 19:00+",
-      "game": "Новая игра по выбору чата",
-      "description": "Голосуем вместе что будем проходить",
+      "time": "16:00",
+      "game": "Новая игра по выбору",
+      "description": "Голосуем вместе, что будем проходить",
+      "highlighted": false
+    },
+    {
+      "day": "Пятница",
+      "time": "18:00 - до талого",
+      "game": "Phasmophobia",
+      "description": "Хоррор на ночь глядя",
       "highlighted": true
+    },
+    {
+      "day": "Суббота",
+      "time": "Выходной",
+      "game": "Отдыхаем от стримов",
+      "description": "Набираемся сил на следующую неделю",
+      "highlighted": false
+    },
+    {
+      "day": "Воскресенье",
+      "time": "15:00",
+      "game": "Секретный стрим",
+      "description": "Сюрприз для агентов",
+      "highlighted": false
     }
   ]
 }

@@ -10,7 +10,7 @@ import { initializeUI } from './ui-components.js';
 import { initMediaArchive } from './media-manager.js';
 import { HeroController } from './hero-controller.js';
 import { SquadController } from './squad-controller.js';
-import { MediaModalManager } from './media-modal.js';
+import { MediaModalManager } from './modal/MediaModalManager.js';
 
 // Визуальные движки (Эффекты)
 import { ReptileEngine } from './reptile-engine.js';

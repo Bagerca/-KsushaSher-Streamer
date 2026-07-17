@@ -1,6 +1,22 @@
 /* js/utils.js */
 
 /**
+ * МАГИЯ ОПТИМИЗАЦИИ: Пропускает тяжелые внешние картинки через CDN
+ * Сжимает размер, конвертирует в WebP и кэширует.
+ */
+export function optimizeImageUrl(url, width = 400) {
+    if (!url) return null;
+    
+    // Не трогаем Ютуб-превью и локальные файлы (assets/...)
+    if (url.includes('youtube.com') || url.includes('youtu.be') || url.startsWith('assets/') || url.startsWith('./')) {
+        return url;
+    }
+    
+    // Оборачиваем ссылку в кэширующий прокси (w=ширина, output=webp)
+    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&output=webp&we=1`;
+}
+
+/**
  * Извлекает ID YouTube видео из любой ссылки
  */
 export function getYouTubeId(url) {
@@ -33,7 +49,7 @@ export function debounce(func, wait) {
 }
 
 /**
- * Вычисляет коэффициент сходства двух строк на основе триграмм (Индекс Соренсена-Диса)
+ * Вычисляет коэффициент сходства двух строк на основе триграмм
  */
 export function calculateSimilarity(str1, str2) {
     if (!str1 || !str2) return 0;

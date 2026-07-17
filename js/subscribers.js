@@ -6,7 +6,7 @@ export class SubscribersManager {
         this.track = document.getElementById('subscribers-track');
         
         // Физика и анимация
-        this.speed = 1.5; // Базовая скорость (пикселей в кадр)
+        this.speed = 1.0; // Базовая авто-скорость
         this.currentX = 0;
         this.originalWidth = 0;
         this.isHovered = false;
@@ -14,15 +14,19 @@ export class SubscribersManager {
         // Drag (перетаскивание)
         this.isDragging = false;
         this.startX = 0;
-        this.dragOffset = 0;
+        
+        // Инерция (Glide)
+        this.velocity = 0;
+        this.lastX = 0;
+        this.lastTime = 0;
         
         this.animationId = null;
         
         // Биндим контекст для событий
         this.animate = this.animate.bind(this);
-        this.handleDragStart = this.handleDragStart.bind(this);
-        this.handleDragMove = this.handleDragMove.bind(this);
-        this.handleDragEnd = this.handleDragEnd.bind(this);
+        this.onPointerDown = this.onPointerDown.bind(this);
+        this.onPointerMove = this.onPointerMove.bind(this);
+        this.onPointerUp = this.onPointerUp.bind(this);
     }
 
     async init() {
@@ -43,7 +47,6 @@ export class SubscribersManager {
     }
 
     renderCards(subscribers) {
-        // 1. Создаем HTML оригинального набора
         const html = subscribers.map(sub => {
             let colorVal = sub.color || '#39ff14';
             const colorMap = {
@@ -72,25 +75,16 @@ export class SubscribersManager {
             `;
         }).join('');
 
-        // 2. Вставляем ОДИН набор в трек, чтобы измерить его реальную ширину
         this.track.innerHTML = html;
     }
 
     setupEngine() {
-        // 1. Вычисляем ширину оригинального контента (с учетом gap)
-        // Берем ширину всех элементов + gap между ними
         const cards = Array.from(this.track.children);
         if (cards.length === 0) return;
         
-        // Получаем gap из CSS
         const gap = parseInt(window.getComputedStyle(this.track).gap) || 80;
-        
-        // Считаем общую ширину
         this.originalWidth = cards.reduce((sum, card) => sum + card.offsetWidth + gap, 0);
 
-        // 2. Клонируем контент для иллюзии бесконечности
-        // Нам нужно достаточно клонов, чтобы заполнить экран. 
-        // Если база маленькая, клонируем 2-3 раза. Если большая — 1 раза хватит.
         const clonesNeeded = Math.ceil(window.innerWidth / this.originalWidth) + 1;
         
         let fullHtml = this.track.innerHTML;
@@ -98,102 +92,119 @@ export class SubscribersManager {
             this.track.innerHTML += fullHtml;
         }
 
-        // 3. Подключаем слушатели событий
         this.bindEvents();
-
-        // 4. Запускаем GPU-ускоренный цикл
         this.animate();
     }
 
     bindEvents() {
-        // Мышь
-        this.track.addEventListener('mousedown', this.handleDragStart);
-        window.addEventListener('mousemove', this.handleDragMove);
-        window.addEventListener('mouseup', this.handleDragEnd);
-
-        // Тач (Телефоны)
-        this.track.addEventListener('touchstart', this.handleDragStart, { passive: true });
-        window.addEventListener('touchmove', this.handleDragMove, { passive: false });
-        window.addEventListener('touchend', this.handleDragEnd);
+        // Используем Pointer Events (охватывает и мышь, и тачскрины)
+        this.track.addEventListener('pointerdown', this.onPointerDown);
+        
+        // Слушаем движения глобально на window, чтобы не терять курсор
+        window.addEventListener('pointermove', this.onPointerMove);
+        window.addEventListener('pointerup', this.onPointerUp);
+        window.addEventListener('pointercancel', this.onPointerUp); // Страховка при системных прерываниях
 
         // Ховер (Пауза при наведении)
         this.track.addEventListener('mouseenter', () => { this.isHovered = true; });
         this.track.addEventListener('mouseleave', () => { this.isHovered = false; });
         
-        // Предотвращаем "призрачное" перетаскивание картинок браузером
-        this.track.ondragstart = () => false;
+        // Жестко запрещаем браузеру пытаться тянуть картинки
+        this.track.addEventListener('dragstart', e => e.preventDefault());
     }
 
-    // --- ФИЗИКА DRAG & DROP ---
+    // --- ФИЗИКА DRAG & DROP С ИНЕРЦИЕЙ ---
 
-    handleDragStart(e) {
+    onPointerDown(e) {
+        // Игнорируем правый клик мыши
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        
         this.isDragging = true;
-        this.track.classList.add('is-dragging'); // Меняем курсор
+        this.track.classList.add('is-dragging');
         
-        // Определяем тип события (мышь или тач)
-        const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-        this.startX = clientX;
+        // ЗАХВАТ КУРСОРА: браузер будет слать события этому элементу, 
+        // даже если курсор ушел за пределы окна.
+        this.track.setPointerCapture(e.pointerId);
+
+        this.startX = e.clientX;
+        this.lastX = e.clientX;
+        this.lastTime = performance.now();
+        this.velocity = 0; // Сбрасываем инерцию при новом касании
         
-        // Останавливаем автоматическую анимацию
         if (this.animationId) cancelAnimationFrame(this.animationId);
     }
 
-    handleDragMove(e) {
+    onPointerMove(e) {
         if (!this.isDragging) return;
         
-        // Для тач-устройств отменяем скролл страницы, если тащим по горизонтали
-        if (e.type.includes('touch') && e.cancelable) e.preventDefault();
-
-        const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-        const deltaX = clientX - this.startX;
+        const currentX = e.clientX;
+        const deltaX = currentX - this.startX;
         
-        // Обновляем текущую позицию
         this.currentX += deltaX;
-        this.startX = clientX; // Обновляем старт для следующего тика
+        this.startX = currentX;
 
-        // Проверяем границы для бесконечности при ручном скролле
+        // Вычисляем скорость рывка для инерции
+        const now = performance.now();
+        const dt = now - this.lastTime;
+        if (dt > 0) {
+            // Пикселей в миллисекунду
+            this.velocity = (currentX - this.lastX) / dt;
+        }
+        
+        this.lastX = currentX;
+        this.lastTime = now;
+
         this.checkBoundaries();
         this.applyTransform();
     }
 
-    handleDragEnd() {
+    onPointerUp(e) {
         if (!this.isDragging) return;
+        
         this.isDragging = false;
         this.track.classList.remove('is-dragging');
+        this.track.releasePointerCapture(e.pointerId);
         
-        // Возобновляем цикл
+        // Ограничиваем максимальную скорость инерции, чтобы не улетело в космос
+        this.velocity = Math.max(-10, Math.min(10, this.velocity));
+
         this.animate();
     }
 
     // --- ЛОГИКА БЕСКОНЕЧНОСТИ ---
 
     checkBoundaries() {
-        // Если уехали влево за пределы ОДНОГО оригинального набора
         if (this.currentX <= -this.originalWidth) {
-            // Незаметно перескакиваем в начало (+originalWidth)
             this.currentX += this.originalWidth;
         } 
-        // Если при ручном драге уехали вправо (в плюс)
         else if (this.currentX > 0) {
-            // Незаметно перескакиваем назад
             this.currentX -= this.originalWidth;
         }
     }
 
     applyTransform() {
-        // translate3d заставляет браузер обрабатывать этот слой на видеокарте (GPU)
         this.track.style.transform = `translate3d(${this.currentX}px, 0, 0)`;
     }
 
     animate() {
-        // Двигаемся только если не тащим мышкой и не навели курсор
-        if (!this.isDragging && !this.isHovered) {
-            this.currentX -= this.speed;
+        if (!this.isDragging) {
+            
+            // Если есть остаточная скорость (инерция от рывка)
+            if (Math.abs(this.velocity) > 0.1) {
+                // Применяем скорость (умножаем на 16мс - примерный кадр 60fps)
+                this.currentX += this.velocity * 16;
+                // Трение (постепенно гасим скорость)
+                this.velocity *= 0.92; 
+            } 
+            // Если инерция угасла, и мы не держим курсор на карусели -> базовый авто-скролл
+            else if (!this.isHovered) {
+                this.currentX -= this.speed;
+            }
+
             this.checkBoundaries();
             this.applyTransform();
         }
         
-        // Рекурсивный вызов (60 раз в секунду)
         this.animationId = requestAnimationFrame(this.animate);
     }
 }
