@@ -8,7 +8,7 @@ export class MediaModalManager {
     constructor() {
         this.buildDOM();
         this.posters = new ModalPosters(this.els.posterWrapper, this.els.posterDots, this.els.cinematicBg);
-        this.player = new ModalPlayer(this.els.videoSection, this.els.iframe, this.els.videoPlaylist);
+        this.player = new ModalPlayer(this.els.videoSection, this.els.iframe, this.els.videoPlaylist, this.els.playlistCol);
         this.renderer = new ModalRenderer(this.els);
         this.initListeners();
     }
@@ -23,9 +23,19 @@ export class MediaModalManager {
             <button class="modal-close-btn" title="Закрыть (Esc)"><i class="fas fa-times"></i></button>
             <div class="media-modal-content">
                 <div class="modal-layout" id="modal-layout">
+                    
                     <div class="modal-col-sidebar" id="modal-col-sidebar">
                         <div class="modal-poster-wrapper"><div class="modal-poster-glow"></div></div>
                         <div class="poster-pagination" id="modal-poster-dots"></div>
+                        
+                        <div class="modal-sidebar-meta">
+                            <span class="modal-status-badge" id="modal-status">STATUS</span>
+                            <div class="modal-rating-box" id="modal-rating-box">
+                                <div class="modal-segments" id="modal-segments"></div>
+                                <span id="modal-rating-val">0.0</span>
+                            </div>
+                        </div>
+
                         <div class="modal-tech-barcode">
                             <div class="barcode-lines"></div>
                             <div class="tech-info">
@@ -34,33 +44,39 @@ export class MediaModalManager {
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-col-main" id="modal-col-main">
                         <div class="modal-dynamic-zone" id="modal-dynamic-zone">
-                            <div class="modal-header">
-                                <div class="modal-title-row">
-                                    <h2 class="modal-title" id="modal-title">TITLE</h2>
-                                    <div class="modal-rating-box" id="modal-rating-box">
-                                        <div class="modal-segments" id="modal-segments"></div>
-                                        <span id="modal-rating-val">0.0</span>
+                            
+                            <div class="modal-text-content">
+                                <div class="hover-reveal-wrapper">
+                                    <h2 class="modal-title truncated" id="modal-title">TITLE</h2>
+                                    <div class="hover-reveal-box" id="modal-title-full">
+                                        <h2 class="modal-title">TITLE</h2>
                                     </div>
                                 </div>
-                                <div class="modal-meta-row">
-                                    <span class="modal-status-badge" id="modal-status">STATUS</span>
+                                
+                                <div class="hover-reveal-wrapper" style="margin-top: 15px;">
+                                    <p class="modal-desc truncated" id="modal-desc"></p>
+                                    <div class="hover-reveal-box">
+                                        <p class="modal-desc" id="modal-desc-full"></p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="modal-body">
-                                <div class="modal-desc-wrapper">
-                                    <p class="modal-desc" id="modal-desc"></p>
-                                    <div class="modal-desc-full" id="modal-desc-full"></div>
-                                </div>
-                            </div>
+
                             <div class="modal-video-section" id="modal-video-section" style="display: none;">
-                                <div class="video-header"><i class="fas fa-play-circle"></i> <span>МЕДИА АРХИВ</span></div>
                                 <div class="video-container" id="modal-player-container"><iframe id="modal-iframe" src="" frameborder="0" allowfullscreen></iframe></div>
-                                <div class="horizontal-scroll-list" id="modal-video-playlist"></div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal-col-playlist" id="modal-col-playlist" style="display: none;">
+                        <div class="playlist-header">
+                            <i class="fas fa-list-ul"></i> АРХИВ ЗАПИСЕЙ
+                        </div>
+                        <div class="vertical-scroll-list" id="modal-video-playlist"></div>
+                    </div>
+
                 </div>
             </div>
         `;
@@ -80,13 +96,18 @@ export class MediaModalManager {
             ratingVal: document.getElementById('modal-rating-val'),
             segments: document.getElementById('modal-segments'),
             status: document.getElementById('modal-status'),
+            
             title: document.getElementById('modal-title'),
+            titleFull: this.overlay.querySelector('#modal-title-full .modal-title'),
             desc: document.getElementById('modal-desc'),
             descFull: document.getElementById('modal-desc-full'),
+            
             id: document.getElementById('modal-id'),
             type: document.getElementById('modal-type'),
+            
             videoSection: document.getElementById('modal-video-section'),
             iframe: document.getElementById('modal-iframe'),
+            playlistCol: document.getElementById('modal-col-playlist'),
             videoPlaylist: document.getElementById('modal-video-playlist')
         };
     }
@@ -96,7 +117,6 @@ export class MediaModalManager {
         this.overlay.addEventListener('click', (e) => { if (e.target === this.overlay || e.target === this.els.cinematicBg) this.close(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.overlay.classList.contains('active')) this.close(); });
         
-        // ПРИХВАТЫВАЕМ ЦВЕТ ИЗ СЕТКИ, ЕСЛИ ОН УЖЕ ВЫЧИСЛЕН (оптимизация)
         EventBus.on('MODAL_OPEN_MEDIA', ({ item, type, triggerElement }) => {
             const precalculatedColor = triggerElement ? triggerElement.dataset.extractedColor : null;
             this.open(item, type, precalculatedColor);
@@ -121,25 +141,26 @@ export class MediaModalManager {
             stackData = images.map(img => ({ ...item, isImageOnly: true, overrideImage: img }));
         }
 
-        // Ставим цвет из сетки (или дефолтный), пока грузится картинка
         const fallbackColor = precalculatedColor || item.customColor || '#ff2d95';
         this.updateThemeColor(fallbackColor);
 
-        // Колбэк на клик (смена плаката)
+        // СРАБАТЫВАЕТ ПРИ КЛИКЕ НА СЛЕДУЮЩИЙ ПОСТЕР
         const handleSlideChange = (currentItem, extractedColor) => {
-            this.updateThemeColor(extractedColor);
             this.renderer.triggerGlitchTransition(() => {
+                // ИСПРАВЛЕНИЕ: Обновляем цвет интерфейса СТРОГО в момент смены текста (когда он невидим)
+                this.updateThemeColor(extractedColor);
                 const effectiveStatus = this.renderer.updateText(currentItem, type, extractedColor);
+                
                 this.player.render(currentItem, effectiveStatus, (newTitle) => {
                     this.els.title.textContent = newTitle;
+                    this.els.titleFull.textContent = newTitle;
                 });
             });
         };
 
-        // Колбэк на асинхронную загрузку картинки (авто-перекраска)
+        // СРАБАТЫВАЕТ КОГДА КАРТИНКА ПРОГРУЗИЛАСЬ (В ФОНЕ)
         const handleImageLoadedColor = (extractedColor) => {
             this.updateThemeColor(extractedColor);
-            // Тихо перекрашиваем рейтинг
             this.els.ratingVal.style.color = extractedColor;
             this.els.segments.querySelectorAll('.filled').forEach(seg => {
                 seg.style.color = extractedColor;
@@ -148,19 +169,19 @@ export class MediaModalManager {
 
         this.posters.init(stackData, handleSlideChange, handleImageLoadedColor);
         
-        // Стартовый рендер
         const initStatus = this.renderer.updateText(stackData[0], type, fallbackColor);
         this.player.render(stackData[0], initStatus, (newTitle) => {
             this.els.title.textContent = newTitle;
+            this.els.titleFull.textContent = newTitle;
         });
 
+        document.body.classList.add('modal-open');
         this.overlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; 
     }
 
     close() {
         this.overlay.classList.remove('active');
-        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
         setTimeout(() => this.player.stop(), 300);
     }
 }

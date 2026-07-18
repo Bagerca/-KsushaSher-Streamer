@@ -14,17 +14,17 @@ export class CometEngine {
         if (!this.containerBg) return;
 
         Object.assign(this.containerBg.style, {
-            position: 'absolute', 
+            position: 'fixed', /* ИСПРАВЛЕНО: fixed для следования за экраном */
             inset: '0', 
             width: '100%',
             height: '100%',
-            zIndex: '0', 
+            zIndex: 'var(--z-bg)', 
             pointerEvents: 'none', 
             overflow: 'hidden'
         });
 
         this.scheduleNextIdleCycle();
-        console.log('🌠 [CometEngine] Фоновый режим запущен (CSS Layout)');
+        console.log('🌠 [CometEngine] Фоновый режим запущен');
     }
 
     stopIdle() {
@@ -86,17 +86,17 @@ export class CometEngine {
         
         const w = window.innerWidth;
         const h = window.innerHeight;
-        const scrollY = window.scrollY;
         const offset = 150; 
 
         const side = forcedSide !== null ? forcedSide : Math.floor(Math.random() * 4);
         let startX, startY, endX, endY;
 
+        /* ИСПРАВЛЕНО: Больше никаких scrollY. Рисуем поверх экрана. */
         switch(side) {
-            case 0: startX = Math.random() * w; startY = scrollY - offset; endX = Math.random() * w; endY = scrollY + h + offset; break;
-            case 1: startX = w + offset; startY = scrollY + Math.random() * h; endX = -offset; endY = scrollY + Math.random() * h; break;
-            case 2: startX = Math.random() * w; startY = scrollY + h + offset; endX = Math.random() * w; endY = scrollY - offset; break;
-            case 3: startX = -offset; startY = scrollY + Math.random() * h; endX = w + offset; endY = scrollY + Math.random() * h; break;
+            case 0: startX = Math.random() * w; startY = -offset; endX = Math.random() * w; endY = h + offset; break;
+            case 1: startX = w + offset; startY = Math.random() * h; endX = -offset; endY = Math.random() * h; break;
+            case 2: startX = Math.random() * w; startY = h + offset; endX = Math.random() * w; endY = -offset; break;
+            case 3: startX = -offset; startY = Math.random() * h; endX = w + offset; endY = Math.random() * h; break;
         }
 
         const deltaX = endX - startX;

@@ -91,7 +91,13 @@ export class GridManager {
                 const item = this.store.getItemById(id);
                 if (item) {
                     EventBus.emit('PLAY_SOUND', 'expand');
-                    EventBus.emit('MODAL_OPEN_MEDIA', { item, type: this.store.currentType, triggerElement: card });
+                    
+                    // РАЗВИЛКА ДЛЯ РАЗНЫХ МОДАЛОК В ЗАВИСИМОСТИ ОТ ФОРМАТА
+                    if (item.format === 'youtube') {
+                        EventBus.emit('MODAL_OPEN_YOUTUBE', { item, triggerElement: card });
+                    } else {
+                        EventBus.emit('MODAL_OPEN_MEDIA', { item, type: this.store.currentType, triggerElement: card });
+                    }
                 }
             }
         });
@@ -104,7 +110,6 @@ export class GridManager {
             lazyBackLayers.forEach(layer => {
                 const bgUrl = layer.dataset.lazyBg;
                 if (bgUrl && !layer.style.backgroundImage) {
-                    // Передаем layer в качестве layerEl для корректной покраски
                     this.lazyLoader._safeImageLoad(bgUrl, card.classList.contains('is-youtube'), layer, null, null, layer);
                     layer.removeAttribute('data-lazy-bg');
                 }

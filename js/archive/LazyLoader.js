@@ -54,7 +54,9 @@ export class LazyLoader {
         try {
             await img.decode();
 
+            // Если загрузилась заглушка ютуба (серая картинка 120px)
             if (isYouTube && url.includes('maxresdefault') && img.naturalWidth <= 120) {
+                console.log(`[LazyLoader] YouTube вернул заглушку для maxresdefault, загружаем hqdefault: ${url}`);
                 this._safeImageLoad(url.replace('maxresdefault', 'hqdefault'), false, targetEl, placeholderEl, parentCard, layerEl);
                 return;
             }
@@ -88,6 +90,13 @@ export class LazyLoader {
             }
 
         } catch (error) {
+            // ИСПРАВЛЕНИЕ ОШИБКИ 404: Если maxresdefault вообще не существует
+            if (isYouTube && url.includes('maxresdefault')) {
+                console.warn(`[LazyLoader] maxresdefault недоступен (404), пробуем hqdefault: ${url}`);
+                this._safeImageLoad(url.replace('maxresdefault', 'hqdefault'), false, targetEl, placeholderEl, parentCard, layerEl);
+                return;
+            }
+
             console.warn(`[LazyLoader] Ошибка сети при загрузке: ${url}`);
             
             if (parentCard && !parentCard.dataset.extractedColor) {

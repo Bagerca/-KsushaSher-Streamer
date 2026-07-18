@@ -1,19 +1,8 @@
 /* css/modal/modal-player.css */
 
-/* =========================================
-   ВИДЕО ПЛЕЕР И ПЛЕЙЛИСТ
-   ========================================= */
 .modal-video-section { 
-    border-top: 1px solid rgba(255, 255, 255, 0.1); 
-    padding-top: 20px; 
-    margin-bottom: 20px;
-    width: 100%; 
-    display: flex; flex-direction: column; gap: 15px; 
-}
-.video-header { 
-    font-family: 'Orbitron', sans-serif; color: var(--modal-color); 
-    font-size: 1.1rem; display: flex; align-items: center; gap: 10px; 
-    opacity: 0.9; letter-spacing: 1px; 
+    width: 100%; display: flex; flex-direction: column; 
+    flex-grow: 1; /* Чтобы плеер тянулся на всю высоту, если нет текста */
 }
 
 .video-container { 
@@ -25,86 +14,94 @@
 .video-container::before { content: ""; display: block; padding-bottom: 56.25%; /* 16:9 Aspect Ratio */ }
 
 /* =========================================
-   ГОРИЗОНТАЛЬНЫЙ СПИСОК YOUTUBE
+   ПРАВАЯ КОЛОНКА: ВЕРТИКАЛЬНЫЙ ПЛЕЙЛИСТ
    ========================================= */
-.horizontal-scroll-list { 
-    display: flex; gap: 15px; 
-    overflow-x: auto; overflow-y: hidden; 
-    padding-bottom: 15px; padding-top: 5px;
-    -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
-    
-    --scroll-size: 6px;
-    --scroll-thumb: var(--modal-color);
-    --scroll-track: rgba(255, 255, 255, 0.02);
+
+.playlist-header {
+    padding: 20px 20px 15px 20px;
+    font-family: 'Orbitron', sans-serif; color: var(--modal-color); 
+    font-size: 1rem; display: flex; align-items: center; gap: 10px; 
+    letter-spacing: 1px; font-weight: 700;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.3);
 }
 
-.scroll-card { 
-    display: flex; flex-direction: column; gap: 10px; 
-    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); 
-    border-radius: 8px; padding: 10px; cursor: pointer; transition: 0.3s; 
-    position: relative; overflow: hidden; flex: 0 0 auto;
+.vertical-scroll-list { 
+    display: flex; flex-direction: column; gap: 12px; 
+    overflow-y: auto; overflow-x: hidden; 
+    padding: 15px 20px; flex-grow: 1;
+    
+    --scroll-size: 4px;
+    --scroll-thumb: var(--modal-color);
+    --scroll-track: transparent;
 }
-.scroll-card:hover { 
-    background: rgba(255, 255, 255, 0.05); transform: translateY(-5px); 
+
+/* ВЕРТИКАЛЬНАЯ КАРТОЧКА (Thumb слева, Текст справа) */
+.vertical-video-card { 
+    display: flex; flex-direction: row; gap: 12px; align-items: center;
+    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); 
+    border-radius: 8px; padding: 8px; cursor: pointer; transition: 0.3s; 
+    position: relative; overflow: hidden; flex-shrink: 0;
+}
+
+.vertical-video-card:hover { 
+    background: rgba(255, 255, 255, 0.05); transform: translateX(-5px); 
     border-color: rgba(255, 255, 255, 0.2); 
 }
-.scroll-card.active { 
+.vertical-video-card.active { 
     background: rgba(0,0,0,0.5); border-color: var(--modal-color); 
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); 
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); 
 }
 
-.sc-thumb { border-radius: 6px; overflow: hidden; position: relative; background: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.5); width: 100%; }
-.sc-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: filter 0.3s, transform 0.3s; }
-.scroll-card:hover .sc-thumb img { opacity: 1; transform: scale(1.05); }
+/* Левая часть: Картинка */
+.v-thumb { 
+    width: 100px; height: 60px; /* Фиксированный размер */
+    border-radius: 4px; overflow: hidden; position: relative; 
+    background: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.5); flex-shrink: 0; 
+}
+.v-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
+.vertical-video-card:hover .v-thumb img { opacity: 1; transform: scale(1.1); }
 
-.sc-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; }
-.scroll-card:hover .sc-overlay { opacity: 1; }
-.sc-overlay i { font-size: 1.5rem; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
+.v-overlay { 
+    position: absolute; inset: 0; background: rgba(0,0,0,0.4); 
+    display: flex; align-items: center; justify-content: center; 
+    opacity: 0; transition: 0.2s; 
+}
+.vertical-video-card:hover .v-overlay { opacity: 1; }
+.v-overlay i { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
 
-.sc-info { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.sc-title { font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.2; }
-.scroll-card.active .sc-title { color: var(--modal-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
-.sc-status { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700;}
-
-/* СПЕЦИФИКА КАРТОЧКИ ВИДЕО */
-.video-card { min-width: 220px; width: 220px; }
-.video-card .sc-thumb { aspect-ratio: 16 / 9; }
+/* Правая часть: Текст */
+.v-info { 
+    display: flex; flex-direction: column; justify-content: center; 
+    min-width: 0; /* Для обрезки текста */
+}
+.v-title { 
+    font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; 
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+    overflow: hidden; line-height: 1.2; 
+}
+.vertical-video-card.active .v-title { color: var(--modal-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
+.v-status { 
+    font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; 
+    margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700;
+}
 
 /* Эквалайзер */
-.equalizer-icon { display: none; align-items: flex-end; gap: 4px; height: 18px; }
-.equalizer-icon span { width: 5px; background: var(--modal-color); border-radius: 2px; animation: eq-play 0.6s infinite ease-in-out alternate; box-shadow: 0 0 8px var(--modal-color); }
-.equalizer-icon span:nth-child(1) { animation-delay: 0.0s; }
-.equalizer-icon span:nth-child(2) { animation-delay: 0.2s; }
-.equalizer-icon span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes eq-play { 0% { height: 4px; } 100% { height: 18px; } }
+.v-equalizer { display: none; align-items: flex-end; gap: 3px; height: 14px; }
+.v-equalizer span { width: 4px; background: var(--modal-color); border-radius: 2px; animation: eq-play 0.6s infinite ease-in-out alternate; box-shadow: 0 0 8px var(--modal-color); }
+.v-equalizer span:nth-child(1) { animation-delay: 0.0s; }
+.v-equalizer span:nth-child(2) { animation-delay: 0.2s; }
+.v-equalizer span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes eq-play { 0% { height: 3px; } 100% { height: 14px; } }
 
 /* Состояние "Сейчас играет" */
-.video-card.active .sc-overlay { opacity: 1; background: rgba(0,0,0,0.7); }
-.video-card.active .sc-thumb img { filter: grayscale(1) brightness(0.5); transform: scale(1); }
-.video-card.active .play-icon { display: none; }
-.video-card.active .equalizer-icon { display: flex; }
+.vertical-video-card.active .v-overlay { opacity: 1; background: rgba(0,0,0,0.7); }
+.vertical-video-card.active .v-thumb img { filter: grayscale(1) brightness(0.5); transform: scale(1); }
+.vertical-video-card.active .play-icon { display: none; }
+.vertical-video-card.active .v-equalizer { display: flex; }
 
 /* =========================================
-   БЕСШОВНЫЙ РЕЖИМ "CINEMA" (ДЛЯ ПРЕДЛОЖКИ)
+   БЕСШОВНЫЙ РЕЖИМ "CINEMA" 
    ========================================= */
-.layout-cinema .modal-video-section { 
-    order: -2; margin: 0; border: none; padding: 0; background: transparent;
-}
-.layout-cinema .video-header { display: none; }
-
-.layout-cinema .video-container { 
-    border-radius: 16px 16px 0 0; border: none; 
-    box-shadow: 0 10px 40px rgba(0,0,0,0.9); z-index: 10;
-}
-
-.layout-cinema .horizontal-scroll-list { 
-    padding: 20px 40px; background: rgba(5, 5, 8, 0.6); 
-    border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
-}
-
-/* Адаптив */
-@media (max-width: 768px) {
-    .layout-cinema .video-container { border-radius: 16px 16px 0 0; }
-    .layout-cinema .horizontal-scroll-list { padding: 15px 20px; }
-    .video-card { min-width: 160px; width: 160px; } 
-}
+.layout-cinema .modal-video-section { margin: 0; }
+.layout-cinema .video-container { border-radius: 16px; border: none; box-shadow: 0 10px 40px rgba(0,0,0,0.9); z-index: 10; }

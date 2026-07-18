@@ -16,8 +16,9 @@ import { initMediaArchive } from './media-manager.js';
 import { HeroController } from './hero-controller.js';
 import { SquadController } from './squad-controller.js';
 import { MediaModalManager } from './modal/MediaModalManager.js';
+import { YoutubeModalManager } from './modal/YoutubeModalManager.js'; // <-- ВОТ ЭТОТ ИМПОРТ БЫЛ ПРОПУЩЕН
 
-import { FXController } from './FXController.js'; // НОВЫЙ ИМПОРТ
+import { FXController } from './FXController.js'; 
 
 import { ScheduleManager } from './schedule.js';
 import { SubscribersManager } from './subscribers.js';
@@ -55,6 +56,7 @@ async function bootstrap() {
         new HeroController();
         new SquadController();
         new MediaModalManager();
+        new YoutubeModalManager(); // <-- ИНИЦИАЛИЗАЦИЯ НОВОЙ МОДАЛКИ
         
         // 3. Настройка графики и глобальных событий (без мусора в app.js)
         fxController.init();

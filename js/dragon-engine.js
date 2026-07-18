@@ -44,11 +44,11 @@ export class DragonEngine {
         
         this.svg = document.createElementNS(xmlns, "svg");
         Object.assign(this.svg.style, {
-            position: "absolute", 
+            position: "fixed", /* Оставляем fixed, чтобы не обрезался внизу сайта */
             inset: "0", 
             width: "100%",
             height: "100%", 
-            zIndex: "0", 
+            zIndex: "var(--z-system)", 
             pointerEvents: "none", 
             background: "transparent",
             filter: `drop-shadow(0 0 5px ${palette.main}) contrast(1.1)` 
@@ -96,6 +96,7 @@ export class DragonEngine {
         const spawnSide = Math.floor(Math.random() * 4); 
         let spawnX, spawnY;
         
+        /* ВОЗВРАЩЕНО: Координаты спавна внутри Документа (учитывают скролл) */
         switch(spawnSide) {
             case 0: spawnX = window.scrollX + Math.random() * window.innerWidth; spawnY = window.scrollY - spawnOffset; break;
             case 1: spawnX = window.scrollX + window.innerWidth + spawnOffset; spawnY = window.scrollY + Math.random() * window.innerHeight; break;
@@ -119,7 +120,7 @@ export class DragonEngine {
         }
 
         this.lastTime = performance.now();
-        console.log(`🐉 [DragonEngine] Запущен на CSS-слое. Цвет: ${palette.name}. Лимит FPS: 60`);
+        console.log(`🐉 [DragonEngine] Запущен. Цвет: ${palette.name}. Лимит FPS: 60`);
         this.loop();
     }
 
@@ -137,6 +138,7 @@ export class DragonEngine {
     }
 
     onPointerMove(e) {
+        /* ВОЗВРАЩЕНО: Цель дракона живет внутри документа (учитывает скролл) */
         this.pointer.x = e.clientX + window.scrollX; 
         this.pointer.y = e.clientY + window.scrollY; 
         this.rad = 0;
@@ -145,17 +147,16 @@ export class DragonEngine {
     loop() {
         this.rafId = requestAnimationFrame(() => this.loop());
         
-        // --- FPS THROTTLE ---
         const now = performance.now();
         const elapsed = now - this.lastTime;
 
         if (elapsed < this.fpsInterval) return;
         this.lastTime = now - (elapsed % this.fpsInterval);
         
-        // --- PHYSICS ---
         try {
             const N = this.elems.length;
             let e = this.elems[0];
+            
             const ax = (Math.cos(3 * this.frm) * this.rad * window.innerWidth) / window.innerHeight;
             const ay = (Math.sin(4 * this.frm) * this.rad * window.innerHeight) / window.innerWidth;
             
@@ -171,13 +172,19 @@ export class DragonEngine {
                 const s = (1 - (i / N)) * 3 + 0.2; 
                 
                 if (e.use) {
-                    e.use.setAttributeNS(null, "transform", `translate(${(ep.x + e.x) / 2},${(ep.y + e.y) / 2}) rotate(${(180 / Math.PI) * a}) scale(${s},${s})`);
+                    /* МАГИЯ ТУТ: Сама физика (e.x, e.y) живет на уровне сайта.
+                       Но чтобы нарисовать ее на стекле экрана (fixed SVG),
+                       мы просто вычитаем текущую прокрутку (scrollY) */
+                    const renderX = ((ep.x + e.x) / 2) - window.scrollX;
+                    const renderY = ((ep.y + e.y) / 2) - window.scrollY;
+                    e.use.setAttributeNS(null, "transform", `translate(${renderX},${renderY}) rotate(${(180 / Math.PI) * a}) scale(${s},${s})`);
                 }
             }
             if (this.rad < Math.min(this.pointer.x, this.pointer.y) - 20) this.rad++;
             this.frm += 0.003;
             
             if (this.rad > 60) {
+                /* ВОЗВРАЩЕНО: Блуждание тоже учитывает прокрутку */
                 const centerX = (window.innerWidth / 2) + window.scrollX;
                 const centerY = (window.innerHeight / 2) + window.scrollY;
                 this.pointer.x += (centerX - this.pointer.x) * 0.05;

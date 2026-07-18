@@ -3,10 +3,11 @@ import EventBus from '../event-bus.js';
 import { getYouTubeId } from '../utils.js';
 
 export class ModalPlayer {
-    constructor(sectionEl, iframeEl, playlistEl) {
+    constructor(sectionEl, iframeEl, playlistEl, playlistColEl) {
         this.section = sectionEl;
         this.iframe = iframeEl;
         this.playlist = playlistEl;
+        this.playlistCol = playlistColEl; 
     }
 
     render(item, effectiveStatus, updateTitleCallback) {
@@ -14,6 +15,7 @@ export class ModalPlayer {
         
         if (!videos || videos.length === 0) {
             this.section.style.display = 'none';
+            if (this.playlistCol) this.playlistCol.style.display = 'none';
             this.iframe.src = '';
             return;
         }
@@ -32,47 +34,63 @@ export class ModalPlayer {
             if (!firstValidId) firstValidId = vidId;
 
             const itemEl = document.createElement('div');
-            itemEl.className = `scroll-card video-card ${index === 0 ? 'active' : ''}`;
+            itemEl.className = `vertical-video-card ${index === 0 ? 'active' : ''}`;
             
+            // XSS FIX: Каркас вставляем через innerHTML, а пользовательские данные безопасно
             itemEl.innerHTML = `
-                <div class="sc-thumb is-16-9">
-                    <img src="https://img.youtube.com/vi/${vidId}/mqdefault.jpg">
-                    <div class="sc-overlay">
-                        <i class="fas fa-play play-icon"></i>
-                        <div class="equalizer-icon"><span></span><span></span><span></span></div>
-                    </div>
+                <div class="v-thumb">
+                    <img src="https://img.youtube.com/vi/${vidId}/mqdefault.jpg" alt="thumbnail">
+                    <div class="v-overlay"><i class="fas fa-play play-icon"></i><div class="v-equalizer"><span></span><span></span><span></span></div></div>
                 </div>
-                <div class="sc-info"><div class="sc-title">${title}</div><div class="sc-status">СМОТРЕТЬ</div></div>
+                <div class="v-info">
+                    <div class="v-title"></div>
+                    <div class="v-status">СМОТРЕТЬ</div>
+                </div>
             `;
+            
+            // XSS FIX: Безопасная вставка текста
+            const titleEl = itemEl.querySelector('.v-title');
+            titleEl.textContent = title;
             
             itemEl.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
-                this.playlist.querySelectorAll('.video-card').forEach(b => b.classList.remove('active'));
+                this.playlist.querySelectorAll('.vertical-video-card').forEach(b => b.classList.remove('active'));
                 itemEl.classList.add('active');
-                this.iframe.src = `https://www.youtube.com/embed/${vidId}?autoplay=1&rel=0&modestbranding=1`;
+                
+                // ИСПРАВЛЕНИЕ: Убрали autoplay=1 для переключаемых видео
+                this.iframe.src = `https://www.youtube.com/embed/${vidId}?autoplay=0&rel=0&modestbranding=1`;
                 
                 if (effectiveStatus === 'suggested' && updateTitleCallback) {
-                    updateTitleCallback(itemEl.querySelector('.sc-title').textContent);
+                    updateTitleCallback(titleEl.textContent);
                 }
             });
             this.playlist.appendChild(itemEl);
 
             if (isString) {
-                fetch(`https://noembed.com/embed?url=${url}`).then(r => r.json()).then(d => {
-                    if (d.title) {
-                        itemEl.querySelector('.sc-title').textContent = d.title;
-                        if (itemEl.classList.contains('active') && effectiveStatus === 'suggested' && updateTitleCallback) {
-                            updateTitleCallback(d.title);
+                // Базовая защита от падения API noembed
+                fetch(`https://noembed.com/embed?url=${url}`)
+                    .then(r => {
+                        if (!r.ok) throw new Error('API Error');
+                        return r.json();
+                    })
+                    .then(d => {
+                        if (d.title) {
+                            titleEl.textContent = d.title;
+                            if (itemEl.classList.contains('active') && effectiveStatus === 'suggested' && updateTitleCallback) {
+                                updateTitleCallback(d.title);
+                            }
                         }
-                    }
-                }).catch(() => {});
+                    }).catch(e => console.warn('⚠️ [ModalPlayer] Не удалось подтянуть название с YouTube:', e.message));
             }
         });
 
-        this.playlist.style.display = videos.length <= 1 ? 'none' : 'flex';
+        if (this.playlistCol) {
+            this.playlistCol.style.display = videos.length <= 1 ? 'none' : 'flex';
+        }
 
         if (firstValidId) {
-            this.iframe.src = `https://www.youtube.com/embed/${firstValidId}?rel=0&modestbranding=1`;
+            // ИСПРАВЛЕНИЕ: Убрали autoplay=1 для первого запуска
+            this.iframe.src = `https://www.youtube.com/embed/${firstValidId}?autoplay=0&rel=0&modestbranding=1`;
         }
     }
 

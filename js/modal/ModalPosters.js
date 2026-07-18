@@ -10,32 +10,54 @@ export class ModalPosters {
         this.currentIndex = 0;
         this.imgElements = [];
         this.stackData = [];
+        this.currentLoadId = 0; 
     }
 
     init(stackData, onChangeCallback, onColorExtractedCallback) {
         this.stackData = stackData;
         this.currentIndex = 0;
         
+        const loadId = ++this.currentLoadId;
+        
+        // Очищаем старые классы количества
+        this.wrapper.classList.remove('stack-1', 'stack-2', 'stack-3');
         this.wrapper.innerHTML = '<div class="modal-poster-glow"></div>';
         this.dotsContainer.innerHTML = '';
         this.imgElements = [];
 
         this.stackData.forEach((data, index) => {
             const img = document.createElement('img');
-            img.crossOrigin = "Anonymous"; // Разрешаем CORS
-            img.decoding = "async"; // Не блокируем UI при отрисовке
+            img.crossOrigin = "Anonymous"; 
+            img.decoding = "async"; 
             
+            const initialColor = data.customColor || '#444455';
+            img.style.setProperty('--poster-color', initialColor);
+
             img.onload = async () => {
+                if (loadId !== this.currentLoadId) return;
+
                 const neonColor = await extractColorFromImageAsync(img) || data.customColor || '#ff2d95';
                 img.dataset.neonColor = neonColor;
+                img.style.setProperty('--poster-color', neonColor);
                 
                 if (index === this.currentIndex && onColorExtractedCallback) {
                     onColorExtractedCallback(neonColor);
                 }
             };
+
+            img.onerror = () => {
+                if (loadId !== this.currentLoadId) return;
+                const fallbackColor = data.customColor || '#444455';
+                img.dataset.neonColor = fallbackColor;
+                img.style.setProperty('--poster-color', fallbackColor);
+                img.src = 'https://via.placeholder.com/600x900/1a1a24/ffffff?text=NO+IMAGE'; 
+                
+                if (index === this.currentIndex && onColorExtractedCallback) {
+                    onColorExtractedCallback(fallbackColor);
+                }
+            };
             
-            // МАГИЯ ЗДЕСЬ: Пропускаем через прокси, чтобы SteamGridDB и прочие не блокировали CORS
-            let rawSrc = data.overrideImage || data.image || 'https://via.placeholder.com/600x900?text=NO+IMAGE';
+            let rawSrc = data.overrideImage || data.image || 'https://via.placeholder.com/600x900/1a1a24/ffffff?text=NO+IMAGE';
             img.src = optimizeImageUrl(rawSrc, 600, 90); 
             
             img.className = 'modal-poster-img'; 
@@ -51,6 +73,10 @@ export class ModalPosters {
 
         this.updateVisuals();
 
+        // МАГИЯ ЗДЕСЬ: Присваиваем класс в зависимости от количества карт (макс 3)
+        const stackCount = Math.min(this.imgElements.length, 3);
+        this.wrapper.classList.add(`stack-${stackCount}`);
+
         if (this.imgElements.length > 1) {
             this.wrapper.classList.add('is-interactive');
             this.wrapper.onclick = () => { 
@@ -60,7 +86,6 @@ export class ModalPosters {
                 
                 const currentItem = this.stackData[this.currentIndex];
                 const activeImg = this.imgElements[this.currentIndex];
-                
                 const currentExtractedColor = activeImg.dataset.neonColor || '#ff2d95';
                 
                 if (!currentItem.isImageOnly && onChangeCallback) {

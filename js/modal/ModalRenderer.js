@@ -16,6 +16,9 @@ const STATUS_COLOR_MAP = {
 export class ModalRenderer {
     constructor(els) {
         this.els = els;
+        this.transitionTimeouts = []; 
+        // Получаем ссылку на колонку со скроллом для сброса позиции
+        this.mainCol = document.getElementById('modal-col-main'); 
     }
 
     setLayoutMode(format, overlay) {
@@ -30,9 +33,14 @@ export class ModalRenderer {
 
     updateText(currentItem, type, color) {
         const bgImg = currentItem.overrideImage || currentItem.image;
-        if (bgImg && this.els.cinematicBg) this.els.cinematicBg.style.backgroundImage = `url('${bgImg}')`;
+        if (bgImg && this.els.cinematicBg) {
+            this.els.cinematicBg.style.backgroundImage = `url('${bgImg}')`;
+        }
 
-        this.els.title.textContent = currentItem.title || "UNKNOWN";
+        const titleText = currentItem.title || "UNKNOWN";
+        this.els.title.textContent = titleText;
+        this.els.titleFull.textContent = titleText;
+        
         this.els.id.textContent = currentItem.id || "---";
         this.els.type.textContent = type ? type.toUpperCase() : "UNKNOWN";
         
@@ -77,17 +85,32 @@ export class ModalRenderer {
         const elementsToAnimate = [this.els.dynamicZone];
         if (this.els.techBarcode) elementsToAnimate.push(this.els.techBarcode);
         
-        elementsToAnimate.forEach(el => el.classList.add('fade-out'));
+        this.transitionTimeouts.forEach(clearTimeout);
+        this.transitionTimeouts = [];
         
-        setTimeout(() => {
+        elementsToAnimate.forEach(el => {
+            el.classList.remove('fade-in');
+            el.classList.add('fade-out');
+        });
+        
+        const t1 = setTimeout(() => {
+            // ИСПРАВЛЕНИЕ: Сброс скролла наверх при смене контента
+            if (this.mainCol) this.mainCol.scrollTop = 0;
+
             callback(); 
+            
             elementsToAnimate.forEach(el => {
                 el.classList.remove('fade-out');
                 el.classList.add('fade-in');
             });
-            setTimeout(() => {
+            
+            const t2 = setTimeout(() => {
                 elementsToAnimate.forEach(el => el.classList.remove('fade-in'));
-            }, 300);
-        }, 200); 
+            }, 300); // 300ms совпадает с CSS анимацией smooth-fade-scale
+            this.transitionTimeouts.push(t2);
+            
+        }, 200); // Ждем 200ms пока контент исчезнет
+
+        this.transitionTimeouts.push(t1);
     }
 }

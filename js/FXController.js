@@ -22,32 +22,10 @@ export class FXController {
 
     init() {
         this.registerEventHandlers();
-        this.setupVisibilityManager();
         
-        // Запуск базового фона при старте
+        // Запуск базового фона (Кометы) при старте
         this.engines.comet.startIdle();
-        console.log('✨ [FXController] Графические движки инициализированы');
-    }
-
-    setupVisibilityManager() {
-        const heroObserver = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                if (this.state.fxMode === 0 && this.engines.matrix.isGodMode) this.engines.matrix.start();
-                if (this.state.fxMode !== 1 && this.state.fxMode !== 3) this.engines.comet.startIdle();
-                
-                if (this.state.activeSubEngines.includes('dragon')) this.engines.dragon.start();
-                if (this.state.activeSubEngines.includes('reptile')) this.engines.reptile.start();
-            } else {
-                this.engines.matrix.stop();
-                this.engines.comet.stopIdle();
-                
-                if (this.engines.dragon.rafId) this.engines.dragon.stop();
-                if (this.engines.reptile.rafId) this.engines.reptile.stop();
-            }
-        }, { threshold: 0.01 });
-
-        const heroEl = document.getElementById('hero');
-        if (heroEl) heroObserver.observe(heroEl);
+        console.log('✨ [FXController] Графические движки инициализированы (Глобальный режим)');
     }
 
     registerEventHandlers() {
@@ -85,6 +63,7 @@ export class FXController {
             
             if (this.state.fxMode === 0) {
                 if (this.engines.matrix.isGodMode) this.engines.matrix.start();
+                this.engines.comet.startIdle();
             }
             else if (this.state.fxMode === 1) {
                 document.body.classList.add('state-no-comets');
@@ -95,6 +74,7 @@ export class FXController {
             else if (this.state.fxMode === 3) {
                 document.body.classList.add('state-no-comets', 'state-no-stars');
                 this.engines.matrix.stop();
+                this.engines.comet.stopIdle();
             }
             EventBus.emit('STATE_FX_CHANGED', this.state.fxMode);
         });
