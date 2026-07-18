@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ksusha Sher - Cyber Dashboard</title>
+    <!-- Title задастся автоматически через ConfigInjector -->
+    <title>Loading...</title>
     
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
@@ -51,8 +52,9 @@
                 <div class="panel-content">
                     <div class="panel-header"><span class="header-title">СОЮЗНИК</span><span class="header-deco-line"></span></div>
                     <div class="ally-container">
-                        <img src="assets/images/tetlabot.jpg" alt="Tetla" class="panel-avatar main-photo tetla" data-character="tetla">
-                        <h3 class="panel-name">TETLA <span class="bot-version">v5.6</span></h3>
+                        <!-- src заполнит инжектор -->
+                        <img src="" alt="Ally Avatar" class="panel-avatar main-photo tetla" data-character="tetla">
+                        <h3><span id="inject-bot-name">BOT</span> <span class="bot-version">v0.0</span></h3>
                     </div>
                     <div class="ally-terminal" id="terminal-box">
                         <div id="terminal-history"></div>
@@ -65,7 +67,8 @@
             <div class="hud-main-display">
                 <div class="main-avatar-container">
                     <div class="main-display-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
-                    <img src="assets/images/ksusha.jpg" alt="Ksusha Sher" class="main-display-avatar main-photo ksusha" data-character="ksusha">
+                    <!-- src заполнит инжектор -->
+                    <img src="" alt="Main Avatar" class="main-display-avatar main-photo ksusha" data-character="ksusha">
                 </div>
                 <div class="main-display-status">
                     <div id="live-status-container" style="display: flex; align-items: center;">
@@ -84,12 +87,9 @@
                 <div class="panel-content">
                     <div class="squad-default-view" id="squad-view">
                         <div class="panel-header"><span class="header-title">ОТРЯД</span><span class="header-deco-line"></span></div>
-                        <h3 class="panel-name">ГРУППА ПОДДЕРЖКИ</h3>
-                        <div class="squad-list">
-                            <div class="squad-member" data-member="bagerka"><div class="avatar-wrapper"><div class="squad-avatar bagerka-avatar orbital-photo bagerka"><img src="assets/images/bagerca.jpg" alt="BAGERca"></div><div class="role-badge tech"><i class="fas fa-code"></i></div></div><span class="squad-name">BAGERca</span></div>
-                            <div class="squad-member" data-member="angel"><div class="avatar-wrapper"><div class="squad-avatar angel-avatar orbital-photo angel"><img src="assets/images/angel.jpg" alt="Angel"></div><div class="role-badge support"><i class="fas fa-star"></i></div></div><span class="squad-name">Angel</span></div>
-                            <div class="squad-member" data-member="kiriki"><div class="avatar-wrapper"><div class="squad-avatar kiriki-avatar orbital-photo kiriki"><img src="assets/images/kiriki.jpg" alt="Kiriki"></div><div class="role-badge fun"><i class="fas fa-music"></i></div></div><span class="squad-name">Kiriki</span></div>
-                        </div>
+                        <h3 class="panel-name" id="inject-squad-title">КОМАНДА</h3>
+                        <!-- КОНТЕЙНЕР ПУСТОЙ: SquadController заполнит его автоматически -->
+                        <div class="squad-list"></div>
                     </div>
                     <div class="squad-detail-view"><button class="close-detail-btn">&times;</button><div class="detail-avatar-container"></div><h3 class="detail-name"></h3><p class="detail-description"></p></div>
                     
@@ -106,7 +106,10 @@
                 </div>
             </div>
         </div>
-        <div class="hero-content-hud"><h1 class="hero-title-hud">KSUSHA SHER</h1><p class="hero-subtitle-hud" id="data-ticker">STREAMER & CONTENT CREATOR</p></div>
+        <div class="hero-content-hud">
+            <h1 class="hero-title-hud" id="inject-main-name">STREAMER</h1>
+            <p class="hero-subtitle-hud" id="data-ticker">INIT...</p>
+        </div>
     </section>
 
     <!-- СЕКЦИЯ 2: ОБО МНЕ -->
@@ -117,14 +120,15 @@
                     <div class="dossier-text">
                         <div class="bio-header"><span class="bio-icon"><i class="fas fa-terminal"></i></span><h3 class="bio-title">БИОГРАФИЯ</h3></div>
                         <!-- ДОБАВЛЕН ID ДЛЯ СИНХРОНИЗАЦИИ С TWITCH -->
-                        <p id="twitch-bio-text">Привет! Я <span class="neon-highlight">Ksusha Sher</span>. Стример, геймер и создатель уютной атмосферы.</p>
-                        <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="twitch-link">Twitch</a>.</p>
+                        <p id="twitch-bio-text">Инициализация био...</p>
+                        <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="#" target="_blank" class="twitch-link">Twitch</a>.</p>
                         <div class="dossier-stats"><div class="stat-tag">🎮 Variety</div><div class="stat-tag">💬 Just Chatting</div><div class="stat-tag">👻 Horror</div></div>
                     </div>
                     <div class="cyber-monitor">
                         <div class="video-wrapper">
                             <div class="monitor-header"><span>REC <span class="rec-dot">●</span></span><span>CAM_01 [LIVE]</span></div>
-                            <div class="video-frame"><iframe src="https://www.youtube.com/embed/Uym3MRaJ3PE" title="Обо мне" frameborder="0" allowfullscreen></iframe><div class="screen-grid"></div></div>
+                            <!-- SRC будет вставлен автоматически -->
+                            <div class="video-frame"><iframe src="" title="Обо мне" frameborder="0" allowfullscreen></iframe><div class="screen-grid"></div></div>
                             <div class="monitor-footer"><span>SIGNAL: <span class="signal-status">STRONG</span></span><span>1080p / 60FPS</span></div>
                         </div>
                     </div>
@@ -154,7 +158,6 @@
                     <div class="hud-bracket top-left"></div>
                     <div class="hud-bracket bottom-right"></div>
                     <div class="stats-grid-container">
-                        <!-- Изменил метки под новые метрики с IVR -->
                         <div class="stat-box"><i class="fas fa-users stat-icon" style="color: var(--neon-green);"></i><div class="stat-info"><div class="stat-label">АГЕНТЫ В СЕТИ</div><div class="stat-value" id="stat-followers">----</div></div></div>
                         <div class="stat-box"><i class="fas fa-comment-dots stat-icon" id="stat-icon-viewers" style="color: #00ccff;"></i><div class="stat-info"><div class="stat-label" id="stat-label-viewers">АКТИВНОСТЬ ЧАТА</div><div class="stat-value" id="stat-viewers">----</div></div></div>
                         <div class="stat-box"><i class="fas fa-quote-left stat-icon" style="color: var(--neon-pink);"></i><div class="stat-info"><div class="stat-label" id="stat-label-game">ПОСЛЕДНИЙ ЭФИР</div><div class="stat-value small" id="stat-game">----</div></div></div>
@@ -232,13 +235,11 @@
                 </div>
                 
                 <div class="filters-wrapper">
-                    <!-- Оставили только статусы -->
                     <div class="filter-row status-row" id="archive-filters-status"></div>
                 </div>
             </div>
             
             <div class="archive-full-grid-wrapper"></div>
-            
         </div>
     </section>
 
@@ -251,12 +252,8 @@
                 <h2 class="cyber-header-main">МОЕ ЖЕЛЕЗО</h2>
                 <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
             </div>
-            <div class="specs-grid">
-                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-microchip"></i></div><div class="spec-info"><h3 class="spec-label">PROCESSOR</h3><p class="spec-value">Intel Core i7-12700H</p><div class="spec-meta"><span class="meta-tag">14 CORES</span><span class="meta-tag">4.7 GHz</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
-                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-desktop"></i></div><div class="spec-info"><h3 class="spec-label">GRAPHICS</h3><p class="spec-value">NVIDIA GeForce RTX 3060</p><div class="spec-meta"><span class="meta-tag">6GB GDDR6</span><span class="meta-tag">RTX ON</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
-                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-memory"></i></div><div class="spec-info"><h3 class="spec-label">MEMORY</h3><p class="spec-value">16GB RAM</p><div class="spec-meta"><span class="meta-tag">DDR5</span><span class="meta-tag">4800 MHz</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
-                <div class="spec-card"><div class="card-glass"></div><div class="spec-content"><div class="spec-icon-box"><i class="fas fa-microphone-lines"></i></div><div class="spec-info"><h3 class="spec-label">MICROPHONE</h3><p class="spec-value">Shure SM7B</p><div class="spec-meta"><span class="meta-tag">STUDIO</span><span class="meta-tag">XLR</span></div></div></div><div class="tech-corner top-right"></div><div class="tech-corner bottom-left"></div></div>
-            </div>
+            <!-- КОНТЕЙНЕР ПУСТОЙ: ConfigInjector заполнит его автоматически -->
+            <div class="specs-grid"></div>
         </div>
     </section>
 
@@ -266,13 +263,19 @@
             <h2 class="section-title">ПОДДЕРЖАТЬ</h2>
             <p class="section-subtitle">Внеси свой вклад в развитие трансляции и улучшение качества контента</p>
             <div class="donation-grid">
-                <a href="https://www.donationalerts.com/r/ksusha__sher" target="_blank" class="donate-card" style="--card-color: #ff8c00;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-sack-dollar"></i></div><div class="donate-info"><h3>DonationAlerts</h3><p>Отправить сообщение</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
-                <a href="https://memealerts.com/6765a519e6fb84c0655d3f01" target="_blank" class="donate-card" style="--card-color: #ff2d95;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-ghost"></i></div><div class="donate-info"><h3>MemeAlerts</h3><p>Напугать стримера</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
-                <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="donate-card" style="--card-color: #9146ff;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fab fa-twitch"></i></div><div class="donate-info"><h3>Twitch Sub</h3><p>Оформить подписку</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
+                <!-- ССЫЛКИ ПУСТЫЕ: ConfigInjector заполнит их автоматически -->
+                <a href="#" target="_blank" class="donate-card" style="--card-color: #ff8c00;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-sack-dollar"></i></div><div class="donate-info"><h3>DonationAlerts</h3><p>Отправить сообщение</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
+                <a href="#" target="_blank" class="donate-card" style="--card-color: #ff2d95;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-ghost"></i></div><div class="donate-info"><h3>MemeAlerts</h3><p>Напугать стримера</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
+                <a href="#" target="_blank" class="donate-card" style="--card-color: #9146ff;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fab fa-twitch"></i></div><div class="donate-info"><h3>Twitch Sub</h3><p>Оформить подписку</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
             </div>
             <div class="crypto-terminal-wrapper">
                 <div class="terminal-label">DIRECT_TRANSFER_PROTOCOL // SBER</div>
-                <div class="card-number-box" id="card-number"><div class="card-chip"></div><div class="card-digits"><span>4276</span><span>1805</span><span>5058</span><span>1960</span></div><div class="copy-icon"><i class="far fa-copy"></i></div><div class="scan-line"></div></div>
+                <div class="card-number-box" id="card-number">
+                    <div class="card-chip"></div>
+                    <div class="card-digits"><span>4276</span><span>1805</span><span>5058</span><span>1960</span></div>
+                    <div class="copy-icon"><i class="far fa-copy"></i></div>
+                    <div class="scan-line"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -283,15 +286,17 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-left">
-                    <h3 class="footer-brand">KSUSHA SHER <span class="brand-ver">LIVE</span></h3>
-                    <p class="copyright">&copy; 2025. Все права защищены.</p>
-                    <p class="dev-credits">SYSTEM ARCHITECT: <span class="dev-name">BAGERca</span></p>
+                    <h3 class="footer-brand"><span id="inject-footer-brand">STREAMER</span> <span class="brand-ver">LIVE</span></h3>
+                    <!-- КОПИРАЙТ пустой: ConfigInjector заполнит его автоматически -->
+                    <p class="copyright"></p>
+                    <p class="dev-credits">SYSTEM ARCHITECT: <span class="dev-name"></span></p>
                 </div>
                 <div class="footer-right">
                     <div class="social-hud">
-                        <a href="https://www.twitch.tv/ksusha__sher?sr=a" target="_blank" class="hud-btn twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
+                        <!-- ССЫЛКИ ПУСТЫЕ: ConfigInjector заполнит их автоматически -->
+                        <a href="#" target="_blank" class="hud-btn twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
                         <a href="#" target="_blank" class="hud-btn youtube" title="YouTube"><i class="fab fa-youtube"></i></a>
-                        <a href="https://t.me/pizdeckakoi_to" target="_blank" class="hud-btn telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a href="#" target="_blank" class="hud-btn telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
                         <a href="#" target="_blank" class="hud-btn discord" title="Discord"><i class="fab fa-discord"></i></a>
                         <a href="#" target="_blank" class="hud-btn tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     </div>

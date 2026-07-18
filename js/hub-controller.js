@@ -1,23 +1,23 @@
 /* js/hub-controller.js */
 import EventBus from './event-bus.js';
+import { AppConfig } from './config.js';
 
 export class HubController {
     constructor() {
-        this.mainChannel = 'ksusha__sher'; 
-        // Список логинов друзей (через запятую, без пробелов!)
-        this.allies = 'Tetlabot,bagercaa,to_be_ang,kiriika1'; 
+        // Строгий паттерн DOM элементов
+        this.els = {
+            playerContainer: document.getElementById('hub-player-container'),
+            chatContainer: document.getElementById('hub-chat-container'),
+            networkList: document.getElementById('hub-network-list'),
+            heroStatusBox: document.getElementById('live-status-container')
+        };
         
-        // Элементы
-        this.playerContainer = document.getElementById('hub-player-container');
-        this.chatContainer = document.getElementById('hub-chat-container');
-        this.networkList = document.getElementById('hub-network-list');
-        
-        // Элементы главной секции (для изменения статуса наверху)
-        this.heroStatusBox = document.getElementById('live-status-container');
-        this.heroStatusText = this.heroStatusBox ? this.heroStatusBox.querySelector('.status-text') : null;
-        this.heroStatusDot = this.heroStatusBox ? this.heroStatusBox.querySelector('.status-indicator') : null;
+        if (this.els.heroStatusBox) {
+            this.els.heroStatusText = this.els.heroStatusBox.querySelector('.status-text');
+            this.els.heroStatusDot = this.els.heroStatusBox.querySelector('.status-indicator');
+        }
 
-        if (this.playerContainer) this.init();
+        if (this.els.playerContainer) this.init();
     }
 
     init() {
@@ -25,21 +25,17 @@ export class HubController {
         this.embedTwitch();
         this.fetchNetworkStatus();
         
-        // Обновляем статус друзей раз в 2 минуты
         setInterval(() => this.fetchNetworkStatus(), 120000);
     }
 
-    // Встраивание плеера и чата через iframe
     embedTwitch() {
-        // Получаем текущий домен для параметра parent (Требование Twitch)
         let domain = window.location.hostname;
         if (domain === "" || domain === "127.0.0.1") domain = "localhost";
 
-        // Встраиваем Плеер
-        if (this.playerContainer) {
-            this.playerContainer.innerHTML = `
+        if (this.els.playerContainer) {
+            this.els.playerContainer.innerHTML = `
                 <iframe 
-                    src="https://player.twitch.tv/?channel=${this.mainChannel}&parent=${domain}&muted=true" 
+                    src="https://player.twitch.tv/?channel=${AppConfig.twitch.channel}&parent=${domain}&muted=true" 
                     height="100%" 
                     width="100%" 
                     allowfullscreen="true" 
@@ -48,11 +44,10 @@ export class HubController {
             `;
         }
 
-        // Встраиваем Чат
-        if (this.chatContainer) {
-            this.chatContainer.innerHTML = `
+        if (this.els.chatContainer) {
+            this.els.chatContainer.innerHTML = `
                 <iframe 
-                    src="https://www.twitch.tv/embed/${this.mainChannel}/chat?darkpopout&parent=${domain}"
+                    src="https://www.twitch.tv/embed/${AppConfig.twitch.channel}/chat?darkpopout&parent=${domain}"
                     height="100%" 
                     width="100%" 
                     style="border: none;">
@@ -60,28 +55,23 @@ export class HubController {
             `;
         }
         
-        // Так как плеер сам показывает онлайн/офлайн экран, 
-        // мы просто зажигаем статус на главном экране Hero.
-        // Для идеала тут можно было бы проверять API твоего канала, 
-        // но пока просто включаем статус (как было раньше).
         this.setHeroLive();
     }
 
     setHeroLive() {
-        if (this.heroStatusText) this.heroStatusText.textContent = "СИСТЕМА АКТИВНА";
-        if (this.heroStatusDot) {
-            this.heroStatusDot.style.background = 'var(--neon-pink)';
-            this.heroStatusDot.style.boxShadow = '0 0 10px var(--neon-pink)';
-            this.heroStatusDot.style.animation = 'pulse 1.5s infinite';
+        if (this.els.heroStatusText) this.els.heroStatusText.textContent = "СИСТЕМА АКТИВНА";
+        if (this.els.heroStatusDot) {
+            this.els.heroStatusDot.style.background = 'var(--neon-pink)';
+            this.els.heroStatusDot.style.boxShadow = '0 0 10px var(--neon-pink)';
+            this.els.heroStatusDot.style.animation = 'pulse 1.5s infinite';
         }
     }
 
-    // Запрос статуса друзей через IVR API
     async fetchNetworkStatus() {
         try {
-            if (!this.networkList) return;
+            if (!this.els.networkList) return;
             
-            const response = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${this.allies}&t=${Date.now()}`);
+            const response = await fetch(`${AppConfig.api.ivrBaseUrl}?login=${AppConfig.twitch.allies}&t=${Date.now()}`);
             if (!response.ok) throw new Error('Network Error');
             
             const users = await response.json();
@@ -89,7 +79,9 @@ export class HubController {
             
         } catch (error) {
             console.error("❌ [HubController] Ошибка радара союзников:", error);
-            if (this.networkList) this.networkList.innerHTML = `<div class="network-loading" style="color:#ff4444;">ОШИБКА ПОДКЛЮЧЕНИЯ К СЕТИ</div>`;
+            if (this.els.networkList) {
+                this.els.networkList.innerHTML = `<div class="network-loading" style="color:#ff4444;">ОШИБКА ПОДКЛЮЧЕНИЯ К СЕТИ</div>`;
+            }
         }
     }
 
@@ -116,7 +108,7 @@ export class HubController {
             `;
         });
         
-        this.networkList.innerHTML = html;
+        this.els.networkList.innerHTML = html;
         EventBus.emit('SYS_LOG', { html: `[RADAR] Союзная сеть синхронизирована.` });
     }
-}   
+}

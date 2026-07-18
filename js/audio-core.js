@@ -1,11 +1,7 @@
 /* js/audio-core.js */
 import EventBus from './event-bus.js';
 import { loadData } from './api.js';
-
-const FALLBACK_TRACKS = [
-    { title: "СЛАВА БОССУ", artist: "5opka", url: "assets/music/5opka_slava_bossu.mp3" },
-    { title: "Котлетки с Пюрешкой", artist: "Enjoykin", url: "assets/music/enjoykin_kotletki.mp3" }
-];
+import { AppConfig } from './config.js';
 
 export class AudioCore {
     constructor() {
@@ -17,7 +13,6 @@ export class AudioCore {
         this.currentTrackIdx = 0;
         this.isPlaying = false;
 
-        // Web Audio API
         this.audioCtx = null;
         this.analyser = null;
         this.source = null;
@@ -28,12 +23,12 @@ export class AudioCore {
 
     async loadTracks() {
         try {
-            const data = await loadData('music.json', FALLBACK_TRACKS);
-            this.tracks = Array.isArray(data) && data.length > 0 ? data : FALLBACK_TRACKS;
+            const data = await loadData('music.json', AppConfig.audio.fallbackTracks);
+            this.tracks = Array.isArray(data) && data.length > 0 ? data : AppConfig.audio.fallbackTracks;
             console.log(`🎵 [AudioCore] Загружено треков: ${this.tracks.length}`);
         } catch (error) {
-            console.error("❌ [AudioCore] Ошибка загрузки плейлиста, используем Fallback:", error);
-            this.tracks = FALLBACK_TRACKS;
+            console.error("❌ [AudioCore] Ошибка загрузки плейлиста:", error);
+            this.tracks = AppConfig.audio.fallbackTracks;
         }
     }
 
@@ -45,9 +40,6 @@ export class AudioCore {
                 duration: this.audio.duration 
             });
         });
-
-        // Слушатель для синтеза системных звуков на лету
-        EventBus.on('PLAY_SOUND', (type) => this.playSynthSound(type));
     }
 
     initContext() {
@@ -63,68 +55,9 @@ export class AudioCore {
             this.analyser.connect(this.audioCtx.destination);
             
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-            console.log("🎵 [AudioCore] Web Audio API подключен");
+            console.log("🎵 [AudioCore] Web Audio API подключен для визуализатора");
         } catch (e) {
             console.error("❌ [AudioCore] Ошибка Web Audio API:", e);
-        }
-    }
-
-    /**
-     * Легковесный синтезатор системных звуков на основе встроенных осцилляторов
-     * Не загружает сеть и работает мгновенно в контексте аудиопроцессора
-     */
-    playSynthSound(type) {
-        try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const ctx = this.audioCtx || new AudioContext();
-            if (ctx.state === 'suspended') ctx.resume();
-
-            const osc = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-
-            osc.connect(gainNode);
-            gainNode.connect(ctx.destination);
-
-            const now = ctx.currentTime;
-
-            if (type === 'click') {
-                // Системный кибер-клик (короткий высокочастотный спад)
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1000, now);
-                osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
-                
-                gainNode.gain.setValueAtTime(0.08, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-                
-                osc.start(now);
-                osc.stop(now + 0.08);
-            } 
-            else if (type === 'hover') {
-                // Тонкое скольжение при наведении на важный объект
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(1200, now);
-                osc.frequency.exponentialRampToValueAtTime(600, now + 0.04);
-                
-                gainNode.gain.setValueAtTime(0.02, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-                
-                osc.start(now);
-                osc.stop(now + 0.04);
-            }
-            else if (type === 'expand') {
-                // Мягкий басовый импульс открытия/развертывания меню
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(100, now);
-                osc.frequency.exponentialRampToValueAtTime(350, now + 0.25);
-                
-                gainNode.gain.setValueAtTime(0.12, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-                
-                osc.start(now);
-                osc.stop(now + 0.25);
-            }
-        } catch (e) {
-            console.warn("⚠️ [AudioCore] Синтезатор заблокирован браузером до первого взаимодействия", e.message);
         }
     }
 
@@ -165,8 +98,7 @@ export class AudioCore {
 
     next() {
         if (!this.tracks || this.tracks.length === 0) return;
-        let nextIdx = this.currentTrackIdx + 1;
-        if (nextIdx >= this.tracks.length) nextIdx = 0;
+        let nextIdx = (this.currentTrackIdx + 1) % this.tracks.length;
         this.loadTrack(nextIdx);
         this.play();
         EventBus.emit('SYS_LOG', { html: `[MUSIC] CMD: <span style="color:#fff">NEXT_TRACK >></span>` });
@@ -174,22 +106,14 @@ export class AudioCore {
 
     prev() {
         if (!this.tracks || this.tracks.length === 0) return;
-        let prevIdx = this.currentTrackIdx - 1;
-        if (prevIdx < 0) prevIdx = this.tracks.length - 1;
+        let prevIdx = (this.currentTrackIdx - 1 + this.tracks.length) % this.tracks.length;
         this.loadTrack(prevIdx);
         this.play();
         EventBus.emit('SYS_LOG', { html: `[MUSIC] CMD: <span style="color:#fff"><< PREV_TRACK</span>` });
     }
 
-    setVolume(vol) {
-        this.audio.volume = Math.max(0, Math.min(1, vol));
-    }
-
-    seek(time) {
-        if (!isNaN(this.audio.duration)) {
-            this.audio.currentTime = time;
-        }
-    }
+    setVolume(vol) { this.audio.volume = Math.max(0, Math.min(1, vol)); }
+    seek(time) { if (!isNaN(this.audio.duration)) this.audio.currentTime = time; }
 
     getFrequencyData() {
         if (!this.isPlaying || !this.analyser || !this.dataArray) return null;

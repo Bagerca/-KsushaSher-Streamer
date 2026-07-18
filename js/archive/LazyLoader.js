@@ -27,7 +27,8 @@ export class LazyLoader {
         const imgBg = frontLayer.querySelector('.layer-img-bg');
 
         if (primaryUrl && imgBg) {
-            this._safeImageLoad(primaryUrl, isYouTube, imgBg, placeholder, card);
+            // Передаем frontLayer чтобы покрасить конкретно его
+            this._safeImageLoad(primaryUrl, isYouTube, imgBg, placeholder, card, frontLayer);
             frontLayer.removeAttribute('data-lazy-bg');
         }
 
@@ -36,14 +37,15 @@ export class LazyLoader {
             backLayers.forEach(layer => {
                 const bgUrl = layer.dataset.lazyBg;
                 if (bgUrl) {
-                    this._safeImageLoad(bgUrl, isYouTube, layer, null, null);
+                    // Передаем layer, чтобы покрасить конкретно его
+                    this._safeImageLoad(bgUrl, isYouTube, layer, null, null, layer);
                     layer.removeAttribute('data-lazy-bg');
                 }
             });
         }
     }
 
-    async _safeImageLoad(url, isYouTube, targetEl, placeholderEl, parentCard) {
+    async _safeImageLoad(url, isYouTube, targetEl, placeholderEl, parentCard, layerEl) {
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.decoding = "async";
@@ -53,7 +55,7 @@ export class LazyLoader {
             await img.decode();
 
             if (isYouTube && url.includes('maxresdefault') && img.naturalWidth <= 120) {
-                this._safeImageLoad(url.replace('maxresdefault', 'hqdefault'), false, targetEl, placeholderEl, parentCard);
+                this._safeImageLoad(url.replace('maxresdefault', 'hqdefault'), false, targetEl, placeholderEl, parentCard, layerEl);
                 return;
             }
 
@@ -67,26 +69,28 @@ export class LazyLoader {
                 }
             });
 
-            if (parentCard) {
+            if (layerEl || parentCard) {
                 extractColorFromImageAsync(img).then(neonColor => {
                     if (neonColor) {
                         requestAnimationFrame(() => {
-                            parentCard.style.setProperty('--custom-color', neonColor);
-                            parentCard.dataset.extractedColor = neonColor;
+                            // Родительская карта красится (как fallback для остального UI)
+                            if (parentCard && !parentCard.dataset.extractedColor) {
+                                parentCard.style.setProperty('--custom-color', neonColor);
+                                parentCard.dataset.extractedColor = neonColor;
+                            }
+                            // Конкретный слой получает индивидуальный цвет!
+                            if (layerEl) {
+                                layerEl.style.setProperty('--layer-color', neonColor);
+                            }
                         });
                     }
                 });
             }
 
         } catch (error) {
-            // Сюда мы попадаем, если пропал интернет (ERR_CONNECTION_RESET)
             console.warn(`[LazyLoader] Ошибка сети при загрузке: ${url}`);
             
-            // Если произошла ошибка, мы НЕ скрываем placeholderEl.
-            // Буквенная заглушка останется на экране, и сайт не будет выглядеть сломанным.
-            
             if (parentCard && !parentCard.dataset.extractedColor) {
-                // Задаем нейтральный цвет, если оригинал не скачался
                 parentCard.style.setProperty('--custom-color', '#444455');
             }
         }

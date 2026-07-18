@@ -1,6 +1,5 @@
 /* js/api.js */
-
-const DATA_BASE_URL = './data/';
+import { AppConfig } from './config.js';
 
 /**
  * Универсальная функция загрузки JSON с защитой от ошибок
@@ -9,14 +8,13 @@ const DATA_BASE_URL = './data/';
  */
 export async function loadData(endpoint, fallbackData = []) {
     const paths = [
-        `${DATA_BASE_URL}${endpoint}`,
+        `${AppConfig.api.dataBaseUrl}${endpoint}`,
         `./data/${endpoint}`,
         `data/${endpoint}`
     ];
 
     for (const path of paths) {
         try {
-            // Добавляем таймаут (5 секунд), чтобы скрипт не висел вечно
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 5000);
             
@@ -24,7 +22,6 @@ export async function loadData(endpoint, fallbackData = []) {
             clearTimeout(timeoutId);
             
             if (response.ok) {
-                // БЕЗОПАСНЫЙ ПАРСИНГ: Если JSON кривой, вызовет catch и пойдет к следующему пути
                 const data = await response.json();
                 return data;
             }

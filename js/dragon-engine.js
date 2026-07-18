@@ -17,6 +17,10 @@ export class DragonEngine {
         this.pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         this.rad = 0;
 
+        // FPS Limiter
+        this.lastTime = 0;
+        this.fpsInterval = 1000 / 60; // Максимум 60 FPS
+
         this.onPointerMove = this.onPointerMove.bind(this);
     }
 
@@ -114,7 +118,8 @@ export class DragonEngine {
             else prepend("Espina", i);
         }
 
-        console.log(`🐉 [DragonEngine] Запущен на CSS-слое. Цвет: ${palette.name}`);
+        this.lastTime = performance.now();
+        console.log(`🐉 [DragonEngine] Запущен на CSS-слое. Цвет: ${palette.name}. Лимит FPS: 60`);
         this.loop();
     }
 
@@ -140,34 +145,47 @@ export class DragonEngine {
     loop() {
         this.rafId = requestAnimationFrame(() => this.loop());
         
-        const N = this.elems.length;
-        let e = this.elems[0];
-        const ax = (Math.cos(3 * this.frm) * this.rad * window.innerWidth) / window.innerHeight;
-        const ay = (Math.sin(4 * this.frm) * this.rad * window.innerHeight) / window.innerWidth;
+        // --- FPS THROTTLE ---
+        const now = performance.now();
+        const elapsed = now - this.lastTime;
+
+        if (elapsed < this.fpsInterval) return;
+        this.lastTime = now - (elapsed % this.fpsInterval);
         
-        e.x += (ax + this.pointer.x - e.x) / 10;
-        e.y += (ay + this.pointer.y - e.y) / 10;
-        
-        for (let i = 1; i < N; i++) {
-            let e = this.elems[i];
-            let ep = this.elems[i - 1];
-            const a = Math.atan2(e.y - ep.y, e.x - ep.x);
-            e.x += (ep.x - e.x + (Math.cos(a) * (100 - i)) / 5) / 4;
-            e.y += (ep.y - e.y + (Math.sin(a) * (100 - i)) / 5) / 4;
-            const s = (1 - (i / N)) * 3 + 0.2; 
+        // --- PHYSICS ---
+        try {
+            const N = this.elems.length;
+            let e = this.elems[0];
+            const ax = (Math.cos(3 * this.frm) * this.rad * window.innerWidth) / window.innerHeight;
+            const ay = (Math.sin(4 * this.frm) * this.rad * window.innerHeight) / window.innerWidth;
             
-            if (e.use) {
-                e.use.setAttributeNS(null, "transform", `translate(${(ep.x + e.x) / 2},${(ep.y + e.y) / 2}) rotate(${(180 / Math.PI) * a}) scale(${s},${s})`);
+            e.x += (ax + this.pointer.x - e.x) / 10;
+            e.y += (ay + this.pointer.y - e.y) / 10;
+            
+            for (let i = 1; i < N; i++) {
+                let e = this.elems[i];
+                let ep = this.elems[i - 1];
+                const a = Math.atan2(e.y - ep.y, e.x - ep.x);
+                e.x += (ep.x - e.x + (Math.cos(a) * (100 - i)) / 5) / 4;
+                e.y += (ep.y - e.y + (Math.sin(a) * (100 - i)) / 5) / 4;
+                const s = (1 - (i / N)) * 3 + 0.2; 
+                
+                if (e.use) {
+                    e.use.setAttributeNS(null, "transform", `translate(${(ep.x + e.x) / 2},${(ep.y + e.y) / 2}) rotate(${(180 / Math.PI) * a}) scale(${s},${s})`);
+                }
             }
-        }
-        if (this.rad < Math.min(this.pointer.x, this.pointer.y) - 20) this.rad++;
-        this.frm += 0.003;
-        
-        if (this.rad > 60) {
-            const centerX = (window.innerWidth / 2) + window.scrollX;
-            const centerY = (window.innerHeight / 2) + window.scrollY;
-            this.pointer.x += (centerX - this.pointer.x) * 0.05;
-            this.pointer.y += (centerY - this.pointer.y) * 0.05;
+            if (this.rad < Math.min(this.pointer.x, this.pointer.y) - 20) this.rad++;
+            this.frm += 0.003;
+            
+            if (this.rad > 60) {
+                const centerX = (window.innerWidth / 2) + window.scrollX;
+                const centerY = (window.innerHeight / 2) + window.scrollY;
+                this.pointer.x += (centerX - this.pointer.x) * 0.05;
+                this.pointer.y += (centerY - this.pointer.y) * 0.05;
+            }
+        } catch (error) {
+            console.error("🐉 [DragonEngine] Ошибка в физическом цикле:", error);
+            this.stop();
         }
     }
 }

@@ -3,17 +3,15 @@
 /**
  * МАГИЯ ОПТИМИЗАЦИИ: Пропускает тяжелые внешние картинки через CDN
  * Сжимает размер, конвертирует в WebP и кэширует.
- * Добавлен параметр качества для экономии трафика задних слоев.
  */
 export function optimizeImageUrl(url, width = 400, quality = 80) {
     if (!url) return null;
     
-    // Не трогаем Ютуб-превью и локальные файлы (assets/...)
+    // Не трогаем Ютуб-превью и локальные файлы
     if (url.includes('youtube.com') || url.includes('youtu.be') || url.startsWith('assets/') || url.startsWith('./')) {
         return url;
     }
     
-    // Оборачиваем ссылку в кэширующий прокси (w=ширина, q=качество, output=webp)
     return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&q=${quality}&output=webp&we=1`;
 }
 
@@ -50,28 +48,6 @@ export function debounce(func, wait) {
 }
 
 /**
- * Вычисляет коэффициент сходства двух строк на основе триграмм
- */
-export function calculateSimilarity(str1, str2) {
-    if (!str1 || !str2) return 0;
-    if (str1.toLowerCase().includes(str2.toLowerCase())) return 1.0;
-    const set1 = getTrigrams(str1);
-    const set2 = getTrigrams(str2);
-    let matches = 0;
-    for (const trigram of set2) { if (set1.includes(trigram)) matches++; }
-    return (2.0 * matches) / (set1.length + set2.length);
-}
-
-function getTrigrams(text) {
-    if (!text) return [];
-    const cleanText = text.toLowerCase().replace(/[^\wа-яё0-9]/gi, '');
-    if (cleanText.length < 3) return [cleanText];
-    const trigrams = [];
-    for (let i = 0; i < cleanText.length - 2; i++) trigrams.push(cleanText.substring(i, i + 3));
-    return trigrams;
-}
-
-/**
  * Конвертирует RGB в неоновый HSL
  */
 function makeNeon(r, g, b) {
@@ -102,22 +78,18 @@ function makeNeon(r, g, b) {
 
 /**
  * АСИНХРОННОЕ ИЗВЛЕЧЕНИЕ ЦВЕТА
- * Больше не блокирует главный поток! Использует OffscreenCanvas (если есть) 
- * и createImageBitmap для вычислений в фоне.
+ * Не блокирует главный поток!
  */
 export async function extractColorFromImageAsync(imgEl) {
     if (!imgEl.src) return null;
 
     try {
-        // createImageBitmap декодирует картинку вне главного потока,
-        // сразу ресайзя ее до 1x1 пикселя (мы берем средний цвет)
         const bitmap = await createImageBitmap(imgEl, {
             resizeWidth: 1,
             resizeHeight: 1,
             resizeQuality: 'low'
         });
 
-        // Используем OffscreenCanvas, если браузер его поддерживает, чтобы вообще не трогать DOM
         let ctx;
         if (typeof OffscreenCanvas !== 'undefined') {
             const offscreen = new OffscreenCanvas(1, 1);
@@ -131,12 +103,10 @@ export async function extractColorFromImageAsync(imgEl) {
         ctx.drawImage(bitmap, 0, 0);
         const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
         
-        // Очищаем битмап из памяти
         bitmap.close();
 
         return makeNeon(r, g, b);
     } catch (e) {
-        // Игнорируем CORS ошибки
         return null;
     }
 }

@@ -31,10 +31,10 @@
     .archive-flex-grid.compact-mode .archive-card-container.is-youtube { width: calc(66.66% - 3.33px); }
 }
 
-/* СЛОИ - ПЕРЕВОД НА INSET SHADOW ДЛЯ РОВНОГО СУБПИКСЕЛЬНОГО РЕНДЕРИНГА */
-.card-layer { transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease-out, filter 0.2s ease-out; }
-.layer-back { z-index: 5; filter: brightness(0.6) grayscale(0.5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 5px 15px rgba(0,0,0,0.6); background-color: #0f0f0f; }
-.layer-back-deep { z-index: 1; filter: brightness(0.4) grayscale(0.8); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 5px 15px rgba(0,0,0,0.6); background-color: #080808; }
+/* СЛОИ - Убрали затемнение (filter) */
+.card-layer { transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease-out; }
+.layer-back { z-index: 5; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 5px 15px rgba(0,0,0,0.6); background-color: #0f0f0f; }
+.layer-back-deep { z-index: 1; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 5px 15px rgba(0,0,0,0.6); background-color: #080808; }
 .compact-mode .layer-back, .compact-mode .layer-back-deep { display: none !important; }
 
 /* ПОЗИЦИИ */
@@ -46,18 +46,39 @@
 .archive-card-container.stack-3 .layer-back-deep { transform: scale(0.88) translate(10px, -10px); z-index: 1; }
 .compact-mode .archive-card-container.stack-2 .layer-front, .compact-mode .archive-card-container.stack-3 .layer-front { transform: none !important; }
 
-/* ХОВЕРЫ С ИДЕАЛЬНЫМ КОНТУРОМ БЕЗ РАЗРЫВОВ */
+/* ХОВЕРЫ - Используем индивидуальную переменную --layer-color */
 .archive-card-container:hover { z-index: 50; }
 
-.compact-mode .archive-card-container:hover .layer-front { transform: scale(1.03) !important; box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 15px var(--custom-color); }
-.archive-card-container.stack-1:hover .layer-front { transform: scale(1.02) translateY(-5px); box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 20px var(--custom-color); }
+.compact-mode .archive-card-container:hover .layer-front { 
+    transform: scale(1.03) !important; 
+    box-shadow: inset 0 0 0 1px var(--layer-color, var(--custom-color)), 0 0 15px var(--layer-color, var(--custom-color)); 
+}
+.archive-card-container.stack-1:hover .layer-front { 
+    transform: scale(1.02) translateY(-5px); 
+    box-shadow: inset 0 0 0 1px var(--layer-color, var(--custom-color)), 0 0 20px var(--layer-color, var(--custom-color)); 
+}
 
-.archive-card-container.stack-2:hover .layer-front { transform: scale(0.96) translate(-12px, 12px); box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 20px var(--custom-color); }
-.archive-card-container.stack-2:hover .layer-back { transform: scale(0.96) translate(12px, -12px); filter: brightness(0.9) grayscale(0); box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 15px var(--custom-color); opacity: 0.8; }
+.archive-card-container.stack-2:hover .layer-front { 
+    transform: scale(0.96) translate(-12px, 12px); 
+    box-shadow: inset 0 0 0 1px var(--layer-color, var(--custom-color)), 0 0 20px var(--layer-color, var(--custom-color)); 
+}
+.archive-card-container.stack-2:hover .layer-back { 
+    transform: scale(0.96) translate(12px, -12px); 
+    box-shadow: inset 0 0 0 1px var(--layer-color, var(--custom-color)), 0 0 15px var(--layer-color, var(--custom-color)); 
+}
 
-.archive-card-container.stack-3:hover .layer-front { transform: scale(0.92) translate(-18px, 18px); box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 20px var(--custom-color); }
-.archive-card-container.stack-3:hover .layer-back { transform: scale(0.92) translate(0, 0); filter: brightness(0.8) grayscale(0.1); box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 10px var(--custom-color); opacity: 0.7; }
-.archive-card-container.stack-3:hover .layer-back-deep { transform: scale(0.92) translate(18px, -18px); filter: brightness(0.6) grayscale(0.4); box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 15px var(--custom-color); opacity: 0.4; }
+.archive-card-container.stack-3:hover .layer-front { 
+    transform: scale(0.92) translate(-18px, 18px); 
+    box-shadow: inset 0 0 0 1px var(--layer-color, var(--custom-color)), 0 0 20px var(--layer-color, var(--custom-color)); 
+}
+.archive-card-container.stack-3:hover .layer-back { 
+    transform: scale(0.92) translate(0, 0); 
+    box-shadow: inset 0 0 0 1px var(--layer-color, var(--custom-color)), 0 0 10px var(--layer-color, var(--custom-color)); 
+}
+.archive-card-container.stack-3:hover .layer-back-deep { 
+    transform: scale(0.92) translate(18px, -18px); 
+    box-shadow: inset 0 0 0 1px var(--layer-color, var(--custom-color)), 0 0 15px var(--layer-color, var(--custom-color)); 
+}
 
 .archive-card-container.is-youtube.stack-3:hover .layer-front { transform: scale(0.92) translate(-22px, 22px); }
 .archive-card-container.is-youtube.stack-3:hover .layer-back-deep { transform: scale(0.92) translate(22px, -22px); }

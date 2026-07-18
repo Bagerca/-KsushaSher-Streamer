@@ -21,7 +21,6 @@ export class CardFactory {
         let displayTitle = item.title || '?';
         let displayDesc = item.description || '';
         let displayStatus = item.status;
-        
         let displayColor = item.customColor || '#444455'; 
 
         if (isCollection && item.items && item.items.length > 0) {
@@ -31,6 +30,17 @@ export class CardFactory {
             displayColor = item.items[0].customColor || displayColor; 
         }
         
+        // --- ГЕНЕРАЦИЯ ИНДИВИДУАЛЬНЫХ ЦВЕТОВ СЛОЕВ ---
+        let cFront = displayColor;
+        let cBack1 = displayColor;
+        let cBack2 = displayColor;
+
+        if (isCollection && item.items) {
+            cFront = item.items[0]?.customColor || displayColor;
+            cBack1 = item.items[1]?.customColor || cFront;
+            cBack2 = item.items[2]?.customColor || cBack1;
+        }
+
         let rawImages = [];
         if (isCollection && item.items) {
             rawImages = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
@@ -47,23 +57,22 @@ export class CardFactory {
         const stackCount = Math.min(rawImages.length, 3);
         const stackClass = `stack-${stackCount}`; 
 
-        // ОПТИМИЗАЦИЯ СЕТИ И RAM: 
-        // 1 слой (Лицо) = высокое качество. 2 и 3 слои (Фон) = низкое качество и размер (они все равно заблюрены)
         const imgFront = optimizeImageUrl(rawImages[0], 400, 85);
         const imgBack1 = rawImages[1] ? optimizeImageUrl(rawImages[1], 200, 60) : null;
         const imgBack2 = rawImages[2] ? optimizeImageUrl(rawImages[2], 200, 60) : null;
 
         let layersHtml = '';
         if (this.getGridMode() !== 'compact') {
-            if (stackCount >= 3 && imgBack2) layersHtml += `<div class="card-layer layer-back-deep" data-lazy-bg="${imgBack2}"></div>`;
-            if (stackCount >= 2 && imgBack1) layersHtml += `<div class="card-layer layer-back" data-lazy-bg="${imgBack1}"></div>`;
+            // Применяем индивидуальные цвета к задним карточкам
+            if (stackCount >= 3 && imgBack2) layersHtml += `<div class="card-layer layer-back-deep" style="--layer-color: ${cBack2};" data-lazy-bg="${imgBack2}"></div>`;
+            if (stackCount >= 2 && imgBack1) layersHtml += `<div class="card-layer layer-back" style="--layer-color: ${cBack1};" data-lazy-bg="${imgBack1}"></div>`;
         }
 
         const playOverlay = isYouTube ? `<div class="youtube-play-overlay"><i class="fab fa-youtube"></i></div>` : '';
         
         let topBadge = '';
         if (isCollection && item.items) {
-            topBadge = `<div class="yt-playlist-badge collection-badge" style="border-color: var(--custom-color);"><i class="fas fa-folder-open" style="color: var(--custom-color);"></i> <span>${item.items.length}</span></div>`;
+            topBadge = `<div class="yt-playlist-badge collection-badge" style="border-color: var(--layer-color, var(--custom-color));"><i class="fas fa-folder-open" style="color: var(--layer-color, var(--custom-color));"></i> <span>${item.items.length}</span></div>`;
         } else if (isYouTube && item.videos && item.videos.length > 1) { 
             topBadge = `<div class="yt-playlist-badge"><i class="fas fa-layer-group"></i> <span>${item.videos.length}</span></div>`;
         }
@@ -87,8 +96,9 @@ export class CardFactory {
             ? `<div class="cyber-status suggested-status"><i class="fas fa-user" style="color: ${getUserColor(item.suggestedBy)}"></i> ${item.suggestedBy}</div>`
             : `<div class="cyber-status">[ ${STATUS_MAP[displayStatus] || displayStatus} ]</div>`;
 
+        // Применяем индивидуальный цвет к передней карточке
         layersHtml += `
-            <div class="card-layer layer-front" style="background-color: color-mix(in srgb, var(--custom-color) 15%, transparent);" data-lazy-bg="${imgFront}">
+            <div class="card-layer layer-front" style="background-color: color-mix(in srgb, var(--custom-color) 15%, transparent); --layer-color: ${cFront};" data-lazy-bg="${imgFront}">
                 <div class="procedural-placeholder" style="border-color: color-mix(in srgb, var(--custom-color) 50%, transparent);">
                     <span class="placeholder-letter" style="color: var(--custom-color); text-shadow: 0 0 10px var(--custom-color);">${displayTitle.charAt(0).toUpperCase()}</span>
                 </div>

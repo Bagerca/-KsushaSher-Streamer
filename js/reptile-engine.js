@@ -2,7 +2,6 @@
 
 const SQUAD_COLORS = ["#ff4444", "#39ff14", "#ffd700", "#007bff", "#ff2d95"];
 
-// Изолированные классы физики
 class Segment {
     constructor(parent, size, angle, range, stiffness) {
         this.isSegment = true;
@@ -170,6 +169,10 @@ export class ReptileEngine {
         
         this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         
+        // FPS Limiter
+        this.lastTime = 0;
+        this.fpsInterval = 1000 / 60; // Максимум 60 FPS
+
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onResize = this.onResize.bind(this);
     }
@@ -222,7 +225,7 @@ export class ReptileEngine {
         
         Object.assign(this.canvas.style, {
             position: "fixed", left: "0", top: "0",
-            zIndex: "9999", pointerEvents: "none", backgroundColor: "transparent"
+            zIndex: "var(--z-system)", pointerEvents: "none", backgroundColor: "transparent"
         });
         
         this.ctx = this.canvas.getContext("2d");
@@ -238,8 +241,9 @@ export class ReptileEngine {
         document.addEventListener("mousemove", this.onMouseMove);
         window.addEventListener("resize", this.onResize);
 
+        this.lastTime = performance.now();
+        console.log(`🦎 [ReptileEngine] Запущен. Цвет: ${color}. Лимит FPS: 60`);
         this.loop();
-        console.log(`🦎 [ReptileEngine] Запущен. Цвет: ${color}`);
     }
 
     stop() {
@@ -269,7 +273,21 @@ export class ReptileEngine {
 
     loop() {
         this.rafId = requestAnimationFrame(() => this.loop());
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (this.critter) this.critter.follow(this.mouse.x, this.mouse.y, this.ctx);
+        
+        // --- FPS THROTTLE ---
+        const now = performance.now();
+        const elapsed = now - this.lastTime;
+
+        if (elapsed < this.fpsInterval) return;
+        this.lastTime = now - (elapsed % this.fpsInterval);
+
+        // --- PHYSICS & DRAWING ---
+        try {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            if (this.critter) this.critter.follow(this.mouse.x, this.mouse.y, this.ctx);
+        } catch (error) {
+            console.error("🦎 [ReptileEngine] Ошибка в физическом цикле:", error);
+            this.stop();
+        }
     }
 }

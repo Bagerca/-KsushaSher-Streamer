@@ -1,10 +1,7 @@
 /* js/matrix-engine.js */
 import EventBus from './event-bus.js';
+import { AppConfig } from './config.js';
 
-const SECRET_WORDS = [
-    "KSUSHA", "SHER", "TETLA", "BAGERCA", "ANGEL", "KIRIKI", 
-    "FOLLOW", "SUBSCRIBE", "DONATE", "LOVE", "MATRIX", "SYSTEM"
-];
 const CHARS = "アァカサтанамāяāлавагазадабапаиикишичиниҳимиривигиджидзибипиуукусуцунуфумуююлугузубудзупуеекесеТЕНЕХЕМЕРЕВЕГЕЗЕДЕБЕПЕОокосотонохомоёёловогозодобоповуцн0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export class MatrixEngine {
@@ -34,7 +31,7 @@ export class MatrixEngine {
         this.ctx = this.canvas.getContext('2d');
         Object.assign(this.canvas.style, {
             position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
-            zIndex: '-10', pointerEvents: 'none', opacity: '0.15'
+            zIndex: 'var(--z-matrix)', pointerEvents: 'none', opacity: '0.15'
         });
         document.body.appendChild(this.canvas);
 
@@ -42,7 +39,7 @@ export class MatrixEngine {
         this.curtain = document.createElement('div');
         Object.assign(this.curtain.style, {
             position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
-            backgroundColor: '#050508', zIndex: '-5', pointerEvents: 'none',
+            backgroundColor: '#050508', zIndex: 'calc(var(--z-matrix) + 5)', pointerEvents: 'none',
             transition: 'opacity 2s ease-in-out', opacity: '1'
         });
         document.body.appendChild(this.curtain);
@@ -101,6 +98,8 @@ export class MatrixEngine {
     draw() {
         if (!this.ctx || !this.canvas) return;
 
+        const secretWords = AppConfig.texts.matrixWords || ["MATRIX"];
+
         this.ctx.fillStyle = 'rgba(5, 5, 8, 0.05)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.font = '14px monospace';
@@ -116,7 +115,7 @@ export class MatrixEngine {
                 if (this.activeEasterEggs[i].charIndex >= egg.word.length) delete this.activeEasterEggs[i];
             } 
             else if (Math.random() > 0.999) {
-                const randomWord = SECRET_WORDS[Math.floor(Math.random() * SECRET_WORDS.length)];
+                const randomWord = secretWords[Math.floor(Math.random() * secretWords.length)];
                 const colors = ['#ff2d95', '#ffffff', '#ffd700']; 
                 const randomColor = colors[Math.floor(Math.random() * colors.length)];
 

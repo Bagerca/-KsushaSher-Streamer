@@ -34,11 +34,6 @@
     animation: donate-stars 180s linear infinite reverse;
 }
 
-@keyframes donate-stars {
-    from { background-position: 0 0, 0 0; }
-    to { background-position: 600px 600px, -400px 800px; }
-}
-
 .donation-section .container { 
     position: relative; 
     z-index: 20; 
@@ -161,7 +156,6 @@
 #copy-tooltip { display: none !important; }
 .secure-badge { margin-top: 15px; font-size: 0.7rem; color: #555; display: flex; align-items: center; justify-content: center; gap: 5px; font-family: 'Exo 2'; }
 
-/* ПОЛНОСТЬЮ ОТКЛЮЧЕНА ПУСТАЯ ЗОНА С ГРАДИЕНТОМ */
 .space-fade-bottom { display: none; }
 
 @media (max-width: 768px) {

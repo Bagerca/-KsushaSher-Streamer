@@ -1,17 +1,13 @@
 /* js/hero-controller.js */
+import { AppConfig } from './config.js';
+
 export class HeroController {
     constructor() {
         this.scanline = document.querySelector('.hud-scanline');
         this.dataTicker = document.getElementById('data-ticker');
         this.heroSection = document.querySelector('.hero-section-hud');
         
-        this.messages = [
-            "АНАЛИЗ СТАТИСТИКИ КАНАЛА...", 
-            "ПОДПИСЧИКОВ: 5.2K+", 
-            "ЛОЯЛЬНОСТЬ АУДИТОРИИ: 95%", 
-            "АКТИВНОСТЬ ЧАТА: ВЫСОКАЯ", 
-            "СИСТЕМЫ В НОРМЕ."
-        ];
+        this.messages = AppConfig.texts.heroTicker || ["СИСТЕМЫ В НОРМЕ."];
         
         this.messageIndex = 0;
         this.charIndex = 0;

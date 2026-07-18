@@ -180,27 +180,20 @@
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
-/* ИСПРАВЛЕНА КАРУСЕЛЬ (Поддержка JS Drag движка + Инерция) */
 .marquee-track {
     display: flex; gap: 80px; width: max-content;
     padding: 0 80px; align-items: center;
     cursor: grab;
     will-change: transform;
-    
-    /* Броня от случайного выделения текста */
     user-select: none;
     -webkit-user-select: none;
-    /* На мобилках разрешаем скроллить саму страницу вниз-вверх поверх карусели */
     touch-action: pan-y;
 }
 
-/* Когда мы тащим мышку */
 .marquee-track.is-dragging {
     cursor: grabbing;
 }
 
-/* КРИТИЧНО: При драге полностью отключаем клики и события на всех карточках внутри, 
-   чтобы браузер не попытался выделить картинку или нажать на текст */
 .marquee-track.is-dragging * {
     pointer-events: none !important;
     user-select: none !important;
@@ -234,11 +227,6 @@
 
 .holo-card:hover { box-shadow: 0 0 18px var(--sub-color); border-color: var(--sub-color); transform: translateY(-5px) scale(1.02); z-index: 10; }
 .holo-card:hover .avatar-ring { border-color: var(--sub-color); box-shadow: 0 0 8px var(--sub-color); border-style: solid; width: 190px; height: 190px; margin-left: -95px; margin-top: -95px; }
-
-@keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
-@keyframes rotate-simple { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-@keyframes border-flow { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 
 @media (max-width: 1200px) {
     .about-top-row { grid-template-columns: 1fr; gap: 0; border: none; background: transparent; box-shadow: none; border-radius: 0; margin-bottom: 0; }
