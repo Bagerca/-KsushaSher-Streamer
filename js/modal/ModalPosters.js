@@ -1,6 +1,6 @@
 /* js/modal/ModalPosters.js */
 import EventBus from '../event-bus.js';
-import { extractColorFromImageAsync } from '../utils.js'; // Обновленный импорт
+import { extractColorFromImageAsync, optimizeImageUrl } from '../utils.js';
 
 export class ModalPosters {
     constructor(wrapperEl, dotsEl, cinematicBgEl) {
@@ -22,22 +22,22 @@ export class ModalPosters {
 
         this.stackData.forEach((data, index) => {
             const img = document.createElement('img');
-            img.crossOrigin = "Anonymous"; // Важно для CORS!
-            img.decoding = "async"; // Аппаратная оптимизация декодирования (как в LazyLoader)
+            img.crossOrigin = "Anonymous"; // Разрешаем CORS
+            img.decoding = "async"; // Не блокируем UI при отрисовке
             
-            // Теперь используем async/await, чтобы не блокировать интерфейс модалки
             img.onload = async () => {
-                // Извлекаем цвет асинхронно
                 const neonColor = await extractColorFromImageAsync(img) || data.customColor || '#ff2d95';
                 img.dataset.neonColor = neonColor;
                 
-                // Если загрузилась именно ТЕКУЩАЯ картинка — перекрашиваем модалку!
                 if (index === this.currentIndex && onColorExtractedCallback) {
                     onColorExtractedCallback(neonColor);
                 }
             };
             
-            img.src = data.overrideImage || data.image || 'https://via.placeholder.com/600x900?text=NO+IMAGE';
+            // МАГИЯ ЗДЕСЬ: Пропускаем через прокси, чтобы SteamGridDB и прочие не блокировали CORS
+            let rawSrc = data.overrideImage || data.image || 'https://via.placeholder.com/600x900?text=NO+IMAGE';
+            img.src = optimizeImageUrl(rawSrc, 600, 90); 
+            
             img.className = 'modal-poster-img'; 
             this.wrapper.appendChild(img); 
             this.imgElements.push(img);
@@ -61,14 +61,15 @@ export class ModalPosters {
                 const currentItem = this.stackData[this.currentIndex];
                 const activeImg = this.imgElements[this.currentIndex];
                 
-                // Передаем извлеченный цвет (или дефолтный, если еще грузится)
                 const currentExtractedColor = activeImg.dataset.neonColor || '#ff2d95';
                 
                 if (!currentItem.isImageOnly && onChangeCallback) {
                     onChangeCallback(currentItem, currentExtractedColor);
                 } else {
                     const bgImg = currentItem.overrideImage || currentItem.image;
-                    if (bgImg && this.cinematicBg) this.cinematicBg.style.backgroundImage = `url('${bgImg}')`;
+                    if (bgImg && this.cinematicBg) {
+                        this.cinematicBg.style.backgroundImage = `url('${optimizeImageUrl(bgImg, 1200, 80)}')`;
+                    }
                     if (onColorExtractedCallback) onColorExtractedCallback(currentExtractedColor);
                 }
             };
