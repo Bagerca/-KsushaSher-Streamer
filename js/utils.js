@@ -3,8 +3,9 @@
 /**
  * МАГИЯ ОПТИМИЗАЦИИ: Пропускает тяжелые внешние картинки через CDN
  * Сжимает размер, конвертирует в WebP и кэширует.
+ * Добавлен параметр качества для экономии трафика задних слоев.
  */
-export function optimizeImageUrl(url, width = 400) {
+export function optimizeImageUrl(url, width = 400, quality = 80) {
     if (!url) return null;
     
     // Не трогаем Ютуб-превью и локальные файлы (assets/...)
@@ -12,8 +13,8 @@ export function optimizeImageUrl(url, width = 400) {
         return url;
     }
     
-    // Оборачиваем ссылку в кэширующий прокси (w=ширина, output=webp)
-    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&output=webp&we=1`;
+    // Оборачиваем ссылку в кэширующий прокси (w=ширина, q=качество, output=webp)
+    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&q=${quality}&output=webp&we=1`;
 }
 
 /**
@@ -70,12 +71,8 @@ function getTrigrams(text) {
     return trigrams;
 }
 
-/* js/utils.js */
-
 /**
  * Конвертирует RGB в неоновый HSL
- * Увеличивает насыщенность (Saturation) и фиксирует яркость (Lightness), 
- * чтобы цвет всегда был сочным и подходил для киберпанк-темы.
  */
 function makeNeon(r, g, b) {
     r /= 255; g /= 255; b /= 255;
@@ -95,35 +92,51 @@ function makeNeon(r, g, b) {
         h /= 6;
     }
     
-    // Форсируем сочность: Saturation 85-100%, Lightness 55-65%
     const hue = Math.round(h * 360);
-    const saturation = 90; // Очень сочный
-    const lightness = 60;  // Оптимально для темного фона
+    const saturation = 90; 
+    const lightness = 60;  
     
-    // Если картинка была чисто черно-белой (saturation 0) — делаем цвет серым/белым
     if (s < 0.1) return `hsl(0, 0%, 70%)`;
-
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
 /**
- * Аппаратное извлечение среднего цвета из загруженной картинки
+ * АСИНХРОННОЕ ИЗВЛЕЧЕНИЕ ЦВЕТА
+ * Больше не блокирует главный поток! Использует OffscreenCanvas (если есть) 
+ * и createImageBitmap для вычислений в фоне.
  */
-export function extractColorFromImage(imgEl) {
-    if (!imgEl.complete || imgEl.naturalWidth === 0) return null;
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    
-    canvas.width = 1;
-    canvas.height = 1;
+export async function extractColorFromImageAsync(imgEl) {
+    if (!imgEl.src) return null;
 
     try {
-        ctx.drawImage(imgEl, 0, 0, 1, 1);
+        // createImageBitmap декодирует картинку вне главного потока,
+        // сразу ресайзя ее до 1x1 пикселя (мы берем средний цвет)
+        const bitmap = await createImageBitmap(imgEl, {
+            resizeWidth: 1,
+            resizeHeight: 1,
+            resizeQuality: 'low'
+        });
+
+        // Используем OffscreenCanvas, если браузер его поддерживает, чтобы вообще не трогать DOM
+        let ctx;
+        if (typeof OffscreenCanvas !== 'undefined') {
+            const offscreen = new OffscreenCanvas(1, 1);
+            ctx = offscreen.getContext('2d', { willReadFrequently: true });
+        } else {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1; canvas.height = 1;
+            ctx = canvas.getContext('2d', { willReadFrequently: true });
+        }
+
+        ctx.drawImage(bitmap, 0, 0);
         const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+        
+        // Очищаем битмап из памяти
+        bitmap.close();
+
         return makeNeon(r, g, b);
     } catch (e) {
-        // Если картинка загружена со стороннего сервера без CORS
+        // Игнорируем CORS ошибки
         return null;
     }
 }

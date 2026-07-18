@@ -22,7 +22,6 @@ export class CardFactory {
         let displayDesc = item.description || '';
         let displayStatus = item.status;
         
-        // Цвет по умолчанию тусклый, пока не отработает LazyLoader
         let displayColor = item.customColor || '#444455'; 
 
         if (isCollection && item.items && item.items.length > 0) {
@@ -32,34 +31,38 @@ export class CardFactory {
             displayColor = item.items[0].customColor || displayColor; 
         }
         
-        let images = [];
+        let rawImages = [];
         if (isCollection && item.items) {
-            images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
+            rawImages = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
         } else if (isYouTube && item.videos) {
-            images = item.videos.slice(0, 3).map(v => `https://img.youtube.com/vi/${getYouTubeId(typeof v === 'string' ? v : v.url)}/maxresdefault.jpg`);
+            rawImages = item.videos.slice(0, 3).map(v => `https://img.youtube.com/vi/${getYouTubeId(typeof v === 'string' ? v : v.url)}/maxresdefault.jpg`);
         } else if (item.images) {
-            images = [...item.images];
+            rawImages = [...item.images];
         } else if (item.image) {
-            images = [item.image];
+            rawImages = [item.image];
         }
         
-        images = images.map(imgUrl => optimizeImageUrl(imgUrl));
-        if (images.length === 0 || !images[0]) images = ['https://via.placeholder.com/320x480/1a1a24/ffffff?text=NO+IMAGE'];
+        if (rawImages.length === 0 || !rawImages[0]) rawImages = ['https://via.placeholder.com/320x480/1a1a24/ffffff?text=NO+IMAGE'];
 
-        const stackCount = Math.min(images.length, 3);
+        const stackCount = Math.min(rawImages.length, 3);
         const stackClass = `stack-${stackCount}`; 
+
+        // ОПТИМИЗАЦИЯ СЕТИ И RAM: 
+        // 1 слой (Лицо) = высокое качество. 2 и 3 слои (Фон) = низкое качество и размер (они все равно заблюрены)
+        const imgFront = optimizeImageUrl(rawImages[0], 400, 85);
+        const imgBack1 = rawImages[1] ? optimizeImageUrl(rawImages[1], 200, 60) : null;
+        const imgBack2 = rawImages[2] ? optimizeImageUrl(rawImages[2], 200, 60) : null;
 
         let layersHtml = '';
         if (this.getGridMode() !== 'compact') {
-            if (stackCount >= 3) layersHtml += `<div class="card-layer layer-back-deep" data-lazy-bg="${images[2]}"></div>`;
-            if (stackCount >= 2) layersHtml += `<div class="card-layer layer-back" data-lazy-bg="${images[1]}"></div>`;
+            if (stackCount >= 3 && imgBack2) layersHtml += `<div class="card-layer layer-back-deep" data-lazy-bg="${imgBack2}"></div>`;
+            if (stackCount >= 2 && imgBack1) layersHtml += `<div class="card-layer layer-back" data-lazy-bg="${imgBack1}"></div>`;
         }
 
         const playOverlay = isYouTube ? `<div class="youtube-play-overlay"><i class="fab fa-youtube"></i></div>` : '';
         
         let topBadge = '';
         if (isCollection && item.items) {
-            // Убрали жесткий инлайн-стиль. Теперь бейдж берет цвет из переменной CSS!
             topBadge = `<div class="yt-playlist-badge collection-badge" style="border-color: var(--custom-color);"><i class="fas fa-folder-open" style="color: var(--custom-color);"></i> <span>${item.items.length}</span></div>`;
         } else if (isYouTube && item.videos && item.videos.length > 1) { 
             topBadge = `<div class="yt-playlist-badge"><i class="fas fa-layer-group"></i> <span>${item.videos.length}</span></div>`;
@@ -84,9 +87,8 @@ export class CardFactory {
             ? `<div class="cyber-status suggested-status"><i class="fas fa-user" style="color: ${getUserColor(item.suggestedBy)}"></i> ${item.suggestedBy}</div>`
             : `<div class="cyber-status">[ ${STATUS_MAP[displayStatus] || displayStatus} ]</div>`;
 
-        // Цвет фона тоже повесили на var(--custom-color)
         layersHtml += `
-            <div class="card-layer layer-front" style="background-color: color-mix(in srgb, var(--custom-color) 15%, transparent);" data-lazy-bg="${images[0]}">
+            <div class="card-layer layer-front" style="background-color: color-mix(in srgb, var(--custom-color) 15%, transparent);" data-lazy-bg="${imgFront}">
                 <div class="procedural-placeholder" style="border-color: color-mix(in srgb, var(--custom-color) 50%, transparent);">
                     <span class="placeholder-letter" style="color: var(--custom-color); text-shadow: 0 0 10px var(--custom-color);">${displayTitle.charAt(0).toUpperCase()}</span>
                 </div>

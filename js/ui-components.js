@@ -4,9 +4,38 @@ import EventBus from './event-bus.js';
 export function initializeUI() {
     console.log('🎨 [UI] Инициализация базовых компонентов...');
     
+    new GlobalScrollBooster();
     new SmoothScrollManager();
     new CryptoCardManager();
     new NavRailManager(); 
+}
+
+/**
+ * ГЛОБАЛЬНЫЙ БУСТЕР СКРОЛЛА
+ * Отключает pointer-events во время прокрутки колесика. 
+ */
+class GlobalScrollBooster {
+    constructor() {
+        this.scrollTimeout = null;
+        this.isScrolling = false;
+        
+        window.addEventListener('scroll', () => {
+            // Если идет автоматический скролл (по клику), бустер не вмешивается
+            if (document.body.classList.contains('is-auto-scrolling')) return;
+
+            if (!this.isScrolling) {
+                this.isScrolling = true;
+                document.body.classList.add('is-mouse-scrolling');
+            }
+            
+            clearTimeout(this.scrollTimeout);
+            
+            this.scrollTimeout = setTimeout(() => {
+                this.isScrolling = false;
+                document.body.classList.remove('is-mouse-scrolling');
+            }, 150);
+        }, { passive: true });
+    }
 }
 
 /**
@@ -17,7 +46,8 @@ function customSmoothScroll(targetPosition, duration = 800) {
     const distance = targetPosition - startPosition;
     let startTime = null;
 
-    document.body.classList.add('is-scrolling');
+    // Свой независимый класс для автоскролла
+    document.body.classList.add('is-auto-scrolling');
 
     function animation(currentTime) {
         if (startTime === null) startTime = currentTime;
@@ -33,7 +63,8 @@ function customSmoothScroll(targetPosition, duration = 800) {
         if (timeElapsed < duration) {
             requestAnimationFrame(animation);
         } else {
-            document.body.classList.remove('is-scrolling');
+            // Снимаем блокировку только когда долетели
+            document.body.classList.remove('is-auto-scrolling');
         }
     }
     requestAnimationFrame(animation);
@@ -68,7 +99,7 @@ class SmoothScrollManager {
 }
 
 /**
- * Менеджер Карты Крипто-Доната (REMASTERED 4.0: Non-Breaking Glitch)
+ * Менеджер Карты Крипто-Доната (REMASTERED 4.0)
  */
 class CryptoCardManager {
     constructor() {
@@ -95,7 +126,6 @@ class CryptoCardManager {
                 this.cardElement.classList.add('copied');
                 this.digitsContainer.classList.add('success-mode');
                 
-                // Подстраховка через CSS
                 this.digitsContainer.style.whiteSpace = 'nowrap';
                 this.digitsContainer.style.wordBreak = 'keep-all';
                 
@@ -120,7 +150,7 @@ class CryptoCardManager {
         const startLen = startText.length;
         const targetLen = targetText.length;
         
-        const glitchWidth = 4; // Ширина "волны" случайных символов
+        const glitchWidth = 4; 
         const maxIters = Math.max(startLen, targetLen) + glitchWidth;
         let iterations = 0;
         
@@ -129,33 +159,23 @@ class CryptoCardManager {
         this.intervalId = setInterval(() => {
             let displayText = "";
             const progress = Math.min(iterations / maxIters, 1);
-            
-            // Плавное изменение длины строки от 19 символов к 12 (или наоборот)
             const currentLen = Math.floor(startLen + (targetLen - startLen) * progress);
             
             for (let i = 0; i < currentLen; i++) {
                 if (i < iterations - glitchWidth) {
-                    // Зона 1: Расшифровано (Слева)
                     displayText += targetText[i] !== undefined ? targetText[i] : "";
                 } else if (i < iterations) {
-                    // Зона 2: Волна глитча (По центру)
                     displayText += this.chars[Math.floor(Math.random() * this.chars.length)];
                 } else {
-                    // Зона 3: Старый текст не тронут (Справа)
                     displayText += startText[i] !== undefined ? startText[i] : "";
                 }
             }
             
-            // АБСОЛЮТНАЯ ЗАЩИТА ОТ ПЕРЕНОСОВ СТРОК:
-            // Заменяем все пробелы на неразрывные пробелы (\u00A0). 
-            // textContent используется вместо innerText, чтобы браузер не пытался парсить HTML
             this.digitsContainer.textContent = displayText.replace(/ /g, '\u00A0');
-            
-            iterations += 0.5; // Скорость волны
+            iterations += 0.5; 
             
             if (iterations >= maxIters) { 
                 clearInterval(this.intervalId);
-                // Финальный текст тоже вставляем с защитой от переносов
                 this.digitsContainer.textContent = targetText.replace(/ /g, '\u00A0'); 
                 if (onComplete) onComplete();
             }
@@ -164,7 +184,7 @@ class CryptoCardManager {
 }
 
 /**
- * Менеджер Навигационного Луча (С идеальной ScrollSpy логикой)
+ * ОПТИМИЗИРОВАННЫЙ Менеджер Навигационного Луча
  */
 class NavRailManager {
     constructor() {
@@ -179,6 +199,7 @@ class NavRailManager {
         
         this.geometryCache = {}; 
         this.ticking = false;    
+        this.currentActiveId = 'hero';
         
         this.init();
     }
@@ -206,49 +227,77 @@ class NavRailManager {
             
             this.rail.appendChild(marker);
         });
+
+        this.setupIntersectionObserver();
         
-        this.updatePositions = this.updatePositions.bind(this);
-        
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.updateGeometryCache();
+                this.distributeMarkers();
+            }, 200);
+        });
+
+        EventBus.on('LAYOUT_CHANGED', () => {
+            setTimeout(() => {
+                this.updateGeometryCache();
+                this.distributeMarkers();
+            }, 350); 
+        });
+
+        this.updateLaserPosition = this.updateLaserPosition.bind(this);
         window.addEventListener('scroll', () => {
             if (!this.ticking) {
                 window.requestAnimationFrame(() => {
-                    this.updatePositions();
+                    this.updateLaserPosition();
                     this.ticking = false;
                 });
                 this.ticking = true;
             }
         }, { passive: true });
 
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                this.updateGeometryCache();
-                this.updatePositions();
-            }, 200);
-        });
-
-        // Обновляем кэш при открытии/закрытии модалок или развороте базы
-        EventBus.on('LAYOUT_CHANGED', () => {
-            setTimeout(() => {
-                this.updateGeometryCache();
-                this.updatePositions();
-            }, 350); 
-        });
-
         setTimeout(() => {
             this.updateGeometryCache();
-            this.updatePositions();
+            this.distributeMarkers();
+            this.updateLaserPosition();
         }, 500);
+    }
+
+    setupIntersectionObserver() {
+        const options = {
+            root: null,
+            rootMargin: '-30% 0px -50% 0px', 
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.setActiveMarker(entry.target.id);
+                }
+            });
+        }, options);
+
+        this.sections.forEach(sec => {
+            const el = document.getElementById(sec.id);
+            if (el) observer.observe(el);
+        });
+    }
+
+    setActiveMarker(sectionId) {
+        this.currentActiveId = sectionId;
+        this.sections.forEach(sec => {
+            const marker = document.getElementById(`nav-marker-${sec.id}`);
+            if (marker) marker.classList.toggle('active', sec.id === sectionId);
+        });
     }
 
     updateGeometryCache() {
         try {
             this.sections.forEach(sec => {
                 const el = document.getElementById(sec.id);
-                if (el) {
-                    this.geometryCache[sec.id] = el.offsetTop;
-                }
+                if (el) this.geometryCache[sec.id] = el.offsetTop;
             });
         } catch(e) {
             console.warn("⚠️ [NavRail] Ошибка обновления кэша:", e);
@@ -263,59 +312,50 @@ class NavRailManager {
         const scrollableHeight = Math.max(1, docHeight - winHeight);
         
         const topPos = this.geometryCache[sectionId];
-        // Отступ сверху, чтобы заголовок не прилипал к краю экрана при клике
         const viewOffset = winHeight * 0.15; 
         let targetScroll = topPos - viewOffset;
 
-        // Жесткие якоря для первой и последней секции
         if (sectionId === this.sections[0].id) targetScroll = 0;
         if (sectionId === this.sections[this.sections.length - 1].id) targetScroll = scrollableHeight;
 
         return Math.max(0, Math.min(scrollableHeight, targetScroll));
     }
 
-    updatePositions() {
+    distributeMarkers() {
         const docHeight = document.documentElement.scrollHeight;
         const winHeight = window.innerHeight;
         const scrollableHeight = Math.max(1, docHeight - winHeight);
-        const scrolled = window.scrollY;
-
-        // 1. Позиция лазера
-        let decimalPos = scrolled / scrollableHeight;
-        decimalPos = Math.max(0, Math.min(1, decimalPos));
-        this.rail.style.setProperty('--line-decimal', decimalPos);
-
-        let currentId = this.sections[0].id; // По умолчанию активна первая секция
 
         this.sections.forEach((sec) => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
             if (marker) {
                 const targetScroll = this.calculateExactTarget(sec.id);
-                
-                // 2. Расставляем точки по их реальным координатам
                 let markerDecimal = targetScroll / scrollableHeight;
                 marker.style.setProperty('--marker-decimal', markerDecimal);
-
-                // 3. Вычисляем свечение (Proximity). Светится, если лазер рядом.
-                let distancePct = Math.abs((decimalPos * 100) - (markerDecimal * 100));
-                let proximity = Math.max(0, 1 - (distancePct / 15)); // Радиус свечения 15%
-                proximity = Math.pow(proximity, 2).toFixed(3);
-                marker.style.setProperty('--proximity', proximity);
-
-                // 4. НОВАЯ ЛОГИКА АКТИВНОСТИ (ScrollSpy)
-                // Если мы проскроллили ниже начала этой секции (с небольшим буфером в 50px),
-                // значит мы находимся в ней. Цикл идет сверху вниз, поэтому последняя 
-                // пройденная секция перезапишет currentId и станет активной.
-                if (scrolled >= targetScroll - 50) {
-                    currentId = sec.id;
-                }
             }
         });
+    }
 
-        // 5. Применяем активный класс
-        this.sections.forEach(sec => {
+    updateLaserPosition() {
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const scrollableHeight = Math.max(1, docHeight - winHeight);
+        const scrolled = window.scrollY;
+
+        let decimalPos = scrolled / scrollableHeight;
+        decimalPos = Math.max(0, Math.min(1, decimalPos));
+        
+        this.rail.style.setProperty('--line-decimal', decimalPos);
+
+        this.sections.forEach((sec) => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
-            if (marker) marker.classList.toggle('active', sec.id === currentId);
+            if (marker) {
+                const markerDecimal = parseFloat(marker.style.getPropertyValue('--marker-decimal') || 0);
+                let distancePct = Math.abs((decimalPos * 100) - (markerDecimal * 100));
+                let proximity = Math.max(0, 1 - (distancePct / 15)); 
+                proximity = Math.pow(proximity, 2).toFixed(3);
+                marker.style.setProperty('--proximity', proximity);
+            }
         });
     }
 }

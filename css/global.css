@@ -80,14 +80,8 @@ body {
 
 /* 
    АППАРАТНАЯ ОПТИМИЗАЦИЯ ПРИ КИНЕМАТОГРАФИЧНОМ СКРОЛЛЕ
-   Отключаем события мыши на карточках, пока летит камера, 
-   чтобы процессор не пытался вычислять сложные 3D-ховеры. 
 */
-body.is-scrolling .archive-card-container,
-body.is-scrolling .cmd-panel,
-body.is-scrolling .spec-card,
-body.is-scrolling .holo-card,
-body.is-scrolling .donate-card {
+body.is-mouse-scrolling *, body.is-auto-scrolling * {
     pointer-events: none !important;
 }
 

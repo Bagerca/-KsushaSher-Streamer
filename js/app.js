@@ -1,39 +1,32 @@
 /* js/app.js */
 
-// Архитектура и Состояние
 import EventBus from './event-bus.js';
 import { TerminalController } from './terminal-core.js';
 import { SettingsMenu } from './settings-menu.js';
-
-// UI Контроллеры (Модули)
 import { initializeUI } from './ui-components.js';
 import { initMediaArchive } from './media-manager.js';
 import { HeroController } from './hero-controller.js';
 import { SquadController } from './squad-controller.js';
 import { MediaModalManager } from './modal/MediaModalManager.js';
 
-// Визуальные движки (Эффекты)
 import { ReptileEngine } from './reptile-engine.js';
 import { DragonEngine } from './dragon-engine.js';
 import { CometEngine } from './comets.js';
 import { MatrixEngine } from './matrix-engine.js'; 
 
-// Загрузчики данных
 import { ScheduleManager } from './schedule.js';
 import { SubscribersManager } from './subscribers.js';
 import { HubController } from './hub-controller.js';
 import { StatsManager } from './stats.js'; 
 
-// Музыкальный плеер
 import { initMusicPlayer, toggleMusicMode } from './music-player.js';
 
-// Глобальное состояние
 const AppState = {
     initialized: false,
-    fxMode: 0
+    fxMode: 0,
+    activeSubEngines: [] // Запоминает, был ли запущен дракон или ящерица
 };
 
-// Экземпляры
 let terminalCtrl;
 let settingsMenu;
 const scheduleMgr = new ScheduleManager();
@@ -62,6 +55,7 @@ async function bootstrap() {
         new MediaModalManager();
         
         registerEventHandlers();
+        setupVisibilityManager(); // Спящий режим
         
         await Promise.all([
             scheduleMgr.init(),
@@ -71,24 +65,53 @@ async function bootstrap() {
             initMusicPlayer()
         ]);
         
-        // Запуск нового Network Hub (Плеер, Чат, Радар друзей)
         new HubController();
         
-        setInterval(async () => {
+        if (window.globalSyncInterval) clearInterval(window.globalSyncInterval);
+        
+        window.globalSyncInterval = setInterval(async () => {
             await scheduleMgr.init();
-            await statsMgr.init(); // Автообновление статистики раз в 5 минут
+            await statsMgr.init(); 
             EventBus.emit('SYS_LOG', { html: "<span style='color:#555'>[SYS] Background data sync complete.</span>" });
         }, 300000);
         
-        // Включаем фоновый полет комет по умолчанию
         engines.comet.startIdle(); 
         
-        console.log('✅ [Boot] Инициализация завершена успешно! Матрица находится в спящем режиме.');
+        console.log('✅ [Boot] Инициализация завершена успешно!');
         AppState.initialized = true;
         
     } catch (error) {
         console.error('❌ [Boot] Критическая ошибка при инициализации:', error);
     }
+}
+
+/**
+ * СПЯЩИЙ РЕЖИМ (SLEEP MODE)
+ */
+function setupVisibilityManager() {
+    const heroObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            // ПРОСЫПАЕМСЯ
+            if (AppState.fxMode === 0 && engines.matrix.isGodMode) engines.matrix.start();
+            if (AppState.fxMode !== 1 && AppState.fxMode !== 3) engines.comet.startIdle();
+            
+            // Восстанавливаем кастомных существ
+            if (AppState.activeSubEngines.includes('dragon')) engines.dragon.start();
+            if (AppState.activeSubEngines.includes('reptile')) engines.reptile.start();
+
+        } else {
+            // ЗАСЫПАЕМ (Глушим всё жестко)
+            engines.matrix.stop();
+            engines.comet.stopIdle();
+            
+            // Если существа работают, глушим их, но оставляем пометку в памяти
+            if (engines.dragon.rafId) engines.dragon.stop();
+            if (engines.reptile.rafId) engines.reptile.stop();
+        }
+    }, { threshold: 0.01 });
+
+    const heroEl = document.getElementById('hero');
+    if (heroEl) heroObserver.observe(heroEl);
 }
 
 function registerEventHandlers() {
@@ -97,10 +120,22 @@ function registerEventHandlers() {
         engines.dragon.stop(); 
         engines.comet.stopShower();
         engines.matrix.stop();
+        AppState.activeSubEngines = []; // Очищаем память
         if (terminalCtrl.historyEl) terminalCtrl.historyEl.innerHTML = '';
     });
-    EventBus.on('CMD_LIZARD', () => { engines.dragon.stop(); engines.reptile.start(); });
-    EventBus.on('CMD_DRAGON', () => { engines.reptile.stop(); engines.dragon.start(); });
+    
+    EventBus.on('CMD_LIZARD', () => { 
+        engines.dragon.stop(); 
+        engines.reptile.start(); 
+        AppState.activeSubEngines = ['reptile']; 
+    });
+    
+    EventBus.on('CMD_DRAGON', () => { 
+        engines.reptile.stop(); 
+        engines.dragon.start(); 
+        AppState.activeSubEngines = ['dragon']; 
+    });
+    
     EventBus.on('CMD_COMET', () => engines.comet.triggerShower());
     EventBus.on('CMD_STATUS', () => EventBus.emit('SYS_LOG', { html: 'СИСТЕМЫ В НОРМЕ.' }));
     EventBus.on('CMD_MUSIC', () => EventBus.emit('UI_CLICK_MUSIC'));
@@ -110,19 +145,24 @@ function registerEventHandlers() {
         <div style="color:#888;">ДОСТУПНЫЕ ПРОТОКОЛЫ:</div>
         <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="clear">CLEAR</span> - Очистить существ</div>
         <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="dragon">DRAGON</span> - Запуск: Дракон</div>
+        <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="lizard">LIZARD</span> - Запуск: Ящерица</div>
         <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="comet">COMET</span> - Запуск: Метеоры</div>
         <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="godmode">GODMODE</span> - Перезапись реальности</div>
         `;
         EventBus.emit('SYS_LOG', { html: helpHtml });
     });
 
-    EventBus.on('UI_CLICK_CLEAR', () => { engines.reptile.stop(); engines.dragon.stop(); });
+    EventBus.on('UI_CLICK_CLEAR', () => { 
+        engines.reptile.stop(); 
+        engines.dragon.stop(); 
+        AppState.activeSubEngines = [];
+    });
+    
     EventBus.on('UI_CLICK_FX_CYCLE', () => {
         AppState.fxMode = (AppState.fxMode + 1) % 4;
         document.body.classList.remove('state-no-comets', 'state-no-stars');
         
         if (AppState.fxMode === 0) {
-            // Режим матрицы теперь запускается динамически, если он выбран или активен god-режим
             if (engines.matrix.isGodMode) engines.matrix.start();
         }
         else if (AppState.fxMode === 1) {

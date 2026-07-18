@@ -1,5 +1,5 @@
 /* js/archive/LazyLoader.js */
-import { extractColorFromImage } from '../utils.js';
+import { extractColorFromImageAsync } from '../utils.js';
 
 export class LazyLoader {
     constructor(gridModeRef) {
@@ -26,13 +26,13 @@ export class LazyLoader {
         const placeholder = frontLayer.querySelector('.procedural-placeholder');
         const imgBg = frontLayer.querySelector('.layer-img-bg');
 
-        // ГРУЗИМ ПЕРЕДНИЙ СЛОЙ (и извлекаем из него цвет!)
+        // ГРУЗИМ ПЕРЕДНИЙ СЛОЙ (и извлекаем из него цвет асинхронно!)
         if (primaryUrl && imgBg) {
             this._safeImageLoad(primaryUrl, isYouTube, imgBg, placeholder, card);
             frontLayer.removeAttribute('data-lazy-bg');
         }
 
-        // ГРУЗИМ ЗАДНИЕ СЛОИ (без извлечения цвета)
+        // ГРУЗИМ ЗАДНИЕ СЛОИ (им цвет не нужен)
         if (this.getGridMode() !== 'compact') {
             const backLayers = card.querySelectorAll('.layer-back, .layer-back-deep');
             backLayers.forEach(layer => {
@@ -45,42 +45,50 @@ export class LazyLoader {
         }
     }
 
-    _safeImageLoad(url, isYouTube, targetEl, placeholderEl, parentCard) {
+    async _safeImageLoad(url, isYouTube, targetEl, placeholderEl, parentCard) {
         const img = new Image();
-        
-        // ВАЖНО: Разрешаем CORS, чтобы можно было прочитать пиксели
         img.crossOrigin = "Anonymous";
         
-        img.onload = () => {
+        // ВАЖНО: Указываем браузеру декодировать картинку в фоновом потоке
+        img.decoding = "async";
+        img.src = url;
+
+        try {
+            // Ждем, пока браузер полностью распакует JPEG/WebP из оперативной памяти в видеопамять
+            await img.decode();
+
+            // Если это сломанная заглушка ютуба - пробуем загрузить качество ниже
             if (isYouTube && url.includes('maxresdefault') && img.naturalWidth <= 120) {
                 this._safeImageLoad(url.replace('maxresdefault', 'hqdefault'), false, targetEl, placeholderEl, parentCard);
                 return;
             }
-            
-            targetEl.style.backgroundImage = `url('${img.src}')`;
-            targetEl.style.opacity = '1';
-            
-            // МАГИЯ АВТО-ЦВЕТА (Только для передней картинки)
-            if (parentCard) {
-                const neonColor = extractColorFromImage(img);
-                if (neonColor) {
-                    parentCard.style.setProperty('--custom-color', neonColor);
-                    // Сохраняем цвет в dataset, чтобы модалка могла его забрать
-                    parentCard.dataset.extractedColor = neonColor;
+
+            // 1. Показываем картинку МГНОВЕННО (через rAF для синхронизации с циклом рендера браузера)
+            requestAnimationFrame(() => {
+                targetEl.style.backgroundImage = `url('${img.src}')`;
+                targetEl.style.opacity = '1';
+                
+                if (placeholderEl) {
+                    placeholderEl.style.opacity = '0';
+                    setTimeout(() => placeholderEl.style.display = 'none', 400);
                 }
-            }
-            
-            if (placeholderEl) {
-                placeholderEl.style.opacity = '0';
-                setTimeout(() => placeholderEl.style.display = 'none', 400);
-            }
-        };
+            });
 
-        img.onerror = () => {
-            console.warn(`[LazyLoader] Ошибка загрузки картинки: ${url}`);
+            // 2. В ФОНОВОМ РЕЖИМЕ вычисляем неоновый цвет (не блокируя показ картинки)
+            if (parentCard) {
+                extractColorFromImageAsync(img).then(neonColor => {
+                    if (neonColor) {
+                        requestAnimationFrame(() => {
+                            parentCard.style.setProperty('--custom-color', neonColor);
+                            parentCard.dataset.extractedColor = neonColor;
+                        });
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.warn(`[LazyLoader] Ошибка загрузки или декодирования картинки: ${url}`);
             targetEl.style.opacity = '0';
-        };
-
-        img.src = url;
+        }
     }
 }

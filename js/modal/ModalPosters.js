@@ -1,6 +1,6 @@
 /* js/modal/ModalPosters.js */
 import EventBus from '../event-bus.js';
-import { extractColorFromImage } from '../utils.js';
+import { extractColorFromImageAsync } from '../utils.js'; // Обновленный импорт
 
 export class ModalPosters {
     constructor(wrapperEl, dotsEl, cinematicBgEl) {
@@ -23,10 +23,12 @@ export class ModalPosters {
         this.stackData.forEach((data, index) => {
             const img = document.createElement('img');
             img.crossOrigin = "Anonymous"; // Важно для CORS!
+            img.decoding = "async"; // Аппаратная оптимизация декодирования (как в LazyLoader)
             
-            img.onload = () => {
-                // Извлекаем цвет
-                const neonColor = extractColorFromImage(img) || data.customColor || '#ff2d95';
+            // Теперь используем async/await, чтобы не блокировать интерфейс модалки
+            img.onload = async () => {
+                // Извлекаем цвет асинхронно
+                const neonColor = await extractColorFromImageAsync(img) || data.customColor || '#ff2d95';
                 img.dataset.neonColor = neonColor;
                 
                 // Если загрузилась именно ТЕКУЩАЯ картинка — перекрашиваем модалку!
