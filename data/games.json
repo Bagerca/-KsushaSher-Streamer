@@ -55,7 +55,7 @@
         "title": "Hollow Knight",
         "rating": 0,
         "description": "Мрачная и красивая метроидвания с хардкорными боссами и глубоким лором.",
-        "image": "assets/images/games/hollow-knight.webp",
+        "image": "assets/images/games/hollow-knight.png",
         "status": "on-hold"
       },
       {
@@ -63,7 +63,7 @@
         "title": "Hollow Knight: Silksong",
         "rating": 3.0,
         "description": "Приятная картинка и наличие кооператива. Но геймплей оказался слишком жестким для меня.",
-        "image": "assets/images/games/hollow-knight-silksong.webp",
+        "image": "assets/images/games/hollow-knight-silksong.png",
         "status": "dropped",
         "videos": ["https://youtu.be/JPGKia9djuA"]
       }
@@ -194,7 +194,7 @@
     "title": "Lethal Company",
     "rating": 5.0,
     "description": "Классика нашего кооператива. Процесс сбора лута невероятно затягивает.",
-    "image": "assets/images/games/lethal-company.webp",
+    "image": "assets/images/games/lethal-company.png",
     "status": "playing"
   },
   {
@@ -218,7 +218,7 @@
     "title": "GRIS",
     "rating": 0,
     "description": "Медитативный платформер с потрясающим акварельным визуалом.",
-    "image": "assets/images/games/gris.webp",
+    "image": "assets/images/games/gris.jpg",
     "status": "on-hold"
   },
   {
@@ -266,7 +266,7 @@
     "title": "Beholder",
     "rating": 0,
     "description": "Симулятор управдома в тоталитарном государстве.",
-    "image": "assets/images/games/beholder.webp",
+    "image": "assets/images/games/beholder.png",
     "status": "on-hold"
   },
   {
@@ -306,7 +306,7 @@
     "title": "VRChat",
     "rating": 0,
     "description": "Социальная песочница в виртуальной реальности.",
-    "image": "assets/images/games/vrchat.webp",
+    "image": "assets/images/games/vrchat.png",
     "status": "on-hold"
   },
   {
@@ -330,7 +330,7 @@
     "title": "Helltaker",
     "rating": 0,
     "description": "Короткая игра-головоломка про сбор гарема из демониц.",
-    "image": "assets/images/games/helltaker.webp",
+    "image": "assets/images/games/helltaker.png",
     "status": "on-hold"
   },
   {
@@ -338,7 +338,7 @@
     "title": "Valorant",
     "rating": 0,
     "description": "Тактический командный шутер с уникальными способностями.",
-    "image": "assets/images/games/valorant.webp",
+    "image": "assets/images/games/valorant.png",
     "status": "on-hold"
   },
   {
