@@ -19,13 +19,11 @@ export class CardFactory {
         const isCollection = item.format === 'collection';
         
         let displayTitle = item.title || '?';
-        let displayDesc = item.description || '';
         let displayStatus = item.status;
         let displayColor = item.customColor || '#444455'; 
 
         if (isCollection && item.items && item.items.length > 0) {
             displayTitle = item.items[0].title || displayTitle;
-            displayDesc = item.items[0].description || displayDesc;
             displayStatus = item.items[0].status || displayStatus;
             displayColor = item.items[0].customColor || displayColor; 
         }
@@ -111,7 +109,6 @@ export class CardFactory {
                     <div class="card-info">
                         <div class="card-title" title="${displayTitle}">${displayTitle}</div>
                         ${statusText}
-                        <p class="card-desc">${displayDesc}</p>
                     </div>
                 </div>
             </div>`;

@@ -4,7 +4,7 @@
    ИДЕАЛЬНО СИММЕТРИЧНАЯ ПАНЕЛЬ (FIT-CONTENT)
    ========================================= */
 .header-control-bar { 
-    margin: 20px auto 0 auto; /* Убрали margin-bottom, чтобы сократить расстояние до поиска в 2 раза */
+    margin: 20px auto 0 auto;
     width: fit-content; 
     display: flex; 
     align-items: center; 
@@ -27,7 +27,7 @@
     background: transparent; border: none; color: #555; 
     width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; 
     cursor: pointer; border-radius: 50%; transition: 0.3s; font-size: 0.9rem;
-    line-height: 1; /* Убирает скрытый интервал для идеального центрирования иконки */
+    line-height: 1;
 }
 
 .sort-btn.active { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
@@ -41,9 +41,9 @@
     padding: 8px 22px; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; 
     cursor: pointer; transition: 0.3s; 
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    line-height: 1; /* Выравнивает текст строго по центру относительно иконки */
+    line-height: 1;
 }
-.switcher-btn i { display: flex; align-items: center; line-height: 1; margin-top: -1px; /* Микро-корректировка иконки FontAwesome */ }
+.switcher-btn i { display: flex; align-items: center; line-height: 1; margin-top: -1px; }
 .switcher-btn.active { color: #000; }
 .type-switcher::before { content: ''; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); background: var(--neon-green); border-radius: 30px; z-index: 1; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(57, 255, 20, 0.4); }
 .type-switcher.movies-active::before { transform: translateX(100%); }
@@ -58,12 +58,12 @@
 
 /* ЭФФЕКТ ЛАЗЕРНОГО СКАНЕРА ВНУТРИ ИНПУТА */
 .search-module::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 48px; /* Ровно высота инпута */
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 48px;
     border-radius: 12px; pointer-events: none; z-index: 201;
     background: linear-gradient(90deg, transparent 0%, rgba(57, 255, 20, 0.15) 50%, transparent 100%);
     background-size: 200% 100%; background-position: -200% 0;
     opacity: 0; transition: opacity 0.3s ease; mix-blend-mode: screen;
-    clip-path: inset(0 0 0 0 round 12px); /* Запрещаем блику вылазить за инпут на выпадающий список */
+    clip-path: inset(0 0 0 0 round 12px);
 }
 .search-module:focus-within::before {
     opacity: 1;
@@ -83,7 +83,10 @@
     color: #888; font-size: 1rem; transition: all 0.3s ease; z-index: 205; 
 }
 #search-icon-default { cursor: pointer; pointer-events: auto; }
-#search-icon-default:hover { 
+
+/* ИСПРАВЛЕНИЕ: Добавлен повышенный приоритет для ховера лупы, чтобы не перебивалось фокусом инпута */
+#search-icon-default:hover,
+.search-module:focus-within #search-icon-default:hover { 
     background: var(--neon-green); color: #000; 
     border-color: var(--neon-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.5); 
 }
@@ -93,7 +96,7 @@
 
 /* ИНПУТ */
 .search-module input { 
-    width: 100%; padding: 14px 80px 14px 55px; /* Отступ слева увеличен под кнопку */
+    width: 100%; padding: 14px 60px 14px 55px; 
     background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; 
     color: #fff; font-family: 'Exo 2', sans-serif; font-size: 1rem; letter-spacing: 1px; height: 48px;
     backdrop-filter: blur(10px); position: relative; z-index: 200; transition: all 0.3s ease; 
@@ -107,7 +110,8 @@
     background: rgba(0, 0, 0, 0.7); border-color: var(--neon-green); 
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(57, 255, 20, 0.15); outline: none; 
 }
-.search-module:focus-within #search-icon-default { border-color: rgba(57, 255, 20, 0.5); color: var(--neon-green); }
+/* Красим лупу в зеленый при фокусе, НО ТОЛЬКО если на неё не навели курсор (решено правилом выше) */
+.search-module:focus-within #search-icon-default:not(:hover) { border-color: rgba(57, 255, 20, 0.5); color: var(--neon-green); }
 
 .search-hotkey {
     position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
@@ -117,14 +121,6 @@
     box-shadow: 0 2px 0 rgba(0,0,0,0.5); transition: 0.3s;
 }
 .search-module:focus-within .search-hotkey { opacity: 0; transform: translateY(-50%) scale(0.8); }
-
-.search-clear-input {
-    position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-    background: transparent; border: none; color: #888; font-size: 1.1rem;
-    cursor: pointer; z-index: 205; display: flex; align-items: center; justify-content: center;
-    width: 24px; height: 24px; border-radius: 50%; transition: all 0.2s ease;
-}
-.search-clear-input:hover { color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink); transform: translateY(-50%) scale(1.1); }
 
 /* КНОПКИ ФИЛЬТРОВ И СБРОСА */
 .cyber-btn-outline { 

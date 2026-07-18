@@ -11,7 +11,6 @@ export class SearchController {
             module: document.getElementById('search-module'),
             iconDefault: document.getElementById('search-icon-default'),
             iconLoading: document.getElementById('search-icon-loading'),
-            clearBtn: document.getElementById('search-clear-input'),
             hotkeyHint: document.getElementById('search-hotkey-hint')
         };
         this.debounceTimer = null;
@@ -52,14 +51,6 @@ export class SearchController {
             }
         });
 
-        if (this.els.clearBtn) {
-            this.els.clearBtn.addEventListener('click', () => {
-                this.els.input.value = '';
-                this.handleInput('');
-                this.els.input.focus();
-            });
-        }
-
         document.addEventListener('click', (e) => {
             if (!this.els.module.contains(e.target)) this.toggleSugg(false);
         });
@@ -93,9 +84,8 @@ export class SearchController {
     handleInput(query) {
         clearTimeout(this.debounceTimer);
 
-        if (this.els.clearBtn && this.els.hotkeyHint) {
+        if (this.els.hotkeyHint) {
             const hasText = query.length > 0;
-            this.els.clearBtn.style.display = hasText ? 'flex' : 'none';
             this.els.hotkeyHint.style.display = hasText ? 'none' : 'flex';
         }
 
@@ -168,7 +158,6 @@ export class SearchController {
     applySelection(item) {
         EventBus.emit('PLAY_SOUND', 'click');
         this.els.input.value = item.title;
-        if (this.els.clearBtn) this.els.clearBtn.style.display = 'flex';
         if (this.els.hotkeyHint) this.els.hotkeyHint.style.display = 'none';
         
         this.toggleSugg(false);
