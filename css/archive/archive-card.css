@@ -17,11 +17,11 @@
 /* ПРОЦЕДУРНАЯ ЗАГЛУШКА */
 .procedural-placeholder { 
     position: absolute; inset: 0; border-radius: 12px; 
-    border: 1px solid rgba(255, 255, 255, 0.1); /* ИСПРАВЛЕНИЕ: Был inset box-shadow */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
     background-clip: padding-box;
     display: flex; align-items: center; justify-content: center; 
     background: radial-gradient(circle at center, rgba(10,12,18,0.9), #050508 100%); 
-    z-index: 1; overflow: hidden; transition: opacity 0.3s; 
+    z-index: 1; overflow: hidden; transition: opacity 0.5s ease; 
 }
 .procedural-placeholder::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 20px 20px; background-position: center; }
 .placeholder-letter { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900; z-index: 2; user-select: none; opacity: 0.8; }
@@ -29,25 +29,37 @@
 /* СЛОИ И КОНТЕНТ */
 .card-layer { 
     grid-area: 1 / 1; width: 100%; height: 100%; border-radius: 12px; 
-    /* ИСПРАВЛЕНИЕ БАГА С УГЛАМИ: ИСПОЛЬЗУЕМ НАСТОЯЩИЙ BORDER */
     border: 1px solid rgba(255, 255, 255, 0.1); 
-    background-clip: padding-box; /* Запрещаем фону вылезать под бордер */
+    background-clip: padding-box; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
     background-size: cover; background-position: center top; background-repeat: no-repeat; 
     position: relative; min-width: 0; backface-visibility: hidden; 
 }
-.layer-front { z-index: 10; background-color: #121215; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 
-/* Блик */
-.layer-front::after { content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.0) 20%, rgba(255, 255, 255, 0.18) 50%, rgba(255, 255, 255, 0.0) 80%, transparent 100%); transform: rotate(30deg); transition: none; pointer-events: none; z-index: 5; opacity: 0; }
-.archive-card-container:hover .layer-front::after { left: 150%; opacity: 1; transition: left 0.8s ease-in-out; }
+/* ИСПРАВЛЕНИЕ КРАЕВ: Добавлен translateZ(0) для аппаратного сглаживания углов браузером */
+.layer-front { 
+    z-index: 10; background-color: #121215; overflow: hidden; display: flex; flex-direction: column; 
+    transition: border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    transform: translateZ(0); 
+}
 
-/* ПЛАВНАЯ АНИМАЦИЯ КАРТИНКИ */
+/* ИСПРАВЛЕНИЕ БЛИКА: Добавлена плавность появления (opacity 0.4s) чтобы он не "вспыхивал" */
+.layer-front::after { 
+    content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; 
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.0) 20%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.0) 80%, transparent 100%); 
+    transform: rotate(30deg); pointer-events: none; z-index: 5; opacity: 0; 
+    transition: left 0.8s ease-in-out, opacity 0.4s ease; 
+}
+.archive-card-container:hover .layer-front::after { left: 150%; opacity: 1; }
+
+/* ИСПРАВЛЕНИЕ ШНЯГ НА ГРАНИЦАХ: Изображение теперь на 2px выходит за рамки внутри контейнера */
 .layer-img-bg { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    position: absolute; 
+    top: -2px; left: -2px; width: calc(100% + 4px); height: calc(100% + 4px); 
     background-size: cover; background-position: center top; 
     z-index: 3;
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s ease;
+    /* Увеличен тайминг фильтра яркости, чтобы картинка затемнялась плавно */
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
 }
 .archive-card-container:hover .layer-front .layer-img-bg { 
     transform: scale(1.08); 
@@ -58,70 +70,50 @@
 
 /* БЛОК ИНФОРМАЦИИ */
 .card-info { 
-    margin-top: auto; padding: 20px 15px 15px 15px; 
+    margin-top: auto; 
+    padding: 30px 15px 12px 15px; 
     background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.8) 50%, transparent 100%); 
     display: flex; flex-direction: column; 
 }
-
-/* ЗАГОЛОВОК */
 .card-title { 
     font-family: 'Rajdhani', sans-serif; color: #fff; font-size: 1.05rem; 
-    font-weight: 700; margin-bottom: 2px; line-height: 1.1; 
-    text-shadow: 0 2px 5px rgba(0,0,0,0.9); 
+    font-weight: 700; 
+    margin-bottom: 0; /* Убрали, так как название теперь в самом низу */
+    line-height: 1.1; text-shadow: 0 2px 5px rgba(0,0,0,0.9); 
 }
-
-/* СТАТУС */
 .cyber-status { 
-    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; 
-    color: var(--custom-color); 
-    text-transform: uppercase; letter-spacing: 2px; font-weight: 700;
-    margin-bottom: 8px; text-shadow: 0 0 5px rgba(0,0,0,0.8);
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; color: var(--custom-color); 
+    text-transform: uppercase; letter-spacing: 2px; font-weight: 700; 
+    margin-bottom: 6px; /* Добавили отступ вниз, к названию */
+    text-shadow: 0 0 5px rgba(0,0,0,0.8); transition: color 0.5s ease; 
 }
-.suggested-status { color: #fff; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-bottom: 8px; }
+.suggested-status { 
+    color: #fff; background: rgba(0,0,0,0.5); padding: 2px 6px; 
+    border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); 
+    display: inline-flex; align-items: center; gap: 5px; width: fit-content; 
+    margin-bottom: 6px; /* Добавили отступ вниз, к названию */
+}
 
 /* COMPACT MODE OVERRIDES */
 .compact-mode .cyber-status { display: none !important; }
-.compact-mode .card-info { padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%); }
+.compact-mode .card-info { padding: 20px 10px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%); }
 .compact-mode .card-title { font-size: 0.85rem; margin-bottom: 0; text-align: center; }
 
-/* -------------------------------------------------------------
-   БЕЙДЖИ ПОВЕРХ ОБЛОЖКИ
-------------------------------------------------------------- */
-
-/* РЕЙТИНГ */
-.cyber-rating-badge {
-    position: absolute; top: 10px; left: 10px; 
-    background: rgba(5, 5, 8, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-    border-radius: 6px; padding: 4px 8px; 
-    z-index: 30; 
-    transition: 0.3s;
-}
-.archive-card-container:hover .cyber-rating-badge {
-    border-color: var(--custom-color); box-shadow: 0 0 10px var(--custom-color);
-}
+/* БЕЙДЖИ ПОВЕРХ ОБЛОЖКИ */
+.cyber-rating-badge { position: absolute; top: 10px; left: 10px; background: rgba(5, 5, 8, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-radius: 6px; padding: 4px 8px; z-index: 30; transition: border-color 0.5s ease, box-shadow 0.5s ease; }
+.archive-card-container:hover .cyber-rating-badge { border-color: var(--custom-color); box-shadow: 0 0 10px var(--custom-color); }
 .cyber-rating { display: flex; align-items: center; gap: 6px; }
 .cyber-rating .segments { display: flex; gap: 3px; margin-top: 1px; }
-.cyber-segment { width: 4px; height: 10px; transform: skewX(-15deg); background: rgba(255,255,255,0.2); transition: 0.3s; }
+.cyber-segment { width: 4px; height: 10px; transform: skewX(-15deg); background: rgba(255,255,255,0.2); transition: 0.5s; }
 .cyber-segment.filled { background: var(--custom-color); box-shadow: 0 0 5px var(--custom-color); }
-.cyber-rating .val { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: #fff; font-weight: 800; text-shadow: 0 0 5px var(--custom-color); }
+.cyber-rating .val { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: #fff; font-weight: 800; text-shadow: 0 0 5px var(--custom-color); transition: text-shadow 0.5s ease; }
 
-/* ПЛЕЙЛИСТ / КОЛЛЕКЦИЯ */
-.yt-playlist-badge { 
-    position: absolute; top: 10px; right: 10px; 
-    background: rgba(5, 5, 8, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-    border-radius: 6px; padding: 5px 10px; 
-    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; 
-    display: flex; align-items: center; gap: 6px; z-index: 30; 
-    transition: 0.3s;
-}
+.yt-playlist-badge { position: absolute; top: 10px; right: 10px; background: rgba(5, 5, 8, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-radius: 6px; padding: 5px 10px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; z-index: 30; transition: border-color 0.5s ease, box-shadow 0.5s ease; }
 .archive-card-container:hover .yt-playlist-badge { border-color: var(--custom-color); box-shadow: 0 0 10px var(--custom-color); }
-.yt-playlist-badge i { opacity: 0.8; }
+.yt-playlist-badge i { opacity: 0.8; transition: color 0.5s ease; }
 .archive-card-container:hover .yt-playlist-badge i { color: var(--custom-color); opacity: 1; }
 
-/* ИКОНКА ВОСПРОИЗВЕДЕНИЯ ЮТУБА */
-.youtube-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.2); transition: 0.3s; pointer-events: none; }
-.youtube-play-overlay i { font-size: 3rem; color: #ff0000; transition: 0.3s; filter: drop-shadow(0 0 5px rgba(0,0,0,0.8)); opacity: 0.8; }
+.youtube-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.2); transition: 0.5s ease; pointer-events: none; }
+.youtube-play-overlay i { font-size: 3rem; color: #ff0000; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s ease; filter: drop-shadow(0 0 5px rgba(0,0,0,0.8)); opacity: 0.8; }
 .archive-card-container:hover .youtube-play-overlay { background: rgba(0,0,0,0.4); }
 .archive-card-container:hover .youtube-play-overlay i { transform: scale(1.1); filter: drop-shadow(0 0 5px rgba(0,0,0,1)) drop-shadow(0 0 15px #ff0000); opacity: 1; }

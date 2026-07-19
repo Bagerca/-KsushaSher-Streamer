@@ -70,11 +70,11 @@
     ]
   },
   {
-    "id": "the-floor-above-demo",
-    "title": "The Floor Above (Demo)",
+    "id": "the-floor-above",
+    "title": "The Floor Above",
     "rating": 4.0,
     "description": "Атмосферный хоррор с новогодним вайбом. Неплохие скримеры разбавлены мемами, что радует.",
-    "image": "assets/images/games/the-floor-above-demo.jpg",
+    "image": "assets/images/games/the-floor-above.jpg",
     "status": "completed"
   },
   {
@@ -127,7 +127,7 @@
   },
   {
     "id": "vacation-cafe-simulator",
-    "title": "Vacation Cafe Simulator (Demo)",
+    "title": "Vacation Cafe Simulator",
     "rating": 4.0,
     "description": "Красивые виды и возможность плавать под водой. Геймплей приятный и несложный.",
     "image": "assets/images/games/vacation-cafe-simulator.jpg",
@@ -343,7 +343,7 @@
   },
   {
     "id": "tomodachi-life-living-the-dream",
-    "title": "Tomodachi Life: Living the Dream 2026",
+    "title": "Tomodachi Life: Living the Dream",
     "rating": 0,
     "description": "",
     "image": "assets/images/games/tomodachi-life.jpg",

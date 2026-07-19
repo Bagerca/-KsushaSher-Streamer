@@ -32,7 +32,14 @@
 }
 
 /* СЛОИ */
-.card-layer { transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease-out, border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+/* ИСПРАВЛЕНИЕ: box-shadow теперь 0.5s вместо 0.2s для устранения резкой "вспышки" */
+.card-layer { 
+    transition: 
+        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+        box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+        border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    will-change: transform, box-shadow;
+}
 .layer-back { z-index: 5; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 5px 15px rgba(0,0,0,0.6); background-color: #0f0f0f; background-clip: padding-box; }
 .layer-back-deep { z-index: 1; border: 1px solid rgba(255, 255, 255, 0.02); box-shadow: 0 5px 15px rgba(0,0,0,0.6); background-color: #080808; background-clip: padding-box; }
 .compact-mode .layer-back, .compact-mode .layer-back-deep { display: none !important; }
@@ -46,7 +53,7 @@
 .archive-card-container.stack-3 .layer-back-deep { transform: scale(0.88) translate(10px, -10px); z-index: 1; }
 .compact-mode .archive-card-container.stack-2 .layer-front, .compact-mode .archive-card-container.stack-3 .layer-front { transform: none !important; }
 
-/* ХОВЕРЫ - МЕНЯЕМ ТОЛЬКО BORDER И OUTERSHADOW */
+/* ХОВЕРЫ */
 .archive-card-container:hover { z-index: 50; }
 
 .compact-mode .archive-card-container:hover .layer-front { 
@@ -54,16 +61,18 @@
     border-color: var(--layer-color, var(--custom-color));
     box-shadow: 0 0 15px var(--layer-color, var(--custom-color)); 
 }
+
+/* ИСПРАВЛЕНИЕ: Добавлен внутренний inset shadow к ховерам, чтобы смягчить резкую границу бордера */
 .archive-card-container.stack-1:hover .layer-front { 
     transform: scale(1.02) translateY(-5px); 
     border-color: var(--layer-color, var(--custom-color));
-    box-shadow: 0 0 20px var(--layer-color, var(--custom-color)); 
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3), 0 0 20px var(--layer-color, var(--custom-color)); 
 }
 
 .archive-card-container.stack-2:hover .layer-front { 
     transform: scale(0.96) translate(-12px, 12px); 
     border-color: var(--layer-color, var(--custom-color));
-    box-shadow: 0 0 20px var(--layer-color, var(--custom-color)); 
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3), 0 0 20px var(--layer-color, var(--custom-color)); 
 }
 .archive-card-container.stack-2:hover .layer-back { 
     transform: scale(0.96) translate(12px, -12px); 
@@ -74,7 +83,7 @@
 .archive-card-container.stack-3:hover .layer-front { 
     transform: scale(0.92) translate(-18px, 18px); 
     border-color: var(--layer-color, var(--custom-color));
-    box-shadow: 0 0 20px var(--layer-color, var(--custom-color)); 
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3), 0 0 20px var(--layer-color, var(--custom-color)); 
 }
 .archive-card-container.stack-3:hover .layer-back { 
     transform: scale(0.92) translate(0, 0); 

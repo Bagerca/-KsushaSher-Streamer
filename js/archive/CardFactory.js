@@ -8,7 +8,6 @@ export class CardFactory {
     }
 
     createCardHTML(item, delay) {
-        // Заглушка для дивайдеров
         if (item.isDivider) {
             return `
             <div class="archive-divider-row animate-entry" style="grid-column: 1 / -1; animation-delay: ${delay}ms">
@@ -20,18 +19,15 @@ export class CardFactory {
         const isCollection = item.format === 'collection';
         const isCompact = this.getGridMode() === 'compact';
         
-        // Определяем основные мета-данные
         const firstSubItem = (isCollection && item.items && item.items[0]) ? item.items[0] : {};
         const title = firstSubItem.title || item.title || '?';
         const status = firstSubItem.status || item.status;
         const color = firstSubItem.customColor || item.customColor || '#444455'; 
 
-        // Иерархия слоев 3D-карточек
         const cFront = color;
         const cBack1 = (isCollection && item.items?.[1]?.customColor) || cFront;
         const cBack2 = (isCollection && item.items?.[2]?.customColor) || cBack1;
 
-        // Извлечение обложек (с резервным плейсхолдером)
         let images = [];
         if (isCollection && item.items) images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
         else if (isYouTube && item.videos) images = item.videos.slice(0, 3).map(v => `https://img.youtube.com/vi/${getYouTubeId(typeof v === 'string' ? v : v.url)}/maxresdefault.jpg`);
@@ -45,14 +41,12 @@ export class CardFactory {
         const imgBack1 = images[1] ? optimizeImageUrl(images[1], 200, 60) : null;
         const imgBack2 = images[2] ? optimizeImageUrl(images[2], 200, 60) : null;
 
-        // Генерация задних слоев (если не компактный режим)
         let backLayersHtml = '';
         if (!isCompact) {
             if (stackCount >= 3 && imgBack2) backLayersHtml += `<div class="card-layer layer-back-deep" style="--layer-color: ${cBack2};" data-lazy-bg="${imgBack2}"></div>`;
             if (stackCount >= 2 && imgBack1) backLayersHtml += `<div class="card-layer layer-back" style="--layer-color: ${cBack1};" data-lazy-bg="${imgBack1}"></div>`;
         }
 
-        // Генерация бейджей
         const playOverlay = isYouTube ? `<div class="youtube-play-overlay"><i class="fab fa-youtube"></i></div>` : '';
         let topBadge = '';
         if (isCollection && item.items) {
@@ -61,7 +55,6 @@ export class CardFactory {
             topBadge = `<div class="yt-playlist-badge"><i class="fas fa-layer-group"></i> <span>${item.videos.length}</span></div>`;
         }
 
-        // Расчет рейтинга
         let rating = item.rating || 0;
         if (isCollection && item.items) {
             const ratedItems = item.items.filter(i => i.rating > 0);
@@ -75,7 +68,6 @@ export class CardFactory {
             ratingHtml = `<div class="cyber-rating-badge"><div class="cyber-rating"><div class="segments">${segments}</div><span class="val">${rating.toFixed(1)}</span></div></div>`;
         }
 
-        // Статус-бар
         const statusHtml = status === 'suggested' && item.suggestedBy 
             ? `<div class="cyber-status suggested-status"><i class="fas fa-user" style="color: ${getUserColor(item.suggestedBy)}"></i> ${item.suggestedBy}</div>`
             : `<div class="cyber-status">[ ${STATUS_MAP[status] || status} ]</div>`;
@@ -96,8 +88,9 @@ export class CardFactory {
                     ${topBadge}
                     ${ratingHtml}
                     <div class="card-info">
-                        <div class="card-title" title="${title}">${title}</div>
+                        <!-- ИСПРАВЛЕНИЕ: Поменяли местами статус и название -->
                         ${statusHtml}
+                        <div class="card-title" title="${title}">${title}</div>
                     </div>
                 </div>
             </div>

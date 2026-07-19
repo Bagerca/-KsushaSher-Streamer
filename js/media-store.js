@@ -2,6 +2,7 @@
 import { loadData } from './api.js';
 import EventBus from './event-bus.js';
 import { SearchEngine } from './services/SearchEngine.js';
+import { getYouTubeId } from './utils.js';
 
 export const STATUS_MAP = {
     'completed': 'ПРОЙДЕНО', 'watched': 'ПОСМОТРЕНО',
@@ -35,12 +36,14 @@ export class MediaStore {
             const rawSuggestions = await loadData('suggestions.json', []);
             
             this.dataMain = Array.isArray(rawMain) ? rawMain : [];
+            
+            // ИСПРАВЛЕНИЕ: Автоматически назначаем статус 'suggested' всему, что пришло из предложки
             this.dataSuggestions = Array.isArray(rawSuggestions) 
-                ? rawSuggestions.filter(item => item.type === type) 
+                ? rawSuggestions.map(item => ({ ...item, status: 'suggested' })).filter(item => item.type === type) 
                 : [];
             
-            this.preprocessData(this.dataMain);
-            this.preprocessData(this.dataSuggestions);
+            await this.preprocessDataAsync(this.dataMain);
+            await this.preprocessDataAsync(this.dataSuggestions);
                 
             this.processData();
             EventBus.emit('MEDIA_STORE_LOADED');
@@ -51,16 +54,52 @@ export class MediaStore {
         }
     }
 
-    preprocessData(list) {
-        list.forEach(item => {
+    async preprocessDataAsync(list) {
+        const fetchPromises = [];
+
+        for (const item of list) {
+            // Логика для коллекций
             if (item.format === 'collection' && item.items && item.items.length > 0) {
                 const firstGame = item.items[0];
-                item.title = firstGame.title;
-                item.description = firstGame.description;
-                item.image = firstGame.image;
-                item.status = firstGame.status;
+                item.title = item.title || firstGame.title;
+                item.description = item.description || firstGame.description;
+                item.image = item.image || firstGame.image;
+                item.status = item.status || firstGame.status;
             }
-        });
+
+            // АВТОМАТИЗАЦИЯ YOUTUBE
+            if (item.format === 'youtube' && item.videos && item.videos.length > 0) {
+                const firstVid = typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url;
+                const ytId = getYouTubeId(firstVid);
+                
+                if (ytId && !item.image) {
+                    item.image = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+                }
+                
+                // Если пользователь не написал описание, ставим заглушку
+                if (!item.description) {
+                    item.description = "Описание от зрителя отсутствует.";
+                }
+
+                if (!item.title) {
+                    item.title = "Установка связи..."; 
+                    
+                    const p = fetch(`https://noembed.com/embed?url=${firstVid}`)
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.title) item.title = d.title;
+                        }).catch(() => {
+                            item.title = "Засекреченный видеофайл";
+                        });
+                        
+                    fetchPromises.push(p);
+                }
+            }
+        }
+
+        if (fetchPromises.length > 0) {
+            await Promise.allSettled(fetchPromises);
+        }
     }
 
     toggleFilter(val) {
@@ -110,14 +149,12 @@ export class MediaStore {
             }
         });
 
-        // Убираем дубликаты
         const uniqueMap = new Map();
         flattenedList.forEach(item => {
             if (!uniqueMap.has(item.id)) uniqueMap.set(item.id, item);
         });
         flattenedList = Array.from(uniqueMap.values());
 
-        // Делегируем вычисление Score движку поиска
         let matches = flattenedList.map(item => {
             const score = SearchEngine.scoreItemForSuggestions(item.title, query);
             return { ...item, score };
@@ -140,7 +177,6 @@ export class MediaStore {
                     });
                 }
                 
-                // Делегируем вычисление Score движку поиска
                 matchScore = SearchEngine.scoreItemForGrid(textToSearch, item.title, this.searchQuery);
             }
             
@@ -157,7 +193,6 @@ export class MediaStore {
 
         const dir = this.sortDirection === 'asc' ? 1 : -1;
         const sortFn = (a, b) => {
-            // Если есть поиск, сортируем по релевантности (Match Score)
             if (this.searchQuery.length > 0 && Math.abs(a._matchScore - b._matchScore) > 0.1) {
                 return b._matchScore - a._matchScore;
             }
