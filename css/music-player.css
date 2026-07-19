@@ -29,27 +29,19 @@
 }
 
 .music-btn.play-btn {
-    font-size: 1.15rem; /* Чуть аккуратнее относительно рамки */
-    width: 44px; /* Сделали кнопку чуть крупнее */
+    font-size: 1.15rem; 
+    width: 44px; 
     height: 44px;
-    border: 1px solid rgba(255, 45, 149, 0.4); /* Мягкая базовая рамка */
+    border: 1px solid rgba(255, 45, 149, 0.4); 
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(255, 45, 149, 0.15);
     position: relative;
 }
 
-/* МАГИЯ ОПТИЧЕСКОЙ КОМПЕНСАЦИИ: 
-   Треугольник Play визуально заваливается влево. Сдвигаем его на 2px вправо. */
-.music-btn.play-btn i.fa-play {
-    transform: translateX(2px);
-}
+/* Оптическая компенсация: треугольник заваливается влево, сдвигаем вправо */
+.music-btn.play-btn i.fa-play { transform: translateX(2px); }
+.music-btn.play-btn i.fa-pause { transform: translateX(0); }
 
-/* Иконка паузы симметричная, ее сдвигать не нужно */
-.music-btn.play-btn i.fa-pause {
-    transform: translateX(0);
-}
-
-/* Премиальный ховер (вместо сплошного цвета - неоновое стекло) */
 .music-btn.play-btn:hover {
     background: rgba(255, 45, 149, 0.15);
     color: var(--neon-pink);
@@ -68,7 +60,6 @@
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* ИСПОЛЬЗОВАНИЕ НОВОГО API СКРОЛЛА */
 .playlist-container {
     flex-grow: 1;
     overflow-y: auto;
@@ -92,11 +83,7 @@
     font-size: 0.9rem;
 }
 
-.track-item:hover {
-    background: rgba(255, 45, 149, 0.1);
-    color: #fff;
-    padding-left: 15px;
-}
+.track-item:hover { background: rgba(255, 45, 149, 0.1); color: #fff; padding-left: 15px; }
 
 .track-item.active {
     color: var(--neon-pink);
@@ -128,10 +115,7 @@
 }
 
 .hud-side-panel.right.music-mode-active .header-title { background: var(--neon-pink); }
-.hud-side-panel.right.music-mode-active .header-deco-line { 
-    background: repeating-linear-gradient(90deg, var(--neon-pink), var(--neon-pink) 2px, transparent 2px, transparent 6px);
-}
-
+.hud-side-panel.right.music-mode-active .header-deco-line { background: repeating-linear-gradient(90deg, var(--neon-pink), var(--neon-pink) 2px, transparent 2px, transparent 6px); }
 .hud-side-panel.right.music-mode-active .sync-waveform { --wave-color: var(--neon-pink); }
 .hud-side-panel.right.music-mode-active .footer-labels { display: none; }
 
@@ -139,18 +123,10 @@
 .volume-ticks-container { flex-grow: 1; height: 20px; display: flex; align-items: center; gap: 4px; margin-left: 15px; cursor: pointer; }
 
 .vol-tick { 
-    height: 8px; 
-    flex-grow: 1; 
-    background: rgba(255, 255, 255, 0.1); 
-    border-radius: 1px; 
-    transform: skewX(-10deg); 
-    transition: all 0.1s ease; 
+    height: 8px; flex-grow: 1; background: rgba(255, 255, 255, 0.1); 
+    border-radius: 1px; transform: skewX(-10deg); transition: all 0.1s ease; 
 }
-.vol-tick.active { 
-    background: var(--neon-pink); 
-    box-shadow: 0 0 5px var(--neon-pink); 
-    height: 12px; 
-}
+.vol-tick.active { background: var(--neon-pink); box-shadow: 0 0 5px var(--neon-pink); height: 12px; }
 .volume-ticks-container:hover .vol-tick:not(.active) { background: rgba(255, 45, 149, 0.3); }
 
 /* --- ИНТЕГРАЦИЯ ПРОГРЕСС-БАРА ПОД ХЕДЕР --- */
@@ -159,6 +135,20 @@
     padding-bottom: 0 !important;
     margin-bottom: 12px !important; 
 }
+
+/* ИСПРАВЛЕНИЕ: Добавлен flex-shrink: 0, чтобы бар не исчезал */
+.music-progress-area { 
+    width: 100%; 
+    height: 4px; 
+    min-height: 4px; /* Запрещаем сжиматься */
+    flex-shrink: 0; /* Запрещаем сжиматься во Flex-контейнере */
+    background: rgba(255, 255, 255, 0.1); 
+    cursor: default; 
+    position: relative; 
+    margin-bottom: 15px; 
+    transition: height 0.2s, background 0.3s; 
+}
+.music-progress-fill { height: 100%; width: 0%; background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); position: relative; transition: width 0.1s linear; }
 
 .hud-side-panel.right.music-mode-active .music-progress-area { cursor: pointer; background: rgba(255, 45, 149, 0.2); }
 .hud-side-panel.right.music-mode-active .music-progress-area:hover { height: 8px; }
@@ -169,22 +159,14 @@
 .hud-side-panel.right.music-mode-active .music-progress-area:hover .music-progress-fill::after { opacity: 1; }
 
 /* =========================================
-   JS CONTROLLED OVERRIDES (ANIMATION STATES)
+   JS CONTROLLED OVERRIDES
    ========================================= */
 
-.hud-side-panel.right.music-mode-active .sync-waveform:not(.js-controlled) .bar {
-    animation: none; height: 4px !important; opacity: 0.3; box-shadow: none;
-}
-.sync-waveform.js-controlled .bar {
-    animation: none !important; transition: height 0.05s ease-out; 
-    background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); opacity: 1;
-}
-
+.hud-side-panel.right.music-mode-active .sync-waveform:not(.js-controlled) .bar { animation: none; height: 4px !important; opacity: 0.3; box-shadow: none; }
+.sync-waveform.js-controlled .bar { animation: none !important; transition: height 0.05s ease-out; background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); opacity: 1; }
 .main-display-rings.js-beat-controlled { animation: none !important; transition: transform 0.05s ease-out; }
 .main-display-rings.js-beat-controlled .ring { animation: none !important; transition: none; }
 .main-display-rings.is-resetting { animation: none !important; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important; transform: scale(1) !important; }
-
-/* TRANSITION EFFECTS (GLITCH & SWAP) */
 .panel-content.is-glitching { animation: hud-glitch-swap 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
 
 @keyframes hud-glitch-swap {

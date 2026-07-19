@@ -1,0 +1,48 @@
+/* css/footer/footer-typography.css */
+
+/* =========================================
+   FOOTER - ТИПОГРАФИКА
+   ========================================= */
+
+.footer-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    color: #fff;
+    letter-spacing: 2px;
+}
+
+.brand-ver {
+    font-size: 0.6rem;
+    background: var(--neon-pink);
+    padding: 2px 5px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 5px;
+    font-weight: 700;
+}
+
+.copyright {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.dev-credits {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.75rem;
+    color: #444;
+    text-transform: uppercase;
+    margin-top: 3px;
+}
+
+.dev-name {
+    color: var(--bagerka-color, #ff4444);
+    font-weight: 700;
+}
+
+/* АДАПТИВНОСТЬ ТИПОГРАФИКИ */
+@media (max-width: 768px) {
+    .footer-content { 
+        text-align: center; 
+    }
+}

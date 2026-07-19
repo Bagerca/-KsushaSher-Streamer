@@ -1,0 +1,80 @@
+/* css/about/holo-carousel.css */
+.subs-marquee-wrapper {
+    position: relative; width: 100%; margin-top: 0; border: none;
+    background: linear-gradient(180deg, rgba(10, 11, 16, 0.95) 0%, #050508 100%);
+    display: flex; flex-direction: column; height: 640px; padding: 50px 0;
+    overflow: hidden; z-index: 10;
+}
+
+.subs-marquee-wrapper::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; 
+    background: linear-gradient(90deg, var(--neon-green), #aaff00, var(--neon-green));
+    background-size: 200% 100%; animation: border-flow 3s linear infinite reverse;
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); z-index: 25;
+}
+.subs-marquee-wrapper::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px; background: rgba(57, 255, 20, 0.3);
+}
+
+.marquee-header-centered {
+    text-align: center; color: var(--neon-green); font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 40px;
+    display: flex; justify-content: center; align-items: center; gap: 15px;
+    z-index: 2; text-transform: uppercase; font-weight: 700;
+}
+.pulse-dot { width: 10px; height: 10px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 10px var(--neon-green); animation: pulse 1s infinite; }
+
+.marquee-track-container {
+    width: 100%; flex-grow: 1; display: flex; align-items: center; overflow: hidden; position: relative;
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.marquee-track {
+    display: flex; gap: 80px; width: max-content; padding: 0 80px; align-items: center;
+    cursor: grab; will-change: transform; user-select: none; -webkit-user-select: none; touch-action: pan-y;
+}
+.marquee-track.is-dragging { cursor: grabbing; }
+.marquee-track.is-dragging * { pointer-events: none !important; user-select: none !important; -webkit-user-select: none !important; }
+
+/* КАРТОЧКА АГЕНТА */
+.holo-card {
+    --sub-color: #39ff14; 
+    width: 300px; height: 400px; padding: 40px 25px;
+    background: linear-gradient(135deg, rgba(30, 30, 40, 0.7) 0%, rgba(20, 20, 30, 0.5) 100%);
+    backdrop-filter: blur(10px); 
+    border: 1px solid var(--sub-color); border-radius: 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    transition: all 0.3s ease; flex-shrink: 0; position: relative; transform: translateZ(0);
+}
+
+.holo-card .card-top-deco { width: 100%; display: flex; justify-content: space-between; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-bottom: 15px; }
+.holo-card .card-top-deco i { color: var(--sub-color); text-shadow: 0 0 5px var(--sub-color); }
+
+.holo-avatar-container { position: relative; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+.holo-avatar { width: 100%; height: 100%; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: #fff; overflow: hidden; z-index: 2; border: 3px solid rgba(255,255,255,0.2); position: relative; }
+.holo-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 5; }
+
+.avatar-ring { position: absolute; top: 50%; left: 50%; width: 180px; height: 180px; margin-left: -90px; margin-top: -90px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.3); animation: rotate-simple 12s linear infinite; z-index: 1; transition: all 0.3s ease; }
+
+.holo-info { text-align: center; z-index: 2; width: 100%; }
+.holo-name { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.8rem; color: #fff; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.holo-role { font-family: 'Exo 2', sans-serif; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; opacity: 0.9; color: var(--sub-color); text-shadow: 0 0 5px var(--sub-color); }
+
+.card-stat-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 20px; overflow: hidden; }
+.card-stat-bar .fill { height: 100%; background: var(--sub-color); box-shadow: 0 0 10px var(--sub-color); }
+
+.holo-card:hover { box-shadow: 0 0 18px var(--sub-color); transform: translateY(-5px) scale(1.02); z-index: 10; }
+.holo-card:hover .avatar-ring { border-color: var(--sub-color); box-shadow: 0 0 8px var(--sub-color); border-style: solid; width: 190px; height: 190px; margin-left: -95px; margin-top: -95px; }
+
+@media (max-width: 1200px) {
+    .subs-marquee-wrapper { margin-top: 40px; border-top: 1px solid rgba(57, 255, 20, 0.3); }
+}
+@media (max-width: 768px) {
+    .subs-marquee-wrapper { height: 450px; margin-top: 40px; }
+    .holo-card { width: 260px; height: 360px; padding: 30px 20px; }
+    .holo-avatar-container { width: 120px; height: 120px; }
+    .avatar-ring { width: 140px; height: 140px; margin-left: -70px; margin-top: -70px; }
+    .holo-name { font-size: 1.5rem; }
+}

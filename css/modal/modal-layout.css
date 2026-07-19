@@ -1,0 +1,101 @@
+/* css/modal/modal-layout.css */
+
+/* =========================================
+   ОВЕРЛЕЙ И КАРКАС
+   ========================================= */
+.media-modal-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(5, 5, 8, 0.95); backdrop-filter: blur(15px); 
+    z-index: var(--z-modal); display: flex; justify-content: center; align-items: center; 
+    opacity: 0; pointer-events: none; transition: 0.3s; 
+}
+.media-modal-overlay.active { opacity: 1; pointer-events: auto; }
+.media-modal-overlay.is-cinema-mode .modal-cinematic-bg { filter: blur(30px) brightness(0.15) saturate(0.5) !important; }
+
+.modal-cinematic-bg {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-size: cover; background-position: center 20%;
+    filter: blur(40px) brightness(0.4) saturate(1.2);
+    opacity: 0.6; transition: filter 0.5s ease, background-image 0.5s ease;
+    mask-image: linear-gradient(to right, black 20%, transparent 80%);
+    -webkit-mask-image: linear-gradient(to right, black 20%, transparent 80%);
+}
+
+.modal-close-btn { 
+    position: fixed; top: 30px; right: 40px; 
+    background: rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); 
+    border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; 
+    color: #fff; cursor: pointer; transition: all 0.3s ease; 
+    z-index: calc(var(--z-modal) + 1); 
+    display: flex; align-items: center; justify-content: center; 
+    backdrop-filter: blur(5px);
+}
+.modal-close-btn:hover { 
+    background: var(--modal-color, #fff); border-color: var(--modal-color, #fff); 
+    color: #000; transform: rotate(90deg) scale(1.1); box-shadow: 0 0 20px var(--modal-color, #fff); 
+}
+
+/* =========================================
+   ОСНОВНОЙ КОНТЕЙНЕР (ОКНО)
+   ========================================= */
+.media-modal-content { 
+    position: relative; width: 95%; max-width: 1650px; height: 90vh; 
+    background: #050508; border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 16px; box-shadow: 0 0 80px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0,0,0,0.5); 
+    transform: scale(0.95) translateY(30px); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    display: flex; flex-direction: column; overflow: hidden; z-index: 100;
+}
+.media-modal-overlay.active .media-modal-content { transform: scale(1) translateY(0); }
+
+.media-modal-content::before { 
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
+    background: var(--modal-color, #fff); border-radius: 16px 16px 0 0; 
+    box-shadow: 0 2px 20px var(--modal-color, #fff); z-index: 100; 
+}
+
+/* =========================================
+   ГРИД-СЕТКА КОЛОНОК
+   ========================================= */
+.modal-layout { 
+    display: grid; grid-template-columns: 360px 1fr auto; 
+    position: relative; z-index: 10; height: 100%; overflow: hidden; 
+}
+
+.modal-col-sidebar { 
+    padding: 30px; display: flex; flex-direction: column; gap: 20px; 
+    border-right: 1px solid rgba(255, 255, 255, 0.05); 
+    background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    overflow-y: auto; scrollbar-width: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.modal-col-sidebar::-webkit-scrollbar { display: none; }
+
+.modal-col-main { 
+    display: flex; flex-direction: column; position: relative;
+    overflow-y: auto; overflow-x: hidden; 
+    --scroll-size: 6px; --scroll-thumb: var(--modal-color);
+}
+
+.modal-col-playlist {
+    width: 360px; border-left: 1px solid rgba(255, 255, 255, 0.05); 
+    background: rgba(5, 5, 8, 0.8); display: flex; flex-direction: column;
+}
+
+/* РЕЖИМ КИНО (CINEMA MODE) */
+.modal-layout.layout-cinema { grid-template-columns: 1fr 340px; }
+.modal-layout.layout-cinema .modal-col-sidebar { display: none; }
+.modal-layout.layout-cinema .modal-text-content { display: none; }
+.modal-layout.layout-cinema .modal-dynamic-zone { padding: 40px; display: flex; align-items: center; justify-content: center;}
+
+/* АДАПТИВНОСТЬ ЛЭЙАУТА */
+@media (max-width: 1400px) {
+    .modal-layout { grid-template-columns: 340px 1fr; display: flex; flex-direction: column; overflow-y: auto;}
+    .modal-col-sidebar { flex-direction: column; align-items: center; padding: 30px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.6); overflow: visible;}
+    .modal-col-main { overflow: visible; }
+    .modal-col-playlist { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.1); height: auto;}
+    .modal-layout.layout-cinema { display: flex; flex-direction: column; }
+}
+
+@media (max-width: 768px) {
+    .modal-close-btn { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 1.2rem; background: rgba(5, 5, 8, 0.95); border: 1px solid rgba(255,255,255,0.2); z-index: calc(var(--z-modal) + 10); }
+}

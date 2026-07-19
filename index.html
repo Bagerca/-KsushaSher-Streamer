@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Title задастся автоматически через ConfigInjector -->
     <title>Loading...</title>
     
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -15,29 +14,74 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Базовые и секционные стили -->
+    <!-- =========================================
+         БАЗОВЫЕ И ГЛОБАЛЬНЫЕ СТИЛИ
+         ========================================= -->
     <link rel="stylesheet" href="css/global.css">           
-    <link rel="stylesheet" href="css/style.css">            
-    <link rel="stylesheet" href="css/hero.css">  
     <link rel="stylesheet" href="css/music-player.css">           
-    <link rel="stylesheet" href="css/content.css">          
-    <link rel="stylesheet" href="css/command-center.css">   
     
-    <!-- МОДУЛИ БАЗЫ ДАННЫХ -->
-    <link rel="stylesheet" href="css/archive-layout.css">
-    <link rel="stylesheet" href="css/archive-controls.css">
-    <link rel="stylesheet" href="css/archive-card.css">
-    <link rel="stylesheet" href="css/archive-stacks-3d.css">
+    <!-- =========================================
+         СЕКЦИЯ 1: HERO
+         ========================================= -->
+    <link rel="stylesheet" href="css/hero/hero-layout.css">
+    <link rel="stylesheet" href="css/hero/hud-terminal.css">
+    <link rel="stylesheet" href="css/hero/hud-squad.css">
+    <link rel="stylesheet" href="css/hero/hud-center.css">
     
-    <!-- МОДУЛИ МОДАЛЬНОГО ОКНА -->
-    <link rel="stylesheet" href="css/modal/modal-base.css"> 
+    <!-- =========================================
+         СЕКЦИЯ 2: ABOUT
+         ========================================= -->
+    <link rel="stylesheet" href="css/about/about-layout.css">
+    <link rel="stylesheet" href="css/about/dossier.css">
+    <link rel="stylesheet" href="css/about/cyber-monitor.css">
+    <link rel="stylesheet" href="css/about/holo-carousel.css">
+
+    <!-- =========================================
+         СЕКЦИЯ 3: HUB (DASHBOARD)
+         ========================================= -->
+    <link rel="stylesheet" href="css/hub/hub-layout.css">
+    <link rel="stylesheet" href="css/hub/hub-stats.css">
+    <link rel="stylesheet" href="css/hub/hub-twitch.css">
+    <link rel="stylesheet" href="css/hub/hub-radar.css">
+
+    <!-- =========================================
+         СЕКЦИЯ 4: ARCHIVE
+         ========================================= -->
+    <link rel="stylesheet" href="css/archive/archive-layout.css">
+    <link rel="stylesheet" href="css/archive/archive-controls.css">
+    <link rel="stylesheet" href="css/archive/archive-card.css">
+    <link rel="stylesheet" href="css/archive/archive-stacks-3d.css">
+    
+    <!-- =========================================
+         МОДУЛИ МОДАЛЬНЫХ ОКОН
+         ========================================= -->
+    <!-- Разделенный базовый слой -->
+    <link rel="stylesheet" href="css/modal/modal-layout.css"> 
+    <link rel="stylesheet" href="css/modal/modal-sidebar.css"> 
+    <link rel="stylesheet" href="css/modal/modal-typography.css"> 
+    <link rel="stylesheet" href="css/modal/modal-animations.css"> 
+    
+    <!-- Специфичные компоненты -->
     <link rel="stylesheet" href="css/modal/modal-posters.css"> 
     <link rel="stylesheet" href="css/modal/modal-player.css">
     <link rel="stylesheet" href="css/modal/modal-youtube.css">
+
+    <!-- =========================================
+         СЕКЦИЯ 6: DONATION
+         ========================================= -->
+    <link rel="stylesheet" href="css/donation/donation-layout.css">        
+    <link rel="stylesheet" href="css/donation/donation-cards.css">        
+    <link rel="stylesheet" href="css/donation/donation-terminal.css">
     
-    <link rel="stylesheet" href="css/specs.css">            
-    <link rel="stylesheet" href="css/donations.css">        
-    <link rel="stylesheet" href="css/footer.css">           
+    <!-- =========================================
+         ПРОЧИЕ СЕКЦИИ И ФУТЕР
+         ========================================= -->
+    <link rel="stylesheet" href="css/specs/specs-layout.css">     
+    
+    <!-- ФУТЕР: Разделенные модули -->
+    <link rel="stylesheet" href="css/footer/footer-layout.css">
+    <link rel="stylesheet" href="css/footer/footer-typography.css">
+    <link rel="stylesheet" href="css/footer/social-hud.css">
 </head>
 <body>
     
@@ -45,7 +89,9 @@
     <div id="comet-system"></div>
     <div id="comet-system-fg"></div>
 
-    <!-- СЕКЦИЯ 1: HERO -->
+    <!-- =========================================
+         СЕКЦИЯ 1: HERO
+         ========================================= -->
     <section class="hero-section-hud" id="hero">
         <div class="hud-container">
             <!-- Левая панель: Союзник / Терминал -->
@@ -53,7 +99,6 @@
                 <div class="panel-content">
                     <div class="panel-header"><span class="header-title">СОЮЗНИК</span><span class="header-deco-line"></span></div>
                     <div class="ally-container">
-                        <!-- src заполнит инжектор -->
                         <img src="" alt="Ally Avatar" class="panel-avatar main-photo tetla" data-character="tetla">
                         <h3><span id="inject-bot-name">BOT</span> <span class="bot-version">v0.0</span></h3>
                     </div>
@@ -68,14 +113,13 @@
             <div class="hud-main-display">
                 <div class="main-avatar-container">
                     <div class="main-display-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
-                    <!-- src заполнит инжектор -->
                     <img src="" alt="Main Avatar" class="main-display-avatar main-photo ksusha" data-character="ksusha">
                 </div>
                 <div class="main-display-status">
-                    <div id="live-status-container" style="display: flex; align-items: center;">
+                    <div id="live-status-container" class="status-container-inner">
                         <span class="status-indicator"></span><span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
                     </div>
-                    <div id="music-controls-container" style="display: none; align-items: center; gap: 20px; padding: 2px 10px;">
+                    <div id="music-controls-container" class="music-controls-inner">
                         <button class="music-btn" id="btn-prev" title="Предыдущий трек"><i class="fas fa-backward-step"></i></button>
                         <button class="music-btn play-btn" id="btn-play" title="Играть/Пауза"><i class="fas fa-play"></i></button>
                         <button class="music-btn" id="btn-next" title="Следующий трек"><i class="fas fa-forward-step"></i></button>
@@ -89,24 +133,23 @@
                     <div class="squad-default-view" id="squad-view">
                         <div class="panel-header"><span class="header-title">ОТРЯД</span><span class="header-deco-line"></span></div>
                         <h3 class="panel-name" id="inject-squad-title">КОМАНДА</h3>
-                        <!-- КОНТЕЙНЕР ПУСТОЙ: SquadController заполнит его автоматически -->
                         <div class="squad-list"></div>
                     </div>
-                    <div class="squad-detail-view"><button class="close-detail-btn">&times;</button><div class="detail-avatar-container"></div><h3 class="detail-name"></h3><p class="detail-description"></p></div>
+                    <div class="squad-detail-view">
+                        <button class="close-detail-btn">&times;</button>
+                        <div class="detail-avatar-container"></div>
+                        <h3 class="detail-name"></h3>
+                        <p class="detail-description"></p>
+                    </div>
                     
-                    <div class="music-playlist-view" id="music-view" style="display: none;">
-                        
-                        <!-- ЗАГОЛОВОК ТЕПЕРЬ СВЕРХУ -->
+                    <div class="music-playlist-view" id="music-view">
                         <div class="panel-header music-panel-header">
                             <span class="header-title" style="background: var(--neon-pink); color: #fff;">MUSIC</span>
                             <div class="volume-ticks-container" id="volume-ticks"></div>
                         </div>
-                        
-                        <!-- ПРОГРЕСС-БАР ТЕПЕРЬ СНИЗУ (ИГРАЕТ РОЛЬ ЛИНИИ) -->
                         <div class="music-progress-area" id="progress-area">
                             <div class="music-progress-fill" id="progress-fill"></div>
                         </div>
-                        
                         <div class="playlist-container" id="playlist-list"></div>
                     </div>
                 </div>
@@ -118,36 +161,38 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ 2: ОБО МНЕ -->
+    <!-- =========================================
+         СЕКЦИЯ 2: ОБО МНЕ
+         ========================================= -->
     <section id="about" class="about-cyber-section">
         <div class="container">
             <div class="about-layout-wrapper">
                 <div class="about-top-row">
-                    <div class="dossier-text">
+                    <article class="dossier-text">
                         <div class="bio-header"><span class="bio-icon"><i class="fas fa-terminal"></i></span><h3 class="bio-title">БИОГРАФИЯ</h3></div>
-                        <!-- ДОБАВЛЕН ID ДЛЯ СИНХРОНИЗАЦИИ С TWITCH -->
                         <p id="twitch-bio-text">Инициализация био...</p>
                         <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="#" target="_blank" class="twitch-link">Twitch</a>.</p>
                         <div class="dossier-stats"><div class="stat-tag">🎮 Variety</div><div class="stat-tag">💬 Just Chatting</div><div class="stat-tag">👻 Horror</div></div>
-                    </div>
-                    <div class="cyber-monitor">
+                    </article>
+                    <aside class="cyber-monitor">
                         <div class="video-wrapper">
                             <div class="monitor-header"><span>REC <span class="rec-dot">●</span></span><span>CAM_01 [LIVE]</span></div>
-                            <!-- SRC будет вставлен автоматически -->
                             <div class="video-frame"><iframe src="" title="Обо мне" frameborder="0" allowfullscreen></iframe><div class="screen-grid"></div></div>
                             <div class="monitor-footer"><span>SIGNAL: <span class="signal-status">STRONG</span></span><span>1080p / 60FPS</span></div>
                         </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
         </div> 
-        <div class="subs-marquee-wrapper full-width-mode">
+        <div class="subs-marquee-wrapper">
             <div class="marquee-header-centered"><span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ</div>
             <div class="marquee-track-container"><div class="marquee-track" id="subscribers-track"></div></div>
         </div>
     </section>
 
-    <!-- СЕКЦИЯ 3: DASHBOARD -->
+    <!-- =========================================
+         СЕКЦИЯ 3: DASHBOARD
+         ========================================= -->
     <section id="command-center" class="command-center-section">
         <div class="hud-grid-bg"></div>
         <div class="container">
@@ -164,10 +209,34 @@
                     <div class="hud-bracket top-left"></div>
                     <div class="hud-bracket bottom-right"></div>
                     <div class="stats-grid-container">
-                        <div class="stat-box"><i class="fas fa-users stat-icon" style="color: var(--neon-green);"></i><div class="stat-info"><div class="stat-label">АГЕНТЫ В СЕТИ</div><div class="stat-value" id="stat-followers">----</div></div></div>
-                        <div class="stat-box"><i class="fas fa-comment-dots stat-icon" id="stat-icon-viewers" style="color: #00ccff;"></i><div class="stat-info"><div class="stat-label" id="stat-label-viewers">АКТИВНОСТЬ ЧАТА</div><div class="stat-value" id="stat-viewers">----</div></div></div>
-                        <div class="stat-box"><i class="fas fa-quote-left stat-icon" style="color: var(--neon-pink);"></i><div class="stat-info"><div class="stat-label" id="stat-label-game">ПОСЛЕДНИЙ ЭФИР</div><div class="stat-value small" id="stat-game">----</div></div></div>
-                        <div class="stat-box"><i class="fas fa-clock stat-icon" id="stat-icon-time" style="color: #ffd700;"></i><div class="stat-info"><div class="stat-label" id="stat-label-time">ПОСЛЕДНИЙ ВХОД</div><div class="stat-value" id="stat-time">----</div></div></div>
+                        <div class="stat-box">
+                            <i class="fas fa-users stat-icon stat-color-green"></i>
+                            <div class="stat-info">
+                                <div class="stat-label">АГЕНТЫ В СЕТИ</div>
+                                <div class="stat-value" id="stat-followers">----</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-comment-dots stat-icon stat-color-blue" id="stat-icon-viewers"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-viewers">АКТИВНОСТЬ ЧАТА</div>
+                                <div class="stat-value stat-color-blue" id="stat-viewers">----</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-quote-left stat-icon stat-color-pink"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-game">ПОСЛЕДНИЙ ЭФИР</div>
+                                <div class="stat-value small stat-color-pink" id="stat-game">----</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-clock stat-icon stat-color-yellow" id="stat-icon-time"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-time">ПОСЛЕДНИЙ ВХОД</div>
+                                <div class="stat-value stat-color-yellow" id="stat-time">----</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -201,7 +270,9 @@
         </div>
     </section>
 
-    <!-- СЕКЦИЯ 4: ARCHIVE (БАЗА ДАННЫХ) -->
+    <!-- =========================================
+         СЕКЦИЯ 4: ARCHIVE (БАЗА ДАННЫХ)
+         ========================================= -->
     <section id="media-archive" class="media-archive-section">
         <div class="container">
             <div class="archive-header">
@@ -231,7 +302,6 @@
                         <i class="fas fa-search search-icon" id="search-icon-default"></i>
                         <i class="fas fa-circle-notch fa-spin search-icon loading-icon" id="search-icon-loading" style="display: none; color: var(--neon-pink);"></i>
                         <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
-                        
                         <div class="search-hotkey" id="search-hotkey-hint">Ctrl+K</div>
                     </div>
                     <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-trash-alt"></i></button>
@@ -242,11 +312,31 @@
                 </div>
             </div>
             
-            <div class="archive-full-grid-wrapper"></div>
+            <!-- Обертка сетки базы данных (Отрефакторено: Контейнеры вынесены в HTML) -->
+            <div class="archive-full-grid-wrapper" id="archive-grid-wrapper">
+                <div id="archive-grid-main" class="archive-flex-grid"></div>
+                
+                <div id="archive-suggested-header" class="archive-divider-row" style="display: none;">
+                    <div class="divider-line"></div>
+                    <div class="divider-text">COMMUNITY_SUGGESTIONS // ПРЕДЛОЖКА</div>
+                    <div class="divider-line"></div>
+                </div>
+                
+                <div id="archive-grid-suggested" class="archive-flex-grid"></div>
+                <div class="archive-fade-overlay" id="archive-fade-overlay"></div>
+
+                <div id="archive-footer-controls" class="archive-footer-controls" style="display: none;">
+                    <button id="archive-toggle-btn" class="cyber-load-btn"></button>
+                </div>
+                
+                <div id="scroll-sentinel" style="width: 100%; height: 10px; position: absolute; bottom: 50px;"></div>
+            </div>
         </div>
     </section>
 
-    <!-- СЕКЦИЯ 5: SPECS -->
+    <!-- =========================================
+         СЕКЦИЯ 5: SPECS
+         ========================================= -->
     <section id="specs" class="specs-section">
         <div class="specs-bg-grid"></div>
         <div class="container">
@@ -255,18 +345,18 @@
                 <h2 class="cyber-header-main">МОЕ ЖЕЛЕЗО</h2>
                 <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
             </div>
-            <!-- КОНТЕЙНЕР ПУСТОЙ: ConfigInjector заполнит его автоматически -->
             <div class="specs-grid"></div>
         </div>
     </section>
 
-    <!-- СЕКЦИЯ 6: DONATION -->
+    <!-- =========================================
+         СЕКЦИЯ 6: DONATION
+         ========================================= -->
     <section id="donation" class="donation-section">
         <div class="container">
             <h2 class="section-title">ПОДДЕРЖАТЬ</h2>
             <p class="section-subtitle">Внеси свой вклад в развитие трансляции и улучшение качества контента</p>
             <div class="donation-grid">
-                <!-- ССЫЛКИ ПУСТЫЕ: ConfigInjector заполнит их автоматически -->
                 <a href="#" target="_blank" class="donate-card" style="--card-color: #ff8c00;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-sack-dollar"></i></div><div class="donate-info"><h3>DonationAlerts</h3><p>Отправить сообщение</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
                 <a href="#" target="_blank" class="donate-card" style="--card-color: #ff2d95;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-ghost"></i></div><div class="donate-info"><h3>MemeAlerts</h3><p>Напугать стримера</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
                 <a href="#" target="_blank" class="donate-card" style="--card-color: #9146ff;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fab fa-twitch"></i></div><div class="donate-info"><h3>Twitch Sub</h3><p>Оформить подписку</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
@@ -283,20 +373,20 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- =========================================
+         FOOTER
+         ========================================= -->
     <footer class="cyber-footer">
         <div class="footer-line"></div>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-left">
                     <h3 class="footer-brand"><span id="inject-footer-brand">STREAMER</span> <span class="brand-ver">LIVE</span></h3>
-                    <!-- КОПИРАЙТ пустой: ConfigInjector заполнит его автоматически -->
                     <p class="copyright"></p>
                     <p class="dev-credits">SYSTEM ARCHITECT: <span class="dev-name"></span></p>
                 </div>
                 <div class="footer-right">
                     <div class="social-hud">
-                        <!-- ССЫЛКИ ПУСТЫЕ: ConfigInjector заполнит их автоматически -->
                         <a href="#" target="_blank" class="hud-btn twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
                         <a href="#" target="_blank" class="hud-btn youtube" title="YouTube"><i class="fab fa-youtube"></i></a>
                         <a href="#" target="_blank" class="hud-btn telegram" title="Telegram"><i class="fab fa-telegram"></i></a>

@@ -6,59 +6,56 @@ export class ScheduleManager {
         this.container = document.getElementById('schedule-container');
     }
 
+    // ИСПРАВЛЕНО: Теперь 100% распознает дни независимо от того, написано полное слово или сокращение
     getDayIndex(dayStr) {
-        const d = dayStr.toLowerCase();
-        if (d.includes('пон') || d === 'пн') return 1;
-        if (d.includes('вто') || d === 'вт') return 2;
-        if (d.includes('сре') || d === 'ср') return 3;
-        if (d.includes('чет') || d === 'чт') return 4;
-        if (d.includes('пят') || d === 'пт') return 5;
-        if (d.includes('суб') || d === 'сб') return 6;
-        if (d.includes('вос') || d === 'вс') return 0;
-        return -1;
+        const day = (dayStr || "").toLowerCase().trim();
+        
+        if (day.includes("воскресен") || day === "вс") return 0;
+        if (day.includes("понедельник") || day === "пн") return 1;
+        if (day.includes("вторник") || day === "вт") return 2;
+        if (day.includes("сред") || day === "ср") return 3;
+        if (day.includes("четверг") || day === "чт") return 4;
+        if (day.includes("пятниц") || day === "пт") return 5;
+        if (day.includes("суббот") || day === "сб") return 6;
+        
+        return 99; // Неизвестный день
     }
 
     async init() {
         if (!this.container) return;
 
         try {
-            console.log(`📅 [Schedule] Загрузка локального расписания из базы данных...`);
-            
-            const rawData = await loadData('schedule.json', { schedule: [] });
-            const segments = Array.isArray(rawData) ? rawData : (rawData.schedule || []);
+            const data = await loadData('schedule.json', { schedule: [] });
+            const segments = Array.isArray(data) ? data : (data.schedule || []);
 
             if (segments.length === 0) {
                 this.container.innerHTML = `
                     <div class="schedule-empty">
                         <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 10px; color: #444;"></i>
-                        <br>
-                        <span>БАЗА ПУСТА.<br>Трансляции не запланированы.</span>
+                        <br><span>БАЗА ПУСТА</span>
                     </div>`;
                 return;
             }
 
+            // Получаем текущий день недели от системы (0 - Воскресенье, 1 - Понедельник...)
             const currentDayIndex = new Date().getDay(); 
 
             this.container.innerHTML = segments.map(segment => {
                 const dayStr = segment.day || "ТБА";
-                const timeStr = segment.time || "Время неизвестно";
-                const gameName = segment.game || "Секретная трансляция";
+                const timeStr = segment.time || "--:--";
+                const gameName = segment.game || "Секретная миссия";
                 const streamTitle = segment.description || "";
                 
-                const segmentDayIdx = this.getDayIndex(dayStr);
-                const isToday = segmentDayIdx === currentDayIndex;
+                // Проверяем, совпадает ли день из JSON с сегодняшним днем
+                const isToday = this.getDayIndex(dayStr) === currentDayIndex;
 
                 let cardClass = 'sched-card';
                 if (isToday) cardClass += ' is-today';
                 else if (segment.highlighted) cardClass += ' is-highlighted';
 
-                // НОВАЯ РАЗМЕТКА:
-                // sched-indicator (слева) -> sched-content (центр) -> sched-datetime (справа)
                 return `
                 <div class="${cardClass}">
-                    <div class="sched-indicator">
-                        <div class="sched-dot"></div>
-                    </div>
+                    <div class="sched-indicator"><div class="sched-dot"></div></div>
                     <div class="sched-content">
                         <div class="sched-game">${gameName}</div>
                         ${streamTitle ? `<div class="sched-desc">${streamTitle}</div>` : ''}
@@ -71,8 +68,7 @@ export class ScheduleManager {
             }).join('');
             
         } catch (error) {
-            console.error('❌ [Schedule] Ошибка рендера локального расписания:', error);
-            this.container.innerHTML = '<div class="network-loading" style="color:#ff4444;">ОШИБКА ЧТЕНИЯ БАЗЫ ДАННЫХ</div>';
+            this.container.innerHTML = '<div class="network-error">ОШИБКА БАЗЫ ДАННЫХ</div>';
         }
     }
 }

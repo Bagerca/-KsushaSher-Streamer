@@ -21,12 +21,10 @@ export class YoutubeModalManager {
             <div class="yt-modal-content" id="yt-modal-content">
                 <div class="yt-main-col">
                     <div class="yt-player-wrapper">
-                        <!-- УБРАЛИ autoplay=1 -->
                         <iframe id="yt-iframe" src="" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>
                     </div>
                     
                     <div class="yt-info-section">
-                        <!-- УМНОЕ ОБРЕЗАНИЕ И РАСКРЫТИЕ (КАК В ИГРАХ) -->
                         <div class="hover-reveal-wrapper">
                             <h2 class="yt-title truncated" id="yt-title">TITLE</h2>
                             <div class="hover-reveal-box">
@@ -83,19 +81,38 @@ export class YoutubeModalManager {
         this.fallbackColor = color || item.customColor || '#ff0000';
         this.overlay.style.setProperty('--yt-color', this.fallbackColor);
         
-        // Заголовок
+        // Заголовок (Безопасная вставка текста)
         this.els.title.textContent = item.title;
         this.els.titleFull.textContent = item.title;
         
-        // Описание и плашка "Кем предложено"
         let descText = item.description || "Описание отсутствует.";
         const effectiveStatus = item.status || 'unknown';
         
+        // Очищаем контейнеры описаний
+        this.els.desc.innerHTML = '';
+        this.els.descFull.innerHTML = '';
+
+        // БЕЗОПАСНАЯ ВСТАВКА ДАННЫХ (ЗАЩИТА ОТ XSS)
         if (effectiveStatus === 'suggested' && item.suggestedBy) {
-            // Безопасно формируем строку (никнейм выделяется цветом плеера)
-            const prefix = `<span style="color: var(--yt-color); font-weight: 700;"><i class="fas fa-user"></i> ${item.suggestedBy}:</span> `;
-            this.els.desc.innerHTML = prefix + descText;
-            this.els.descFull.innerHTML = prefix + descText;
+            // Создаем стилизованный префикс с иконкой
+            const prefixSpan = document.createElement('span');
+            prefixSpan.style.color = 'var(--yt-color)';
+            prefixSpan.style.fontWeight = '700';
+            prefixSpan.innerHTML = '<i class="fas fa-user"></i> '; // Иконка FontAwesome (Безопасно, хардкод)
+            
+            // Текст имени пользователя вставляем через textContent
+            const authorText = document.createTextNode(`${item.suggestedBy}: `);
+            prefixSpan.appendChild(authorText);
+            
+            // Основное описание также вставляем как текст
+            const mainDescNode = document.createTextNode(descText);
+            
+            // Собираем элементы для truncated и full версий
+            this.els.desc.appendChild(prefixSpan.cloneNode(true));
+            this.els.desc.appendChild(mainDescNode.cloneNode());
+            
+            this.els.descFull.appendChild(prefixSpan);
+            this.els.descFull.appendChild(mainDescNode);
         } else {
             this.els.desc.textContent = descText;
             this.els.descFull.textContent = descText;
@@ -108,7 +125,6 @@ export class YoutubeModalManager {
     }
 
     async extractAndApplyColor(ytId) {
-        // Грузим превьюшку в фоне, чтобы достать цвет
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.decoding = "async";
@@ -142,27 +158,33 @@ export class YoutubeModalManager {
 
             const card = document.createElement('div');
             card.className = `yt-playlist-card ${index === 0 ? 'active' : ''}`;
+            
+            // Безопасная вставка каркаса
             card.innerHTML = `
-                <div class="yt-thumb"><img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg"></div>
+                <div class="yt-thumb"><img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="thumbnail"></div>
                 <div class="yt-card-info">
-                    <div class="yt-card-title">${title}</div>
+                    <div class="yt-card-title"></div>
                 </div>
             `;
+            
+            // Безопасная вставка текста названия видео
+            const titleEl = card.querySelector('.yt-card-title');
+            titleEl.textContent = title;
 
             card.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
                 this.els.playlistItems.querySelectorAll('.yt-playlist-card').forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
-                this.setVideo(ytId, title);
+                this.setVideo(ytId, titleEl.textContent);
             });
 
             this.els.playlistItems.appendChild(card);
 
-            // Подгрузка оригинального названия видео через API (Noembed)
+            // Подгрузка оригинального названия видео через API
             if (isStr) {
                 fetch(`https://noembed.com/embed?url=${url}`).then(r => r.json()).then(d => {
                     if (d.title) {
-                        card.querySelector('.yt-card-title').textContent = d.title;
+                        titleEl.textContent = d.title;
                         if (card.classList.contains('active') && status === 'suggested') {
                             this.els.title.textContent = d.title;
                             this.els.titleFull.textContent = d.title;
@@ -184,11 +206,9 @@ export class YoutubeModalManager {
     }
 
     setVideo(ytId, title) {
-        // УБРАЛИ autoplay=1
         this.els.iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=0&rel=0&modestbranding=1`;
         this.els.bg.style.backgroundImage = `url('https://img.youtube.com/vi/${ytId}/maxresdefault.jpg')`;
         
-        // Меняем цвет UI
         this.extractAndApplyColor(ytId);
 
         if (this.currentItem.status === 'suggested') {

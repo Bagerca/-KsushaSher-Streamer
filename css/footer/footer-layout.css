@@ -1,0 +1,73 @@
+/* css/footer/footer-layout.css */
+
+/* =========================================
+   FOOTER (SYSTEM HUD STYLE) - LAYOUT & GRID
+   ========================================= */
+
+.cyber-footer {
+    background-color: #000000;
+    position: relative;
+    z-index: 20; 
+    padding: 30px 0;
+    overflow: visible;
+}
+
+.cyber-footer .container {
+    max-width: 1900px;
+    width: 95%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5;
+}
+
+/* =========================================
+   ЛАЗЕРНАЯ ЛИНИЯ-СЕПАРАТОР
+   ========================================= */
+.footer-line {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 1px;
+    
+    /* Жесткая центральная линия */
+    background: linear-gradient(90deg, transparent 0%, var(--neon-green) 50%, transparent 100%);
+    opacity: 0.9;
+}
+
+/* Идеальное свечение, повторяющее форму затухания градиента */
+.footer-line::after {
+    content: '';
+    position: absolute;
+    top: -4px; left: 0; width: 100%; height: 8px;
+    
+    background: linear-gradient(90deg, transparent 0%, var(--neon-green) 50%, transparent 100%);
+    filter: blur(4px);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* =========================================
+   СЕТКА КОНТЕНТА
+   ========================================= */
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* АДАПТИВНОСТЬ ЛЭЙАУТА */
+@media (max-width: 768px) {
+    .cyber-footer { 
+        padding: 25px 0; 
+    }
+    .footer-content { 
+        flex-direction: column; 
+        gap: 15px; 
+    }
+}

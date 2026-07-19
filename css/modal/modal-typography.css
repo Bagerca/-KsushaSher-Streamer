@@ -1,0 +1,66 @@
+/* css/modal/modal-typography.css */
+
+/* =========================================
+   ТИПОГРАФИКА И ЭФФЕКТ GLASS REVEAL
+   ========================================= */
+.modal-dynamic-zone { 
+    padding: 40px 60px; 
+    display: flex; flex-direction: column; flex-grow: 1; 
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.modal-text-content { margin-bottom: 30px; }
+
+.hover-reveal-wrapper { position: relative; cursor: pointer; }
+
+.modal-title, .modal-desc { 
+    border-left: 3px solid var(--modal-color); 
+    padding-left: 15px; margin: 0;
+}
+
+.modal-title { 
+    font-family: 'Orbitron', sans-serif; font-size: 2.2rem; line-height: 1.2; 
+    color: #fff; font-weight: 800; letter-spacing: 1px; 
+    text-shadow: 0 5px 15px rgba(0,0,0,0.8); 
+}
+.modal-desc { 
+    color: #ccc; font-size: 1rem; line-height: 1.6; font-family: 'Exo 2', sans-serif; 
+}
+
+.truncated { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* REVEAL BOX (ПОКАЗ ПОЛНОГО ТЕКСТА) */
+.hover-reveal-box {
+    position: absolute; top: -10px; left: -10px; right: -10px; 
+    padding: 10px 10px 10px 25px; 
+    background: rgba(10, 11, 16, 0.98); 
+    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.5);
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    
+    opacity: 0; visibility: hidden; transform: translateY(-5px) translateZ(0);
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 100;
+}
+
+.hover-reveal-box .modal-title, .hover-reveal-box .modal-desc {
+    border-left: none; padding-left: 0;
+    white-space: normal; 
+}
+
+.hover-reveal-box::before {
+    content: ''; position: absolute; left: 10px; top: 10px; bottom: 10px;
+    width: 3px; background: var(--modal-color); border-radius: 2px;
+}
+
+.hover-reveal-wrapper:hover .hover-reveal-box {
+    opacity: 1; visibility: visible; transform: translateY(0) translateZ(0);
+}
+
+@media (max-width: 1400px) {
+    .modal-dynamic-zone { padding: 30px 40px; }
+}
+
+@media (max-width: 768px) {
+    .modal-title { font-size: 1.8rem; }
+    .modal-dynamic-zone { padding: 20px; }
+}

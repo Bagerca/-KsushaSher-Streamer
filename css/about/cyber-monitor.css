@@ -1,0 +1,31 @@
+/* css/about/cyber-monitor.css */
+.cyber-monitor {
+    padding: 40px; position: relative; z-index: 2; 
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    height: 100%;
+}
+.video-wrapper { width: 90%; display: flex; flex-direction: column; gap: 5px; }
+
+.monitor-header, .monitor-footer {
+    display: flex; justify-content: space-between; padding: 5px 0;
+    font-family: 'monospace'; font-size: 0.7rem; color: var(--neon-pink); opacity: 0.6;
+}
+.rec-dot { color: #ff4444; animation: blink 2s infinite; }
+.signal-status { color: var(--neon-green); }
+
+.video-frame {
+    position: relative; width: 100%; padding-bottom: 56.25%; background: #000;
+    overflow: hidden; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.5); border-radius: 2px;
+}
+.video-frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; border: none; }
+
+.screen-grid {
+    position: absolute; inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px; z-index: 2; pointer-events: none; opacity: 0.3;
+}
+
+@media (max-width: 1200px) {
+    .cyber-monitor { padding: 0; }
+    .video-wrapper { width: 100%; }
+}

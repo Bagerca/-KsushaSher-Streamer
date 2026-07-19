@@ -1,5 +1,15 @@
-/* css/archive-layout.css */
-.media-archive-section { background-color: transparent; position: relative; z-index: 1; padding: 10px 0 30px 0; overflow: visible; border-top: 1px solid rgba(57, 255, 20, 0.1); background-image: radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.04) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.04) 0%, transparent 40%); }
+/* css/archive/archive-layout.css */
+
+.media-archive-section { 
+    background-color: transparent; 
+    position: relative; 
+    z-index: 1; 
+    padding: 10px 0 30px 0; /* Те самые 30px отступа снизу */
+    overflow: visible; 
+    border-top: 1px solid rgba(57, 255, 20, 0.1); 
+    background-image: radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.04) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.04) 0%, transparent 40%); 
+}
+
 .media-archive-section::before, .media-archive-section::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: -1; }
 .media-archive-section::before { background-image: radial-gradient(white 1px, transparent 1px), radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px); background-size: 550px 550px, 350px 350px; opacity: 0.4; animation: donate-stars 120s linear infinite; }
 .media-archive-section::after { background-image: radial-gradient(white 2px, transparent 2px), radial-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px); background-size: 400px 400px, 250px 250px; opacity: 0.2; animation: donate-stars 180s linear infinite reverse; }
@@ -26,22 +36,22 @@
 .divider-text { font-family: 'Orbitron', sans-serif; color: var(--neon-green); letter-spacing: 3px; font-weight: 700; text-transform: uppercase; }
 
 /* =========================================
-   ИДЕАЛЬНЫЙ ПРЕМИАЛЬНЫЙ ОВЕРЛЕЙ
+   ИДЕАЛЬНЫЙ ПРЕМИАЛЬНЫЙ ОВЕРЛЕЙ (ИСПРАВЛЕНО)
    ========================================= */
 .archive-fade-overlay {
     position: absolute;
-    bottom: 0; /* Жестко к низу секции, никаких -10px */
+    bottom: -30px; /* ИСПРАВЛЕНИЕ: Компенсируем padding-bottom (30px) самой секции, чтобы перекрыть щель */
     left: 50%;
     transform: translateX(-50%);
-    width: 100vw; /* Строго на всю ширину экрана */
-    height: 250px; 
+    width: 100vw; 
+    height: 280px; /* Чуть увеличили высоту, чтобы градиент был плавнее */
     
-    /* Градиент, который плавно уходит в цвет секции Specs (#07070a) */
+    /* Градиент, который плавно уходит в точный цвет секции Specs (#07070a / rgba(7, 7, 10, 0.96)) */
     background: linear-gradient(
         to top, 
-        #07070a 0%, 
-        rgba(7, 7, 10, 0.9) 20%, 
-        rgba(7, 7, 10, 0.4) 60%, 
+        rgba(7, 7, 10, 0.96) 0%, 
+        rgba(7, 7, 10, 0.8) 30%, 
+        rgba(7, 7, 10, 0.3) 70%, 
         transparent 100%
     );
     z-index: 15; pointer-events: none; opacity: 0;
@@ -58,7 +68,7 @@
 
 /* Режим РАЗВЕРНУТЬ: кнопка садится поверх нового оверлея */
 .archive-footer-controls.mode-expand {
-    margin-top: -80px; /* Подняли чуть выше над размытием */
+    margin-top: -80px; 
 }
 
 /* Режим СВЕРНУТЬ: кнопка отступает от последней карточки */
@@ -85,6 +95,6 @@
     .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; padding: 0; }
     .archive-flex-grid { gap: 15px; }
     .archive-flex-grid.compact-mode { gap: 10px; }
-    .archive-fade-overlay { height: 180px; }
+    .archive-fade-overlay { height: 180px; bottom: -30px; } /* И на мобильных тоже держим смещение */
     .archive-footer-controls.mode-expand { margin-top: -60px; }
 }

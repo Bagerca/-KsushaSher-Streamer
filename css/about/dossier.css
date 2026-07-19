@@ -1,0 +1,40 @@
+/* css/about/dossier.css */
+.dossier-text {
+    padding: 50px; font-family: 'Exo 2', sans-serif;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; z-index: 2;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bio-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; position: relative; }
+.bio-icon { font-size: 1.5rem; color: var(--neon-green); animation: blink 2s infinite; }
+.bio-title {
+    font-family: 'Orbitron', sans-serif; color: #fff; font-size: 1.8rem;
+    text-transform: uppercase; letter-spacing: 4px; margin: 0; font-weight: 800;
+    text-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+.dossier-text p {
+    color: #ccc; margin-bottom: 15px; line-height: 1.8; font-size: 1.1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.neon-highlight { color: var(--neon-green); font-weight: 700; border-bottom: 1px dashed var(--neon-green); }
+.pink-highlight { color: var(--neon-pink); font-weight: 700; }
+
+.twitch-link { color: #9146ff; font-weight: 700; text-decoration: none; position: relative; transition: 0.3s; }
+.twitch-link:hover { color: #fff; text-shadow: 0 0 10px #9146ff; }
+.twitch-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0%; height: 2px; background: #9146ff; transition: 0.3s; }
+.twitch-link:hover::after { width: 100%; }
+
+.dossier-stats { display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
+.stat-tag { 
+    background: rgba(255, 45, 149, 0.1); padding: 6px 14px; border-radius: 2px;
+    font-size: 0.85rem; border: 1px solid rgba(255, 45, 149, 0.3); color: #fff; 
+    font-family: 'Rajdhani', sans-serif; font-weight: 600; letter-spacing: 1px; transition: 0.3s;
+}
+.stat-tag:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 15px var(--neon-pink); transform: translateY(-2px); }
+
+@media (max-width: 1200px) {
+    .dossier-text { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 30px; background: rgba(10, 11, 16, 0.7); margin-bottom: 20px; border-radius: 4px; }
+}

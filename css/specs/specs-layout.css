@@ -1,0 +1,97 @@
+/* css/specs/specs-layout.css */
+
+.specs-section {
+    background-color: rgba(7, 7, 10, 0.96); 
+    position: relative; z-index: 10;
+    padding: 40px 0 40px 0; 
+    overflow: hidden;
+    border-top: 1px solid rgba(57, 255, 20, 0.1);
+}
+
+.specs-bg-grid {
+    position: absolute; inset: 0;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
+    pointer-events: none; z-index: 1;
+}
+
+.cyber-header-wrapper { text-align: center; margin-bottom: 25px; position: relative; z-index: 5; }
+.cyber-header-sub { font-family: 'Rajdhani', sans-serif; color: var(--neon-green); font-size: 0.9rem; letter-spacing: 4px; font-weight: 600; margin-bottom: 5px; opacity: 0.8; text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); }
+.cyber-header-main { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin: 0; display: inline-block; text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 20px rgba(57, 255, 20, 0.3), 2px 2px 0px #000; }
+.cyber-header-lines { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; opacity: 0.6; }
+.cyber-header-lines .line { height: 1px; width: 100px; background: linear-gradient(90deg, transparent, var(--neon-green)); }
+.cyber-header-lines .line:last-child { background: linear-gradient(90deg, var(--neon-green), transparent); }
+.cyber-header-lines .dot { width: 8px; height: 8px; background: var(--neon-green); transform: rotate(45deg); box-shadow: 0 0 10px var(--neon-green); }
+
+/* GRID & CARDS */
+.specs-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); 
+    gap: 30px; position: relative; z-index: 2;
+}
+
+.spec-card {
+    position: relative; height: 140px;
+    background: rgba(20, 20, 25, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px; overflow: hidden; backdrop-filter: blur(5px);
+    cursor: default;
+    opacity: 0;
+    /* ИСПРАВЛЕНИЕ: Базовый переход для плавного наведения и отведения мышки */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ИСПРАВЛЕНИЕ: Появление карточки теперь работает через Keyframes и не ломает hover */
+.specs-grid.is-visible .spec-card {
+    animation-name: specCardEntry;
+    animation-duration: 0.6s;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes specCardEntry {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.card-glass { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%); opacity: 0; transition: 0.3s; }
+
+/* Ховер карточки */
+.spec-card:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--neon-green); 
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.4), 0 10px 30px rgba(57, 255, 20, 0.15); 
+}
+.spec-card:hover .card-glass { opacity: 1; }
+
+.spec-content { display: flex; align-items: center; gap: 25px; padding: 20px 30px; height: 100%; position: relative; z-index: 2; }
+
+/* ИКОНКА */
+.spec-icon-box {
+    width: 65px; height: 65px; background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; color: var(--neon-green); transition: 0.3s;
+    flex-shrink: 0; position: relative; overflow: hidden;
+}
+
+.spec-card:hover .spec-icon-box { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); border-color: transparent; }
+
+/* ТЕКСТЫ */
+.spec-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.spec-label { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; color: #777; letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; font-weight: 600; }
+.spec-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.2; white-space: normal; }
+.spec-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.meta-tag { font-family: 'Exo 2', sans-serif; font-size: 0.7rem; background: rgba(255, 255, 255, 0.08); padding: 4px 10px; border-radius: 6px; color: #ccc; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+.spec-card:hover .meta-tag { background: rgba(57, 255, 20, 0.1); color: var(--neon-green); border-color: rgba(57, 255, 20, 0.3); }
+
+/* УГОЛКИ */
+.tech-corner { position: absolute; width: 20px; height: 20px; transition: border-color 0.3s ease; pointer-events: none; z-index: 5; }
+.tech-corner.top-right { top: 0; right: 0; border-top: 2px solid rgba(255, 255, 255, 0.1); border-right: 2px solid rgba(255, 255, 255, 0.1); border-radius: 0 16px 0 0; }
+.tech-corner.bottom-left { bottom: 0; left: 0; border-bottom: 2px solid rgba(255, 255, 255, 0.1); border-left: 2px solid rgba(255, 255, 255, 0.1); border-radius: 0 0 0 16px; }
+.spec-card:hover .tech-corner { border-color: var(--neon-green); }
+
+@media (max-width: 1024px) { .specs-grid { gap: 15px; } .spec-card { height: auto; min-height: 140px; } }
+@media (max-width: 768px) { .specs-grid { grid-template-columns: 1fr; } .spec-content { padding: 20px; } .cyber-header-main { font-size: 2.5rem; } .cyber-header-lines .line { width: 50px; } }

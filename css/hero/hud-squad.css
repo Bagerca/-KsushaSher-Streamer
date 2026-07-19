@@ -1,0 +1,45 @@
+/* css/hero/hud-squad.css */
+
+.panel-name { 
+    font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #fff; 
+    text-shadow: 0 0 15px rgba(57, 255, 20, 0.3); display: flex; justify-content: center; 
+    align-items: center; text-align: center; line-height: 1.2; margin-bottom: 10px;
+}
+
+.squad-list { position: relative; display: flex; justify-content: space-around; margin-top: 30px; margin-bottom: auto; }
+.squad-list::before { content: ''; position: absolute; top: 40px; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.2) 80%, transparent 100%); z-index: 0; }
+
+.squad-member { text-align: center; cursor: pointer; transition: transform 0.2s; position: relative; }
+.squad-member:hover { transform: scale(1.1); }
+.avatar-wrapper { position: relative; display: inline-block; margin-bottom: 10px; }
+.squad-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid; position: relative; z-index: 1; background: #000; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; }
+.squad-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.squad-name { font-family: 'Rajdhani', sans-serif; font-size: 1rem; color: #ccc; }
+
+.role-badge { position: absolute; bottom: -5px; right: -5px; width: 24px; height: 24px; border-radius: 50%; background: #000; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,0.8); transition: 0.3s; }
+.role-badge.tech { border-color: var(--bagerka-color); color: var(--bagerka-color); }
+.role-badge.support { border-color: var(--angel-color); color: var(--angel-color); }
+.role-badge.fun { border-color: var(--kiriki-color); color: var(--kiriki-color); }
+
+.squad-member:hover .role-badge { transform: scale(1.2); background: #fff; box-shadow: 0 0 10px currentColor; }
+.squad-member:hover .role-badge.tech { background: var(--bagerka-color); color: #000; }
+.squad-member:hover .role-badge.support { background: var(--angel-color); color: #000; }
+.squad-member:hover .role-badge.fun { background: var(--kiriki-color); color: #000; }
+
+/* Squad View States */
+.squad-default-view { height: 100%; display: flex; flex-direction: column; transition: opacity 0.3s; }
+.squad-detail-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 30px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: all 0.3s ease; }
+
+.hud-side-panel.right.expanded .squad-default-view { opacity: 0; pointer-events: none; }
+.hud-side-panel.right.expanded .squad-detail-view { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+.detail-avatar-container { width: 140px; height: 140px; border-radius: 50%; border: 3px solid; margin: 20px auto; display: flex; align-items: center; justify-content: center; background: #000; font-size: 4rem; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; }
+.detail-avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+.detail-name { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 20px; }
+.detail-description { font-family: 'Exo 2', sans-serif; text-align: center; color: #ccc; line-height: 1.6; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; }
+.close-detail-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2.5rem; cursor: pointer; }
+
+/* Состояния, которые мы перенесли из HTML (удаленные inline styles) */
+#music-view { display: none; }
+#music-controls-container { display: none; align-items: center; gap: 20px; padding: 2px 10px; }
+.status-container-inner { display: flex; align-items: center; }

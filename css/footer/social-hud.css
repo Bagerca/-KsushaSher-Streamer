@@ -1,0 +1,68 @@
+/* css/footer/social-hud.css */
+
+/* =========================================
+   FOOTER - СОЦИАЛЬНЫЕ КНОПКИ (HUD)
+   ========================================= */
+
+.social-hud {
+    display: flex;
+    gap: 12px;
+}
+
+.hud-btn {
+    width: 40px; height: 40px; 
+    display: flex; align-items: center; justify-content: center;
+    color: #aaa;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    border: none;
+    background-color: var(--btn-border-color, rgba(255, 255, 255, 0.15));
+    --clip-shape: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    clip-path: var(--clip-shape);
+}
+
+.hud-btn::before {
+    content: '';
+    position: absolute;
+    inset: 1px; 
+    background: #0a0a0a;
+    clip-path: var(--clip-shape);
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.hud-btn i {
+    position: relative;
+    z-index: 2; 
+    transition: all 0.3s ease;
+}
+
+/* Цветовые переменные брендов */
+.hud-btn.twitch   { --btn-border-color: #9146ff; }
+.hud-btn.youtube  { --btn-border-color: #ff0000; }
+.hud-btn.telegram { --btn-border-color: #0088cc; }
+.hud-btn.discord  { --btn-border-color: #5865F2; }
+.hud-btn.tiktok   { --btn-border-color: #ff2d95; }
+
+/* Состояние Hover */
+.hud-btn:hover {
+    transform: translateY(-2px);
+    color: #fff;
+    filter: drop-shadow(0 0 8px var(--btn-border-color));
+}
+
+.hud-btn:hover::before { 
+    background: var(--btn-border-color); 
+}
+
+.hud-btn:hover i { 
+    color: #fff; 
+}
+
+/* АДАПТИВНОСТЬ КНОПОК */
+@media (max-width: 768px) {
+    .social-hud { 
+        justify-content: center; 
+    }
+}

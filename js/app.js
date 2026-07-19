@@ -7,11 +7,12 @@ import { ConfigInjector } from './services/ConfigInjector.js';
 
 import { TerminalController } from './terminal-core.js';
 import { SettingsMenu } from './settings-menu.js';
-import { registerTerminalCommands } from './terminal-commands.js'; // <-- ИМПОРТ НОВОГО МОДУЛЯ
+import { registerTerminalCommands } from './terminal-commands.js'; 
 
 import { initScrollPhysics } from './ui/scroll-physics.js';
 import { initCryptoWidget } from './ui/crypto-widget.js';
 import { initNavRail } from './ui/nav-rail.js';
+import { initSpecs } from './ui/SpecsRenderer.js'; // <-- ДОБАВЛЕН НОВЫЙ МОДУЛЬ ЖЕЛЕЗА
 
 import { initMediaArchive } from './media-manager.js';
 import { HeroController } from './hero-controller.js';
@@ -51,6 +52,7 @@ async function bootstrap() {
         initScrollPhysics();
         initCryptoWidget();
         initNavRail();
+        initSpecs(); // <-- ЗАПУСК НОВОГО МОДУЛЯ ЖЕЛЕЗА
         
         ConfigInjector.init(); 
         
@@ -75,7 +77,7 @@ async function bootstrap() {
         // 5. Пост-инициализация
         new HubController();
         
-        // Фоновая синхронизация
+        // Фоновая синхронизация каждые 5 минут
         if (window.globalSyncInterval) clearInterval(window.globalSyncInterval);
         window.globalSyncInterval = setInterval(async () => {
             await scheduleMgr.init();
@@ -91,7 +93,7 @@ async function bootstrap() {
     }
 }
 
-// Регистрация только высокоуровневых UI-событий
+// Регистрация высокоуровневых UI-событий
 function registerGlobalEvents() {
     EventBus.on('CMD_CLEAR', () => {
         if (terminalCtrl && terminalCtrl.historyEl) terminalCtrl.historyEl.innerHTML = '';
@@ -111,14 +113,17 @@ function registerGlobalEvents() {
     });
 }
 
+// Глобальный перехват ошибок
 window.addEventListener('error', e => console.error('🚨 [System] Uncaught Error:', e.error));
 
+// Запуск
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootstrap); 
 } else {
     bootstrap();
 }
 
+// Экспорты для вызовов извне (если нужны)
 export function addLogLine(html, isTyping = false, forceScroll = false) { 
     if (terminalCtrl) return terminalCtrl.addLogLine(html, isTyping, forceScroll); 
 }
