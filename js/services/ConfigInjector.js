@@ -13,9 +13,7 @@ export class ConfigInjector {
 
     static injectIdentity() {
         const iden = AppConfig.identity;
-        
         if (document.title !== undefined) document.title = iden.pageTitle;
-
         document.querySelectorAll('.main-display-avatar').forEach(el => el.src = iden.mainAvatar);
         document.querySelectorAll('.main-photo.tetla').forEach(el => el.src = iden.botAvatar);
 
@@ -40,14 +38,24 @@ export class ConfigInjector {
 
     static injectSocials() {
         const links = AppConfig.socials;
+        
         const setHref = (selector, url) => {
-            const el = document.querySelector(selector);
-            if (el) el.href = url;
+            const els = document.querySelectorAll(selector);
+            els.forEach(el => {
+                if (url && url !== '#') {
+                    el.href = url;
+                } else {
+                    el.href = '#';
+                    el.removeAttribute('target'); 
+                }
+            });
         };
 
         setHref('.hud-btn.twitch', links.twitch);
         setHref('.hud-btn.youtube', links.youtube);
+        setHref('.hud-btn.youtube-alt', links.youtube2); 
         setHref('.hud-btn.telegram', links.telegram);
+        setHref('.hud-btn.vk', links.vk); // <-- ДОБАВИЛИ VK
         setHref('.hud-btn.discord', links.discord);
         setHref('.hud-btn.tiktok', links.tiktok);
         setHref('.twitch-link', links.twitch);
@@ -72,9 +80,11 @@ export class ConfigInjector {
         }
         
         if (copyEl) {
-            // Используем textContent и символ © вместо innerHTML и &copy;
-            // для 100% защиты от XSS инъекций через конфигурацию.
-            copyEl.textContent = `© ${AppConfig.system.copyrightYear}. Все права защищены.`;
+            const startYear = parseInt(AppConfig.system.copyrightYear) || 2025;
+            const currentYear = new Date().getFullYear();
+            const yearStr = currentYear > startYear ? `${startYear} - ${currentYear}` : `${startYear}`;
+            
+            copyEl.textContent = `© ${yearStr}. Все права защищены.`;
         }
     }
 }

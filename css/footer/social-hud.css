@@ -1,9 +1,5 @@
 /* css/footer/social-hud.css */
 
-/* =========================================
-   FOOTER - СОЦИАЛЬНЫЕ КНОПКИ (HUD)
-   ========================================= */
-
 .social-hud {
     display: flex;
     gap: 12px;
@@ -42,8 +38,13 @@
 .hud-btn.twitch   { --btn-border-color: #9146ff; }
 .hud-btn.youtube  { --btn-border-color: #ff0000; }
 .hud-btn.telegram { --btn-border-color: #0088cc; }
+.hud-btn.vk       { --btn-border-color: #0077FF; } /* <-- ЦВЕТ VK */
 .hud-btn.discord  { --btn-border-color: #5865F2; }
 .hud-btn.tiktok   { --btn-border-color: #ff2d95; }
+
+/* ВТОРАЯ КНОПКА YOUTUBE (Изначально серебристая) */
+.hud-btn.youtube-alt { --btn-border-color: #888888; }
+.hud-btn.youtube-alt i { color: #888; }
 
 /* Состояние Hover */
 .hud-btn:hover {
@@ -60,9 +61,11 @@
     color: #fff; 
 }
 
-/* АДАПТИВНОСТЬ КНОПОК */
+/* Особый Hover для второй кнопки (Становится красной) */
+.hud-btn.youtube-alt:hover {
+    --btn-border-color: #ff0000;
+}
+
 @media (max-width: 768px) {
-    .social-hud { 
-        justify-content: center; 
-    }
+    .social-hud { justify-content: center; flex-wrap: wrap; }
 }

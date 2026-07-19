@@ -29,11 +29,13 @@ export const AppConfig = {
         trailerVideoId: 'Uym3MRaJ3PE' 
     },
     socials: {
-        twitch: 'https://www.twitch.tv/ksusha__sher?sr=a',
-        youtube: '#',
+        twitch: 'twitch.tv/ksusha__sher',
+        youtube: 'https://www.youtube.com/@Ksusha__Sher__off',
+        youtube2: 'https://www.youtube.com/@swamp_ksusha__sher',
         telegram: 'https://t.me/pizdeckakoi_to',
-        discord: '#',
-        tiktok: '#'
+        vk: 'https://vk.com/k_sher', 
+        discord: 'https://discord.gg/tV5YdkyhU',
+        tiktok: 'https://www.tiktok.com/@_ksusha_sher_'
     },
     donations: {
         donationAlerts: 'https://www.donationalerts.com/r/ksusha__sher',
