@@ -95,13 +95,18 @@
                     <div class="squad-detail-view"><button class="close-detail-btn">&times;</button><div class="detail-avatar-container"></div><h3 class="detail-name"></h3><p class="detail-description"></p></div>
                     
                     <div class="music-playlist-view" id="music-view" style="display: none;">
-                        <div class="music-progress-area" id="progress-area">
-                            <div class="music-progress-fill" id="progress-fill"></div>
-                        </div>
-                        <div class="panel-header">
+                        
+                        <!-- ЗАГОЛОВОК ТЕПЕРЬ СВЕРХУ -->
+                        <div class="panel-header music-panel-header">
                             <span class="header-title" style="background: var(--neon-pink); color: #fff;">MUSIC</span>
                             <div class="volume-ticks-container" id="volume-ticks"></div>
                         </div>
+                        
+                        <!-- ПРОГРЕСС-БАР ТЕПЕРЬ СНИЗУ (ИГРАЕТ РОЛЬ ЛИНИИ) -->
+                        <div class="music-progress-area" id="progress-area">
+                            <div class="music-progress-fill" id="progress-fill"></div>
+                        </div>
+                        
                         <div class="playlist-container" id="playlist-list"></div>
                     </div>
                 </div>

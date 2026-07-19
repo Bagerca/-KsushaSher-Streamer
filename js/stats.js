@@ -121,6 +121,14 @@ export class StatsManager {
                 }
             }
 
+            // РАССЫЛАЕМ СОБЫТИЕ С РЕАЛЬНЫМИ ДАННЫМИ ПО ВСЕМУ САЙТУ
+            EventBus.emit('TWITCH_DATA_UPDATED', {
+                isLive: isLive,
+                followers: user.followers,
+                viewers: isLive ? user.stream.viewersCount : 0,
+                game: isLive && user.stream.game ? user.stream.game.displayName : ''
+            });
+
             EventBus.emit('SYS_LOG', { html: `[STATS] Данные трансляции и био обновлены.` });
             
         } catch (error) {

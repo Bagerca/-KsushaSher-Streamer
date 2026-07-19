@@ -51,7 +51,6 @@ export const AppConfig = {
         { id: 'mic', icon: 'fas fa-microphone-lines', label: 'MICROPHONE', value: 'Shure SM7B', tags: ['STUDIO', 'XLR'] }
     ],
     audio: {
-        // Восстановлены все 7 треков
         fallbackTracks: [
             { title: "СЛАВА БОССУ", artist: "5opka", url: "assets/music/5opka_slava_bossu.mp3" },
             { title: "ДРУЗЬЯ НАВСЕГДА", artist: "НИНТЕР", url: "assets/music/ninter_druzya_navsegda.mp3" },
@@ -62,7 +61,6 @@ export const AppConfig = {
             { title: "comedoz", artist: "comedoztv", url: "assets/music/comedoztv_comedoz.mp3" }
         ]
     },
-    // Тексты для модулей интерфейса
     texts: {
         heroTicker: [
             "АНАЛИЗ СТАТИСТИКИ КАНАЛА...", 
@@ -71,12 +69,22 @@ export const AppConfig = {
             "АКТИВНОСТЬ ЧАТА: ВЫСОКАЯ", 
             "СИСТЕМЫ В НОРМЕ."
         ],
+        // ИСПРАВЛЕНИЕ: Новые мемы и фразы для терминала
         terminalNoise: [
-            "[SYS] Ping: 24ms check ok", "[SYS] CPU Temp: 45°C", "[SYS] GPU Load: 89% [Rendering]",
-            "[SYS] RAM Usage: 12.4GB / 16GB", "[BG] Garbage collection...", "[BG] Cooling fans: 2400 RPM",
-            "[PWR] Voltage stable: 1.2V", "[DRV] NVIDIA Drivers: Up to date", "[NET] Packet received from 127.0.0.1",
-            "[NET] Upload bitrate: 6000 kbps", "[TETLA] Scanning chat logs...", "[TETLA] Syncing BTTV/7TV emotes...",
-            "[SEC] Unauthorized access blocked", "[WARN] Entity 'Lizard' dormant"
+            "[SYS] Ping: 24ms check ok",
+            "[SYS] Оптимизация памяти... Успешно",
+            "[NET] localhost (127.0.0.1) пытается взломать сам себя...",
+            "[ERR] sudo rm -rf / ... ДЕЙСТВИЕ ЗАБЛОКИРОВАНО БОТОМ TETLA",
+            "[WARN] Обнаружена попытка выйти из VIM... Пользователь заблудился",
+            "[TWITCH] Пинг до серверов: 1337ms (Опять сервера лагают)",
+            "[TWITCH] Сканирование чата на запретки... Угроза миновала",
+            "[CHAT] Зафиксирован спам KEKW. Активируем щиты",
+            "[LETHAL] Квота: НЕ ВЫПОЛНЕНА. Активируем протокол увольнения",
+            "[PHASMO] Зафиксировано ЭМП 5-го уровня в комнате стримера",
+            "[TETLA] Буферизация донатов... Анализ на наличие скримеров",
+            "[BAGERCA] Инъекция чернильного кода завершена",
+            "[ANGEL] Модуль тактической поддержки переведен в OVERDRIVE",
+            "[KIRIKI] Генерация нейро-волн: 100%. Вибрации в норме"
         ],
         matrixWords: [
             "KSUSHA", "SHER", "TETLA", "BAGERCA", "ANGEL", "KIRIKI", 

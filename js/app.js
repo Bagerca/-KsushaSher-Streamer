@@ -7,6 +7,7 @@ import { ConfigInjector } from './services/ConfigInjector.js';
 
 import { TerminalController } from './terminal-core.js';
 import { SettingsMenu } from './settings-menu.js';
+import { registerTerminalCommands } from './terminal-commands.js'; // <-- ИМПОРТ НОВОГО МОДУЛЯ
 
 import { initScrollPhysics } from './ui/scroll-physics.js';
 import { initCryptoWidget } from './ui/crypto-widget.js';
@@ -16,7 +17,7 @@ import { initMediaArchive } from './media-manager.js';
 import { HeroController } from './hero-controller.js';
 import { SquadController } from './squad-controller.js';
 import { MediaModalManager } from './modal/MediaModalManager.js';
-import { YoutubeModalManager } from './modal/YoutubeModalManager.js'; // <-- ВОТ ЭТОТ ИМПОРТ БЫЛ ПРОПУЩЕН
+import { YoutubeModalManager } from './modal/YoutubeModalManager.js';
 
 import { FXController } from './FXController.js'; 
 
@@ -56,9 +57,9 @@ async function bootstrap() {
         new HeroController();
         new SquadController();
         new MediaModalManager();
-        new YoutubeModalManager(); // <-- ИНИЦИАЛИЗАЦИЯ НОВОЙ МОДАЛКИ
+        new YoutubeModalManager();
         
-        // 3. Настройка графики и глобальных событий (без мусора в app.js)
+        // 3. Настройка графики и глобальных событий
         fxController.init();
         registerGlobalEvents();
         
@@ -90,7 +91,7 @@ async function bootstrap() {
     }
 }
 
-// Здесь остались ТОЛЬКО системные и UI-ивенты, графика ушла в FXController
+// Регистрация только высокоуровневых UI-событий
 function registerGlobalEvents() {
     EventBus.on('CMD_CLEAR', () => {
         if (terminalCtrl && terminalCtrl.historyEl) terminalCtrl.historyEl.innerHTML = '';
@@ -100,20 +101,10 @@ function registerGlobalEvents() {
     EventBus.on('CMD_MUSIC', () => EventBus.emit('UI_CLICK_MUSIC'));
     EventBus.on('CMD_PLAYER', () => EventBus.emit('UI_CLICK_MUSIC'));
     
-    EventBus.on('CMD_HELP', () => {
-        const helpHtml = `
-        <div style="color:#888;">ДОСТУПНЫЕ ПРОТОКОЛЫ:</div>
-        <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="clear">CLEAR</span> - Очистить консоль и существ</div>
-        <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="dragon">DRAGON</span> - Запуск: Дракон</div>
-        <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="lizard">LIZARD</span> - Запуск: Ящерица</div>
-        <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="comet">COMET</span> - Запуск: Метеоры</div>
-        <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="godmode">GODMODE</span> - Перезапись реальности</div>
-        `;
-        EventBus.emit('SYS_LOG', { html: helpHtml });
-    });
+    // Инициализация модуля с контентными командами и пасхалками
+    registerTerminalCommands();
 
     EventBus.on('UI_CLICK_MUSIC', () => toggleMusicMode());
-    
     EventBus.on('UI_CLICK_REFRESH', async () => { 
         await scheduleMgr.init(); 
         await statsMgr.init();

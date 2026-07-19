@@ -8,14 +8,8 @@ export class HubController {
         this.els = {
             playerContainer: document.getElementById('hub-player-container'),
             chatContainer: document.getElementById('hub-chat-container'),
-            networkList: document.getElementById('hub-network-list'),
-            heroStatusBox: document.getElementById('live-status-container')
+            networkList: document.getElementById('hub-network-list')
         };
-        
-        if (this.els.heroStatusBox) {
-            this.els.heroStatusText = this.els.heroStatusBox.querySelector('.status-text');
-            this.els.heroStatusDot = this.els.heroStatusBox.querySelector('.status-indicator');
-        }
 
         if (this.els.playerContainer) this.init();
     }
@@ -53,17 +47,6 @@ export class HubController {
                     style="border: none;">
                 </iframe>
             `;
-        }
-        
-        this.setHeroLive();
-    }
-
-    setHeroLive() {
-        if (this.els.heroStatusText) this.els.heroStatusText.textContent = "СИСТЕМА АКТИВНА";
-        if (this.els.heroStatusDot) {
-            this.els.heroStatusDot.style.background = 'var(--neon-pink)';
-            this.els.heroStatusDot.style.boxShadow = '0 0 10px var(--neon-pink)';
-            this.els.heroStatusDot.style.animation = 'pulse 1.5s infinite';
         }
     }
 

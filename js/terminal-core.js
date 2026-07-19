@@ -4,7 +4,6 @@ import { AppConfig } from './config.js';
 
 /**
  * Класс визуальных эффектов терминала.
- * Отвечает ТОЛЬКО за загрузочный экран и системный мусор (Шум).
  */
 class TerminalFX {
     constructor(terminalCtrl) {
@@ -45,7 +44,8 @@ class TerminalFX {
     }
 
     startSystemNoise() {
-        const wrapLog = (text) => `<span style='color:#666; font-size:0.8rem'>${text}</span>`;
+        const wrapLog = (text) => `<span style='font-size:0.85rem; color:#888;'>${this.ctrl.colorizeLog(text)}</span>`;
+        
         this.noiseInterval = setInterval(() => {
             if (this.ctrl.isSystemNoiseAllowed && this.ctrl.historyEl) {
                 const rand = Math.random();
@@ -85,10 +85,8 @@ class TerminalFX {
     delay(ms) { return new Promise(res => setTimeout(res, ms)); }
 }
 
-
 /**
  * Основной контроллер терминала.
- * Отвечает ТОЛЬКО за ввод/вывод данных и связь с DOM.
  */
 export class TerminalController {
     constructor() {
@@ -99,20 +97,36 @@ export class TerminalController {
         this.isSystemNoiseAllowed = true;
         this.fx = new TerminalFX(this);
         
+        // --- НОВЫЙ БЛОК: ЮЗАБИЛИТИ ---
+        this.cmdHistory = []; // История введенных команд
+        this.historyIndex = -1;
+        this.availableCommands = [
+            'help', 'clear', 'status', 'music', 'player', 'dragon', 'lizard', 
+            'comet', 'godmode', 'whoami', 'neofetch', 'ping', 'sudo', 
+            'socials', 'schedule', 'specs', 'hack', '8ball', 'roll', 'angel', 'bagerca'
+        ];
+        
         this.init();
     }
 
     init() {
-        if (!this.historyEl || !this.boxEl || !this.inputEl) {
-            console.warn('⚠️ [Terminal] DOM элементы не найдены. Терминал отключен.');
-            return;
-        }
-
+        if (!this.historyEl || !this.boxEl || !this.inputEl) return;
         this.setupEventListeners();
         this.fx.runBootSequence();
         this.fx.startSystemNoise();
-        
-        console.log('💻 [Terminal] Контроллер инициализирован');
+    }
+    
+    colorizeLog(text) {
+        return text.replace(/^\[(.*?)\]/, (match, prefix) => {
+            let color = '#888'; 
+            if (['ERR', 'BAGERCA'].includes(prefix)) color = '#ff4444';
+            else if (['WARN', 'ANGEL'].includes(prefix)) color = '#ffd700';
+            else if (['OK', 'SYS'].includes(prefix)) color = 'var(--neon-green)';
+            else if (['NET', 'TWITCH', 'CHAT', 'KIRIKI'].includes(prefix)) color = '#00ccff';
+            else if (['TETLA', 'LETHAL', 'PHASMO'].includes(prefix)) color = 'var(--neon-pink)';
+            
+            return `<span style="color:${color}; font-weight:bold;">[${prefix}]</span>`;
+        });
     }
 
     setupEventListeners() {
@@ -123,52 +137,113 @@ export class TerminalController {
         this.historyEl.addEventListener('click', (e) => {
             const cmdEl = e.target.closest('.interactive-cmd');
             if (cmdEl) {
-                const commandText = cmdEl.dataset.cmd;
-                navigator.clipboard.writeText(commandText).finally(() => {
-                    this.inputEl.value = commandText;
-                    this.inputEl.focus();
-                });
+                this.inputEl.value = cmdEl.dataset.cmd;
+                this.inputEl.focus();
             }
         });
 
-        this.inputEl.addEventListener('keydown', (e) => this.handleInput(e));
+        this.inputEl.addEventListener('keydown', (e) => this.handleKeyDown(e));
 
-        const SCROLL_FACTOR = 0.3; 
         this.boxEl.addEventListener('wheel', (e) => {
             e.preventDefault();
-            this.boxEl.scrollTop += e.deltaY * SCROLL_FACTOR;
+            this.boxEl.scrollTop += e.deltaY * 0.3;
         }, { passive: false });
 
         EventBus.on('SYS_LOG', (payload) => {
             this.addLogLine(payload.html, payload.isTyping, payload.forceScroll);
         });
+
+        // --- НОВЫЙ ИВЕНТ: Текстовый спиннер загрузки ---
+        EventBus.on('SYS_SPINNER', async ({ text, duration, finalHtml }) => {
+            const line = this.addLogLine(`${text} [ | ]`, false, true);
+            const frames = ['|', '/', '-', '\\'];
+            let i = 0;
+            
+            const interval = setInterval(() => {
+                i = (i + 1) % frames.length;
+                line.innerHTML = `${text} <span style="color:var(--neon-pink)">[ ${frames[i]} ]</span>`;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                if (finalHtml) {
+                    line.innerHTML = finalHtml;
+                    this.scrollToBottom();
+                } else {
+                    line.remove();
+                }
+            }, duration);
+        });
     }
 
-    handleInput(e) {
-        if (e.key !== 'Enter') return;
-
-        const rawValue = this.inputEl.value;
-        const commandParts = rawValue.trim().split(/\s+/);
-        const command = commandParts[0].toLowerCase();
-        
-        if (!rawValue.trim()) return;
-
-        const cmdLine = document.createElement('p');
-        cmdLine.innerHTML = `<span style="color:var(--neon-green); margin-right:8px;">></span>${rawValue}`;
-        cmdLine.style.color = '#fff'; 
-        cmdLine.style.margin = '0 0 5px 0';
-        this.historyEl.appendChild(cmdLine);
-        this.scrollToBottom();
-        
-        const eventName = `CMD_${command.toUpperCase()}`;
-        
-        if (EventBus.listeners[eventName] && EventBus.listeners[eventName].length > 0) {
-            EventBus.emit(eventName, commandParts.slice(1));
-        } else {
-            this.addLogLine(`<span style="color:#ff4444">ОШИБКА: НЕИЗВЕСТНАЯ КОМАНДА</span>`, false, true);
+    // --- НОВАЯ ЛОГИКА ОБРАБОТКИ КЛАВИШ ---
+    handleKeyDown(e) {
+        // 1. Автодополнение (Tab)
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const currentVal = this.inputEl.value.toLowerCase().trim();
+            if (!currentVal) return;
+            
+            const match = this.availableCommands.find(cmd => cmd.startsWith(currentVal));
+            if (match) this.inputEl.value = match + ' ';
+            return;
         }
-        
-        this.inputEl.value = '';
+
+        // 2. История вверх
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (this.cmdHistory.length > 0) {
+                this.historyIndex = Math.max(0, this.historyIndex - 1);
+                this.inputEl.value = this.cmdHistory[this.historyIndex];
+            }
+            return;
+        }
+
+        // 3. История вниз
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (this.historyIndex < this.cmdHistory.length - 1) {
+                this.historyIndex++;
+                this.inputEl.value = this.cmdHistory[this.historyIndex];
+            } else {
+                this.historyIndex = this.cmdHistory.length;
+                this.inputEl.value = '';
+            }
+            return;
+        }
+
+        // 4. Отправка команды (Enter)
+        if (e.key === 'Enter') {
+            const rawValue = this.inputEl.value;
+            const commandParts = rawValue.trim().split(/\s+/);
+            const command = commandParts[0].toLowerCase();
+            
+            if (!rawValue.trim()) return;
+
+            // Записываем в историю
+            if (this.cmdHistory[this.cmdHistory.length - 1] !== rawValue.trim()) {
+                this.cmdHistory.push(rawValue.trim());
+            }
+            this.historyIndex = this.cmdHistory.length;
+
+            // Вывод введенной команды
+            const cmdLine = document.createElement('p');
+            cmdLine.innerHTML = `<span style="color:var(--neon-green); margin-right:8px;">></span>${rawValue}`;
+            cmdLine.style.color = '#fff'; 
+            cmdLine.style.margin = '0 0 5px 0';
+            this.historyEl.appendChild(cmdLine);
+            this.scrollToBottom();
+            
+            const eventName = `CMD_${command.toUpperCase()}`;
+            
+            if (EventBus.listeners[eventName] && EventBus.listeners[eventName].length > 0) {
+                EventBus.emit(eventName, commandParts.slice(1));
+            } else {
+                this.addLogLine(`<span style="color:#ff4444">[ERR]</span> НЕИЗВЕСТНАЯ КОМАНДА: ${command}`, false, true);
+            }
+            
+            this.inputEl.value = '';
+        }
     }
 
     addLogLine(html, isTyping = false, forceScroll = false) {

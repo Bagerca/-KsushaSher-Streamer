@@ -137,11 +137,29 @@
 
 /* --- РЕГУЛЯТОР ГРОМКОСТИ (ТИКИ) --- */
 .volume-ticks-container { flex-grow: 1; height: 20px; display: flex; align-items: center; gap: 4px; margin-left: 15px; cursor: pointer; }
-.vol-tick { height: 8px; flex-grow: 1; background: rgba(255, 255, 255, 0.1); border-radius: 2px; transition: all 0.1s ease; }
-.vol-tick.active { background: var(--neon-pink); box-shadow: 0 0 5px var(--neon-pink); height: 12px; }
+
+.vol-tick { 
+    height: 8px; 
+    flex-grow: 1; 
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 1px; 
+    transform: skewX(-10deg); 
+    transition: all 0.1s ease; 
+}
+.vol-tick.active { 
+    background: var(--neon-pink); 
+    box-shadow: 0 0 5px var(--neon-pink); 
+    height: 12px; 
+}
 .volume-ticks-container:hover .vol-tick:not(.active) { background: rgba(255, 45, 149, 0.3); }
 
-/* --- ИНТЕРАКТИВНЫЙ ПРОГРЕСС БАР --- */
+/* --- ИНТЕГРАЦИЯ ПРОГРЕСС-БАРА ПОД ХЕДЕР --- */
+.music-panel-header {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 12px !important; 
+}
+
 .hud-side-panel.right.music-mode-active .music-progress-area { cursor: pointer; background: rgba(255, 45, 149, 0.2); }
 .hud-side-panel.right.music-mode-active .music-progress-area:hover { height: 8px; }
 .hud-side-panel.right.music-mode-active .music-progress-fill::after {

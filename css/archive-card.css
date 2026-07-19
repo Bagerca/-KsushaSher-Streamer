@@ -15,14 +15,28 @@
 .archive-card-container.is-youtube { aspect-ratio: 16/9; }
 
 /* ПРОЦЕДУРНАЯ ЗАГЛУШКА */
-.procedural-placeholder { position: absolute; inset: 0; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(10,12,18,0.9), #050508 100%); z-index: 1; overflow: hidden; transition: opacity 0.3s; }
+.procedural-placeholder { 
+    position: absolute; inset: 0; border-radius: 12px; 
+    border: 1px solid rgba(255, 255, 255, 0.1); /* ИСПРАВЛЕНИЕ: Был inset box-shadow */
+    background-clip: padding-box;
+    display: flex; align-items: center; justify-content: center; 
+    background: radial-gradient(circle at center, rgba(10,12,18,0.9), #050508 100%); 
+    z-index: 1; overflow: hidden; transition: opacity 0.3s; 
+}
 .procedural-placeholder::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 20px 20px; background-position: center; }
 .placeholder-letter { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900; z-index: 2; user-select: none; opacity: 0.8; }
 
 /* СЛОИ И КОНТЕНТ */
-/* ИСПОЛЬЗУЕМ BOX-SHADOW INSET ВМЕСТО BORDER ДЛЯ ИДЕАЛЬНОГО РЕНДЕРИНГА 3D */
-.card-layer { grid-area: 1 / 1; width: 100%; height: 100%; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 5px 15px rgba(0,0,0,0.6); background-size: cover; background-position: center top; background-repeat: no-repeat; position: relative; min-width: 0; backface-visibility: hidden; }
-.layer-front { z-index: 10; background-color: #121215; overflow: hidden; display: flex; flex-direction: column; }
+.card-layer { 
+    grid-area: 1 / 1; width: 100%; height: 100%; border-radius: 12px; 
+    /* ИСПРАВЛЕНИЕ БАГА С УГЛАМИ: ИСПОЛЬЗУЕМ НАСТОЯЩИЙ BORDER */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    background-clip: padding-box; /* Запрещаем фону вылезать под бордер */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
+    background-size: cover; background-position: center top; background-repeat: no-repeat; 
+    position: relative; min-width: 0; backface-visibility: hidden; 
+}
+.layer-front { z-index: 10; background-color: #121215; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 
 /* Блик */
 .layer-front::after { content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.0) 20%, rgba(255, 255, 255, 0.18) 50%, rgba(255, 255, 255, 0.0) 80%, transparent 100%); transform: rotate(30deg); transition: none; pointer-events: none; z-index: 5; opacity: 0; }
@@ -63,19 +77,10 @@
     text-transform: uppercase; letter-spacing: 2px; font-weight: 700;
     margin-bottom: 8px; text-shadow: 0 0 5px rgba(0,0,0,0.8);
 }
-.suggested-status { color: #fff; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1); display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-bottom: 8px; }
-
-/* ОПИСАНИЕ С FADE OUT */
-.card-desc { 
-    font-size: 0.75rem; color: #bbb; line-height: 1.3; 
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
-    overflow: hidden;
-    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-}
+.suggested-status { color: #fff; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-bottom: 8px; }
 
 /* COMPACT MODE OVERRIDES */
-.compact-mode .card-desc, .compact-mode .cyber-status { display: none !important; }
+.compact-mode .cyber-status { display: none !important; }
 .compact-mode .card-info { padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%); }
 .compact-mode .card-title { font-size: 0.85rem; margin-bottom: 0; text-align: center; }
 
@@ -87,13 +92,13 @@
 .cyber-rating-badge {
     position: absolute; top: 10px; left: 10px; 
     background: rgba(5, 5, 8, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0,0,0,0.5); 
+    border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
     border-radius: 6px; padding: 4px 8px; 
     z-index: 30; 
     transition: 0.3s;
 }
 .archive-card-container:hover .cyber-rating-badge {
-    box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 10px var(--custom-color);
+    border-color: var(--custom-color); box-shadow: 0 0 10px var(--custom-color);
 }
 .cyber-rating { display: flex; align-items: center; gap: 6px; }
 .cyber-rating .segments { display: flex; gap: 3px; margin-top: 1px; }
@@ -105,13 +110,13 @@
 .yt-playlist-badge { 
     position: absolute; top: 10px; right: 10px; 
     background: rgba(5, 5, 8, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0,0,0,0.5); 
+    color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
     border-radius: 6px; padding: 5px 10px; 
     font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; 
     display: flex; align-items: center; gap: 6px; z-index: 30; 
     transition: 0.3s;
 }
-.archive-card-container:hover .yt-playlist-badge { box-shadow: inset 0 0 0 1px var(--custom-color), 0 0 10px var(--custom-color); }
+.archive-card-container:hover .yt-playlist-badge { border-color: var(--custom-color); box-shadow: 0 0 10px var(--custom-color); }
 .yt-playlist-badge i { opacity: 0.8; }
 .archive-card-container:hover .yt-playlist-badge i { color: var(--custom-color); opacity: 1; }
 
