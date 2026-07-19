@@ -41,15 +41,13 @@
     filter: blur(6px); opacity: 0.5; pointer-events: none;
 }
 
-/* ИСПРАВЛЕНИЕ: Выравнивание сетки */
 .footer-content {
     display: grid;
-    grid-template-columns: 1fr auto 1fr; /* Три равные колонки с центром по размеру контента */
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 30px;
 }
 
-/* Левая часть теперь центрируется по вертикали с основным контентом */
 .footer-left { display: flex; flex-direction: column; justify-content: center; gap: 8px; }
 .footer-right { display: flex; justify-content: flex-end; align-items: center; }
 
@@ -69,9 +67,38 @@
     border-radius: 50%; box-shadow: 0 0 8px var(--neon-green); 
     animation: blink 2s infinite;
 }
-.footer-barcode {
-    width: 140px; height: 12px; opacity: 0.4;
-    background: repeating-linear-gradient(90deg, #fff, #fff 2px, transparent 2px, transparent 5px, #fff 5px, #fff 6px, transparent 6px, transparent 10px);
+
+/* НАСТОЯЩИЙ ШТРИХКОД */
+.footer-barcode-container {
+    height: 12px; /* Приплющиваем его как было в старом дизайне */
+    opacity: 0.4;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: crosshair; /* Курсор прицела для атмосферы */
+    transition: all 0.3s ease;
+}
+
+.barcode-svg {
+    height: 100%;
+    width: auto;
+    min-width: 140px;
+    transition: filter 0.3s ease;
+}
+
+/* Эффекты при наведении: Загорается зеленым */
+.footer-center:hover .footer-barcode-container {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px var(--neon-green));
+}
+
+/* ИСПРАВЛЕНИЕ БАГА: Красим только линии (они лежат внутри тега <g>), 
+   игнорируя фоновый прямоугольник, чтобы он не заливался сплошным цветом */
+.footer-center:hover .barcode-svg g rect,
+.footer-center:hover .barcode-svg path {
+    stroke: var(--neon-green) !important;
+    fill: var(--neon-green) !important;
 }
 
 @media (max-width: 1024px) {
