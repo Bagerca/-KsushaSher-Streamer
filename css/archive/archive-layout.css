@@ -25,102 +25,177 @@
 .archive-header:hover .section-title::after { transform: translateY(-50%) translateX(10px); filter: drop-shadow(0 0 15px var(--neon-green)); }
 .archive-header-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; color: var(--neon-green); letter-spacing: 6px; margin-top: 8px; opacity: 0.7; text-transform: uppercase; font-weight: 600; text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); }
 
-/* ФЛЕКС-СЕТКА */
+/* =========================================
+   НОВАЯ СТРУКТУРА: Сайдбар СЛЕВА + Сетка СПРАВА
+   ========================================= */
 .archive-full-grid-wrapper { 
-    width: 100%; position: relative; z-index: 5; 
-    min-height: 400px; display: flex; flex-direction: column; 
-    gap: 20px;
+    width: 100%; 
+    position: relative; 
+    z-index: 5; 
+    min-height: 400px; 
+    display: flex; 
+    flex-direction: row; 
+    align-items: stretch; /* ИСПРАВЛЕНИЕ: Растягиваем контейнер рельсы на всю высоту сетки */
+    gap: 30px;
 }
+
+/* КОНТЕЙНЕР СЕТКИ */
+.archive-grid-content {
+    flex-grow: 1;
+    min-width: 0;
+}
+
 .archive-flex-grid { 
     display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; 
     position: relative; 
 }
 .archive-flex-grid.compact-mode { gap: 12px; }
 
-/* АНИМАЦИИ ПАГИНАЦИИ (ГЛИТЧ/FADE ПРИ ПЕРЕКЛЮЧЕНИИ) */
+/* =========================================
+   АНИМАЦИИ ПАГИНАЦИИ (ВВЕРХ/ВНИЗ)
+   ========================================= */
 .transition-layer {
     transition: opacity 0.25s ease, transform 0.25s ease, filter 0.25s ease;
     will-change: opacity, transform, filter;
 }
 
-.page-fade-out {
+.page-slide-up-out {
     opacity: 0 !important;
-    transform: scale(0.98) translateY(10px);
+    transform: translateY(-40px) scale(0.98);
     filter: blur(4px);
     pointer-events: none;
 }
 
-/* =========================================
-   HUD ПАГИНАЦИИ (DOCK PANEL)
-   ========================================= */
-.archive-pagination-hud {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px; 
-    padding: 5px 0 15px 0; 
-    position: relative;
-    z-index: 20;
+.page-slide-down-out {
+    opacity: 0 !important;
+    transform: translateY(40px) scale(0.98);
+    filter: blur(4px);
+    pointer-events: none;
 }
 
-/* Стеклянная панель-док */
-.pagination-dock {
-    display: inline-flex;
+.archive-flex-grid.entering-from-top .archive-card-container.animate-entry {
+    animation-name: card-load-down;
+}
+.archive-flex-grid.entering-from-bottom .archive-card-container.animate-entry {
+    animation-name: card-load-up; 
+}
+
+@keyframes card-load-up { 
+    0% { opacity: 0; transform: translateY(30px) scale(0.95); } 
+    100% { opacity: 1; transform: translateY(0) scale(1); } 
+}
+@keyframes card-load-down { 
+    0% { opacity: 0; transform: translateY(-30px) scale(0.95); } 
+    100% { opacity: 1; transform: translateY(0) scale(1); } 
+}
+
+/* =========================================
+   HUD ПАГИНАЦИИ И РЕЛЬСА
+   ========================================= */
+
+/* КОНТЕЙНЕР РЕЛЬСЫ (Тянется на всю высоту) */
+.archive-side-pagination {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    width: 52px; /* Фиксируем ширину для центровки рельсы */
+}
+
+/* ФИЗИЧЕСКИЙ ЖЕЛОБ (Тёмный паз) */
+.archive-side-pagination::before {
+    content: '';
+    position: absolute;
+    top: 20px; bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 1), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    z-index: 0;
+}
+
+/* СВЕТЯЩАЯСЯ ЛИНИЯ ВНУТРИ ЖЕЛОБА */
+.archive-side-pagination::after {
+    content: '';
+    position: absolute;
+    top: 25px; bottom: 25px; left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    background: linear-gradient(
+        to bottom, 
+        transparent 0%, 
+        rgba(57, 255, 20, 0.4) 10%, 
+        rgba(57, 255, 20, 0.1) 50%, 
+        rgba(57, 255, 20, 0.4) 90%, 
+        transparent 100%
+    );
+    z-index: 0;
+}
+
+/* Стеклянная панель-док (Вертикальная) - СКОЛЬЗИТ ПО РЕЛЬСЕ */
+.pagination-dock-vertical {
+    position: sticky;
+    top: max(40px, calc(50vh - 180px)); /* Залипает по центру экрана */
+    height: fit-content; /* Необходим для корректной работы sticky */
+    z-index: 5; /* Выше рельсы */
+    
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 8px;
-    background: rgba(5, 5, 8, 0.7);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(5, 5, 8, 0.8);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    padding: 6px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 10px 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Разделители внутри панели */
-.pagination-divider {
-    width: 1px;
-    height: 24px;
+.pagination-divider-vert {
+    width: 24px;
+    height: 1px;
     background: rgba(255, 255, 255, 0.1);
-    margin: 0 5px;
+    margin: 5px 0;
 }
 
 /* Кнопки < ПРЕД / СЛЕД > */
-.cyber-page-btn {
+.cyber-page-btn-vert {
     background: transparent;
     color: #888;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 8px 16px;
+    font-size: 1.2rem;
+    padding: 12px 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    width: 100%;
 }
 
-.cyber-page-btn i { font-size: 0.8rem; }
-
-.cyber-page-btn:hover:not(:disabled) {
+.cyber-page-btn-vert:hover:not(:disabled) {
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
 }
 
-.cyber-page-btn:disabled {
+.cyber-page-btn-vert:disabled {
     opacity: 0.3;
     cursor: not-allowed;
 }
 
 /* Контейнер цифр */
-.page-numbers-container {
+.page-numbers-vert {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
 }
 
-/* Кнопки цифр 1, 2, 3... (Строгие и четкие) */
+/* Кнопки цифр 1, 2, 3... */
 .page-num-btn {
     background: transparent;
     color: #888;
@@ -130,7 +205,7 @@
     width: 38px;
     height: 38px;
     border: 1px solid transparent;
-    border-radius: 4px; /* Легкое закругление вместо круглого */
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -140,55 +215,80 @@
     overflow: hidden;
 }
 
-/* Линия-индикатор снизу кнопки (стиль Valorant/Cyberpunk) */
 .page-num-btn::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: var(--neon-green);
-    transition: 0.3s ease;
+    content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 0; height: 2px; background: var(--neon-green); transition: 0.3s ease;
 }
 
 .page-num-btn:hover:not(.active) {
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
 }
-.page-num-btn:hover:not(.active)::after {
-    width: 40%;
-    background: #fff;
-}
+.page-num-btn:hover:not(.active)::after { width: 40%; background: #fff; }
 
-/* Активная страница (Четкий неоновый акцент) */
 .page-num-btn.active {
     color: #000;
     background: var(--neon-green);
     box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
     cursor: default;
 }
-.page-num-btn.active::after {
-    display: none; /* Убираем полоску, если кнопка залита полностью */
-}
-
-/* Паттерн "Scanline" на активной кнопке для текстурности */
+.page-num-btn.active::after { display: none; }
 .page-num-btn.active::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
     pointer-events: none;
 }
 
-/* Многоточие */
 .page-dots {
     color: #666;
     font-family: 'Orbitron', sans-serif;
     font-weight: 700;
-    padding: 0 5px;
+    padding: 5px 0;
     user-select: none;
+}
+
+/* =========================================
+   АДАПТИВ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+   Переносим панель вниз и отключаем рельсу
+   ========================================= */
+@media (max-width: 1024px) {
+    .archive-full-grid-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .archive-grid-content { width: 100%; order: 1; }
+    
+    .archive-side-pagination {
+        position: relative; top: auto;
+        width: 100%; justify-content: center;
+        order: 2; /* Панель под сеткой */
+    }
+    
+    /* Отключаем рельсу на телефонах */
+    .archive-side-pagination::before,
+    .archive-side-pagination::after {
+        display: none;
+    }
+    
+    .pagination-dock-vertical {
+        position: relative; top: auto; /* Снимаем залипание */
+        flex-direction: row;
+        padding: 6px 10px;
+    }
+    
+    .pagination-divider-vert { width: 1px; height: 24px; margin: 0 5px; }
+    
+    .page-numbers-vert { flex-direction: row; gap: 4px; }
+    
+    .cyber-page-btn-vert { width: auto; padding: 8px 16px; }
+    
+    /* Разворачиваем стрелки влево/вправо */
+    #page-prev-btn i { transform: rotate(-90deg); }
+    #page-next-btn i { transform: rotate(-90deg); }
+    
+    .page-num-btn { width: 34px; height: 34px; font-size: 0.85rem; }
 }
 
 @media (max-width: 768px) {
@@ -196,11 +296,4 @@
     .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; padding: 0; }
     .archive-flex-grid { gap: 15px; }
     .archive-flex-grid.compact-mode { gap: 10px; }
-    
-    /* Адаптив пагинации для мобильных */
-    .pagination-dock { padding: 4px; gap: 2px; }
-    .cyber-page-btn { padding: 6px 10px; font-size: 0.8rem; }
-    .cyber-page-btn span { display: none; /* Прячем текст ПРЕД/СЛЕД на телефоне, оставляем только иконки */ }
-    .page-num-btn { width: 34px; height: 34px; font-size: 0.85rem; }
-    .pagination-divider { margin: 0 2px; }
 }

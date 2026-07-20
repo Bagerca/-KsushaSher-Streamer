@@ -1,14 +1,14 @@
 /* css/hub/hub-radar.css */
 /* РАДАР */
-.network-list { display: flex; flex-direction: column; gap: 12px; }
+.network-list { display: flex; flex-direction: column; gap: 10px; }
 .network-loading { font-family: 'monospace'; color: #666; text-align: center; padding: 20px; }
 .network-error { font-family: 'monospace'; color: #ff4444; text-align: center; padding: 20px; }
 
-.ally-net-card { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 6px; transition: all 0.3s ease; }
+.ally-net-card { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; transition: all 0.3s ease; }
 .ally-net-card:hover { background: rgba(255,255,255,0.06); transform: translateX(5px); }
-.ally-net-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #444; transition: 0.3s; }
+.ally-net-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #444; transition: 0.3s; }
 .ally-net-info { display: flex; flex-direction: column; flex-grow: 1; justify-content: center; min-width: 0; }
-.ally-net-name { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.1; }
+.ally-net-name { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 700; color: #fff; line-height: 1.1; }
 .ally-net-game { font-family: 'Exo 2', sans-serif; font-size: 0.8rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
 .ally-net-status { font-family: 'Rajdhani', sans-serif; font-weight: bold; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; background: #222; color: #666; letter-spacing: 1px; }
 
@@ -20,34 +20,31 @@
 
 /* РАСПИСАНИЕ */
 .mission-panel { flex-grow: 1; display: flex; flex-direction: column; }
-.mission-timeline { display: flex; flex-direction: column; gap: 8px; padding-right: 5px; flex-grow: 1; max-height: 520px; overflow-y: auto; overflow-x: hidden; --scroll-size: 4px; --scroll-thumb: var(--neon-pink); --scroll-track: transparent; }
+.mission-timeline { display: flex; flex-direction: column; gap: 6px; padding-right: 5px; flex-grow: 1; max-height: 520px; overflow-y: auto; overflow-x: hidden; --scroll-size: 4px; --scroll-thumb: var(--neon-pink); --scroll-track: transparent; }
 .schedule-empty { text-align: center; color: #666; padding: 30px; font-family: 'Exo 2'; }
 
-.sched-card { display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px; padding: 10px 14px; transition: all 0.3s ease; position: relative; }
+.sched-card { display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px; padding: 8px 12px; transition: all 0.3s ease; position: relative; }
 .sched-card:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 45, 149, 0.3); transform: translateX(4px); }
 
 .sched-indicator { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .sched-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 45, 149, 0.3); box-shadow: 0 0 5px rgba(255, 45, 149, 0.2); transition: 0.3s; }
 
 .sched-content { display: flex; flex-direction: column; flex-grow: 1; min-width: 0; justify-content: center; }
-.sched-game { font-family: 'Rajdhani', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sched-desc { font-family: 'Exo 2', sans-serif; font-size: 0.8rem; color: #777; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sched-game { font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 700; color: #fff; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sched-desc { font-family: 'Exo 2', sans-serif; font-size: 0.75rem; color: #777; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .sched-datetime { 
     display: flex; 
     flex-direction: column; 
     align-items: flex-end; 
     text-align: right; 
-    
-    /* ИСПРАВЛЕНИЕ: Задали жесткую ширину, чтобы линия всегда была на одном месте */
-    width: 150px; 
+    width: 140px; 
     flex-shrink: 0; 
-    
     padding-left: 12px; 
     border-left: 1px solid rgba(255, 255, 255, 0.05); 
 }
-.sched-day { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; color: var(--neon-pink); margin-bottom: 2px; }
-.sched-time { font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; color: #aaa; font-weight: 600; }
+.sched-day { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; color: var(--neon-pink); margin-bottom: 2px; }
+.sched-time { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; color: #aaa; font-weight: 600; }
 .sched-time i { font-size: 0.7rem; margin-right: 3px; opacity: 0.7; }
 
 /* Состояние "Сегодня" */

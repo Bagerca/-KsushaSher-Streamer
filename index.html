@@ -312,30 +312,35 @@
                 </div>
             </div>
             
-            <!-- Обертка сетки базы данных -->
+            <!-- Обертка сетки базы данных (НОВАЯ СТРУКТУРА: Левый Сайдбар + Сетка) -->
             <div class="archive-full-grid-wrapper" id="archive-grid-wrapper">
-                <div id="archive-grid-main" class="archive-flex-grid transition-layer"></div>
-
-                <!-- ПАНЕЛЬ ПАГИНАЦИИ (НОВЫЙ ХАЙ-ТЕК ДИЗАЙН) -->
-                <div id="archive-footer-controls" class="archive-pagination-hud" style="display: none;">
-                    <div class="pagination-dock">
-                        <button id="page-prev-btn" class="cyber-page-btn" title="Предыдущая">
-                            <i class="fas fa-chevron-left"></i> <span>ПРЕД</span>
+                
+                <!-- ПАНЕЛЬ ПАГИНАЦИИ (СЛЕВА) -->
+                <div id="archive-side-pagination" class="archive-side-pagination" style="display: none;">
+                    <div class="pagination-dock-vertical">
+                        <button id="page-prev-btn" class="cyber-page-btn-vert" title="Предыдущая страница">
+                            <i class="fas fa-chevron-up"></i>
                         </button>
                         
-                        <div class="pagination-divider"></div>
+                        <div class="pagination-divider-vert"></div>
                         
-                        <div id="page-numbers-container" class="page-numbers-container">
+                        <div id="page-numbers-container" class="page-numbers-vert">
                             <!-- JS генерирует сюда кружочки с цифрами -->
                         </div>
                         
-                        <div class="pagination-divider"></div>
+                        <div class="pagination-divider-vert"></div>
                         
-                        <button id="page-next-btn" class="cyber-page-btn" title="Следующая">
-                            <span>СЛЕД</span> <i class="fas fa-chevron-right"></i>
+                        <button id="page-next-btn" class="cyber-page-btn-vert" title="Следующая страница">
+                            <i class="fas fa-chevron-down"></i>
                         </button>
                     </div>
                 </div>
+
+                <!-- СЕТКА КАРТОЧЕК -->
+                <div class="archive-grid-content">
+                    <div id="archive-grid-main" class="archive-flex-grid transition-layer"></div>
+                </div>
+
             </div>
         </div>
     </section>

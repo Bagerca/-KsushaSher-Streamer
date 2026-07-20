@@ -10,7 +10,7 @@ export class GridManager {
         this.els = {
             wrapper: document.getElementById('archive-grid-wrapper'),
             gridMain: document.getElementById('archive-grid-main'),
-            controlsDiv: document.getElementById('archive-footer-controls'),
+            controlsDiv: document.getElementById('archive-side-pagination'),
             prevBtn: document.getElementById('page-prev-btn'),
             nextBtn: document.getElementById('page-next-btn'),
             pageNumbersContainer: document.getElementById('page-numbers-container')
@@ -41,10 +41,12 @@ export class GridManager {
 
     calculateItemsPerPage() {
         const width = window.innerWidth;
+        // Отнимаем ширину сайдбара из расчетов
+        const effectiveWidth = width > 1024 ? width - 80 : width;
         const isCompact = this.gridMode === 'compact';
         let cols = isCompact 
-            ? (width > 1600 ? 8 : width > 1400 ? 7 : width > 1000 ? 6 : width > 768 ? 4 : 3)
-            : (width > 1600 ? 6 : width > 1400 ? 5 : width > 1000 ? 4 : width > 768 ? 3 : 2);
+            ? (effectiveWidth > 1600 ? 8 : effectiveWidth > 1400 ? 7 : effectiveWidth > 1000 ? 6 : effectiveWidth > 768 ? 4 : 3)
+            : (effectiveWidth > 1600 ? 6 : effectiveWidth > 1400 ? 5 : effectiveWidth > 1000 ? 4 : effectiveWidth > 768 ? 3 : 2);
             
         return cols * 2; 
     }
@@ -109,24 +111,38 @@ export class GridManager {
     async changePage(direction) {
         const newPage = this.currentPage + direction;
         if (newPage < 1 || newPage > this.totalPages) return;
-        this.goToPage(newPage);
+        this.goToPage(newPage, direction);
     }
 
-    async goToPage(page) {
+    async goToPage(page, direction = 0) {
         if (this.isAnimating || page === this.currentPage) return;
         
+        // Вычисляем направление, если кликнули по конкретной цифре
+        if (direction === 0) {
+            direction = page > this.currentPage ? 1 : -1;
+        }
+
         this.isAnimating = true;
         EventBus.emit('PLAY_SOUND', 'hover');
 
-        this.els.gridMain.classList.add('page-fade-out');
+        // Выбираем класс ухода (вверх или вниз)
+        const outClass = direction > 0 ? 'page-slide-up-out' : 'page-slide-down-out';
+        this.els.gridMain.classList.add(outClass);
 
-        await new Promise(r => setTimeout(r, 250));
+        await new Promise(r => setTimeout(r, 250)); // Ждем окончания анимации
 
         this.currentPage = page;
+
+        // Применяем класс, откуда будут появляться новые карточки
+        const entryClass = direction > 0 ? 'entering-from-bottom' : 'entering-from-top';
+        this.els.gridMain.classList.remove('entering-from-bottom', 'entering-from-top');
+        this.els.gridMain.classList.add(entryClass);
+
         this.renderGridContent();
         this.updatePaginationUI();
 
-        this.els.gridMain.classList.remove('page-fade-out');
+        // Снимаем класс ухода, чтобы карточки начали появляться
+        this.els.gridMain.classList.remove(outClass);
         
         this.isAnimating = false;
         EventBus.emit('LAYOUT_CHANGED');
@@ -181,13 +197,11 @@ export class GridManager {
             start = Math.max(1, end - maxVisible + 1);
         }
 
-        // Кнопка 1 и многоточие
         if (start > 1) {
             html += `<button class="page-num-btn" data-page="1">1</button>`;
             if (start > 2) html += `<span class="page-dots">...</span>`;
         }
 
-        // Основные номера
         for (let i = start; i <= end; i++) {
             if (i === cur) {
                 html += `<button class="page-num-btn active">${i}</button>`;
@@ -196,7 +210,6 @@ export class GridManager {
             }
         }
 
-        // Последняя кнопка и многоточие
         if (end < total) {
             if (end < total - 1) html += `<span class="page-dots">...</span>`;
             html += `<button class="page-num-btn" data-page="${total}">${total}</button>`;
@@ -204,7 +217,6 @@ export class GridManager {
 
         this.els.pageNumbersContainer.innerHTML = html;
 
-        // Биндим клики
         this.els.pageNumbersContainer.querySelectorAll('.page-num-btn[data-page]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const targetPage = parseInt(e.target.dataset.page);

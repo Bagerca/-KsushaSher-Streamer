@@ -1,8 +1,7 @@
 /* css/hub/hub-twitch.css */
-.player-panel { padding: 15px; flex-shrink: 0; }
+.player-panel { padding: 12px; flex-shrink: 0; } /* Было 15px */
 
-/* ИСПРАВЛЕНИЕ: Чат теперь гибкий и растягивается */
-.chat-panel { flex-grow: 1; padding: 15px; display: flex; flex-direction: column; }
+.chat-panel { flex-grow: 1; padding: 12px; display: flex; flex-direction: column; } /* Было 15px */
 
 .twitch-player-wrapper, .twitch-chat-wrapper {
     width: 100%; background: #000;
@@ -14,8 +13,7 @@
 
 .twitch-player-wrapper { aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
 
-/* ИСПРАВЛЕНИЕ: Убрали жесткие 350px, теперь чат тянется вслед за расписанием */
-.twitch-chat-wrapper { flex-grow: 1; min-height: 250px; }
+.twitch-chat-wrapper { flex-grow: 1; min-height: 240px; } /* Было 250px */
 
 .twitch-iframe {
     position: absolute; inset: 0;
