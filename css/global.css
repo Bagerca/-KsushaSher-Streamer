@@ -153,25 +153,35 @@ section { padding: 80px 0; position: relative; z-index: var(--z-content); scroll
    CYBER NAV RAIL (СЕКЦИОННАЯ ЗАЛИВКА)
    ========================================= */
 .cyber-nav-rail {
-    position: fixed; top: 0; right: 20px; width: 40px; height: 100vh;
-    z-index: var(--z-system); display: flex; flex-direction: column; pointer-events: none;
+    position: fixed; 
+    top: 40px; 
+    right: 20px; 
+    width: 40px; 
+    height: calc(100vh - 80px); /* Отступаем сверху и снизу */
+    z-index: var(--z-system); 
+    pointer-events: none;
 }
 
 /* Статичная тусклая струна на фоне */
 .cyber-nav-rail::before {
-    content: ''; position: absolute; top: 40px; bottom: 40px; left: 50%; transform: translateX(-50%); 
-    width: 1px; background: rgba(255, 255, 255, 0.08); z-index: 0;
+    content: ''; position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); 
+    width: 1px; background: rgba(255, 255, 255, 0.1); z-index: 0;
 }
 
-/* Светящийся отрезок (Луч секции) */
+/* Светящийся отрезок (Луч заполняющий секцию) */
 .nav-laser-beam {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    width: 3px; border-radius: 2px;
+    position: absolute; 
+    left: 50%; 
+    transform: translateX(-50%);
+    width: 3px; 
+    border-radius: 2px;
     background: var(--audio-color, var(--neon-green));
     box-shadow: 0 0 10px var(--audio-color, var(--neon-green)), 0 0 20px var(--audio-color, var(--neon-green));
     z-index: 1;
-    top: calc(40px + var(--beam-top, 0) * (100% - 80px));
-    height: calc(var(--beam-height, 0) * (100% - 80px));
+    
+    /* Растягивается от маркера до маркера */
+    top: calc(var(--beam-top, 0) * 100%);
+    height: calc(var(--beam-height, 0) * 100%);
     transition: top 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
                 height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
                 background 0.3s;
@@ -179,11 +189,12 @@ section { padding: 80px 0; position: relative; z-index: var(--z-content); scroll
 
 /* Контейнер маркера */
 .nav-marker {
-    position: absolute; left: 50%; width: 24px; height: 24px; 
+    position: absolute; 
+    left: 50%; 
+    width: 24px; height: 24px; 
     transform: translate(-50%, -50%); 
-    top: calc(40px + var(--marker-decimal, 0) * (100% - 80px));
     cursor: pointer; pointer-events: auto; z-index: 4;
-    transition: top 0.3s ease;
+    transition: top 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     display: flex; align-items: center; justify-content: center;
 }
 

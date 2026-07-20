@@ -50,7 +50,7 @@ export const AppConfig = {
         { id: 'cpu', icon: 'fas fa-microchip', label: 'PROCESSOR', value: 'Intel Core i7-12700H', tags: ['14 CORES', '4.7 GHz'] },
         { id: 'gpu', icon: 'fas fa-desktop', label: 'GRAPHICS', value: 'NVIDIA GeForce RTX 3060', tags: ['6GB GDDR6', 'RTX ON'] },
         { id: 'ram', icon: 'fas fa-memory', label: 'MEMORY', value: '16GB RAM', tags: ['DDR5', '4800 MHz'] },
-        { id: 'mic', icon: 'fas fa-microphone-lines', label: 'MICROPHONE', value: 'Shure SM7B', tags: ['STUDIO', 'XLR'] }
+        { id: 'mic', icon: 'fas fa-microphone-lines', label: 'MICROPHONE', value: 'Fifine AmpliGame A5', tags: ['STUDIO', 'XLR'] }
     ],
     audio: {
         fallbackTracks: [

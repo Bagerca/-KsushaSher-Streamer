@@ -4,7 +4,7 @@
     background-color: #050508;
     position: relative;
     z-index: 20; 
-    padding: 40px 0;
+    padding: 30px 0 15px 0; /* Уменьшили отступы, особенно нижний */
     overflow: hidden;
     border-top: 1px solid rgba(57, 255, 20, 0.15);
 }
@@ -106,7 +106,7 @@
     .footer-center { display: none; }
 }
 @media (max-width: 768px) {
-    .cyber-footer { padding: 30px 0; }
+    .cyber-footer { padding: 25px 0 15px 0; }
     .footer-content { grid-template-columns: 1fr; text-align: center; gap: 25px; }
     .footer-left { align-items: center; }
     .footer-right { justify-content: center; }
