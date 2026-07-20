@@ -19,20 +19,24 @@ export class CardFactory {
         const isCollection = item.format === 'collection';
         const isCompact = this.getGridMode() === 'compact';
         
-        const firstSubItem = (isCollection && item.items && item.items[0]) ? item.items[0] : {};
-        const title = firstSubItem.title || item.title || '?';
-        const status = firstSubItem.status || item.status;
-        const color = firstSubItem.customColor || item.customColor || '#444455'; 
+        // [РЕФАКТОРИНГ] Данные уже нормализованы в MediaStore. Просто берем их.
+        const title = item.title || '?';
+        const status = item.status || 'unknown';
+        const color = item.customColor || '#444455'; 
 
-        const cFront = color;
-        const cBack1 = (isCollection && item.items?.[1]?.customColor) || cFront;
-        const cBack2 = (isCollection && item.items?.[2]?.customColor) || cBack1;
+        // [РЕФАКТОРИНГ] Берем предрассчитанные цвета слоев
+        const cFront = item.stackColors ? item.stackColors[0] : color;
+        const cBack1 = item.stackColors ? item.stackColors[1] : color;
+        const cBack2 = item.stackColors ? item.stackColors[2] : color;
 
         let images = [];
-        if (isCollection && item.items) images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
-        else if (isYouTube && item.videos) images = item.videos.slice(0, 3).map(v => `https://img.youtube.com/vi/${getYouTubeId(typeof v === 'string' ? v : v.url)}/maxresdefault.jpg`);
-        else if (item.images) images = [...item.images];
-        else if (item.image) images = [item.image];
+        if (isYouTube && item.videos) {
+            images = item.videos.slice(0, 3).map(v => `https://img.youtube.com/vi/${getYouTubeId(typeof v === 'string' ? v : v.url)}/maxresdefault.jpg`);
+        } else if (item.images && item.images.length > 0) {
+            images = [...item.images];
+        } else if (item.image) {
+            images = [item.image];
+        }
         
         if (!images.length) images = ['https://via.placeholder.com/320x480/1a1a24/ffffff?text=NO+IMAGE'];
 
@@ -55,11 +59,8 @@ export class CardFactory {
             topBadge = `<div class="yt-playlist-badge"><i class="fas fa-layer-group"></i> <span>${item.videos.length}</span></div>`;
         }
 
-        let rating = item.rating || 0;
-        if (isCollection && item.items) {
-            const ratedItems = item.items.filter(i => i.rating > 0);
-            if (ratedItems.length) rating = ratedItems.reduce((sum, i) => sum + i.rating, 0) / ratedItems.length;
-        }
+        // [РЕФАКТОРИНГ] Используем заранее вычисленный рейтинг коллекции
+        const rating = item.rating || 0;
 
         let ratingHtml = '';
         if (status !== 'suggested' && !isYouTube && rating > 0) {
@@ -88,7 +89,6 @@ export class CardFactory {
                     ${topBadge}
                     ${ratingHtml}
                     <div class="card-info">
-                        <!-- ИСПРАВЛЕНИЕ: Поменяли местами статус и название -->
                         ${statusHtml}
                         <div class="card-title" title="${title}">${title}</div>
                     </div>

@@ -39,40 +39,12 @@
         transform-origin: center;
         animation: eyePulse 3s infinite alternate;
       }
-      .hud-spin {
-        transform-origin: 60px 60px;
-        animation: spin 20s linear infinite;
-      }
-      .hud-spin-reverse {
-        transform-origin: 60px 60px;
-        animation: spin 30s linear infinite reverse;
-      }
-      .node {
-        animation: nodeFlicker 4s infinite alternate;
-      }
       @keyframes eyePulse {
         0% { filter: drop-shadow(0 0 2px #39ff14); opacity: 0.8; }
         100% { filter: drop-shadow(0 0 8px #39ff14) drop-shadow(0 0 15px #39ff14); opacity: 1; }
       }
-      @keyframes spin {
-        100% { transform: rotate(360deg); }
-      }
-      @keyframes nodeFlicker {
-        0%, 100% { opacity: 0.3; r: 1; }
-        50% { opacity: 1; r: 1.5; }
-      }
     </style>
   </defs>
-
-  <!-- ФОНОВЫЕ ЭЛЕМЕНТЫ HUD -->
-  <g class="hud-spin-reverse" opacity="0.4">
-    <circle cx="60" cy="60" r="55" fill="none" stroke="#39ff14" stroke-width="0.5" stroke-dasharray="2 6" />
-  </g>
-  <g class="hud-spin" opacity="0.6">
-    <circle cx="60" cy="60" r="48" fill="none" stroke="#ff2d95" stroke-width="0.5" stroke-dasharray="10 4 2 4" />
-  </g>
-  
-  <path d="M 60,2 L 60,6 M 60,118 L 60,114 M 2,60 L 6,60 M 118,60 L 114,60" stroke="#39ff14" stroke-width="1" opacity="0.5" />
 
   <!-- БАЗА ЛИСЫ (ПОЛИГОНАЛЬНАЯ СЕТКА) -->
   <g stroke="#ff2d95" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" filter="url(#neonPink)">
@@ -112,24 +84,5 @@
     <!-- Правый глаз -->
     <polygon points="88,58 76,62 80,65 90,61" fill="#39ff14" />
   </g>
-
-  <!-- ТЕХНИЧЕСКИЕ ДЕТАЛИ (НОДЫ) -->
-  <g fill="#00ccff">
-    <circle cx="60" cy="105" r="1.5" class="node" /> <!-- Нос -->
-    <circle cx="60" cy="32" r="1.5" class="node" style="animation-delay: 0.5s;" /> <!-- Третий глаз/Лоб -->
-    <circle cx="22" cy="15" r="1" class="node" style="animation-delay: 1s;" /> <!-- Левое ухо -->
-    <circle cx="98" cy="15" r="1" class="node" style="animation-delay: 1.5s;" /> <!-- Правое ухо -->
-  </g>
-
-  <!-- ДЕКОРАТИВНЫЕ СКОБКИ HUD ПО УГЛАМ -->
-  <g stroke="#39ff14" stroke-width="1.5" fill="none" opacity="0.7">
-    <polyline points="15,25 15,15 25,15" />
-    <polyline points="105,25 105,15 95,15" />
-    <polyline points="15,95 15,105 25,105" />
-    <polyline points="105,95 105,105 95,105" />
-  </g>
-
-  <!-- ТЕКСТ SYS.FOX -->
-  <text x="60" y="115" font-family="monospace" font-size="5" fill="#39ff14" text-anchor="middle" letter-spacing="1" opacity="0.6">SYS.FOX_v2</text>
 
 </svg>

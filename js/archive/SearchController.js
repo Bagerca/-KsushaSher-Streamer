@@ -30,7 +30,6 @@ export class SearchController {
         this.els.input.addEventListener('input', (e) => this.handleInput(e.target.value));
         this.els.input.addEventListener('keydown', (e) => this.handleKeyDown(e));
 
-        // Лупа работает как кнопка Enter
         if (this.els.iconDefault) {
             this.els.iconDefault.addEventListener('click', () => {
                 if (this.els.input.value.trim().length > 0) {
@@ -164,7 +163,6 @@ export class SearchController {
         this.store.setSearchQuery(item.title);
     }
 
-    // Подсветка букв в любом месте
     highlightText(text, query) {
         if (!query) return text;
         const escapedQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -187,37 +185,27 @@ export class SearchController {
             const titleHtml = this.highlightText(titleText, query);
             const color = item.customColor || '#fff';
 
-            // ИЗВЛЕЧЕНИЕ КАРТИНКИ
+            // ИЗВЛЕЧЕНИЕ КАРТИНКИ (Упрощено благодаря нормализации в MediaStore)
             let thumbUrl = item.image;
-            if (!thumbUrl) {
-                if (item.format === 'collection' && item.items && item.items.length > 0) {
-                     thumbUrl = item.items[0].image;
-                } else if (item.videos && item.videos.length > 0) {
-                     const vUrl = typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url;
-                     const ytId = getYouTubeId(vUrl);
-                     if (ytId) thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
-                }
+            
+            if (!thumbUrl && item.format === 'youtube' && item.videos && item.videos.length > 0) {
+                const vUrl = typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url;
+                const ytId = getYouTubeId(vUrl);
+                if (ytId) thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
             }
             if (!thumbUrl) thumbUrl = 'https://via.placeholder.com/65x95?text=NO+IMG';
 
-            // ЛОГИКА КОЛЛЕКЦИИ (3D Стек + Бейдж)
             const isCollection = item.format === 'collection';
             const thumbClasses = "sugg-thumb-wrapper" + (isCollection ? " is-collection" : "");
             const collectionBadge = (isCollection && item.items) 
                 ? `<div class="sugg-collection-badge" style="border-color:${color};"><i class="fas fa-folder-open" style="color:${color};"></i> <span>${item.items.length}</span></div>` 
                 : '';
 
-            // ЛОГИКА СТАТУСА (Хакерские скобки)
             const rawStatus = STATUS_MAP[item.status] || item.status;
             const statusHtml = `<span class="sugg-cyber-status" style="color: ${color}; text-shadow: 0 0 5px ${color}80;">[ ${rawStatus} ]</span>`;
 
-            // ЛОГИКА РЕЙТИНГА (Сегменты)
-            let displayRating = item.rating || 0;
-            if (isCollection && item.items) {
-                let sum = 0, count = 0;
-                item.items.forEach(sub => { if (sub.rating && sub.rating > 0) { sum += sub.rating; count++; } });
-                if (count > 0) displayRating = sum / count;
-            }
+            // [РЕФАКТОРИНГ] Используем заранее вычисленный рейтинг коллекции
+            const displayRating = item.rating || 0;
 
             let ratingHtml = '';
             if (displayRating > 0 && item.status !== 'suggested') {
@@ -231,7 +219,6 @@ export class SearchController {
 
             const animDelay = index * 40;
 
-            // НОВАЯ СТРУКТУРА HTML (Левая и Правая части)
             return `
                 <div class="suggestion-item" data-index="${index}" style="animation-delay: ${animDelay}ms">
                     <div class="sugg-left">

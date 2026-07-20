@@ -37,7 +37,6 @@ export class MediaStore {
             
             this.dataMain = Array.isArray(rawMain) ? rawMain : [];
             
-            // ИСПРАВЛЕНИЕ: Автоматически назначаем статус 'suggested' всему, что пришло из предложки
             this.dataSuggestions = Array.isArray(rawSuggestions) 
                 ? rawSuggestions.map(item => ({ ...item, status: 'suggested' })).filter(item => item.type === type) 
                 : [];
@@ -58,13 +57,9 @@ export class MediaStore {
         const fetchPromises = [];
 
         for (const item of list) {
-            // Логика для коллекций
-            if (item.format === 'collection' && item.items && item.items.length > 0) {
-                const firstGame = item.items[0];
-                item.title = item.title || firstGame.title;
-                item.description = item.description || firstGame.description;
-                item.image = item.image || firstGame.image;
-                item.status = item.status || firstGame.status;
+            // [РЕФАКТОРИНГ] Изолированная нормализация коллекций
+            if (item.format === 'collection') {
+                this._normalizeCollection(item);
             }
 
             // АВТОМАТИЗАЦИЯ YOUTUBE
@@ -76,7 +71,6 @@ export class MediaStore {
                     item.image = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
                 }
                 
-                // Если пользователь не написал описание, ставим заглушку
                 if (!item.description) {
                     item.description = "Описание от зрителя отсутствует.";
                 }
@@ -100,6 +94,43 @@ export class MediaStore {
         if (fetchPromises.length > 0) {
             await Promise.allSettled(fetchPromises);
         }
+    }
+
+    // [РЕФАКТОРИНГ] Вспомогательный метод: Подготавливает все данные коллекции для UI
+    _normalizeCollection(item) {
+        if (!item.items || item.items.length === 0) return;
+
+        const firstItem = item.items[0];
+
+        // Наследуем базовые поля от первого элемента, если они не заданы в корне
+        item.title = item.title || firstItem.title;
+        item.description = item.description || firstItem.description;
+        item.status = item.status || firstItem.status;
+        item.customColor = item.customColor || firstItem.customColor;
+        item.image = item.image || firstItem.image;
+
+        // Предрасчет массива картинок для 3D-стека (максимум 3)
+        if (!item.images) {
+            item.images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
+        }
+
+        // Предрасчет среднего рейтинга
+        if (item.rating === undefined) {
+            const ratedItems = item.items.filter(i => i.rating && i.rating > 0);
+            if (ratedItems.length > 0) {
+                const sum = ratedItems.reduce((acc, curr) => acc + curr.rating, 0);
+                item.rating = sum / ratedItems.length;
+            } else {
+                item.rating = 0;
+            }
+        }
+
+        // Предрасчет индивидуальных цветов для 3D слоев
+        item.stackColors = [
+            item.customColor || '#444455',
+            (item.items[1] && item.items[1].customColor) ? item.items[1].customColor : (item.customColor || '#444455'),
+            (item.items[2] && item.items[2].customColor) ? item.items[2].customColor : (item.customColor || '#444455')
+        ];
     }
 
     toggleFilter(val) {
@@ -198,20 +229,9 @@ export class MediaStore {
             }
             
             if (this.sort === 'rating') {
-                let ratingA = a.rating || 0;
-                let ratingB = b.rating || 0;
-                
-                if (a.format === 'collection' && a.items) {
-                    let sum = 0, count = 0;
-                    a.items.forEach(i => { if (i.rating > 0) { sum += i.rating; count++; } });
-                    if (count > 0) ratingA = sum / count;
-                }
-                if (b.format === 'collection' && b.items) {
-                    let sum = 0, count = 0;
-                    b.items.forEach(i => { if (i.rating > 0) { sum += i.rating; count++; } });
-                    if (count > 0) ratingB = sum / count;
-                }
-                
+                // [РЕФАКТОРИНГ] Логика упрощена благодаря предрасчету item.rating
+                const ratingA = a.rating || 0;
+                const ratingB = b.rating || 0;
                 return (ratingA - ratingB) * dir;
             }
             return (a.title || "").localeCompare(b.title || "") * dir;
