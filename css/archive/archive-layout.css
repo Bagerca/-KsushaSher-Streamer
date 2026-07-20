@@ -4,7 +4,7 @@
     background-color: transparent; 
     position: relative; 
     z-index: 1; 
-    padding: 10px 0 30px 0; /* Те самые 30px отступа снизу */
+    padding: 10px 0 10px 0; 
     overflow: visible; 
     border-top: 1px solid rgba(57, 255, 20, 0.1); 
     background-image: radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.04) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.04) 0%, transparent 40%); 
@@ -26,75 +26,181 @@
 .archive-header-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; color: var(--neon-green); letter-spacing: 6px; margin-top: 8px; opacity: 0.7; text-transform: uppercase; font-weight: 600; text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); }
 
 /* ФЛЕКС-СЕТКА */
-.archive-full-grid-wrapper { width: 100%; position: relative; z-index: 5; min-height: 400px; display: flex; flex-direction: column; gap: 40px; }
-.archive-flex-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; transition: all 0.4s ease; position: relative; }
+.archive-full-grid-wrapper { 
+    width: 100%; position: relative; z-index: 5; 
+    min-height: 400px; display: flex; flex-direction: column; 
+    gap: 20px;
+}
+.archive-flex-grid { 
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; 
+    position: relative; 
+}
 .archive-flex-grid.compact-mode { gap: 12px; }
 
-/* ДИВАЙДЕРЫ И КНОПКИ */
-.archive-divider-row { width: 100%; display: flex; align-items: center; gap: 20px; margin: 20px 0; }
-.divider-line { flex-grow: 1; height: 2px; background: linear-gradient(90deg, rgba(57, 255, 20, 0) 0%, rgba(57, 255, 20, 1) 50%, rgba(57, 255, 20, 0) 100%); }
-.divider-text { font-family: 'Orbitron', sans-serif; color: var(--neon-green); letter-spacing: 3px; font-weight: 700; text-transform: uppercase; }
+/* АНИМАЦИИ ПАГИНАЦИИ (ГЛИТЧ/FADE ПРИ ПЕРЕКЛЮЧЕНИИ) */
+.transition-layer {
+    transition: opacity 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+    will-change: opacity, transform, filter;
+}
+
+.page-fade-out {
+    opacity: 0 !important;
+    transform: scale(0.98) translateY(10px);
+    filter: blur(4px);
+    pointer-events: none;
+}
 
 /* =========================================
-   ИДЕАЛЬНЫЙ ПРЕМИАЛЬНЫЙ ОВЕРЛЕЙ (ИСПРАВЛЕНО)
+   HUD ПАГИНАЦИИ (DOCK PANEL)
    ========================================= */
-.archive-fade-overlay {
+.archive-pagination-hud {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px; 
+    padding: 5px 0 15px 0; 
+    position: relative;
+    z-index: 20;
+}
+
+/* Стеклянная панель-док */
+.pagination-dock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(5, 5, 8, 0.7);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Разделители внутри панели */
+.pagination-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 5px;
+}
+
+/* Кнопки < ПРЕД / СЛЕД > */
+.cyber-page-btn {
+    background: transparent;
+    color: #888;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cyber-page-btn i { font-size: 0.8rem; }
+
+.cyber-page-btn:hover:not(:disabled) {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.cyber-page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Контейнер цифр */
+.page-numbers-container {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Кнопки цифр 1, 2, 3... (Строгие и четкие) */
+.page-num-btn {
+    background: transparent;
+    color: #888;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    width: 38px;
+    height: 38px;
+    border: 1px solid transparent;
+    border-radius: 4px; /* Легкое закругление вместо круглого */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Линия-индикатор снизу кнопки (стиль Valorant/Cyberpunk) */
+.page-num-btn::after {
+    content: '';
     position: absolute;
-    bottom: -30px; /* ИСПРАВЛЕНИЕ: Компенсируем padding-bottom (30px) самой секции, чтобы перекрыть щель */
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 100vw; 
-    height: 280px; /* Чуть увеличили высоту, чтобы градиент был плавнее */
-    
-    /* Градиент, который плавно уходит в точный цвет секции Specs (#07070a / rgba(7, 7, 10, 0.96)) */
-    background: linear-gradient(
-        to top, 
-        rgba(7, 7, 10, 0.96) 0%, 
-        rgba(7, 7, 10, 0.8) 30%, 
-        rgba(7, 7, 10, 0.3) 70%, 
-        transparent 100%
-    );
-    z-index: 15; pointer-events: none; opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-.archive-fade-overlay.active { opacity: 1; pointer-events: auto; }
-
-/* КОНТЕЙНЕР ДЛЯ КНОПКИ (Умное позиционирование) */
-.archive-footer-controls { 
-    display: flex; justify-content: center; 
-    position: relative; z-index: 20; 
-    transition: margin-top 0.4s ease;
+    width: 0;
+    height: 2px;
+    background: var(--neon-green);
+    transition: 0.3s ease;
 }
 
-/* Режим РАЗВЕРНУТЬ: кнопка садится поверх нового оверлея */
-.archive-footer-controls.mode-expand {
-    margin-top: -80px; 
+.page-num-btn:hover:not(.active) {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+.page-num-btn:hover:not(.active)::after {
+    width: 40%;
+    background: #fff;
 }
 
-/* Режим СВЕРНУТЬ: кнопка отступает от последней карточки */
-.archive-footer-controls.mode-collapse {
-    margin-top: 30px;
-    padding-bottom: 20px;
+/* Активная страница (Четкий неоновый акцент) */
+.page-num-btn.active {
+    color: #000;
+    background: var(--neon-green);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+    cursor: default;
+}
+.page-num-btn.active::after {
+    display: none; /* Убираем полоску, если кнопка залита полностью */
 }
 
-.cyber-load-btn { position: relative; background: rgba(0, 0, 0, 0.6); color: var(--neon-green); font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 2px; padding: 15px 40px; border: none; cursor: pointer; text-transform: uppercase; transition: all 0.3s ease; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
-.cyber-load-btn::before { content: ''; position: absolute; inset: 0; background: var(--neon-green); z-index: -1; opacity: 0.3; transition: opacity 0.3s; }
-.cyber-load-btn::after { content: ''; position: absolute; inset: 2px; background: #0a0b10; z-index: -1; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
-.cyber-load-btn span { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; }
-.cyber-load-btn:hover { color: #000; transform: translateY(-2px); box-shadow: 0 0 20px rgba(57, 255, 20, 0.4); }
-.cyber-load-btn:hover::after { background: var(--neon-green); }
-.cyber-load-btn:hover::before { opacity: 1; }
+/* Паттерн "Scanline" на активной кнопке для текстурности */
+.page-num-btn.active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+    pointer-events: none;
+}
 
-.cyber-load-btn.collapse-mode { color: var(--neon-pink); }
-.cyber-load-btn.collapse-mode::before { background: var(--neon-pink); }
-.cyber-load-btn.collapse-mode:hover { color: #fff; box-shadow: 0 0 20px rgba(255, 45, 149, 0.4); }
-.cyber-load-btn.collapse-mode:hover::after { background: var(--neon-pink); }
+/* Многоточие */
+.page-dots {
+    color: #666;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    padding: 0 5px;
+    user-select: none;
+}
 
 @media (max-width: 768px) {
     .archive-header .section-title::before, .archive-header .section-title::after { display: none; }
     .archive-header .section-title { font-size: 2rem; letter-spacing: 2px; padding: 0; }
     .archive-flex-grid { gap: 15px; }
     .archive-flex-grid.compact-mode { gap: 10px; }
-    .archive-fade-overlay { height: 180px; bottom: -30px; } /* И на мобильных тоже держим смещение */
-    .archive-footer-controls.mode-expand { margin-top: -60px; }
+    
+    /* Адаптив пагинации для мобильных */
+    .pagination-dock { padding: 4px; gap: 2px; }
+    .cyber-page-btn { padding: 6px 10px; font-size: 0.8rem; }
+    .cyber-page-btn span { display: none; /* Прячем текст ПРЕД/СЛЕД на телефоне, оставляем только иконки */ }
+    .page-num-btn { width: 34px; height: 34px; font-size: 0.85rem; }
+    .pagination-divider { margin: 0 2px; }
 }

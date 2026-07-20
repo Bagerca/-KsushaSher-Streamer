@@ -7,22 +7,20 @@ export class GridManager {
         this.factory = cardFactory;
         this.lazyLoader = lazyLoader;
 
-        // Строгая привязка к элементам из index.html
         this.els = {
             wrapper: document.getElementById('archive-grid-wrapper'),
             gridMain: document.getElementById('archive-grid-main'),
-            gridSuggested: document.getElementById('archive-grid-suggested'),
-            suggestedHeader: document.getElementById('archive-suggested-header'),
-            overlay: document.getElementById('archive-fade-overlay'),
             controlsDiv: document.getElementById('archive-footer-controls'),
-            toggleBtn: document.getElementById('archive-toggle-btn'),
-            sentinel: document.getElementById('scroll-sentinel')
+            prevBtn: document.getElementById('page-prev-btn'),
+            nextBtn: document.getElementById('page-next-btn'),
+            pageNumbersContainer: document.getElementById('page-numbers-container')
         };
 
-        this.isExpanded = false;
+        this.currentPage = 1;
+        this.itemsPerPage = 12; 
+        this.totalPages = 1;
+        
         this.isAnimating = false; 
-        this.renderedCount = 0;
-        this.scrollObserver = null;
         this.resizeDebounceTimer = null;
         this.gridMode = 'detailed';
 
@@ -33,22 +31,21 @@ export class GridManager {
         this.gridMode = mode;
         const action = mode === 'compact' ? 'add' : 'remove';
         this.els.gridMain.classList[action]('compact-mode');
-        this.els.gridSuggested.classList[action]('compact-mode');
         this.renderGrid(true);
     }
 
     setSwitchingState(isSwitching) {
         const action = isSwitching ? 'add' : 'remove';
         this.els.gridMain.classList[action]('switching');
-        this.els.gridSuggested.classList[action]('switching');
     }
 
-    getDynamicBatchSize() {
+    calculateItemsPerPage() {
         const width = window.innerWidth;
         const isCompact = this.gridMode === 'compact';
         let cols = isCompact 
             ? (width > 1600 ? 8 : width > 1400 ? 7 : width > 1000 ? 6 : width > 768 ? 4 : 3)
             : (width > 1600 ? 6 : width > 1400 ? 5 : width > 1000 ? 4 : width > 768 ? 3 : 2);
+            
         return cols * 2; 
     }
 
@@ -56,10 +53,9 @@ export class GridManager {
         EventBus.on('MEDIA_STORE_LOADED', () => this.renderGrid(true));
         EventBus.on('MEDIA_STORE_UPDATED', () => this.renderGrid(true));
 
-        // Делегирование клика по карточкам
         this.els.wrapper.addEventListener('click', (e) => {
             const card = e.target.closest('.archive-card-container');
-            if (!card || card.classList.contains('fold-out')) return;
+            if (!card || this.isAnimating) return;
 
             const item = this.store.getItemById(card.dataset.id);
             if (item) {
@@ -69,7 +65,6 @@ export class GridManager {
             }
         });
 
-        // Отложенная загрузка слоев (3D-стек)
         this.els.wrapper.addEventListener('mouseenter', (e) => {
             const card = e.target.closest('.archive-card-container');
             if (!card || this.gridMode === 'compact') return;
@@ -84,154 +79,137 @@ export class GridManager {
         }, true);
 
         window.addEventListener('resize', () => {
-            if (this.isExpanded) return; 
             clearTimeout(this.resizeDebounceTimer);
             this.resizeDebounceTimer = setTimeout(() => this.renderGrid(true), 300);
         });
 
-        // Кнопка развернуть/свернуть
-        this.els.toggleBtn.addEventListener('click', () => this.handleExpandCollapse());
+        this.els.prevBtn.addEventListener('click', () => this.changePage(-1));
+        this.els.nextBtn.addEventListener('click', () => this.changePage(1));
     }
 
-    renderGrid(reset = false) {
-        if (reset) {
-            this.els.gridMain.innerHTML = '';
-            this.els.gridSuggested.innerHTML = '';
-            this.els.suggestedHeader.style.display = 'none';
-            this.renderedCount = 0;
-            this.isExpanded = false; 
-            if (this.scrollObserver) this.scrollObserver.disconnect();
+    renderGrid(resetToFirstPage = false) {
+        if (resetToFirstPage) {
+            this.currentPage = 1;
         }
 
         const data = this.store.combinedData;
+        this.itemsPerPage = this.calculateItemsPerPage();
+        this.totalPages = Math.ceil(data.length / this.itemsPerPage) || 1;
 
         if (data.length === 0) {
             this.els.gridMain.innerHTML = '<div style="width:100%; text-align:center; padding:50px; color:#666; font-family:\'Exo 2\';">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
-            this.toggleUI(false, false);
+            this.els.controlsDiv.style.display = 'none';
             return;
         }
 
-        if (this.renderedCount === 0 || this.isExpanded) {
-            this.renderNextBatch();
-        }
-
-        if (this.renderedCount < data.length) {
-            this.toggleUI(!this.isExpanded, true, this.isExpanded ? 'collapse' : 'expand');
-            if (this.isExpanded) this.setupInfiniteScroll();
-        } else {
-            this.toggleUI(false, this.isExpanded && data.length > this.getDynamicBatchSize(), 'collapse');
-        }
+        this.renderGridContent();
+        this.updatePaginationUI();
     }
 
-    toggleUI(showOverlay, showButton, btnMode = 'expand') {
-        this.els.overlay.classList.toggle('active', showOverlay);
-        this.els.wrapper.classList.toggle('has-more', showOverlay);
+    async changePage(direction) {
+        const newPage = this.currentPage + direction;
+        if (newPage < 1 || newPage > this.totalPages) return;
+        this.goToPage(newPage);
+    }
+
+    async goToPage(page) {
+        if (this.isAnimating || page === this.currentPage) return;
         
-        this.els.controlsDiv.style.display = showButton ? 'flex' : 'none';
-        if (showButton) {
-            this.els.controlsDiv.className = `archive-footer-controls mode-${btnMode}`;
-            this.els.toggleBtn.className = btnMode === 'expand' ? 'cyber-load-btn' : 'cyber-load-btn collapse-mode';
-            this.els.toggleBtn.innerHTML = btnMode === 'expand' 
-                ? `<span>РАЗВЕРНУТЬ БАЗУ (${this.store.combinedData.length}) <i class="fas fa-chevron-down"></i></span>`
-                : `<span>СВЕРНУТЬ <i class="fas fa-chevron-up"></i></span>`;
-        }
-    }
+        this.isAnimating = true;
+        EventBus.emit('PLAY_SOUND', 'hover');
 
-    handleExpandCollapse() {
-        if (this.isAnimating) return;
-        EventBus.emit('PLAY_SOUND', 'expand');
+        this.els.gridMain.classList.add('page-fade-out');
 
-        if (!this.isExpanded) {
-            this.isExpanded = true;
-            this.toggleUI(false, true, 'collapse');
-            this.renderNextBatch(); 
-            this.setupInfiniteScroll();
-        } else {
-            this.isAnimating = true;
-            const archiveSection = document.getElementById('media-archive');
-            
-            if (archiveSection) {
-                EventBus.emit('LAYOUT_CHANGED'); 
-                window.scrollTo({ top: Math.max(0, archiveSection.offsetTop - 50), behavior: 'smooth' });
-            }
+        await new Promise(r => setTimeout(r, 250));
 
-            setTimeout(() => {
-                const initialBatchSize = this.getDynamicBatchSize();
-                const allCards = [
-                    ...this.els.gridMain.querySelectorAll('.archive-card-container'),
-                    ...this.els.gridSuggested.querySelectorAll('.archive-card-container')
-                ];
+        this.currentPage = page;
+        this.renderGridContent();
+        this.updatePaginationUI();
 
-                const cardsToRemove = allCards.slice(initialBatchSize);
-
-                if (cardsToRemove.length > 0) {
-                    cardsToRemove.forEach(card => card.classList.add('fold-out'));
-                    
-                    setTimeout(() => {
-                        cardsToRemove.forEach(card => card.remove());
-                        if (this.els.gridSuggested.children.length === 0) {
-                            this.els.suggestedHeader.style.display = 'none';
-                        }
-                        
-                        this.renderedCount = initialBatchSize;
-                        this.isExpanded = false;
-                        
-                        this.toggleUI(true, true, 'expand');
-                        if (this.scrollObserver) this.scrollObserver.disconnect();
-                        
-                        EventBus.emit('LAYOUT_CHANGED'); 
-                        this.isAnimating = false;
-                    }, 350); 
-                } else {
-                    this.isAnimating = false;
-                }
-            }, 600);
-        }
-    }
-
-    setupInfiniteScroll() {
-        if (this.scrollObserver) this.scrollObserver.disconnect();
+        this.els.gridMain.classList.remove('page-fade-out');
         
-        this.scrollObserver = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && this.renderedCount < this.store.combinedData.length && this.isExpanded) {
-                this.renderNextBatch();
-            }
-        }, { rootMargin: '400px' });
-        
-        this.scrollObserver.observe(this.els.sentinel);
+        this.isAnimating = false;
+        EventBus.emit('LAYOUT_CHANGED');
     }
 
-    renderNextBatch() {
+    renderGridContent() {
         const data = this.store.combinedData;
-        const start = this.renderedCount;
-        const batchSize = this.getDynamicBatchSize();
-        const end = Math.min(this.isExpanded ? start + batchSize : batchSize, data.length);
+        const start = (this.currentPage - 1) * this.itemsPerPage;
+        const end = Math.min(start + this.itemsPerPage, data.length);
         
-        if (start >= end) return;
+        const pageData = data.slice(start, end);
 
         let mainHtmlBuf = '';
-        let suggHtmlBuf = '';
 
-        for (let i = start; i < end; i++) {
-            const html = this.factory.createCardHTML(data[i], (i % batchSize) * 35);
-            if (data[i].status === 'suggested') suggHtmlBuf += html;
-            else mainHtmlBuf += html;
-        }
+        pageData.forEach((item, index) => {
+            const delay = index * 30; 
+            mainHtmlBuf += this.factory.createCardHTML(item, delay);
+        });
         
-        if (suggHtmlBuf) {
-            this.els.suggestedHeader.style.display = 'flex';
-            this.els.gridSuggested.insertAdjacentHTML('beforeend', suggHtmlBuf);
-        }
-        if (mainHtmlBuf) {
-            this.els.gridMain.insertAdjacentHTML('beforeend', mainHtmlBuf);
-        }
-        
+        this.els.gridMain.innerHTML = mainHtmlBuf;
+
         document.querySelectorAll('.archive-card-container:not(.is-observed)').forEach(card => {
             card.classList.add('is-observed');
             this.lazyLoader.observe(card);
         });
+    }
 
-        this.renderedCount = end;
-        EventBus.emit('LAYOUT_CHANGED');
+    updatePaginationUI() {
+        if (this.totalPages <= 1) {
+            this.els.controlsDiv.style.display = 'none';
+            return;
+        }
+        
+        this.els.controlsDiv.style.display = 'flex';
+        
+        this.els.prevBtn.disabled = this.currentPage === 1;
+        this.els.nextBtn.disabled = this.currentPage === this.totalPages;
+        
+        this.renderPageNumbers();
+    }
+
+    renderPageNumbers() {
+        let html = '';
+        const maxVisible = 5; 
+        const total = this.totalPages;
+        const cur = this.currentPage;
+
+        let start = Math.max(1, cur - Math.floor(maxVisible / 2));
+        let end = Math.min(total, start + maxVisible - 1);
+
+        if (end - start + 1 < maxVisible) {
+            start = Math.max(1, end - maxVisible + 1);
+        }
+
+        // Кнопка 1 и многоточие
+        if (start > 1) {
+            html += `<button class="page-num-btn" data-page="1">1</button>`;
+            if (start > 2) html += `<span class="page-dots">...</span>`;
+        }
+
+        // Основные номера
+        for (let i = start; i <= end; i++) {
+            if (i === cur) {
+                html += `<button class="page-num-btn active">${i}</button>`;
+            } else {
+                html += `<button class="page-num-btn" data-page="${i}">${i}</button>`;
+            }
+        }
+
+        // Последняя кнопка и многоточие
+        if (end < total) {
+            if (end < total - 1) html += `<span class="page-dots">...</span>`;
+            html += `<button class="page-num-btn" data-page="${total}">${total}</button>`;
+        }
+
+        this.els.pageNumbersContainer.innerHTML = html;
+
+        // Биндим клики
+        this.els.pageNumbersContainer.querySelectorAll('.page-num-btn[data-page]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetPage = parseInt(e.target.dataset.page);
+                this.goToPage(targetPage);
+            });
+        });
     }
 }

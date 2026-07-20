@@ -312,24 +312,30 @@
                 </div>
             </div>
             
-            <!-- Обертка сетки базы данных (Отрефакторено: Контейнеры вынесены в HTML) -->
+            <!-- Обертка сетки базы данных -->
             <div class="archive-full-grid-wrapper" id="archive-grid-wrapper">
-                <div id="archive-grid-main" class="archive-flex-grid"></div>
-                
-                <div id="archive-suggested-header" class="archive-divider-row" style="display: none;">
-                    <div class="divider-line"></div>
-                    <div class="divider-text">COMMUNITY_SUGGESTIONS // ПРЕДЛОЖКА</div>
-                    <div class="divider-line"></div>
-                </div>
-                
-                <div id="archive-grid-suggested" class="archive-flex-grid"></div>
-                <div class="archive-fade-overlay" id="archive-fade-overlay"></div>
+                <div id="archive-grid-main" class="archive-flex-grid transition-layer"></div>
 
-                <div id="archive-footer-controls" class="archive-footer-controls" style="display: none;">
-                    <button id="archive-toggle-btn" class="cyber-load-btn"></button>
+                <!-- ПАНЕЛЬ ПАГИНАЦИИ (НОВЫЙ ХАЙ-ТЕК ДИЗАЙН) -->
+                <div id="archive-footer-controls" class="archive-pagination-hud" style="display: none;">
+                    <div class="pagination-dock">
+                        <button id="page-prev-btn" class="cyber-page-btn" title="Предыдущая">
+                            <i class="fas fa-chevron-left"></i> <span>ПРЕД</span>
+                        </button>
+                        
+                        <div class="pagination-divider"></div>
+                        
+                        <div id="page-numbers-container" class="page-numbers-container">
+                            <!-- JS генерирует сюда кружочки с цифрами -->
+                        </div>
+                        
+                        <div class="pagination-divider"></div>
+                        
+                        <button id="page-next-btn" class="cyber-page-btn" title="Следующая">
+                            <span>СЛЕД</span> <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
-                
-                <div id="scroll-sentinel" style="width: 100%; height: 10px; position: absolute; bottom: 50px;"></div>
             </div>
         </div>
     </section>
@@ -394,7 +400,7 @@
                         <span class="status-dot"></span>
                         <span class="status-text">СИСТЕМА ЗАЩИЩЕНА</span>
                     </div>
-                    <!-- ИСПРАВЛЕНИЕ: Контейнер для настоящего штрихкода -->
+                    <!-- Настоящий штрихкод -->
                     <div class="footer-barcode-container" title="[ HIDDEN DATA_LINK // SCAN TO DECODE ]"></div>
                     <p class="copyright"></p>
                 </div>
@@ -409,7 +415,6 @@
                         <a href="#" target="_blank" class="hud-btn youtube-alt" title="YouTube (Live/VOD)"><i class="fab fa-youtube"></i></a>
                         <a href="#" target="_blank" class="hud-btn telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
                         
-                        <!-- НОВАЯ КНОПКА VK -->
                         <a href="#" target="_blank" class="hud-btn vk" title="VKontakte"><i class="fab fa-vk"></i></a>
                         
                         <a href="#" target="_blank" class="hud-btn discord" title="Discord"><i class="fab fa-discord"></i></a>
