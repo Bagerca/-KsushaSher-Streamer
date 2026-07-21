@@ -18,8 +18,8 @@ export class AudioUI {
             btnPrev: document.getElementById('btn-prev'),
             btnNext: document.getElementById('btn-next'),
             hudRight: document.querySelector('.hud-side-panel.right'),
-            progressArea: document.getElementById('progress-area'), // Может отсутствовать в DOM
-            progressFill: document.getElementById('progress-fill'), // Может отсутствовать в DOM
+            progressArea: document.getElementById('progress-area'),
+            progressFill: document.getElementById('progress-fill'),
             volumeTicksContainer: document.getElementById('volume-ticks')
         };
 
@@ -38,24 +38,23 @@ export class AudioUI {
     }
 
     bindEvents() {
-        // Контролы (Безопасная привязка)
         if (this.els.btnPlay) this.els.btnPlay.addEventListener('click', () => this.core.togglePlay());
         if (this.els.btnPrev) this.els.btnPrev.addEventListener('click', () => { this.core.initContext(); this.core.prev(); });
         if (this.els.btnNext) this.els.btnNext.addEventListener('click', () => { this.core.initContext(); this.core.next(); });
         if (this.els.playlist) this.els.playlist.addEventListener('click', () => this.core.initContext());
 
-        // Прогресс бар (с проверкой существования)
         if (this.els.progressArea) {
             this.els.progressArea.addEventListener('click', (e) => {
                 if (!this.isMusicModeActive || isNaN(this.core.audio.duration)) return;
                 const clickX = e.offsetX;
                 const newTime = (clickX / this.els.progressArea.clientWidth) * this.core.audio.duration;
                 this.core.seek(newTime);
-                EventBus.emit('SYS_LOG', { html: `[MUSIC] SEEK_TO: <span style="color:#fff">${Math.floor(newTime/60)}:${Math.floor(newTime%60).toString().padStart(2, '0')}</span>` });
+                
+                const timeStr = `${Math.floor(newTime/60)}:${Math.floor(newTime%60).toString().padStart(2, '0')}`;
+                EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'SEEK_TO', value: timeStr, color: '#ccc' });
             });
         }
 
-        // Громкость (Drag) - только если элемент есть
         if (this.els.volumeTicksContainer) {
             let isDraggingVolume = false;
             this.els.volumeTicksContainer.addEventListener('mousedown', (e) => {
@@ -67,13 +66,12 @@ export class AudioUI {
             });
             document.addEventListener('mouseup', () => {
                 if (isDraggingVolume && this.isMusicModeActive) {
-                    EventBus.emit('SYS_LOG', { html: `[MUSIC] VOL_UPDATE: <span style="color:#fff">${Math.round(this.core.audio.volume * 100)}%</span>` });
+                    EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'VOL_UPDATE', value: `${Math.round(this.core.audio.volume * 100)}%`, color: '#ccc' });
                 }
                 isDraggingVolume = false;
             });
         }
 
-        // Подписки на Core
         EventBus.on('AUDIO_PLAY_STATE_CHANGED', (isPlaying) => {
             if (this.els.btnPlay) {
                 const icon = this.els.btnPlay.querySelector('i');
@@ -89,7 +87,6 @@ export class AudioUI {
             this.els.progressFill.style.width = `${(currentTime / duration) * 100}%`;
         });
 
-        // Слушаем переключение режима UI
         EventBus.on('UI_CLICK_MUSIC', () => this.toggleMode());
     }
 
@@ -178,8 +175,7 @@ export class AudioUI {
                 this.updateVolumeUI(this.core.audio.volume);
                 this.renderPlaylist();
                 
-                EventBus.emit('SYS_LOG', { html: `MUSIC MODULE: <span style='color:var(--neon-pink)'>ACTIVATING...</span>`, forceScroll: true });
-                EventBus.emit('SYS_LOG', { html: `[MUSIC] MODULE_INIT <span style="color:#fff">READY</span>` });
+                EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'MODULE_INIT', value: 'READY', color: 'var(--neon-pink)', forceScroll: true });
             } else {
                 if (this.core.isPlaying) this.core.pause();
                 
@@ -190,7 +186,7 @@ export class AudioUI {
                 if (this.els.hudRight) this.els.hudRight.classList.remove('music-mode-active');
                 if (this.els.progressFill) this.els.progressFill.style.width = '0%';
                 
-                EventBus.emit('SYS_LOG', { html: `MUSIC MODULE: <span style='color:var(--neon-green)'>DEACTIVATING...</span>`, forceScroll: true });
+                EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'MODULE', value: 'DEACTIVATED', color: '#888', forceScroll: true });
             }
             
             if (statusContainer) statusContainer.classList.remove('status-switching');

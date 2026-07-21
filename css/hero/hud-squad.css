@@ -3,7 +3,7 @@
 .panel-name { 
     font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #fff; 
     text-shadow: 0 0 15px rgba(57, 255, 20, 0.3); display: flex; justify-content: center; 
-    align-items: center; text-align: center; line-height: 1.2; margin-bottom: 10px;
+    align-items: center; text-align: center; line-height: 1.2; margin-bottom: 0px;
 }
 
 .squad-list { 
@@ -12,11 +12,12 @@
     justify-content: center; 
     flex-wrap: wrap;
     gap: 30px; 
-    margin-top: 10px; /* ИСПРАВЛЕНИЕ: Подтянули список выше к заголовку */
+    /* Магия центрирования: auto сверху и снизу выравнивает блок ровно посередине пустого места */
+    margin-top: auto; 
     margin-bottom: auto; 
 }
 
-/* НОВЫЙ БЛОК: SVG ЛИНИИ СОЕДИНЕНИЯ (НЕЙРОСЕТЬ) */
+/* СЕТКА НЕЙРОСЕТИ МЕЖДУ АВАТАРКАМИ */
 .squad-connections {
     position: absolute;
     inset: 0;

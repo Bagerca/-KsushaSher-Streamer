@@ -15,7 +15,6 @@ export class NavRailManager {
         
         this.ticking = false;    
         this.currentActiveId = null;
-        this.observer = null;
         
         this.init();
     }
@@ -40,15 +39,16 @@ export class NavRailManager {
             
             marker.addEventListener('click', (e) => {
                 e.preventDefault();
-                const targetScroll = this.calculateTargetScroll(sec.id);
-                customSmoothScroll(targetScroll, 1000);
+                // Используем сохраненные координаты для идеального скролла
+                if (sec.targetScroll !== undefined) {
+                    customSmoothScroll(sec.targetScroll, 800);
+                }
             });
             
             this.rail.appendChild(marker);
         });
 
-        this.setupIntersectionObserver();
-
+        // Слушаем изменения размера экрана для перерасчета координат
         this.resizeObserver = new ResizeObserver(() => {
             if (!this.ticking) {
                 window.requestAnimationFrame(() => {
@@ -60,16 +60,18 @@ export class NavRailManager {
         });
         this.resizeObserver.observe(document.body);
 
+        // Главный слушатель скролла
         window.addEventListener('scroll', () => {
             if (!this.ticking) {
                 window.requestAnimationFrame(() => {
-                    this.updateScrollMagnetism();
+                    this.updateScrollState();
                     this.ticking = false;
                 });
                 this.ticking = true;
             }
         }, { passive: true });
 
+        // Перерасчет при изменении контента
         EventBus.on('LAYOUT_CHANGED', () => {
             setTimeout(() => this.updatePositions(), 300); 
         });
@@ -77,25 +79,35 @@ export class NavRailManager {
         setTimeout(() => this.updatePositions(), 500);
     }
 
-    setupIntersectionObserver() {
-        const options = {
-            root: null,
-            rootMargin: '-30% 0px -50% 0px', 
-            threshold: 0
-        };
-
-        this.observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.setActiveMarker(entry.target.id);
-                }
-            });
-        }, options);
-
-        this.sections.forEach(sec => {
+    // Вычисляем и сохраняем точные координаты каждой секции
+    updatePositions() {
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const maxScroll = Math.max(1, docHeight - winHeight);
+        
+        this.sections.forEach((sec, index) => {
             const el = document.getElementById(sec.id);
-            if (el) this.observer.observe(el);
+            if (el) {
+                let targetScroll = el.offsetTop - (winHeight * 0.15);
+                if (index === 0) targetScroll = 0;
+                if (index === this.sections.length - 1) targetScroll = maxScroll;
+
+                sec.targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
+                sec.decimal = sec.targetScroll / maxScroll;
+
+                const marker = document.getElementById(`nav-marker-${sec.id}`);
+                if (marker) {
+                    marker.style.top = `${sec.decimal * 100}%`;
+                }
+            } else {
+                sec.targetScroll = 0;
+                sec.decimal = 0;
+            }
         });
+        
+        // Сортируем массив строго по порядку скролла (защита от багов)
+        this.sections.sort((a, b) => a.targetScroll - b.targetScroll);
+        this.updateScrollState();
     }
 
     setActiveMarker(sectionId) {
@@ -108,83 +120,52 @@ export class NavRailManager {
                 marker.classList.toggle('active', s.id === sectionId);
             }
         });
-        
-        // Как только меняется секция — перерисовываем луч
-        this.updateBeam();
     }
 
-    calculateTargetScroll(sectionId) {
-        const el = document.getElementById(sectionId);
-        if (!el) return 0;
-
-        const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
-        const maxScroll = Math.max(1, docHeight - winHeight);
-        
-        const viewOffset = winHeight * 0.15; 
-        let targetScroll = el.offsetTop - viewOffset;
-
-        if (sectionId === this.sections[0].id) targetScroll = 0;
-        if (sectionId === this.sections[this.sections.length - 1].id) targetScroll = maxScroll;
-
-        return Math.max(0, Math.min(maxScroll, targetScroll));
-    }
-
-    updatePositions() {
-        const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
-        const maxScroll = Math.max(1, docHeight - winHeight);
-        
-        this.sections.forEach(sec => {
-            const marker = document.getElementById(`nav-marker-${sec.id}`);
-            if (marker) {
-                const targetScroll = this.calculateTargetScroll(sec.id);
-                const markerDecimal = targetScroll / maxScroll;
-                const safeDecimal = Math.max(0, Math.min(1, markerDecimal));
-                
-                marker.style.top = `${safeDecimal * 100}%`;
-                sec.decimal = safeDecimal;
-            }
-        });
-        
-        this.updateScrollMagnetism();
-        this.updateBeam();
-    }
-
-    // НОВАЯ ЛОГИКА: Растягиваем луч на размер текущей секции
-    updateBeam() {
-        if (!this.currentActiveId) return;
-        
-        const activeIndex = this.sections.findIndex(s => s.id === this.currentActiveId);
-        if (activeIndex === -1) return;
-
-        const activeSec = this.sections[activeIndex];
-        const startDecimal = activeSec.decimal || 0;
-        let endDecimal = 1;
-
-        if (activeIndex < this.sections.length - 1) {
-            endDecimal = this.sections[activeIndex + 1].decimal || 1;
-        }
-
-        const heightDecimal = endDecimal - startDecimal;
-
-        this.rail.style.setProperty('--beam-top', startDecimal);
-        this.rail.style.setProperty('--beam-height', heightDecimal);
-    }
-
-    updateScrollMagnetism() {
+    // НОВАЯ МАТЕМАТИЧЕСКАЯ ЛОГИКА (Заменила глючный IntersectionObserver)
+    updateScrollState() {
         const docHeight = document.documentElement.scrollHeight;
         const winHeight = window.innerHeight;
         const maxScroll = Math.max(1, docHeight - winHeight);
         const scrollY = window.scrollY;
 
-        let scrollPercentage = scrollY / maxScroll;
-        scrollPercentage = Math.max(0, Math.min(1, scrollPercentage)); 
-        
+        let globalProgress = scrollY / maxScroll;
+        globalProgress = Math.max(0, Math.min(1, globalProgress));
+
+        // 1. Находим активную секцию (какая сейчас на экране)
+        let activeIndex = 0;
+        for (let i = this.sections.length - 1; i >= 0; i--) {
+            if (scrollY >= this.sections[i].targetScroll - 5) {
+                activeIndex = i;
+                break;
+            }
+        }
+
+        const activeSec = this.sections[activeIndex];
+        this.setActiveMarker(activeSec.id);
+
+        // 2. Луч заливается ровно от активной секции до следующей
+        const startDecimal = activeSec.decimal;
+        let endDecimal = startDecimal;
+
+        if (activeIndex < this.sections.length - 1) {
+            endDecimal = this.sections[activeIndex + 1].decimal;
+        } else {
+            // Для последней секции уводим луч в конец
+            endDecimal = 1.0;
+        }
+
+        const beamHeight = endDecimal - startDecimal;
+
+        // 3. Отправляем координаты в CSS
+        this.rail.style.setProperty('--beam-top', startDecimal);
+        this.rail.style.setProperty('--beam-height', beamHeight);
+
+        // 4. Магнетизм (свечение маркеров при приближении скролла)
         this.sections.forEach(sec => {
             const marker = document.getElementById(`nav-marker-${sec.id}`);
             if (marker && sec.decimal !== undefined) {
-                let distance = Math.abs(scrollPercentage - sec.decimal);
+                let distance = Math.abs(globalProgress - sec.decimal);
                 let proximity = Math.max(0, 1 - (distance * 6)); 
                 proximity = Math.pow(proximity, 2).toFixed(3);
                 marker.style.setProperty('--proximity', proximity);
@@ -195,5 +176,5 @@ export class NavRailManager {
 
 export function initNavRail() {
     new NavRailManager();
-    console.log('🧭 [UI] Навигационный луч (Секционный) инициализирован');
+    console.log('🧭 [UI] Навигационный луч (Математический трекинг) инициализирован');
 }

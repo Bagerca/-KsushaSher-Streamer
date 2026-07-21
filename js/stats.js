@@ -6,7 +6,6 @@ export class StatsManager {
     constructor() {
         this.uptimeInterval = null;
         
-        // Строгий паттерн привязки элементов DOM
         this.els = {
             followers: document.getElementById('stat-followers'),
             viewersLabel: document.getElementById('stat-label-viewers'),
@@ -121,7 +120,6 @@ export class StatsManager {
                 }
             }
 
-            // РАССЫЛАЕМ СОБЫТИЕ С РЕАЛЬНЫМИ ДАННЫМИ ПО ВСЕМУ САЙТУ
             EventBus.emit('TWITCH_DATA_UPDATED', {
                 isLive: isLive,
                 followers: user.followers,
@@ -129,7 +127,7 @@ export class StatsManager {
                 game: isLive && user.stream.game ? user.stream.game.displayName : ''
             });
 
-            EventBus.emit('SYS_LOG', { html: `[STATS] Данные трансляции и био обновлены.` });
+            // Лог статистики при загрузке отключен по просьбе пользователя
             
         } catch (error) {
             console.error('❌ [Stats] Ошибка получения данных:', error);

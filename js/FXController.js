@@ -22,10 +22,8 @@ export class FXController {
 
     init() {
         this.registerEventHandlers();
-        
-        // Запуск базового фона (Кометы) при старте
         this.engines.comet.startIdle();
-        console.log('✨ [FXController] Графические движки инициализированы (Глобальный режим)');
+        console.log('✨ [FXController] Графические движки инициализированы');
     }
 
     registerEventHandlers() {
@@ -84,9 +82,9 @@ export class FXController {
         
         EventBus.on('STATE_GODMODE_CHANGED', (isGodMode) => {
             if (isGodMode) {
-                EventBus.emit('SYS_LOG', { html: "🔥 PROTOCOL: <span style='color:var(--neon-pink)'>GOD_MODE_ACTIVATED</span>" });
+                EventBus.emit('SYS_LOG', { type: 'system', tag: 'PROTOCOL', action: 'GOD_MODE', value: 'ACTIVATED', color: '#ffd700' });
             } else {
-                EventBus.emit('SYS_LOG', { html: "💤 PROTOCOL: <span style='color:#666'>GOD_MODE_DEACTIVATED</span>" });
+                EventBus.emit('SYS_LOG', { type: 'system', tag: 'PROTOCOL', action: 'GOD_MODE', value: 'DEACTIVATED', color: '#888' });
             }
         });
     }

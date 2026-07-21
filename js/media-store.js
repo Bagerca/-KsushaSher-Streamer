@@ -43,23 +43,17 @@ export class MediaStore {
                 loadData('suggestions-youtube.json', [])
             ]);
             
-            // МАГИЯ АВТОМАТИЗАЦИИ: Функция инъекции недостающих данных
             const injectMeta = (array, defaultType, defaultFormat, idPrefix) => {
                 return (Array.isArray(array) ? array : []).map((item, index) => ({
                     ...item,
-                    // Генерируем уникальный ID, если его нет
                     id: item.id || `${idPrefix}-${Date.now()}-${index}`,
-                    // Проставляем тип (games/movies)
                     type: item.type || defaultType,
-                    // Если есть items, значит это коллекция, иначе берем defaultFormat
                     format: item.format || (item.items ? 'collection' : defaultFormat)
                 }));
             };
 
-            // Обрабатываем все массивы перед их сохранением
             this.dataMain = injectMeta(rawMain, type, 'standard', 'main');
             
-            // Для ютуба жестко проставляем format 'youtube' и кидаем его в 'movies'
             const pGames = injectMeta(sugGames, 'games', 'standard', 'sug-games');
             const pMovies = injectMeta(sugMovies, 'movies', 'standard', 'sug-movies');
             const pYt = injectMeta(sugYt, 'movies', 'youtube', 'sug-yt');
@@ -73,10 +67,12 @@ export class MediaStore {
                 
             this.processData();
             EventBus.emit('MEDIA_STORE_LOADED');
-            EventBus.emit('SYS_LOG', { html: `[DB] Загружена база: ${type.toUpperCase()}` });
+            
+            // Лог базы данных при загрузке отключен по просьбе пользователя
+            
         } catch (error) {
             console.error("Ошибка загрузки медиа:", error);
-            EventBus.emit('SYS_LOG', { html: `<span class="terminal-err">[DB] Ошибка загрузки ${type}</span>` });
+            EventBus.emit('SYS_LOG', { type: 'system', tag: 'DATABASE', action: 'ERROR', value: `LOAD_${type.toUpperCase()}_FAILED`, color: '#ff4444' });
         }
     }
 

@@ -2,15 +2,12 @@
 import EventBus from './event-bus.js';
 import { AppConfig } from './config.js';
 
-/**
- * Класс визуальных эффектов терминала.
- */
 class TerminalFX {
     constructor(terminalCtrl) {
         this.ctrl = terminalCtrl;
-        this.lastNoiseIndex = -1;
         this.noiseInterval = null;
-        this.messages = AppConfig.texts.terminalNoise || ["[SYS] Ping: OK"];
+        this.messages = AppConfig.texts.terminalNoise || ["[SYS] System Ready"];
+        this.recentIndexes = [];
     }
 
     async runBootSequence() {
@@ -19,61 +16,64 @@ class TerminalFX {
         ctrl.historyEl.innerHTML = '';
         
         await this.delay(500);
-        let line = ctrl.addLogLine(`INITIALIZING ${AppConfig.system.osName} ${AppConfig.system.osVersion}...`, true, true);
+        
+        let line = ctrl.addLogLine(`<div class="term-line"><span class="term-tag boot">[BOOT]</span> <span class="term-text">ЗАПУСК ${AppConfig.system.osName} ${AppConfig.system.osVersion}...</span></div>`, true, true);
         await this.delay(800);
         line.style.borderRight = 'none';
         
-        ctrl.addLogLine("CHECKING MEMORY... <span class='terminal-ok'>OK</span>", false, true);
+        ctrl.addLogLine(`<div class="term-line"><span class="term-tag mem">[MEM]</span> <span class="term-text">ДИАГНОСТИКА ПАМЯТИ...</span> <span class="term-status ok">[ OK ]</span></div>`, false, true);
         await this.delay(300);
         
         const loadingLine = ctrl.addLogLine("", false, true);
         await new Promise((resolve) => {
             this.runProgressBarAnimation(loadingLine, () => {
-                loadingLine.innerHTML = "CORE MODULES: <span class='terminal-ok'>LOADED</span>";
+                loadingLine.innerHTML = `<div class="term-line"><span class="term-tag core">[CORE]</span> <span class="term-text">ЯДРО СИСТЕМЫ...</span> <span class="term-status ok">[ ЗАГРУЖЕНО ]</span></div>`;
                 resolve();
-            }, "LOADING KERNEL");
+            });
         });
 
-        ctrl.addLogLine("CONNECTING TO TWITCH API... <span class='terminal-ok'>CONNECTED</span>", false, true);
+        ctrl.addLogLine(`<div class="term-line"><span class="term-tag net">[NET]</span> <span class="term-text">TWITCH API LINK...</span> <span class="term-status ok">[ УСТАНОВЛЕН ]</span></div>`, false, true);
         await this.delay(400);
-        ctrl.addLogLine("> ПРОТОКОЛЫ ЗАЩИТЫ: <span class='terminal-ok'>АКТИВНЫ</span>", false, true);
-        await this.delay(200);
-        ctrl.addLogLine("> МОДЕРАЦИЯ ЧАТА: <span class='terminal-ok'>АКТИВНА</span>", false, true);
-        await this.delay(200);
-        ctrl.addLogLine("<span style='opacity:0.7'>Введите 'help' для списка команд...</span>", false, true);
+        
+        ctrl.addLogLine(`<div class="term-line"><span class="term-tag sec">[SEC]</span> <span class="term-text">ПРОТОКОЛЫ ЗАЩИТЫ...</span> <span class="term-status active">[ АКТИВНЫ ]</span></div>`, false, true);
+        await this.delay(300);
+        
+        ctrl.addLogLine(`<span class="term-welcome">СИСТЕМА ГОТОВА. Введите <span class="term-cmd-highlight" data-cmd="help">help</span> для вывода списка команд.</span>`, false, true);
     }
 
     startSystemNoise() {
-        const wrapLog = (text) => `<span style='font-size:0.85rem; color:#888;'>${this.ctrl.colorizeLog(text)}</span>`;
-        
         this.noiseInterval = setInterval(() => {
             if (this.ctrl.isSystemNoiseAllowed && this.ctrl.historyEl) {
                 const rand = Math.random();
                 if (rand > 0.7 && rand < 0.95) {
                     let index;
                     do { index = Math.floor(Math.random() * this.messages.length); } 
-                    while (index === this.lastNoiseIndex && this.messages.length > 1);
-                    this.lastNoiseIndex = index;
-                    this.ctrl.addLogLine(wrapLog(this.messages[index]));
+                    while (this.recentIndexes.includes(index) && this.messages.length > this.recentIndexes.length);
+                    
+                    this.recentIndexes.push(index);
+                    if (this.recentIndexes.length > 6) this.recentIndexes.shift();
+
+                    this.ctrl.addLogLine(this.ctrl.colorizeLog(this.messages[index]));
                 }
-                if (this.ctrl.historyEl.children.length > 50) {
+                
+                if (this.ctrl.historyEl.children.length > 60) {
                     this.ctrl.historyEl.removeChild(this.ctrl.historyEl.firstChild);
                 }
             }
         }, 8000);
     }
 
-    runProgressBarAnimation(logLine, onComplete, label) {
+    runProgressBarAnimation(logLine, onComplete) {
         let percent = 0;
         const barWidth = 15; 
-        const speed = label === "LOADING KERNEL" ? 30 : 50;
+        const speed = 30;
 
         const interval = setInterval(() => {
             percent += 4; 
             const filledCount = Math.floor(barWidth * (percent / 100));
             const bar = '█'.repeat(filledCount) + '░'.repeat(barWidth - filledCount);
             
-            logLine.innerHTML = `> ${label}... [${bar}] ${percent}%`;
+            logLine.innerHTML = `<div class="term-line"><span class="term-tag core">[CORE]</span> <span class="term-text">РАСПАКОВКА... [${bar}] ${percent}%</span></div>`;
             
             if (percent >= 100) {
                 clearInterval(interval);
@@ -85,9 +85,6 @@ class TerminalFX {
     delay(ms) { return new Promise(res => setTimeout(res, ms)); }
 }
 
-/**
- * Основной контроллер терминала.
- */
 export class TerminalController {
     constructor() {
         this.historyEl = document.getElementById('terminal-history');
@@ -97,8 +94,7 @@ export class TerminalController {
         this.isSystemNoiseAllowed = true;
         this.fx = new TerminalFX(this);
         
-        // --- НОВЫЙ БЛОК: ЮЗАБИЛИТИ ---
-        this.cmdHistory = []; // История введенных команд
+        this.cmdHistory = []; 
         this.historyIndex = -1;
         this.availableCommands = [
             'help', 'clear', 'status', 'music', 'player', 'dragon', 'lizard', 
@@ -116,26 +112,28 @@ export class TerminalController {
         this.fx.startSystemNoise();
     }
     
+    // ИСПРАВЛЕНИЕ: Добавлены новые теги в словарь раскраски (REPO, BIOSHOCK и т.д.)
     colorizeLog(text) {
         return text.replace(/^\[(.*?)\]/, (match, prefix) => {
-            let color = '#888'; 
-            if (['ERR', 'BAGERCA'].includes(prefix)) color = '#ff4444';
-            else if (['WARN', 'ANGEL'].includes(prefix)) color = '#ffd700';
-            else if (['OK', 'SYS'].includes(prefix)) color = 'var(--neon-green)';
-            else if (['NET', 'TWITCH', 'CHAT', 'KIRIKI'].includes(prefix)) color = '#00ccff';
-            else if (['TETLA', 'LETHAL', 'PHASMO'].includes(prefix)) color = 'var(--neon-pink)';
+            let color = '#00ccff'; 
+            if (['ERR', 'BAGERCA', 'ROULETTE', 'MOUTHWASHING'].includes(prefix)) color = '#ff4444';
+            else if (['WARN', 'ANGEL', 'CS2', 'TOMODACHI'].includes(prefix)) color = '#ffd700';
+            else if (['OK', 'SYS', 'MINECRAFT', 'REPO'].includes(prefix)) color = 'var(--neon-green)';
+            else if (['TETLA', 'LETHAL', 'PHASMO', 'DBD', 'DONATE', 'BIOSHOCK'].includes(prefix)) color = 'var(--neon-pink)';
             
-            return `<span style="color:${color}; font-weight:bold;">[${prefix}]</span>`;
+            return `<span style="color:${color}; font-weight:bold; margin-right:6px;">[${prefix}]</span>`;
         });
     }
 
     setupEventListeners() {
         this.boxEl.addEventListener('click', (e) => {
-            if (!e.target.closest('.interactive-cmd')) this.inputEl.focus();
+            if (!e.target.closest('.interactive-cmd') && !e.target.closest('[data-cmd]')) {
+                this.inputEl.focus();
+            }
         });
 
         this.historyEl.addEventListener('click', (e) => {
-            const cmdEl = e.target.closest('.interactive-cmd');
+            const cmdEl = e.target.closest('.interactive-cmd, [data-cmd]');
             if (cmdEl) {
                 this.inputEl.value = cmdEl.dataset.cmd;
                 this.inputEl.focus();
@@ -150,10 +148,32 @@ export class TerminalController {
         }, { passive: false });
 
         EventBus.on('SYS_LOG', (payload) => {
-            this.addLogLine(payload.html, payload.isTyping, payload.forceScroll);
+            if (payload.type === 'system') {
+                const timeStr = new Date().toLocaleTimeString('ru-RU', { hour12: false });
+                const color = payload.color || 'var(--neon-green)';
+                
+                const htmlContent = `
+                    <div class="sys-log-row">
+                        <span class="sys-time">[${timeStr}]</span>
+                        <span class="sys-tag" style="color: ${color}">[${payload.tag}]</span>
+                        <span class="sys-action">${payload.action}</span>
+                        <div class="sys-dots"></div>
+                        <span class="sys-value" style="color: ${color}" title="${payload.value}">${payload.value}</span>
+                    </div>
+                `;
+                this.addLogLine(htmlContent, payload.isTyping, payload.forceScroll);
+                return;
+            }
+
+            let htmlContent = payload.html;
+            
+            if (!htmlContent.includes('<') && htmlContent.match(/^\[.*?\]/)) {
+                htmlContent = this.colorizeLog(htmlContent);
+            }
+
+            this.addLogLine(htmlContent, payload.isTyping, payload.forceScroll);
         });
 
-        // --- НОВЫЙ ИВЕНТ: Текстовый спиннер загрузки ---
         EventBus.on('SYS_SPINNER', async ({ text, duration, finalHtml }) => {
             const line = this.addLogLine(`${text} [ | ]`, false, true);
             const frames = ['|', '/', '-', '\\'];
@@ -176,9 +196,7 @@ export class TerminalController {
         });
     }
 
-    // --- НОВАЯ ЛОГИКА ОБРАБОТКИ КЛАВИШ ---
     handleKeyDown(e) {
-        // 1. Автодополнение (Tab)
         if (e.key === 'Tab') {
             e.preventDefault();
             const currentVal = this.inputEl.value.toLowerCase().trim();
@@ -189,7 +207,6 @@ export class TerminalController {
             return;
         }
 
-        // 2. История вверх
         if (e.key === 'ArrowUp') {
             e.preventDefault();
             if (this.cmdHistory.length > 0) {
@@ -199,7 +216,6 @@ export class TerminalController {
             return;
         }
 
-        // 3. История вниз
         if (e.key === 'ArrowDown') {
             e.preventDefault();
             if (this.historyIndex < this.cmdHistory.length - 1) {
@@ -212,7 +228,6 @@ export class TerminalController {
             return;
         }
 
-        // 4. Отправка команды (Enter)
         if (e.key === 'Enter') {
             const rawValue = this.inputEl.value;
             const commandParts = rawValue.trim().split(/\s+/);
@@ -220,14 +235,13 @@ export class TerminalController {
             
             if (!rawValue.trim()) return;
 
-            // Записываем в историю
             if (this.cmdHistory[this.cmdHistory.length - 1] !== rawValue.trim()) {
                 this.cmdHistory.push(rawValue.trim());
             }
             this.historyIndex = this.cmdHistory.length;
 
-            // Вывод введенной команды
-            const cmdLine = document.createElement('p');
+            const cmdLine = document.createElement('div');
+            cmdLine.className = 'terminal-log-entry';
             cmdLine.innerHTML = `<span style="color:var(--neon-green); margin-right:8px;">></span>${rawValue}`;
             cmdLine.style.color = '#fff'; 
             cmdLine.style.margin = '0 0 5px 0';
@@ -249,21 +263,23 @@ export class TerminalController {
     addLogLine(html, isTyping = false, forceScroll = false) {
         if (!this.historyEl) return null;
         
-        const p = document.createElement('p');
-        p.innerHTML = html;
-        p.style.margin = '0 0 5px 0';
+        const row = document.createElement('div');
+        row.className = 'terminal-log-entry';
+        row.innerHTML = html;
         
         if (isTyping) {
-            p.style.borderRight = '7px solid var(--neon-green)';
-            p.style.width = 'fit-content';
-            p.style.animation = 'blink 0.5s step-end infinite';
+            row.style.borderRight = '7px solid var(--neon-green)';
+            row.style.width = 'fit-content';
+            row.style.animation = 'blink 0.5s step-end infinite';
         }
         
-        this.historyEl.appendChild(p);
+        this.historyEl.appendChild(row);
         
-        if (forceScroll || this.isNearBottom()) this.scrollToBottom();
+        if (forceScroll || this.isNearBottom()) {
+            this.scrollToBottom();
+        }
         
-        return p;
+        return row;
     }
 
     isNearBottom() {
@@ -272,7 +288,11 @@ export class TerminalController {
     }
 
     scrollToBottom() {
-        if (this.boxEl) this.boxEl.scrollTop = this.boxEl.scrollHeight;
+        if (this.boxEl) {
+            setTimeout(() => {
+                this.boxEl.scrollTop = this.boxEl.scrollHeight;
+            }, 10);
+        }
     }
 
     setSystemNoiseState(isEnabled) {

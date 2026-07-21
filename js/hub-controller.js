@@ -24,7 +24,6 @@ export class HubController {
         let domain = window.location.hostname || "localhost";
         if (domain === "127.0.0.1") domain = "localhost";
 
-        // Добавлен класс twitch-iframe и песочница, чтобы Twitch не жаловался на кликджекинг
         if (this.els.playerContainer) {
             this.els.playerContainer.innerHTML = `
                 <iframe 
@@ -79,6 +78,6 @@ export class HubController {
             `;
         }).join('');
         
-        EventBus.emit('SYS_LOG', { html: `[RADAR] Союзная сеть синхронизирована.` });
+        // Лог радара при обновлении отключен по просьбе пользователя
     }
 }

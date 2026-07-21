@@ -86,14 +86,16 @@ export class AudioCore {
         this.audio.play().catch(e => console.error("❌ [AudioCore] Ошибка Play:", e));
         this.isPlaying = true;
         EventBus.emit('AUDIO_PLAY_STATE_CHANGED', true);
-        EventBus.emit('SYS_LOG', { html: `[MUSIC] PLAYING: <span style="color:#fff">${this.tracks[this.currentTrackIdx].title}</span>` });
+        
+        EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'PLAYING', value: this.tracks[this.currentTrackIdx].title, color: 'var(--neon-pink)' });
     }
 
     pause() {
         this.audio.pause();
         this.isPlaying = false;
         EventBus.emit('AUDIO_PLAY_STATE_CHANGED', false);
-        EventBus.emit('SYS_LOG', { html: `[MUSIC] STATUS: <span style="color:#fff">PAUSED</span>` });
+        
+        EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'STATUS', value: 'PAUSED', color: '#888' });
     }
 
     next() {
@@ -101,7 +103,7 @@ export class AudioCore {
         let nextIdx = (this.currentTrackIdx + 1) % this.tracks.length;
         this.loadTrack(nextIdx);
         this.play();
-        EventBus.emit('SYS_LOG', { html: `[MUSIC] CMD: <span style="color:#fff">NEXT_TRACK >></span>` });
+        EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'CMD', value: 'NEXT_TRACK >>', color: 'var(--neon-pink)' });
     }
 
     prev() {
@@ -109,7 +111,7 @@ export class AudioCore {
         let prevIdx = (this.currentTrackIdx - 1 + this.tracks.length) % this.tracks.length;
         this.loadTrack(prevIdx);
         this.play();
-        EventBus.emit('SYS_LOG', { html: `[MUSIC] CMD: <span style="color:#fff"><< PREV_TRACK</span>` });
+        EventBus.emit('SYS_LOG', { type: 'system', tag: 'MUSIC', action: 'CMD', value: '<< PREV_TRACK', color: 'var(--neon-pink)' });
     }
 
     setVolume(vol) { this.audio.volume = Math.max(0, Math.min(1, vol)); }
