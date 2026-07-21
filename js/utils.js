@@ -25,6 +25,16 @@ export function getYouTubeId(url) {
 }
 
 /**
+ * Извлекает ID YouTube Плейлиста из любой ссылки
+ */
+export function getYouTubePlaylistId(url) {
+    if (!url) return null;
+    // Ищем параметр list= в URL
+    const match = url.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+    return (match && match[1]) ? match[1] : null;
+}
+
+/**
  * Генерирует стабильный цвет на основе строки (никнейма)
  */
 export function getUserColor(name) {

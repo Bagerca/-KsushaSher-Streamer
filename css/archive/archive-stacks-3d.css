@@ -1,38 +1,22 @@
 /* css/archive-stacks-3d.css */
 
-/* FLEX WIDTHS */
-.archive-card-container { width: calc(16.666% - 16.66px); }
-.archive-card-container.is-youtube { width: calc(33.333% - 13.33px); }
-.archive-flex-grid.compact-mode .archive-card-container { width: calc(12.5% - 10.5px); }
-.archive-flex-grid.compact-mode .archive-card-container.is-youtube { width: calc(25% - 9px); }
+/* ФИКСИРОВАННЫЕ РАЗМЕРЫ В CSS GRID */
+.archive-card-container { 
+    grid-column: span 1; 
+    width: 100%; 
+    height: auto; /* Высота подтянется по aspect-ratio из archive-card.css */
+}
 
-@media (max-width: 1600px) { 
-    .archive-card-container { width: calc(20% - 16px); } 
-    .archive-card-container.is-youtube { width: calc(40% - 12px); }
-    .archive-flex-grid.compact-mode .archive-card-container { width: calc(14.28% - 10.28px); }
-    .archive-flex-grid.compact-mode .archive-card-container.is-youtube { width: calc(28.56% - 8.5px); }
+.archive-card-container.is-youtube { 
+    grid-column: span 2; 
 }
-@media (max-width: 1400px) { 
-    .archive-card-container { width: calc(25% - 15px); } 
-    .archive-card-container.is-youtube { width: calc(50% - 10px); }
-    .archive-flex-grid.compact-mode .archive-card-container { width: calc(16.66% - 10px); }
-    .archive-flex-grid.compact-mode .archive-card-container.is-youtube { width: calc(33.33% - 8px); }
-}
-@media (max-width: 1000px) { 
-    .archive-card-container { width: calc(33.33% - 13.33px); } 
-    .archive-card-container.is-youtube { width: calc(66.66% - 6.66px); }
-    .archive-flex-grid.compact-mode .archive-card-container { width: calc(25% - 9px); }
-    .archive-flex-grid.compact-mode .archive-card-container.is-youtube { width: calc(50% - 6px); }
-}
-@media (max-width: 768px) {
-    .archive-card-container { width: calc(50% - 7.5px); } 
-    .archive-card-container.is-youtube { width: 100%; }
-    .archive-flex-grid.compact-mode .archive-card-container { width: calc(33.33% - 6.66px); }
-    .archive-flex-grid.compact-mode .archive-card-container.is-youtube { width: calc(66.66% - 3.33px); }
+
+/* Мобильный адаптив */
+@media (max-width: 600px) {
+    .archive-card-container { grid-column: span 1 !important; }
 }
 
 /* СЛОИ */
-/* ИСПРАВЛЕНИЕ: box-shadow теперь 0.5s вместо 0.2s для устранения резкой "вспышки" */
 .card-layer { 
     transition: 
         transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
@@ -62,7 +46,6 @@
     box-shadow: 0 0 15px var(--layer-color, var(--custom-color)); 
 }
 
-/* ИСПРАВЛЕНИЕ: Добавлен внутренний inset shadow к ховерам, чтобы смягчить резкую границу бордера */
 .archive-card-container.stack-1:hover .layer-front { 
     transform: scale(1.02) translateY(-5px); 
     border-color: var(--layer-color, var(--custom-color));

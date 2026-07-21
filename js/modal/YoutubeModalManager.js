@@ -81,33 +81,26 @@ export class YoutubeModalManager {
         this.fallbackColor = color || item.customColor || '#ff0000';
         this.overlay.style.setProperty('--yt-color', this.fallbackColor);
         
-        // Заголовок (Безопасная вставка текста)
         this.els.title.textContent = item.title;
         this.els.titleFull.textContent = item.title;
         
         let descText = item.description || "Описание отсутствует.";
         const effectiveStatus = item.status || 'unknown';
         
-        // Очищаем контейнеры описаний
         this.els.desc.innerHTML = '';
         this.els.descFull.innerHTML = '';
 
-        // БЕЗОПАСНАЯ ВСТАВКА ДАННЫХ (ЗАЩИТА ОТ XSS)
         if (effectiveStatus === 'suggested' && item.suggestedBy) {
-            // Создаем стилизованный префикс с иконкой
             const prefixSpan = document.createElement('span');
             prefixSpan.style.color = 'var(--yt-color)';
             prefixSpan.style.fontWeight = '700';
-            prefixSpan.innerHTML = '<i class="fas fa-user"></i> '; // Иконка FontAwesome (Безопасно, хардкод)
+            prefixSpan.innerHTML = '<i class="fas fa-user"></i> '; 
             
-            // Текст имени пользователя вставляем через textContent
             const authorText = document.createTextNode(`${item.suggestedBy}: `);
             prefixSpan.appendChild(authorText);
             
-            // Основное описание также вставляем как текст
             const mainDescNode = document.createTextNode(descText);
             
-            // Собираем элементы для truncated и full версий
             this.els.desc.appendChild(prefixSpan.cloneNode(true));
             this.els.desc.appendChild(mainDescNode.cloneNode());
             
@@ -124,18 +117,17 @@ export class YoutubeModalManager {
         this.overlay.classList.add('active');
     }
 
-    async extractAndApplyColor(ytId) {
+    async extractAndApplyColor(imageUrl) {
+        if (!imageUrl) return;
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.decoding = "async";
-        img.src = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+        img.src = imageUrl;
         
         try {
             await img.decode();
             const color = await extractColorFromImageAsync(img);
-            if (color) {
-                this.overlay.style.setProperty('--yt-color', color);
-            }
+            if (color) this.overlay.style.setProperty('--yt-color', color);
         } catch (e) {
             this.overlay.style.setProperty('--yt-color', this.fallbackColor);
         }
@@ -147,51 +139,42 @@ export class YoutubeModalManager {
         this.els.playlistItems.innerHTML = '';
         let firstValidId = null;
 
-        videos.forEach((vid, index) => {
-            const isStr = typeof vid === 'string';
-            const url = isStr ? vid : vid.url;
-            let title = (!isStr && vid.title) ? vid.title : `Ролик #${index + 1}`;
-            const ytId = getYouTubeId(url);
-            
-            if (!ytId) return;
-            if (!firstValidId) firstValidId = ytId;
+        videos.forEach((url, index) => { // ИСПРАВЛЕНИЕ: Ждем только строку url
+            const loopYtId = getYouTubeId(url);
+            if (!loopYtId) return;
+            if (!firstValidId) firstValidId = loopYtId;
 
             const card = document.createElement('div');
             card.className = `yt-playlist-card ${index === 0 ? 'active' : ''}`;
             
-            // Безопасная вставка каркаса
             card.innerHTML = `
-                <div class="yt-thumb"><img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="thumbnail"></div>
+                <div class="yt-thumb"><img src="https://img.youtube.com/vi/${loopYtId}/hqdefault.jpg" alt="thumbnail"></div>
                 <div class="yt-card-info">
-                    <div class="yt-card-title"></div>
+                    <div class="yt-card-title">Ролик #${index + 1}</div>
                 </div>
             `;
             
-            // Безопасная вставка текста названия видео
             const titleEl = card.querySelector('.yt-card-title');
-            titleEl.textContent = title;
 
             card.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
                 this.els.playlistItems.querySelectorAll('.yt-playlist-card').forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
-                this.setVideo(ytId, titleEl.textContent);
+                this.setVideo(loopYtId, titleEl.textContent);
             });
 
             this.els.playlistItems.appendChild(card);
 
-            // Подгрузка оригинального названия видео через API
-            if (isStr) {
-                fetch(`https://noembed.com/embed?url=${url}`).then(r => r.json()).then(d => {
-                    if (d.title) {
-                        titleEl.textContent = d.title;
-                        if (card.classList.contains('active') && status === 'suggested') {
-                            this.els.title.textContent = d.title;
-                            this.els.titleFull.textContent = d.title;
-                        }
+            // АВТО-ПАРСИНГ ИМЕНИ
+            fetch(`https://noembed.com/embed?url=${url}`).then(r => r.json()).then(d => {
+                if (d.title) {
+                    titleEl.textContent = d.title;
+                    if (card.classList.contains('active') && status === 'suggested') {
+                        this.els.title.textContent = d.title;
+                        this.els.titleFull.textContent = d.title;
                     }
-                }).catch(() => {});
-            }
+                }
+            }).catch(() => {});
         });
 
         if (videos.length > 1) {
@@ -207,9 +190,9 @@ export class YoutubeModalManager {
 
     setVideo(ytId, title) {
         this.els.iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=0&rel=0&modestbranding=1`;
-        this.els.bg.style.backgroundImage = `url('https://img.youtube.com/vi/${ytId}/maxresdefault.jpg')`;
+        this.els.bg.style.backgroundImage = `url('https://img.youtube.com/vi/${ytId}/hqdefault.jpg')`;
         
-        this.extractAndApplyColor(ytId);
+        this.extractAndApplyColor(`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`);
 
         if (this.currentItem.status === 'suggested') {
             this.els.title.textContent = title;

@@ -19,26 +19,28 @@ export class CardFactory {
         const isCollection = item.format === 'collection';
         const isCompact = this.getGridMode() === 'compact';
         
-        // [РЕФАКТОРИНГ] Данные уже нормализованы в MediaStore. Просто берем их.
         const title = item.title || '?';
         const status = item.status || 'unknown';
         const color = item.customColor || '#444455'; 
 
-        // [РЕФАКТОРИНГ] Берем предрассчитанные цвета слоев
         const cFront = item.stackColors ? item.stackColors[0] : color;
         const cBack1 = item.stackColors ? item.stackColors[1] : color;
         const cBack2 = item.stackColors ? item.stackColors[2] : color;
 
         let images = [];
-        if (isYouTube && item.videos) {
-            images = item.videos.slice(0, 3).map(v => `https://img.youtube.com/vi/${getYouTubeId(typeof v === 'string' ? v : v.url)}/maxresdefault.jpg`);
-        } else if (item.images && item.images.length > 0) {
-            images = [...item.images];
-        } else if (item.image) {
-            images = [item.image];
+
+        if (isYouTube && item.videos && item.videos.length > 0) {
+            images = item.videos.slice(0, 3).map(url => { // ИСПРАВЛЕНИЕ: Прямая строка
+                const ytId = getYouTubeId(url);
+                return ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
+            }).filter(Boolean);
+        } 
+
+        if (!images.length) {
+            if (item.images && item.images.length > 0) images = [...item.images];
+            else if (item.image) images = [item.image];
+            else images = ['https://via.placeholder.com/320x480/1a1a24/ffffff?text=NO+IMAGE'];
         }
-        
-        if (!images.length) images = ['https://via.placeholder.com/320x480/1a1a24/ffffff?text=NO+IMAGE'];
 
         const stackCount = Math.min(images.length, 3);
         const imgFront = optimizeImageUrl(images[0], 400, 85);
@@ -52,16 +54,15 @@ export class CardFactory {
         }
 
         const playOverlay = isYouTube ? `<div class="youtube-play-overlay"><i class="fab fa-youtube"></i></div>` : '';
+        
         let topBadge = '';
         if (isCollection && item.items) {
             topBadge = `<div class="yt-playlist-badge collection-badge" style="border-color: var(--layer-color, var(--custom-color));"><i class="fas fa-folder-open" style="color: var(--layer-color, var(--custom-color));"></i> <span>${item.items.length}</span></div>`;
-        } else if (isYouTube && item.videos?.length > 1) { 
-            topBadge = `<div class="yt-playlist-badge"><i class="fas fa-layer-group"></i> <span>${item.videos.length}</span></div>`;
+        } else if (isYouTube && item.videos && item.videos.length > 1) { 
+            topBadge = `<div class="yt-playlist-badge"><i class="fas fa-list"></i> <span>${item.videos.length}</span></div>`;
         }
 
-        // [РЕФАКТОРИНГ] Используем заранее вычисленный рейтинг коллекции
         const rating = item.rating || 0;
-
         let ratingHtml = '';
         if (status !== 'suggested' && !isYouTube && rating > 0) {
             const rScore = Math.round(rating); 

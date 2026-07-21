@@ -380,5 +380,69 @@
     "description": "Выживание на планете, полностью покрытой водой.",
     "image": "assets/images/games/subnautica.jpg",
     "status": "on-hold"
+  },
+  {
+    "id": "tiny-bunny",
+    "title": "Tiny Bunny",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/tiny-bunny.jpg",
+    "status": "completed"
+  },
+  {
+    "id": "machinika-museum",
+    "title": "Machinika: Museum",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/machinika-museum.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "poppy-playtime",
+    "title": "Poppy Playtime",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/poppy-playtime.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "scp-secret-laboratory",
+    "title": "SCP: Secret Laboratory",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/scp-secret-laboratory.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "scorn",
+    "title": "Scorn",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/scorn.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "sigame",
+    "title": "SIGame",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/sigame.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "spiderheck",
+    "title": "SpiderHeck",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/spiderheck.jpg",
+    "status": "on-hold"
+  },
+  {
+    "id": "stalker-soc",
+    "title": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/stalker-soc.jpg",
+    "status": "on-hold"
   }
 ]

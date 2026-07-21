@@ -55,13 +55,10 @@
     <!-- =========================================
          МОДУЛИ МОДАЛЬНЫХ ОКОН
          ========================================= -->
-    <!-- Разделенный базовый слой -->
     <link rel="stylesheet" href="css/modal/modal-layout.css"> 
     <link rel="stylesheet" href="css/modal/modal-sidebar.css"> 
     <link rel="stylesheet" href="css/modal/modal-typography.css"> 
     <link rel="stylesheet" href="css/modal/modal-animations.css"> 
-    
-    <!-- Специфичные компоненты -->
     <link rel="stylesheet" href="css/modal/modal-posters.css"> 
     <link rel="stylesheet" href="css/modal/modal-player.css">
     <link rel="stylesheet" href="css/modal/modal-youtube.css">
@@ -77,8 +74,6 @@
          ПРОЧИЕ СЕКЦИИ И ФУТЕР
          ========================================= -->
     <link rel="stylesheet" href="css/specs/specs-layout.css">     
-    
-    <!-- ФУТЕР: Разделенные модули -->
     <link rel="stylesheet" href="css/footer/footer-layout.css">
     <link rel="stylesheet" href="css/footer/footer-typography.css">
     <link rel="stylesheet" href="css/footer/social-hud.css">
@@ -94,7 +89,6 @@
          ========================================= -->
     <section class="hero-section-hud" id="hero">
         <div class="hud-container">
-            <!-- Левая панель: Союзник / Терминал -->
             <div class="hud-side-panel left">
                 <div class="panel-content">
                     <div class="panel-header"><span class="header-title">СОЮЗНИК</span><span class="header-deco-line"></span></div>
@@ -109,7 +103,6 @@
                 </div>
             </div>
 
-            <!-- Центральный радар -->
             <div class="hud-main-display">
                 <div class="main-avatar-container">
                     <div class="main-display-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
@@ -127,7 +120,6 @@
                 </div>
             </div>
 
-            <!-- Правая панель: Отряд / Плеер -->
             <div class="hud-side-panel right" id="squad-panel">
                 <div class="panel-content">
                     <div class="squad-default-view" id="squad-view">
@@ -204,7 +196,6 @@
                 </div>
             </div>
             <div class="hub-grid">
-                <!-- Статистика -->
                 <div class="cmd-panel stats-panel">
                     <div class="hud-bracket top-left"></div>
                     <div class="hud-bracket bottom-right"></div>
@@ -240,7 +231,6 @@
                     </div>
                 </div>
 
-                <!-- Левая колонка -->
                 <div class="hub-col-main">
                     <div class="cmd-panel player-panel">
                         <div class="hud-bracket top-left"></div>
@@ -253,7 +243,6 @@
                     </div>
                 </div>
 
-                <!-- Правая колонка -->
                 <div class="hub-col-side">
                     <div class="cmd-panel network-panel">
                         <div class="hud-bracket top-right"></div>
@@ -275,72 +264,66 @@
          ========================================= -->
     <section id="media-archive" class="media-archive-section">
         <div class="container">
-            <div class="archive-header">
-                <h2 class="section-title">БАЗА ДАННЫХ</h2>
-                <div class="archive-header-sub">SYSTEM LIBRARY // ACCESS GRANTED</div>
+            
+            <!-- ШАПКА АРХИВА (2 КОЛОНКИ) -->
+            <div class="archive-top-bar">
                 
-                <div class="header-control-bar">
-                    <div class="sort-switcher">
-                        <button class="sort-btn active" data-sort="name" title="По алфавиту"><i class="fas fa-sort-alpha-down sort-icon"></i></button>
-                        <button class="sort-btn" data-sort="rating" title="По рейтингу"><i class="fas fa-star sort-icon"></i></button>
+                <!-- Левая колонка: Управление и Фильтры -->
+                <div class="archive-tools">
+                    <div class="header-control-bar">
+                        <div class="sort-switcher">
+                            <button class="sort-btn active" data-sort="name" title="По алфавиту"><i class="fas fa-sort-alpha-down sort-icon"></i></button>
+                            <button class="sort-btn" data-sort="rating" title="По рейтингу"><i class="fas fa-star sort-icon"></i></button>
+                        </div>
+                        <div class="type-switcher">
+                            <div class="switcher-bg"></div>
+                            <button class="switcher-btn active" data-type="games"><i class="fas fa-gamepad"></i> ИГРЫ</button>
+                            <button class="switcher-btn" data-type="movies"><i class="fas fa-film"></i> КИНО</button>
+                        </div>
+                        <div class="density-switcher">
+                            <button class="density-btn active" data-mode="detailed" title="Подробная сетка"><i class="fas fa-th-large"></i></button>
+                            <button class="density-btn" data-mode="compact" title="Компактная сетка"><i class="fas fa-th"></i></button>
+                        </div>
                     </div>
-                    <div class="type-switcher">
-                        <div class="switcher-bg"></div>
-                        <button class="switcher-btn active" data-type="games"><i class="fas fa-gamepad"></i> ИГРЫ</button>
-                        <button class="switcher-btn" data-type="movies"><i class="fas fa-film"></i> КИНО</button>
-                    </div>
-                    <div class="density-switcher">
-                        <button class="density-btn active" data-mode="detailed" title="Подробная сетка"><i class="fas fa-th-large"></i></button>
-                        <button class="density-btn" data-mode="compact" title="Компактная сетка"><i class="fas fa-th"></i></button>
+                    
+                    <div class="filters-wrapper">
+                        <div class="filter-row status-row" id="archive-filters-status"></div>
                     </div>
                 </div>
+
+                <!-- Правая колонка: Поиск -->
+                <div class="archive-search-area">
+                    <div class="search-row">
+                        <div class="search-module" id="search-module">
+                            <i class="fas fa-search search-icon" id="search-icon-default"></i>
+                            <i class="fas fa-circle-notch fa-spin search-icon loading-icon" id="search-icon-loading" style="display: none; color: var(--neon-pink);"></i>
+                            <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
+                            <div class="search-hotkey" id="search-hotkey-hint">Ctrl+K</div>
+                        </div>
+                        <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+
             </div>
             
-            <div class="archive-controls">
-                <div class="search-row">
-                    <div class="search-module" id="search-module">
-                        <i class="fas fa-search search-icon" id="search-icon-default"></i>
-                        <i class="fas fa-circle-notch fa-spin search-icon loading-icon" id="search-icon-loading" style="display: none; color: var(--neon-pink);"></i>
-                        <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
-                        <div class="search-hotkey" id="search-hotkey-hint">Ctrl+K</div>
-                    </div>
-                    <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-trash-alt"></i></button>
-                </div>
-                
-                <div class="filters-wrapper">
-                    <div class="filter-row status-row" id="archive-filters-status"></div>
-                </div>
-            </div>
-            
-            <!-- Обертка сетки базы данных (НОВАЯ СТРУКТУРА: Левый Сайдбар + Сетка) -->
             <div class="archive-full-grid-wrapper" id="archive-grid-wrapper">
-                
-                <!-- ПАНЕЛЬ ПАГИНАЦИИ (СЛЕВА) -->
                 <div id="archive-side-pagination" class="archive-side-pagination" style="display: none;">
                     <div class="pagination-dock-vertical">
                         <button id="page-prev-btn" class="cyber-page-btn-vert" title="Предыдущая страница">
                             <i class="fas fa-chevron-up"></i>
                         </button>
-                        
                         <div class="pagination-divider-vert"></div>
-                        
-                        <div id="page-numbers-container" class="page-numbers-vert">
-                            <!-- JS генерирует сюда кружочки с цифрами -->
-                        </div>
-                        
+                        <div id="page-numbers-container" class="page-numbers-vert"></div>
                         <div class="pagination-divider-vert"></div>
-                        
                         <button id="page-next-btn" class="cyber-page-btn-vert" title="Следующая страница">
                             <i class="fas fa-chevron-down"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- СЕТКА КАРТОЧЕК -->
                 <div class="archive-grid-content">
                     <div id="archive-grid-main" class="archive-flex-grid transition-layer"></div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -384,7 +367,7 @@
         </div>
     </section>
 
-<!-- =========================================
+    <!-- =========================================
          FOOTER
          ========================================= -->
     <footer class="cyber-footer">
@@ -392,41 +375,29 @@
         <div class="footer-bg-grid"></div>
         <div class="container">
             <div class="footer-content">
-                
-                <!-- Левая часть: Бренд и Разработчик -->
                 <div class="footer-left">
                     <h3 class="footer-brand"><span id="inject-footer-brand">STREAMER</span> <span class="brand-ver">OS v.5.6</span></h3>
                     <p class="dev-credits">SYSTEM ARCHITECT: <a href="https://github.com/Bagerca" target="_blank" class="dev-name"></a></p>
                 </div>
-
-                <!-- Центральная часть: Статус, Штрихкод и Копирайт -->
                 <div class="footer-center">
                     <div class="footer-status">
                         <span class="status-dot"></span>
                         <span class="status-text">СИСТЕМА ЗАЩИЩЕНА</span>
                     </div>
-                    <!-- Настоящий штрихкод -->
                     <div class="footer-barcode-container" title="[ HIDDEN DATA_LINK // SCAN TO DECODE ]"></div>
                     <p class="copyright"></p>
                 </div>
-
-                <!-- Правая часть: Соцсети -->
                 <div class="footer-right">
                     <div class="social-hud">
                         <a href="#" target="_blank" class="hud-btn twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
-                        <!-- Первая кнопка YT (Основная) -->
                         <a href="#" target="_blank" class="hud-btn youtube" title="YouTube (Main)"><i class="fab fa-youtube"></i></a>
-                        <!-- Вторая кнопка YT (Архив/VOD) -->
                         <a href="#" target="_blank" class="hud-btn youtube-alt" title="YouTube (Live/VOD)"><i class="fab fa-youtube"></i></a>
                         <a href="#" target="_blank" class="hud-btn telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
-                        
                         <a href="#" target="_blank" class="hud-btn vk" title="VKontakte"><i class="fab fa-vk"></i></a>
-                        
                         <a href="#" target="_blank" class="hud-btn discord" title="Discord"><i class="fab fa-discord"></i></a>
                         <a href="#" target="_blank" class="hud-btn tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
-
             </div>
         </div>
     </footer>

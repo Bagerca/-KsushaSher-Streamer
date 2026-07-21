@@ -1,41 +1,56 @@
 [
   {
+    "id": "tetla",
     "name": "Tetlabot",
     "role": "fish",
     "level": 99,
     "color": "#319a24",
     "mainIcon": "fas fa-fish",
     "typeIcon": "fas fa-water",
-    "stats": 100
+    "stats": 100,
+    "description": "Искусственный интеллект, контролирующий систему. Любит рыб."
   },
   {
+    "id": "bagerka",
     "name": "BAGERcaa",
+    "squadName": "BAGERca",
     "role": "DEV / TECH",
     "level": 80,
     "color": "#ff4444",
     "mainIcon": "fas fa-laptop-code",
     "typeIcon": "fas fa-code",
-    "stats": 95
+    "stats": 95,
+    "avatarPath": "assets/images/bagerca.jpg",
+    "description": "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах."
   },
   {
+    "id": "angel",
     "name": "to_be_ang",
+    "squadName": "Angel",
     "role": "The Shining Angel",
     "level": 75,
     "color": "#ff4504",
     "mainIcon": "fas fa-sun",
     "typeIcon": "fas fa-star",
-    "stats": 90
+    "stats": 90,
+    "avatarPath": "assets/images/angel.jpg",
+    "description": "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию."
   },
   {
+    "id": "kiriki",
     "name": "kiriki_oni",
+    "squadName": "Kiriki",
     "role": "Neuro wave",
     "level": 70,
     "color": "#007bff",
     "mainIcon": "fas fa-wave-square",
     "typeIcon": "fas fa-music",
-    "stats": 85
+    "stats": 85,
+    "avatarPath": "assets/images/kiriki.jpg",
+    "description": "Нейро-композитор и повелитель алгоритмов. Создает уникальную музыку с помощью нейросетей, превращая искусственный интеллект в инструмент искусства."
   },
   {
+    "id": "dragon",
     "name": "dragonsmaddison",
     "role": "DragonDildo",
     "level": 69,
@@ -45,6 +60,7 @@
     "stats": 80
   },
   {
+    "id": "dark",
     "name": "Darkl1us",
     "role": "Military Beer",
     "level": 40,
@@ -54,6 +70,7 @@
     "stats": 60
   },
   {
+    "id": "nikita",
     "name": "Nikitakgc",
     "role": "Forest Expert",
     "level": 50,
@@ -63,6 +80,7 @@
     "stats": 70
   },
   {
+    "id": "roma",
     "name": "Roma99...",
     "role": "Orenburg Brother",
     "level": 45,
@@ -72,8 +90,9 @@
     "stats": 65
   },
   {
+    "id": "raku6chka",
     "name": "raku6chka",
-    "role": "Orenburg Brother",
+    "role": "Irkutsk Brother",
     "level": 42,
     "color": "#17a2b8",
     "mainIcon": "far fa-handshake",
@@ -81,6 +100,7 @@
     "stats": 62
   },
   {
+    "id": "hardwell",
     "name": "h1rdwell",
     "role": "Hard Worker",
     "level": 35,

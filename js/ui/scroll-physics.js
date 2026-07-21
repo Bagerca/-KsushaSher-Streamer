@@ -2,8 +2,7 @@
 
 /**
  * КИБЕР-ФИЗИКА СКРОЛЛА
- * Универсальная функция для плавного перемещения камеры.
- * Экспортируется для использования в навигационном луче.
+ * Универсальная функция для плавного перемещения камеры по клику (якоря/навигация).
  */
 export function customSmoothScroll(targetPosition, duration = 800) {
     const startPosition = window.scrollY;
@@ -90,8 +89,95 @@ class SmoothScrollManager {
     }
 }
 
+/**
+ * УМЕНЬШИТЕЛЬ ШАГА КОЛЕСИКА МЫШИ
+ * Делает "тик" мышки в два раза короче и добавляет плавную кинематографичную остановку.
+ */
+class SmoothWheelScroller {
+    constructor() {
+        this.targetY = window.scrollY;
+        this.currentY = window.scrollY;
+        this.isAnimating = false;
+        
+        // --- НАСТРОЙКИ ---
+        this.dampening = 0.45; // Во сколько раз резать шаг (0.45 = шаг в 2 с лишним раза короче)
+        this.speed = 0.12;     // Скорость плавной остановки
+        // -----------------
+
+        window.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
+        
+        // Синхронизация, если юзер дернул ползунок справа
+        window.addEventListener('scroll', () => {
+            if (!this.isAnimating) {
+                this.targetY = window.scrollY;
+                this.currentY = window.scrollY;
+            }
+        }, { passive: true });
+    }
+
+    onWheel(e) {
+        // Пропускаем, если зажат Ctrl (зум браузера) или идет авто-скролл по клику в меню
+        if (e.ctrlKey || document.body.classList.contains('is-auto-scrolling')) return;
+
+        // ЗАЩИТА ТАЧПАДОВ: Если шаг слишком маленький (< 50px), это ноутбучный тачпад.
+        // Ему не нужна обрезка шага, у него свой идеальный микро-скролл.
+        if (Math.abs(e.deltaY) < 50) return;
+
+        // ЗАЩИТА КОНТЕЙНЕРОВ: Разрешаем нативный скролл внутри терминала или модалок
+        let target = e.target;
+        while (target && target !== document.body && target !== document.documentElement) {
+            const style = window.getComputedStyle(target);
+            if ((style.overflowY === 'auto' || style.overflowY === 'scroll') && target.scrollHeight > target.clientHeight) {
+                return; // Нашли внутренний скролл, отключаем нашу магию
+            }
+            target = target.parentElement;
+        }
+
+        // Блокируем стандартный грубый прыжок браузера
+        e.preventDefault();
+
+        // Если анимация не идет, синхронизируем стартовую точку
+        if (!this.isAnimating) {
+            this.targetY = window.scrollY;
+            this.currentY = window.scrollY;
+        }
+
+        // Применяем обрезанный шаг
+        this.targetY += e.deltaY * this.dampening;
+
+        // Не даем улететь за пределы страницы
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        this.targetY = Math.max(0, Math.min(this.targetY, maxScroll));
+
+        // Запускаем цикл плавной доводки
+        if (!this.isAnimating) {
+            this.isAnimating = true;
+            requestAnimationFrame(() => this.update());
+        }
+    }
+
+    update() {
+        if (!this.isAnimating) return;
+
+        // Плавная интерполяция (Lerp)
+        this.currentY += (this.targetY - this.currentY) * this.speed;
+
+        // Остановка, когда почти доехали до цели
+        if (Math.abs(this.targetY - this.currentY) < 0.5) {
+            this.currentY = this.targetY;
+            window.scrollTo(0, this.currentY);
+            this.isAnimating = false;
+            return;
+        }
+
+        window.scrollTo(0, this.currentY);
+        requestAnimationFrame(() => this.update());
+    }
+}
+
 export function initScrollPhysics() {
     new GlobalScrollBooster();
     new SmoothScrollManager();
+    new SmoothWheelScroller(); // Включаем наш новый сглаживатель шага
     console.log('⚡ [UI] Физика скролла инициализирована');
 }

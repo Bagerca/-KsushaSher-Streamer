@@ -17,7 +17,12 @@ export class GridManager {
         };
 
         this.currentPage = 1;
-        this.itemsPerPage = 12; 
+        this.stdPerPage = 12; 
+        this.ytPerPage = 6;
+        
+        this.mainPages = 0;
+        this.suggPages = 0;
+        this.ytPages = 0;
         this.totalPages = 1;
         
         this.isAnimating = false; 
@@ -31,6 +36,7 @@ export class GridManager {
         this.gridMode = mode;
         const action = mode === 'compact' ? 'add' : 'remove';
         this.els.gridMain.classList[action]('compact-mode');
+        this.els.gridMain.style.minHeight = '0px';
         this.renderGrid(true);
     }
 
@@ -39,16 +45,19 @@ export class GridManager {
         this.els.gridMain.classList[action]('switching');
     }
 
-    calculateItemsPerPage() {
-        const width = window.innerWidth;
-        // Отнимаем ширину сайдбара из расчетов
-        const effectiveWidth = width > 1024 ? width - 80 : width;
-        const isCompact = this.gridMode === 'compact';
-        let cols = isCompact 
-            ? (effectiveWidth > 1600 ? 8 : effectiveWidth > 1400 ? 7 : effectiveWidth > 1000 ? 6 : effectiveWidth > 768 ? 4 : 3)
-            : (effectiveWidth > 1600 ? 6 : effectiveWidth > 1400 ? 5 : effectiveWidth > 1000 ? 4 : effectiveWidth > 768 ? 3 : 2);
-            
-        return cols * 2; 
+    getColumnsCount() {
+        let gridWidth = this.els.gridMain.clientWidth;
+        
+        if (gridWidth === 0) {
+            const containerMax = Math.min(window.innerWidth * 0.95, 1650);
+            gridWidth = containerMax - 52 - 30; 
+        }
+
+        if (this.gridMode === 'compact') {
+            return Math.max(1, Math.floor((gridWidth + 12) / (160 + 12)));
+        } else {
+            return Math.max(1, Math.floor((gridWidth + 20) / (230 + 20)));
+        }
     }
 
     bindEvents() {
@@ -82,7 +91,10 @@ export class GridManager {
 
         window.addEventListener('resize', () => {
             clearTimeout(this.resizeDebounceTimer);
-            this.resizeDebounceTimer = setTimeout(() => this.renderGrid(true), 300);
+            this.resizeDebounceTimer = setTimeout(() => {
+                this.els.gridMain.style.minHeight = '0px';
+                this.renderGrid(true);
+            }, 300);
         });
 
         this.els.prevBtn.addEventListener('click', () => this.changePage(-1));
@@ -90,19 +102,26 @@ export class GridManager {
     }
 
     renderGrid(resetToFirstPage = false) {
-        if (resetToFirstPage) {
-            this.currentPage = 1;
-        }
+        if (resetToFirstPage) this.currentPage = 1;
 
-        const data = this.store.combinedData;
-        this.itemsPerPage = this.calculateItemsPerPage();
-        this.totalPages = Math.ceil(data.length / this.itemsPerPage) || 1;
+        const cols = this.getColumnsCount();
+        this.stdPerPage = cols * 2; 
+        
+        this.ytPerPage = Math.max(2, Math.floor(cols / 2) * 2); 
+        
+        this.mainPages = Math.ceil(this.store.filteredMainStandard.length / this.stdPerPage);
+        this.suggPages = Math.ceil(this.store.filteredSuggStandard.length / this.stdPerPage);
+        this.ytPages = Math.ceil(this.store.filteredYoutube.length / this.ytPerPage);
 
-        if (data.length === 0) {
+        this.totalPages = this.mainPages + this.suggPages + this.ytPages;
+
+        if (this.totalPages === 0) {
             this.els.gridMain.innerHTML = '<div style="width:100%; text-align:center; padding:50px; color:#666; font-family:\'Exo 2\';">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
             this.els.controlsDiv.style.display = 'none';
             return;
         }
+
+        if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
 
         this.renderGridContent();
         this.updatePaginationUI();
@@ -116,24 +135,17 @@ export class GridManager {
 
     async goToPage(page, direction = 0) {
         if (this.isAnimating || page === this.currentPage) return;
-        
-        // Вычисляем направление, если кликнули по конкретной цифре
-        if (direction === 0) {
-            direction = page > this.currentPage ? 1 : -1;
-        }
+        if (direction === 0) direction = page > this.currentPage ? 1 : -1;
 
         this.isAnimating = true;
         EventBus.emit('PLAY_SOUND', 'hover');
 
-        // Выбираем класс ухода (вверх или вниз)
         const outClass = direction > 0 ? 'page-slide-up-out' : 'page-slide-down-out';
         this.els.gridMain.classList.add(outClass);
 
-        await new Promise(r => setTimeout(r, 250)); // Ждем окончания анимации
-
+        await new Promise(r => setTimeout(r, 250));
         this.currentPage = page;
 
-        // Применяем класс, откуда будут появляться новые карточки
         const entryClass = direction > 0 ? 'entering-from-bottom' : 'entering-from-top';
         this.els.gridMain.classList.remove('entering-from-bottom', 'entering-from-top');
         this.els.gridMain.classList.add(entryClass);
@@ -141,28 +153,56 @@ export class GridManager {
         this.renderGridContent();
         this.updatePaginationUI();
 
-        // Снимаем класс ухода, чтобы карточки начали появляться
         this.els.gridMain.classList.remove(outClass);
-        
         this.isAnimating = false;
         EventBus.emit('LAYOUT_CHANGED');
     }
 
     renderGridContent() {
-        const data = this.store.combinedData;
-        const start = (this.currentPage - 1) * this.itemsPerPage;
-        const end = Math.min(start + this.itemsPerPage, data.length);
+        let pageData = [];
+        let isYoutubePage = false;
         
-        const pageData = data.slice(start, end);
+        if (this.currentPage <= this.mainPages) {
+            const start = (this.currentPage - 1) * this.stdPerPage;
+            pageData = this.store.filteredMainStandard.slice(start, start + this.stdPerPage);
+        } else if (this.currentPage <= this.mainPages + this.suggPages) {
+            const suggPage = this.currentPage - this.mainPages;
+            const start = (suggPage - 1) * this.stdPerPage;
+            pageData = this.store.filteredSuggStandard.slice(start, start + this.stdPerPage);
+        } else {
+            isYoutubePage = true;
+            const ytPage = this.currentPage - this.mainPages - this.suggPages;
+            const start = (ytPage - 1) * this.ytPerPage;
+            pageData = this.store.filteredYoutube.slice(start, start + this.ytPerPage);
+        }
 
         let mainHtmlBuf = '';
-
         pageData.forEach((item, index) => {
             const delay = index * 30; 
             mainHtmlBuf += this.factory.createCardHTML(item, delay);
         });
         
         this.els.gridMain.innerHTML = mainHtmlBuf;
+
+        // ИСПРАВЛЕНИЕ: ЖЕСТКАЯ ФИКСАЦИЯ ВЫСОТЫ КОНТЕЙНЕРА
+        requestAnimationFrame(() => {
+            const gap = this.gridMode === 'compact' ? 12 : 20;
+            const cardWidth = this.gridMode === 'compact' ? 160 : 230;
+            
+            // Мы ВСЕГДА вычисляем высоту на основе высоких дефолтных карточек.
+            // Это гарантирует, что контейнер не сузится при переходе на ютуб-страницы.
+            const defaultCardHeight = cardWidth * 1.5; 
+            const targetMinHeight = (defaultCardHeight * 2) + gap; 
+            
+            this.els.gridMain.style.minHeight = `${targetMinHeight}px`;
+
+            // Если страница с ютуб роликами, мы центрируем их внутри зафиксированного высокого контейнера.
+            if (isYoutubePage) {
+                this.els.gridMain.style.alignContent = 'center';
+            } else {
+                this.els.gridMain.style.alignContent = 'start';
+            }
+        });
 
         document.querySelectorAll('.archive-card-container:not(.is-observed)').forEach(card => {
             card.classList.add('is-observed');
@@ -175,12 +215,9 @@ export class GridManager {
             this.els.controlsDiv.style.display = 'none';
             return;
         }
-        
         this.els.controlsDiv.style.display = 'flex';
-        
         this.els.prevBtn.disabled = this.currentPage === 1;
         this.els.nextBtn.disabled = this.currentPage === this.totalPages;
-        
         this.renderPageNumbers();
     }
 
@@ -189,39 +226,46 @@ export class GridManager {
         const maxVisible = 5; 
         const total = this.totalPages;
         const cur = this.currentPage;
-
         let start = Math.max(1, cur - Math.floor(maxVisible / 2));
         let end = Math.min(total, start + maxVisible - 1);
 
-        if (end - start + 1 < maxVisible) {
-            start = Math.max(1, end - maxVisible + 1);
-        }
+        if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1);
 
-        if (start > 1) {
-            html += `<button class="page-num-btn" data-page="1">1</button>`;
-            if (start > 2) html += `<span class="page-dots">...</span>`;
-        }
+        const getBtnHtml = (i) => {
+            let isSugg = false;
+            let isYt = false;
+            
+            if (i > this.mainPages && i <= this.mainPages + this.suggPages) isSugg = true;
+            else if (i > this.mainPages + this.suggPages) isYt = true;
 
-        for (let i = start; i <= end; i++) {
-            if (i === cur) {
-                html += `<button class="page-num-btn active">${i}</button>`;
-            } else {
-                html += `<button class="page-num-btn" data-page="${i}">${i}</button>`;
+            const activeClass = i === cur ? 'active' : '';
+            let extraClass = '';
+            let displayVal = i;
+
+            if (isSugg) {
+                extraClass = 'sugg-page-btn';
+                const suggNum = i - this.mainPages;
+                displayVal = this.suggPages > 1 
+                    ? `<i class="fas fa-star"></i><span style="font-size:0.7em; margin-top:2px;">${suggNum}</span>` 
+                    : `<i class="fas fa-star"></i>`;
+            } else if (isYt) {
+                extraClass = 'yt-page-btn';
+                const ytNum = i - this.mainPages - this.suggPages;
+                displayVal = this.ytPages > 1 
+                    ? `<i class="fab fa-youtube"></i><span style="font-size:0.7em; margin-top:2px;">${ytNum}</span>` 
+                    : `<i class="fab fa-youtube"></i>`;
             }
-        }
 
-        if (end < total) {
-            if (end < total - 1) html += `<span class="page-dots">...</span>`;
-            html += `<button class="page-num-btn" data-page="${total}">${total}</button>`;
-        }
+            return `<button class="page-num-btn ${activeClass} ${extraClass}" data-page="${i}">${displayVal}</button>`;
+        };
+
+        if (start > 1) { html += getBtnHtml(1); if (start > 2) html += `<span class="page-dots">...</span>`; }
+        for (let i = start; i <= end; i++) html += getBtnHtml(i);
+        if (end < total) { if (end < total - 1) html += `<span class="page-dots">...</span>`; html += getBtnHtml(total); }
 
         this.els.pageNumbersContainer.innerHTML = html;
-
         this.els.pageNumbersContainer.querySelectorAll('.page-num-btn[data-page]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const targetPage = parseInt(e.target.dataset.page);
-                this.goToPage(targetPage);
-            });
+            btn.addEventListener('click', (e) => this.goToPage(parseInt(e.currentTarget.dataset.page)));
         });
     }
 }

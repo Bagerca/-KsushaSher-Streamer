@@ -9,7 +9,9 @@ export const AppConfig = {
         mainAvatar: 'assets/images/ksusha.jpg',
         botName: 'TETLA',
         botAvatar: 'assets/images/tetlabot.jpg',
-        squadTitle: 'ГРУППА ПОДДЕРЖКИ'
+        squadTitle: 'ГРУППА ПОДДЕРЖКИ',
+        // ТЕПЕРЬ ОТРЯД УПРАВЛЯЕТСЯ ОТСЮДА (указываем id из subscribers.json)
+        squadMembers: ['bagerka', 'angel', 'kiriki', 'raku6chka', 'nikita', 'hardwell', 'roma', 'dragon', 'dark'] 
     },
     system: {
         osVersion: 'v5.6',
@@ -29,7 +31,7 @@ export const AppConfig = {
         trailerVideoId: 'Uym3MRaJ3PE' 
     },
     socials: {
-        twitch: 'twitch.tv/ksusha__sher',
+        twitch: 'https://twitch.tv/ksusha__sher',
         youtube: 'https://www.youtube.com/@Ksusha__Sher__off',
         youtube2: 'https://www.youtube.com/@swamp_ksusha__sher',
         telegram: 'https://t.me/pizdeckakoi_to',
@@ -71,7 +73,6 @@ export const AppConfig = {
             "АКТИВНОСТЬ ЧАТА: ВЫСОКАЯ", 
             "СИСТЕМЫ В НОРМЕ."
         ],
-        // ИСПРАВЛЕНИЕ: Новые мемы и фразы для терминала
         terminalNoise: [
             "[SYS] Ping: 24ms check ok",
             "[SYS] Оптимизация памяти... Успешно",

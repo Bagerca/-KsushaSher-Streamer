@@ -39,11 +39,25 @@
   },
   {
     "id": "arcane",
+    "format": "collection",
     "title": "Arcane / Аркейн",
     "rating": 4.0,
-    "description": "Красивая и сочная рисованная графика, отличная музыка.",
-    "image": "assets/images/movies/arcane-s1.jpg",
-    "status": "watched"
+    "description": "Потрясающая рисованная графика, невероятный уровень анимации от студии Fortiche, отличный саундтрек и глубокая семейная драма на фоне конфликта двух городов.",
+    "status": "watched",
+    "items": [
+      {
+        "id": "arcane-s1",
+        "title": "Arcane: Season 1 / Аркейн: 1 Сезон",
+        "description": "Красивая и сочная рисованная графика, отличная музыка и завязка истории сестер Вай и Джинкс.",
+        "image": "assets/images/movies/arcane-s1.jpg"
+      },
+      {
+        "id": "arcane-s2",
+        "title": "Arcane: Season 2 / Аркейн: 2 Сезон",
+        "description": "Грандиозный и эмоциональный финал противостояния Пилтовера и Зауна. Каждая серия — настоящее произведение искусства.",
+        "image": "assets/images/movies/arcane-s2.jpg"
+      }
+    ]
   },
   {
     "id": "wild-robot",

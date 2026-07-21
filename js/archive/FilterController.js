@@ -81,14 +81,15 @@ export class FilterController {
     renderChips() {
         if (!this.els.statusFilters) return;
 
+        // ИСПРАВЛЕНИЕ: Убрали статус 'suggested' из массива рендера кнопок
         let statusesOrder = this.store.currentType === 'games' 
-            ? ['completed', 'playing', 'suggested', 'on-hold', 'dropped']
-            : ['watched', 'watching', 'suggested', 'on-hold', 'dropped'];
+            ? ['completed', 'playing', 'on-hold', 'dropped']
+            : ['watched', 'watching', 'on-hold', 'dropped'];
         
         const isActive = (val) => this.store.activeFilters.has(val) ? 'active' : '';
 
         this.els.statusFilters.innerHTML = statusesOrder.map(s => `
-            <div class="filter-chip is-status ${s === 'suggested' ? 'status-suggested' : `status-${s}`} ${isActive(s)}" data-filter="${s}">
+            <div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">
                 ${STATUS_MAP[s] || s}
             </div>
         `).join('');

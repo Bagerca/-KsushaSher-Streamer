@@ -16,6 +16,9 @@ export class MediaStore {
         this.currentType = 'games';
         this.dataMain = [];
         this.dataSuggestions = [];
+        
+        this.filteredMain = [];
+        this.filteredSuggestions = [];
         this.combinedData = [];
         
         this.activeFilters = new Set(); 
@@ -33,7 +36,14 @@ export class MediaStore {
         
         try {
             const rawMain = await loadData(endpoint, []);
-            const rawSuggestions = await loadData('suggestions.json', []);
+            
+            const [sugGames, sugMovies, sugYt] = await Promise.all([
+                loadData('suggestions-games.json', []),
+                loadData('suggestions-movies.json', []),
+                loadData('suggestions-youtube.json', [])
+            ]);
+            
+            const rawSuggestions = [...sugGames, ...sugMovies, ...sugYt];
             
             this.dataMain = Array.isArray(rawMain) ? rawMain : [];
             
@@ -57,18 +67,16 @@ export class MediaStore {
         const fetchPromises = [];
 
         for (const item of list) {
-            // [РЕФАКТОРИНГ] Изолированная нормализация коллекций
             if (item.format === 'collection') {
                 this._normalizeCollection(item);
             }
 
-            // АВТОМАТИЗАЦИЯ YOUTUBE
             if (item.format === 'youtube' && item.videos && item.videos.length > 0) {
-                const firstVid = typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url;
+                const firstVid = item.videos[0]; // ИСПРАВЛЕНИЕ: Берем чистую ссылку
                 const ytId = getYouTubeId(firstVid);
                 
                 if (ytId && !item.image) {
-                    item.image = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+                    item.image = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
                 }
                 
                 if (!item.description) {
@@ -78,12 +86,23 @@ export class MediaStore {
                 if (!item.title) {
                     item.title = "Установка связи..."; 
                     
-                    const p = fetch(`https://noembed.com/embed?url=${firstVid}`)
-                        .then(r => r.json())
+                    const fetchUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(firstVid)}&format=json`;
+                    
+                    const p = fetch(fetchUrl)
+                        .then(r => {
+                            if(!r.ok) throw new Error('oEmbed error');
+                            return r.json();
+                        })
                         .then(d => {
-                            if (d.title) item.title = d.title;
+                            if (d.title && item.title === "Установка связи...") item.title = d.title;
                         }).catch(() => {
-                            item.title = "Засекреченный видеофайл";
+                            return fetch(`https://noembed.com/embed?url=${encodeURIComponent(firstVid)}`)
+                                .then(r => r.json())
+                                .then(d => {
+                                    if (d.title && item.title === "Установка связи...") item.title = d.title;
+                                });
+                        }).catch(() => {
+                            if (item.title === "Установка связи...") item.title = "Засекреченный видеофайл";
                         });
                         
                     fetchPromises.push(p);
@@ -96,25 +115,21 @@ export class MediaStore {
         }
     }
 
-    // [РЕФАКТОРИНГ] Вспомогательный метод: Подготавливает все данные коллекции для UI
     _normalizeCollection(item) {
         if (!item.items || item.items.length === 0) return;
 
         const firstItem = item.items[0];
 
-        // Наследуем базовые поля от первого элемента, если они не заданы в корне
         item.title = item.title || firstItem.title;
         item.description = item.description || firstItem.description;
         item.status = item.status || firstItem.status;
         item.customColor = item.customColor || firstItem.customColor;
         item.image = item.image || firstItem.image;
 
-        // Предрасчет массива картинок для 3D-стека (максимум 3)
         if (!item.images) {
             item.images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
         }
 
-        // Предрасчет среднего рейтинга
         if (item.rating === undefined) {
             const ratedItems = item.items.filter(i => i.rating && i.rating > 0);
             if (ratedItems.length > 0) {
@@ -125,7 +140,6 @@ export class MediaStore {
             }
         }
 
-        // Предрасчет индивидуальных цветов для 3D слоев
         item.stackColors = [
             item.customColor || '#444455',
             (item.items[1] && item.items[1].customColor) ? item.items[1].customColor : (item.customColor || '#444455'),
@@ -229,7 +243,6 @@ export class MediaStore {
             }
             
             if (this.sort === 'rating') {
-                // [РЕФАКТОРИНГ] Логика упрощена благодаря предрасчету item.rating
                 const ratingA = a.rating || 0;
                 const ratingB = b.rating || 0;
                 return (ratingA - ratingB) * dir;
@@ -240,6 +253,17 @@ export class MediaStore {
         filteredMain.sort(sortFn);
         filteredSuggestions.sort(sortFn);
 
+        this.filteredMain = filteredMain;
+        this.filteredSuggestions = filteredSuggestions;
         this.combinedData = [...filteredMain, ...filteredSuggestions];
+
+        this.filteredMainStandard = filteredMain.filter(i => i.format !== 'youtube');
+        this.filteredSuggStandard = filteredSuggestions.filter(i => i.format !== 'youtube');
+        
+        this.filteredYoutube = [
+            ...filteredMain.filter(i => i.format === 'youtube'), 
+            ...filteredSuggestions.filter(i => i.format === 'youtube')
+        ];
+        this.filteredYoutube.sort(sortFn); 
     }
 }
