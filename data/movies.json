@@ -136,5 +136,13 @@
     "description": "...",
     "image": "assets/images/movies/ready-player-one.jpg",
     "status": "on-hold"
+  },
+  {
+    "id": "a-monster-in-paris",
+    "title": "A Monster in Paris / Монстр в Париже",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/movies/a-monster-in-paris.jpg",
+    "status": "on-hold"
   }
 ]

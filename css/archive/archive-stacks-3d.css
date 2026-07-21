@@ -1,19 +1,35 @@
-/* css/archive-stacks-3d.css */
+/* css/archive/archive-stacks-3d.css */
 
-/* ФИКСИРОВАННЫЕ РАЗМЕРЫ В CSS GRID */
+/* ИСПРАВЛЕНИЕ: ФИКСИРОВАННЫЕ РАЗМЕРЫ ДЛЯ FLEXBOX */
+/* Жестко задаем ширину, чтобы Flexbox правильно считал перенос строк */
 .archive-card-container { 
-    grid-column: span 1; 
-    width: 100%; 
+    width: 230px;
     height: auto; /* Высота подтянется по aspect-ratio из archive-card.css */
+    flex-shrink: 0;
 }
 
 .archive-card-container.is-youtube { 
-    grid-column: span 2; 
+    /* Ширина двух стандартых карт + gap (230*2 + 20) */
+    width: 480px; 
+}
+
+/* КОМПАКТНЫЙ РЕЖИМ */
+.compact-mode .archive-card-container {
+    width: 160px;
+}
+.compact-mode .archive-card-container.is-youtube {
+    /* Ширина двух компактных карт + gap (160*2 + 12) */
+    width: 332px; 
 }
 
 /* Мобильный адаптив */
 @media (max-width: 600px) {
-    .archive-card-container { grid-column: span 1 !important; }
+    .archive-card-container,
+    .compact-mode .archive-card-container,
+    .archive-card-container.is-youtube,
+    .compact-mode .archive-card-container.is-youtube { 
+        width: 100% !important; 
+    }
 }
 
 /* СЛОИ */

@@ -46,7 +46,6 @@
     align-items: flex-end; 
     justify-self: end;
     width: 100%;
-    /* ИСПРАВЛЕНИЕ: Увеличили ширину поисковика */
     max-width: 550px; 
 }
 
@@ -56,16 +55,20 @@
 .archive-full-grid-wrapper { width: 100%; position: relative; z-index: 5; min-height: 400px; display: flex; flex-direction: row; align-items: stretch; gap: 30px; }
 .archive-grid-content { flex-grow: 1; min-width: 0; }
 
-/* ПЕРЕВОДИМ СЕТКУ НА CSS GRID */
+/* ИСПРАВЛЕНИЕ: ПЕРЕВОД СЕТКИ НА FLEXBOX ДЛЯ ИДЕАЛЬНОЙ ЦЕНТРАЛИЗАЦИИ */
+/* Flexbox в отличие от Grid всегда центрирует неполные ряды */
 .archive-flex-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, 230px); 
-    justify-content: center; align-items: center; 
-    align-content: start;
-    gap: 20px; position: relative; width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Идеальное центрирование по горизонтали */
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 20px; 
+    position: relative; 
+    width: 100%;
     transition: min-height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.archive-flex-grid.compact-mode { grid-template-columns: repeat(auto-fit, 160px); gap: 12px; }
+.archive-flex-grid.compact-mode { gap: 12px; }
 
 /* АНИМАЦИИ ПАГИНАЦИИ (ВВЕРХ/ВНИЗ) */
 .transition-layer { transition: opacity 0.25s ease, transform 0.25s ease, filter 0.25s ease; will-change: opacity, transform, filter; }
@@ -129,5 +132,6 @@
 }
 
 @media (max-width: 600px) {
-    .archive-flex-grid { grid-template-columns: 1fr; }
+    /* Оставляем на всякий случай, но основная магия ширины переехала в archive-stacks-3d */
+    .archive-flex-grid { flex-direction: column; align-items: center; }
 }

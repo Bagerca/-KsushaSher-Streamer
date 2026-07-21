@@ -179,15 +179,21 @@ export class SearchController {
                 </div>`;
             return;
         }
+
+        const STATUS_COLORS = {
+            'completed': '#39ff14', 'watched': '#39ff14',
+            'playing': '#00ccff', 'watching': '#00ccff',
+            'on-hold': '#ffd700',
+            'dropped': '#ff4444',
+            'suggested': '#ff2d95'
+        };
         
         this.suggestionsBox.innerHTML = matches.map((item, index) => {
             const titleText = item.title || "";
             const titleHtml = this.highlightText(titleText, query);
             const color = item.customColor || '#fff';
 
-            // ИЗВЛЕЧЕНИЕ КАРТИНКИ (Упрощено благодаря нормализации в MediaStore)
             let thumbUrl = item.image;
-            
             if (!thumbUrl && item.format === 'youtube' && item.videos && item.videos.length > 0) {
                 const vUrl = typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url;
                 const ytId = getYouTubeId(vUrl);
@@ -196,17 +202,23 @@ export class SearchController {
             if (!thumbUrl) thumbUrl = 'https://via.placeholder.com/65x95?text=NO+IMG';
 
             const isCollection = item.format === 'collection';
-            const thumbClasses = "sugg-thumb-wrapper" + (isCollection ? " is-collection" : "");
+            const isYouTube = item.format === 'youtube'; // ИСПРАВЛЕНИЕ: Проверяем ютуб
+
+            // ИСПРАВЛЕНИЕ: Добавляем класс is-youtube, если это видеоформат
+            let thumbClasses = "sugg-thumb-wrapper";
+            if (isCollection) thumbClasses += " is-collection";
+            if (isYouTube) thumbClasses += " is-youtube";
+
             const collectionBadge = (isCollection && item.items) 
                 ? `<div class="sugg-collection-badge" style="border-color:${color};"><i class="fas fa-folder-open" style="color:${color};"></i> <span>${item.items.length}</span></div>` 
                 : '';
 
             const rawStatus = STATUS_MAP[item.status] || item.status;
-            const statusHtml = `<span class="sugg-cyber-status" style="color: ${color}; text-shadow: 0 0 5px ${color}80;">[ ${rawStatus} ]</span>`;
+            const badgeColor = STATUS_COLORS[item.status] || '#888';
+            
+            const statusHtml = `<span class="sugg-cyber-status" style="color: ${badgeColor}; border-color: color-mix(in srgb, ${badgeColor} 40%, transparent); background: color-mix(in srgb, ${badgeColor} 10%, transparent);">[<span class="status-text">${rawStatus}</span>]</span>`;
 
-            // [РЕФАКТОРИНГ] Используем заранее вычисленный рейтинг коллекции
             const displayRating = item.rating || 0;
-
             let ratingHtml = '';
             if (displayRating > 0 && item.status !== 'suggested') {
                 const rScore = Math.round(displayRating);

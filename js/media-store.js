@@ -141,7 +141,6 @@ export class MediaStore {
             item.images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
         }
 
-        // ИСПРАВЛЕНИЕ: Берем рейтинг только первой игры (лица коллекции)
         if (item.rating === undefined) {
             item.rating = firstItem.rating || 0;
         }
@@ -191,21 +190,27 @@ export class MediaStore {
         let flattenedList = [];
         const fullList = [...this.dataMain, ...this.dataSuggestions];
 
+        // ИСПРАВЛЕНИЕ БАГА: Не добавляем саму коллекцию в поиск, берем только её "детей"
         fullList.forEach(item => {
-            flattenedList.push(item);
-            if (item.format === 'collection' && item.items) {
+            if (item.format === 'collection' && item.items && item.items.length > 0) {
+                // Если это коллекция, добавляем только элементы внутри неё
                 item.items.forEach(sub => {
                     flattenedList.push({ ...sub, status: sub.status || item.status, isSubItem: true });
                 });
+            } else {
+                // Если это обычная игра/фильм, добавляем как есть
+                flattenedList.push(item);
             }
         });
 
+        // Убираем полные дубликаты по ID (на всякий случай)
         const uniqueMap = new Map();
         flattenedList.forEach(item => {
             if (!uniqueMap.has(item.id)) uniqueMap.set(item.id, item);
         });
         flattenedList = Array.from(uniqueMap.values());
 
+        // Прогоняем через движок поиска
         let matches = flattenedList.map(item => {
             const score = SearchEngine.scoreItemForSuggestions(item.title, query);
             return { ...item, score };

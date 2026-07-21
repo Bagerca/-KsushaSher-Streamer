@@ -25,6 +25,14 @@
         "status": "on-hold"
       },
       {
+        "id": "bendy-secrets-of-the-machine",
+        "title": "Bendy: Secrets of the Machine",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/bendy-secrets-of-the-machine.jpg",
+        "status": "on-hold"
+      },
+      {
         "id": "bendy-lone-wolf",
         "title": "Bendy: Lone Wolf",
         "rating": 0,
@@ -38,14 +46,6 @@
         "rating": 0,
         "description": "...",
         "image": "assets/images/games/boris-and-the-dark-survival.jpg",
-        "status": "on-hold"
-      },
-      {
-        "id": "bendy-secrets-of-the-machine",
-        "title": "Bendy: Secrets of the Machine",
-        "rating": 0,
-        "description": "...",
-        "image": "assets/images/games/bendy-secrets-of-the-machine.jpg",
         "status": "on-hold"
       }
     ]

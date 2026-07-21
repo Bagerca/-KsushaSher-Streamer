@@ -9,8 +9,9 @@ export class CardFactory {
 
     createCardHTML(item, delay) {
         if (item.isDivider) {
+            // ИСПРАВЛЕНИЕ: Замена grid-column на width: 100% для совместимости с Flexbox
             return `
-            <div class="archive-divider-row animate-entry" style="grid-column: 1 / -1; animation-delay: ${delay}ms">
+            <div class="archive-divider-row animate-entry" style="width: 100%; animation-delay: ${delay}ms">
                 <div class="divider-line"></div><div class="divider-text">${item.title}</div><div class="divider-line"></div>
             </div>`;
         }
@@ -30,7 +31,7 @@ export class CardFactory {
         let images = [];
 
         if (isYouTube && item.videos && item.videos.length > 0) {
-            images = item.videos.slice(0, 3).map(url => { // ИСПРАВЛЕНИЕ: Прямая строка
+            images = item.videos.slice(0, 3).map(url => {
                 const ytId = getYouTubeId(url);
                 return ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
             }).filter(Boolean);
