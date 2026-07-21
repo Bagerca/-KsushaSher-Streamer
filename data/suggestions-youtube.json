@@ -1,32 +1,23 @@
 [
   {
-    "id": "sug-jesus-goat",
-    "type": "movies",
-    "format": "youtube",
-    "description": "Просто забавный хит про козу, который нужно увидеть и услышать.",
+    "description": "...",
     "suggestedBy": "BAGERca",
     "videos": [
       "https://youtu.be/Vi0flWHGVlg"
     ]
   },
   {
-    "id": "sug-robot-aware",
-    "type": "movies",
-    "format": "youtube",
-    "description": "Очень залипательное видео о создании робота, который осознает сам себя. Инженерия на грани фантастики.",
+    "description": "...",
     "suggestedBy": "BAGERca",
     "videos": [
-      "https://youtu.be/S0x2llxEAjk?si=QpxwURhXTcC7doqx",
-      "https://youtu.be/6nEfAb5q84o?si=2Zmueias0iVExIDL",
-      "https://youtu.be/lnDP902qeqw?si=VqVTVvGjCgZy7beC",
-      "https://youtu.be/yDA-A1jWswo?si=q5sUspQCM8v1imTr"
+      "https://youtu.be/S0x2llxEAjk",
+      "https://youtu.be/6nEfAb5q84o",
+      "https://youtu.be/lnDP902qeqw",
+      "https://youtu.be/yDA-A1jWswo"
     ]
   },
   {
-    "id": "sug-tankist-mc",
-    "type": "movies",
-    "format": "youtube",
-    "description": "Лютый пранк над танкистом в Майнкрафте. Сборник из четырех серий, смеяться будешь долго.",
+    "description": "...",
     "suggestedBy": "BAGERca",
     "videos": [
       "https://youtu.be/MrNbqT7-S-Y",
@@ -36,14 +27,27 @@
     ]
   },
   {
-    "id": "sug-bioshock-lore",
-    "type": "movies",
-    "format": "youtube",
-    "description": "Полный разбор сюжета и лора одной из лучших игровых вселенных в истории.",
+    "description": "...",
     "suggestedBy": "BAGERca",
     "videos": [
       "https://youtu.be/fEqjAznFQyk",
       "https://youtu.be/Of4BTo6GbjQ"
+    ]
+  },
+  {
+    "description": "...",
+    "suggestedBy": "BAGERca",
+    "videos": [
+      "https://youtu.be/VuHT54rPJb4?si=IpYuOzcCMwOAeHt-",
+      "https://youtu.be/kVXxNb1vuxs?si=9CmaHR74QUTLczGM",
+      "https://youtu.be/SAzDZhSSa_c?si=OlwmCUXtvLrS0uTX"
+    ]
+  },
+  {
+    "description": "...",
+    "suggestedBy": "BAGERca",
+    "videos": [
+      "https://youtu.be/L79F2HRaD2g?si=XS9xJWa523dABPeA"
     ]
   }
 ]

@@ -43,13 +43,30 @@ export class MediaStore {
                 loadData('suggestions-youtube.json', [])
             ]);
             
-            const rawSuggestions = [...sugGames, ...sugMovies, ...sugYt];
+            // МАГИЯ АВТОМАТИЗАЦИИ: Функция инъекции недостающих данных
+            const injectMeta = (array, defaultType, defaultFormat, idPrefix) => {
+                return (Array.isArray(array) ? array : []).map((item, index) => ({
+                    ...item,
+                    // Генерируем уникальный ID, если его нет
+                    id: item.id || `${idPrefix}-${Date.now()}-${index}`,
+                    // Проставляем тип (games/movies)
+                    type: item.type || defaultType,
+                    // Если есть items, значит это коллекция, иначе берем defaultFormat
+                    format: item.format || (item.items ? 'collection' : defaultFormat)
+                }));
+            };
+
+            // Обрабатываем все массивы перед их сохранением
+            this.dataMain = injectMeta(rawMain, type, 'standard', 'main');
             
-            this.dataMain = Array.isArray(rawMain) ? rawMain : [];
+            // Для ютуба жестко проставляем format 'youtube' и кидаем его в 'movies'
+            const pGames = injectMeta(sugGames, 'games', 'standard', 'sug-games');
+            const pMovies = injectMeta(sugMovies, 'movies', 'standard', 'sug-movies');
+            const pYt = injectMeta(sugYt, 'movies', 'youtube', 'sug-yt');
+
+            const rawSuggestions = [...pGames, ...pMovies, ...pYt].map(item => ({...item, status: 'suggested'}));
             
-            this.dataSuggestions = Array.isArray(rawSuggestions) 
-                ? rawSuggestions.map(item => ({ ...item, status: 'suggested' })).filter(item => item.type === type) 
-                : [];
+            this.dataSuggestions = rawSuggestions.filter(item => item.type === type);
             
             await this.preprocessDataAsync(this.dataMain);
             await this.preprocessDataAsync(this.dataSuggestions);
@@ -72,7 +89,7 @@ export class MediaStore {
             }
 
             if (item.format === 'youtube' && item.videos && item.videos.length > 0) {
-                const firstVid = item.videos[0]; // ИСПРАВЛЕНИЕ: Берем чистую ссылку
+                const firstVid = item.videos[0]; 
                 const ytId = getYouTubeId(firstVid);
                 
                 if (ytId && !item.image) {
