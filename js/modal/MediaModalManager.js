@@ -50,9 +50,19 @@ export class MediaModalManager {
                             
                             <div class="modal-text-content">
                                 <div class="hover-reveal-wrapper">
-                                    <h2 class="modal-title truncated" id="modal-title">TITLE</h2>
-                                    <div class="hover-reveal-box" id="modal-title-full">
-                                        <h2 class="modal-title">TITLE</h2>
+                                    <h2 class="modal-title truncated">
+                                        <a href="#" target="_blank" id="modal-title-link" class="title-search-link" title="Искать в Google">
+                                            <span id="modal-title">TITLE</span>
+                                            <i class="fab fa-google search-icon"></i>
+                                        </a>
+                                    </h2>
+                                    <div class="hover-reveal-box" id="modal-title-full-box">
+                                        <h2 class="modal-title">
+                                            <a href="#" target="_blank" id="modal-title-link-full" class="title-search-link" title="Искать в Google">
+                                                <span id="modal-title-full">TITLE</span>
+                                                <i class="fab fa-google search-icon"></i>
+                                            </a>
+                                        </h2>
                                     </div>
                                 </div>
                                 
@@ -71,9 +81,6 @@ export class MediaModalManager {
                     </div>
 
                     <div class="modal-col-playlist" id="modal-col-playlist" style="display: none;">
-                        <div class="playlist-header">
-                            <i class="fas fa-list-ul"></i> АРХИВ ЗАПИСЕЙ
-                        </div>
                         <div class="vertical-scroll-list" id="modal-video-playlist"></div>
                     </div>
 
@@ -98,7 +105,9 @@ export class MediaModalManager {
             status: document.getElementById('modal-status'),
             
             title: document.getElementById('modal-title'),
-            titleFull: this.overlay.querySelector('#modal-title-full .modal-title'),
+            titleFull: document.getElementById('modal-title-full'),
+            titleLink: document.getElementById('modal-title-link'),
+            titleLinkFull: document.getElementById('modal-title-link-full'),
             desc: document.getElementById('modal-desc'),
             descFull: document.getElementById('modal-desc-full'),
             
@@ -144,10 +153,8 @@ export class MediaModalManager {
         const fallbackColor = precalculatedColor || item.customColor || '#ff2d95';
         this.updateThemeColor(fallbackColor);
 
-        // СРАБАТЫВАЕТ ПРИ КЛИКЕ НА СЛЕДУЮЩИЙ ПОСТЕР
         const handleSlideChange = (currentItem, extractedColor) => {
             this.renderer.triggerGlitchTransition(() => {
-                // ИСПРАВЛЕНИЕ: Обновляем цвет интерфейса СТРОГО в момент смены текста (когда он невидим)
                 this.updateThemeColor(extractedColor);
                 const effectiveStatus = this.renderer.updateText(currentItem, type, extractedColor);
                 
@@ -158,7 +165,6 @@ export class MediaModalManager {
             });
         };
 
-        // СРАБАТЫВАЕТ КОГДА КАРТИНКА ПРОГРУЗИЛАСЬ (В ФОНЕ)
         const handleImageLoadedColor = (extractedColor) => {
             this.updateThemeColor(extractedColor);
             this.els.ratingVal.style.color = extractedColor;

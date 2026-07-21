@@ -99,14 +99,11 @@ class SmoothWheelScroller {
         this.currentY = window.scrollY;
         this.isAnimating = false;
         
-        // --- НАСТРОЙКИ ---
-        this.dampening = 0.45; // Во сколько раз резать шаг (0.45 = шаг в 2 с лишним раза короче)
-        this.speed = 0.12;     // Скорость плавной остановки
-        // -----------------
+        this.dampening = 0.45; 
+        this.speed = 0.12;     
 
         window.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
         
-        // Синхронизация, если юзер дернул ползунок справа
         window.addEventListener('scroll', () => {
             if (!this.isAnimating) {
                 this.targetY = window.scrollY;
@@ -116,40 +113,43 @@ class SmoothWheelScroller {
     }
 
     onWheel(e) {
-        // Пропускаем, если зажат Ctrl (зум браузера) или идет авто-скролл по клику в меню
         if (e.ctrlKey || document.body.classList.contains('is-auto-scrolling')) return;
 
-        // ЗАЩИТА ТАЧПАДОВ: Если шаг слишком маленький (< 50px), это ноутбучный тачпад.
-        // Ему не нужна обрезка шага, у него свой идеальный микро-скролл.
         if (Math.abs(e.deltaY) < 50) return;
 
-        // ЗАЩИТА КОНТЕЙНЕРОВ: Разрешаем нативный скролл внутри терминала или модалок
+        // Разрешаем нативный скролл внутри списков/терминала
         let target = e.target;
+        let isInsideScrollable = false;
         while (target && target !== document.body && target !== document.documentElement) {
             const style = window.getComputedStyle(target);
             if ((style.overflowY === 'auto' || style.overflowY === 'scroll') && target.scrollHeight > target.clientHeight) {
-                return; // Нашли внутренний скролл, отключаем нашу магию
+                isInsideScrollable = true;
+                break;
             }
             target = target.parentElement;
         }
 
-        // Блокируем стандартный грубый прыжок браузера
+        // Если крутим внутри списка - отдаем управление браузеру
+        if (isInsideScrollable) return; 
+
+        // ИСПРАВЛЕНИЕ: Если открыта модалка, блокируем и дефолтный скролл, и наш кастомный. Сайт не сдвинется.
+        if (document.body.classList.contains('modal-open')) {
+            e.preventDefault();
+            return;
+        }
+
         e.preventDefault();
 
-        // Если анимация не идет, синхронизируем стартовую точку
         if (!this.isAnimating) {
             this.targetY = window.scrollY;
             this.currentY = window.scrollY;
         }
 
-        // Применяем обрезанный шаг
         this.targetY += e.deltaY * this.dampening;
 
-        // Не даем улететь за пределы страницы
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         this.targetY = Math.max(0, Math.min(this.targetY, maxScroll));
 
-        // Запускаем цикл плавной доводки
         if (!this.isAnimating) {
             this.isAnimating = true;
             requestAnimationFrame(() => this.update());
@@ -159,10 +159,8 @@ class SmoothWheelScroller {
     update() {
         if (!this.isAnimating) return;
 
-        // Плавная интерполяция (Lerp)
         this.currentY += (this.targetY - this.currentY) * this.speed;
 
-        // Остановка, когда почти доехали до цели
         if (Math.abs(this.targetY - this.currentY) < 0.5) {
             this.currentY = this.targetY;
             window.scrollTo(0, this.currentY);
@@ -178,6 +176,6 @@ class SmoothWheelScroller {
 export function initScrollPhysics() {
     new GlobalScrollBooster();
     new SmoothScrollManager();
-    new SmoothWheelScroller(); // Включаем наш новый сглаживатель шага
+    new SmoothWheelScroller();
     console.log('⚡ [UI] Физика скролла инициализирована');
 }

@@ -31,22 +31,13 @@
 }
 
 .archive-tools { 
-    grid-column: 2;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-self: center;
-    gap: 12px; 
+    grid-column: 2; display: flex; flex-direction: column; 
+    align-items: center; justify-self: center; gap: 12px; 
 }
 
 .archive-search-area { 
-    grid-column: 3;
-    display: flex; 
-    flex-direction: column; 
-    align-items: flex-end; 
-    justify-self: end;
-    width: 100%;
-    max-width: 550px; 
+    grid-column: 3; display: flex; flex-direction: column; 
+    align-items: flex-end; justify-self: end; width: 100%; max-width: 550px; 
 }
 
 /* =========================================
@@ -55,22 +46,15 @@
 .archive-full-grid-wrapper { width: 100%; position: relative; z-index: 5; min-height: 400px; display: flex; flex-direction: row; align-items: stretch; gap: 30px; }
 .archive-grid-content { flex-grow: 1; min-width: 0; }
 
-/* ИСПРАВЛЕНИЕ: ПЕРЕВОД СЕТКИ НА FLEXBOX ДЛЯ ИДЕАЛЬНОЙ ЦЕНТРАЛИЗАЦИИ */
-/* Flexbox в отличие от Grid всегда центрирует неполные ряды */
 .archive-flex-grid { 
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Идеальное центрирование по горизонтали */
-    align-items: flex-start;
-    align-content: flex-start;
-    gap: 20px; 
-    position: relative; 
-    width: 100%;
+    display: flex; flex-wrap: wrap; justify-content: center;
+    align-items: flex-start; align-content: flex-start;
+    gap: 20px; position: relative; width: 100%;
     transition: min-height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .archive-flex-grid.compact-mode { gap: 12px; }
 
-/* АНИМАЦИИ ПАГИНАЦИИ (ВВЕРХ/ВНИЗ) */
+/* АНИМАЦИИ ПАГИНАЦИИ */
 .transition-layer { transition: opacity 0.25s ease, transform 0.25s ease, filter 0.25s ease; will-change: opacity, transform, filter; }
 .page-slide-up-out { opacity: 0 !important; transform: translateY(-40px) scale(0.98); filter: blur(4px); pointer-events: none; }
 .page-slide-down-out { opacity: 0 !important; transform: translateY(40px) scale(0.98); filter: blur(4px); pointer-events: none; }
@@ -80,58 +64,336 @@
 @keyframes card-load-up { 0% { opacity: 0; transform: translateY(30px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes card-load-down { 0% { opacity: 0; transform: translateY(-30px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
-/* HUD ПАГИНАЦИИ И РЕЛЬСА */
+/* =========================================
+   HUD ПАГИНАЦИИ И РЕЛЬСА
+   ========================================= */
 .archive-side-pagination { flex-shrink: 0; position: relative; z-index: 20; display: flex; justify-content: center; width: 52px; }
-.archive-side-pagination::before { content: ''; position: absolute; top: 20px; bottom: 20px; left: 50%; transform: translateX(-50%); width: 6px; border-radius: 3px; background: rgba(0, 0, 0, 0.8); box-shadow: inset 0 0 6px rgba(0, 0, 0, 1), 0 0 0 1px rgba(255, 255, 255, 0.05); z-index: 0; }
-.archive-side-pagination::after { content: ''; position: absolute; top: 25px; bottom: 25px; left: 50%; transform: translateX(-50%); width: 2px; background: linear-gradient(to bottom, transparent 0%, rgba(57, 255, 20, 0.4) 10%, rgba(57, 255, 20, 0.1) 50%, rgba(57, 255, 20, 0.4) 90%, transparent 100%); z-index: 0; }
-.pagination-dock-vertical { position: sticky; top: max(40px, calc(50vh - 180px)); height: fit-content; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 8px; background: rgba(5, 5, 8, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 10px 6px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(0, 0, 0, 0.5); }
-.pagination-divider-vert { width: 24px; height: 1px; background: rgba(255, 255, 255, 0.1); margin: 5px 0; }
-.cyber-page-btn-vert { background: transparent; color: #888; font-size: 1.2rem; padding: 12px 10px; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; width: 100%; }
-.cyber-page-btn-vert:hover:not(:disabled) { color: #fff; background: rgba(255, 255, 255, 0.05); }
-.cyber-page-btn-vert:disabled { opacity: 0.3; cursor: not-allowed; }
-.page-numbers-vert { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 
-.page-num-btn { background: transparent; color: #888; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; width: 38px; height: 38px; border: 1px solid transparent; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-.page-num-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 2px; background: var(--neon-green); transition: 0.3s ease; }
-.page-num-btn:hover:not(.active) { color: #fff; background: rgba(255, 255, 255, 0.05); }
-.page-num-btn:hover:not(.active)::after { width: 40%; background: #fff; }
-.page-num-btn.active { color: #000; background: var(--neon-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.4); cursor: default; }
-.page-num-btn.active::after { display: none; }
-.page-num-btn.active::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 50%, transparent 50%); background-size: 100% 4px; pointer-events: none; z-index: 1; animation: btn-scanlines 0.5s linear infinite, btn-flicker 4s infinite; }
+/* 1. ФИЗИЧЕСКИЙ ЖЁЛОБ (Трек) */
+.archive-side-pagination::before { 
+    content: ''; position: absolute; top: 10px; bottom: 10px; left: 50%; transform: translateX(-50%); 
+    width: 10px; border-radius: 5px; background-color: #030304; 
+    background-image: repeating-linear-gradient(to bottom, transparent, transparent 8px, rgba(255,255,255,0.04) 8px, rgba(255,255,255,0.04) 9px);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 1), 0 0 0 1px rgba(255, 255, 255, 0.05); z-index: 0; 
+}
 
-.sugg-page-btn { color: var(--neon-pink); flex-direction: column; gap: 0px; }
-.sugg-page-btn::after { background: var(--neon-pink); }
-.sugg-page-btn:hover:not(.active) { color: #fff; background: rgba(255, 45, 149, 0.15); }
-.sugg-page-btn.active { color: #fff; background: var(--neon-pink); box-shadow: 0 0 15px rgba(255, 45, 149, 0.5); }
+/* 2. НЕОНОВЫЙ СТЕРЖЕНЬ (Статический) */
+.archive-side-pagination::after { 
+    content: ''; position: absolute; top: 15px; bottom: 15px; left: 50%; transform: translateX(-50%); 
+    width: 2px; background: linear-gradient(to bottom, rgba(57, 255, 20, 0.1) 0%, rgba(57, 255, 20, 0.4) 40%, var(--neon-green) 50%, rgba(57, 255, 20, 0.4) 60%, rgba(57, 255, 20, 0.1) 100%);
+    z-index: 0; mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+}
 
-.yt-page-btn { color: #ff0000; flex-direction: column; gap: 0px; }
-.yt-page-btn::after { background: #ff0000; }
-.yt-page-btn:hover:not(.active) { color: #fff; background: rgba(255, 0, 0, 0.15); }
-.yt-page-btn:hover:not(.active)::after { background: #fff; }
-.yt-page-btn.active { color: #fff; background: #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); }
+/* =========================================
+   БЛОК С КНОПКАМИ ПАГИНАЦИИ (ГЛАВНЫЙ ДОК)
+   ========================================= */
+.pagination-dock-vertical { 
+    position: sticky; 
+    top: max(40px, calc(50vh - 220px)); 
+    height: fit-content; 
+    z-index: 50; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 12px; 
+    
+    background: rgba(8, 9, 13, 0.98); 
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 12px; 
+    padding: 24px 12px; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); 
+}
 
-@keyframes btn-scanlines { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
-@keyframes btn-flicker { 0%, 94%, 96%, 98%, 100% { opacity: 1; } 95% { opacity: 0.3; } 97% { opacity: 0.7; } 99% { opacity: 0.4; } }
-.page-dots { color: #666; font-family: 'Orbitron', sans-serif; font-weight: 700; padding: 5px 0; user-select: none; }
+.pagination-divider-vert { 
+    width: 28px; height: 1px; background: rgba(255, 255, 255, 0.15); 
+    margin: 4px 0; transition: 0.3s; 
+}
 
-/* АДАПТИВ */
+.cyber-page-btn-vert { 
+    background: transparent; color: #666; font-size: 1.4rem; padding: 6px; 
+    border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; 
+    display: flex; align-items: center; justify-content: center; width: 100%; 
+}
+.cyber-page-btn-vert:hover:not(:disabled) { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); transform: scale(1.1); }
+.cyber-page-btn-vert:disabled { opacity: 0.2; cursor: not-allowed; }
+
+/* =========================================
+   СИСТЕМА: ТЮНЕР + ЯКОРЯ
+   ========================================= */
+.page-numbers-vert { 
+    width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; 
+}
+
+/* 1. ОПТИЧЕСКИЙ ТЮНЕР */
+.tuner-container {
+    position: relative; 
+    display: flex; flex-direction: column; align-items: center; gap: 12px; 
+    height: 140px; 
+    justify-content: center; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tuner-slot {
+    background: transparent; border: 1px solid transparent; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif; font-weight: 700; transition: all 0.3s ease;
+    flex-shrink: 0; cursor: pointer; line-height: 1; overflow: hidden;
+}
+
+.tuner-slot.prev, .tuner-slot.next { width: 36px; height: 36px; border-radius: 8px; font-size: 0.85rem; color: #555; background: rgba(255,255,255,0.02); }
+.tuner-slot.prev:hover, .tuner-slot.next:hover { background: rgba(255,255,255,0.08); color: #fff; transform: scale(1.1); }
+.tuner-slot.empty { width: 36px; height: 36px; border-radius: 8px; font-size: 0.75rem; color: #333; pointer-events: none; cursor: default; border: 1px dashed rgba(255,255,255,0.05); }
+
+.tuner-slot.active {
+    width: 44px; height: 44px; border-radius: 10px; font-size: 1.15rem; color: #000; background: var(--neon-green);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.5), inset 0 0 10px rgba(255,255,255,0.5); border-color: #fff; z-index: 10;
+}
+.tuner-slot.active:hover { transform: scale(1.05); box-shadow: 0 0 25px var(--neon-green), inset 0 0 10px rgba(255,255,255,0.8); }
+.tuner-container.selector-open .tuner-slot.active { transform: scale(0.95); box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); filter: brightness(0.8); }
+
+.tuner-slot.sugg-page-btn.active { background: var(--neon-pink); box-shadow: 0 0 20px rgba(255, 45, 149, 0.5); }
+.tuner-slot.yt-page-btn.active { background: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+.tuner-slot i { font-size: 0.8em; margin-bottom: 2px; }
+.tuner-slot.active i { font-size: 0.6em; opacity: 0.8; }
+
+
+/* 2. ЯКОРЯ КАТЕГОРИЙ (БЕСШОВНОЕ СЛИЯНИЕ) */
+.category-jumpers {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 13px);
+    transform: translateY(-50%);
+    
+    display: flex; flex-direction: column; gap: 10px;
+    background: rgba(8, 9, 13, 0.98); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-right: none; 
+    border-radius: 16px 0 0 16px; 
+    
+    padding: 12px 10px; 
+    padding-right: 12px; 
+    box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.9); 
+    transition: all 0.4s ease;
+    z-index: 60;
+    backdrop-filter: none;
+}
+
+.category-jumpers::before,
+.category-jumpers::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    pointer-events: none;
+    z-index: 1; 
+    transition: all 0.4s ease;
+}
+
+.category-jumpers::before {
+    bottom: 100%; 
+    border-bottom-right-radius: 16px;
+    box-shadow: 
+        1px 1px 0 0 rgba(255, 255, 255, 0.1),
+        6px 6px 0 6px rgba(8, 9, 13, 0.98);
+}
+
+.category-jumpers::after {
+    top: 100%; 
+    border-top-right-radius: 16px;
+    box-shadow: 
+        1px -1px 0 0 rgba(255, 255, 255, 0.1),
+        6px -6px 0 6px rgba(8, 9, 13, 0.98);
+}
+
+.jumper-btn {
+    position: relative;
+    z-index: 5;
+    width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.02); color: #555; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden; transform-origin: top;
+}
+.jumper-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2); }
+.jumper-btn:disabled { opacity: 0.1; cursor: default; }
+
+.jumper-btn.yt.is-hidden {
+    height: 0; border-width: 0; opacity: 0; padding: 0;
+    margin-top: -10px; pointer-events: none; transform: scaleY(0);
+}
+
+.jumper-btn.active { opacity: 1; }
+.jumper-btn.db.active { color: #000; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); border-color: var(--neon-green); }
+.jumper-btn.sugg.active { color: #000; background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); border-color: var(--neon-pink); }
+.jumper-btn.yt.active { color: #fff; background: #ff0000; box-shadow: 0 0 10px #ff0000; border-color: #ff0000; }
+
+/* =========================================
+   ГОЛОГРАФИЧЕСКАЯ МАТРИЦА (ВЫЕЗЖАЕТ ВПРАВО)
+   ========================================= */
+.holo-floor-selector {
+    position: absolute; top: 50%; 
+    left: calc(100% + 25px); 
+    transform: translateY(-50%) translateX(-15px); 
+    
+    width: max-content; min-width: 220px; 
+    
+    /* Обновленный фон: более глубокий, с кибер-сканлайнами */
+    background: linear-gradient(135deg, rgba(14, 15, 22, 0.98) 0%, rgba(8, 9, 13, 0.95) 100%);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: 8px; /* Более острые углы */
+    padding: 20px 18px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(57, 255, 20, 0.05);
+    
+    opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 100;
+}
+
+/* Сканлайны (Голографический эффект) */
+.holo-floor-selector::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px);
+    background-size: 100% 3px; border-radius: 8px;
+}
+
+.holo-floor-selector.open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(-50%) translateX(0); }
+
+/* Стрелочка Матрицы (Физический стык) */
+.holo-floor-selector::after {
+    content: ''; position: absolute; top: 50%; 
+    left: -7px; 
+    transform: translateY(-50%) rotate(45deg);
+    width: 14px; height: 14px; 
+    background: #0d0e14; /* Цвет края панели */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: -5px 5px 15px rgba(0,0,0,0.6);
+    z-index: 1;
+}
+
+.holo-selector-header { 
+    position: relative; z-index: 2;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; 
+    color: #999; letter-spacing: 3px; text-align: center; 
+    margin-bottom: 16px; padding-bottom: 12px; 
+    border-bottom: none; /* Убрали пунктир */
+}
+
+/* Кибер-линия под заголовком */
+.holo-selector-header::after {
+    content: ''; position: absolute; bottom: 0; left: 10%; width: 80%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
+.holo-selector-body { 
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; gap: 16px; 
+    max-height: 50vh; overflow-y: auto; overflow-x: hidden; 
+    padding-right: 5px; --scroll-size: 4px; --scroll-thumb: #444; 
+}
+
+/* Блоки данных (Сектора) */
+.sector-label { 
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; 
+    margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase;
+    
+    /* Магия: цвет берется из инлайн-стиля JS (currentColor) */
+    border-left: 2px solid currentColor;
+    padding-left: 8px;
+    background: linear-gradient(90deg, color-mix(in srgb, currentColor 10%, transparent), transparent);
+}
+
+.sector-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 5px; }
+
+/* КНОПКИ ВЫБОРА СТРАНИЦЫ */
+.matrix-btn {
+    background: rgba(0, 0, 0, 0.4); 
+    border: 1px solid rgba(255, 255, 255, 0.05); 
+    border-radius: 4px; /* Острые углы */
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+    color: #777;
+    font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; 
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); 
+    flex-direction: column;
+}
+
+.matrix-btn i { font-size: 0.6em; margin-bottom: 3px; opacity: 0.8; }
+
+.matrix-btn:hover { 
+    background: rgba(255,255,255,0.05); 
+    border-color: rgba(255,255,255,0.2);
+    color: #fff; 
+    transform: translateY(-2px); /* Кинематографичный подъем вместо скейла */
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+
+/* АКТИВНОЕ СОСТОЯНИЕ (Динамические цвета через переменные) */
+.matrix-btn.is-current { 
+    border-color: var(--active-color); 
+    color: #fff; 
+    background: color-mix(in srgb, var(--active-color) 15%, transparent);
+    text-shadow: 0 0 8px var(--active-color); 
+    box-shadow: 
+        inset 0 0 10px color-mix(in srgb, var(--active-color) 40%, transparent), 
+        0 4px 15px color-mix(in srgb, var(--active-color) 20%, transparent);
+    transform: translateY(-2px);
+}
+
+/* Маппинг цветов кнопок по классам (совпадает с логикой в JS) */
+.matrix-btn:not(.sugg-page-btn):not(.yt-page-btn) { --active-color: var(--neon-green); }
+.matrix-btn.sugg-page-btn { --active-color: var(--neon-pink); }
+.matrix-btn.yt-page-btn { --active-color: #ff0000; }
+
+/* =========================================
+   АДАПТИВ (Планшеты и Мобильные)
+   ========================================= */
 @media (max-width: 1024px) {
     .archive-top-bar { display: flex; flex-direction: column; align-items: center; gap: 20px; }
     .archive-search-area { max-width: 100%; width: 100%; align-items: center; }
     
     .archive-full-grid-wrapper { flex-direction: column; align-items: center; gap: 20px; }
     .archive-grid-content { width: 100%; order: 1; }
+    
     .archive-side-pagination { position: relative; top: auto; width: 100%; justify-content: center; order: 2; }
     .archive-side-pagination::before, .archive-side-pagination::after { display: none; }
-    .pagination-dock-vertical { position: relative; top: auto; flex-direction: row; padding: 6px 10px; }
-    .pagination-divider-vert { width: 1px; height: 24px; margin: 0 5px; }
-    .page-numbers-vert { flex-direction: row; gap: 4px; }
+    
+    .pagination-dock-vertical { 
+        position: relative; top: auto; flex-direction: row; flex-wrap: wrap; justify-content: center;
+        padding: 12px 20px; width: 100%; max-width: 550px; border-radius: 50px; 
+    }
+    
+    .page-numbers-vert { flex-direction: row; width: auto; gap: 15px; flex-wrap: wrap; justify-content: center; }
+    .tuner-container { flex-direction: row; height: auto; gap: 12px; }
+    
+    .category-jumpers { 
+        position: relative; top: auto; right: auto; transform: none;
+        flex-direction: row; gap: 12px; background: transparent; border: none; padding: 0; box-shadow: none; 
+    }
+    .category-jumpers::before, .category-jumpers::after { display: none; } 
+    .jumper-btn.yt.is-hidden { height: 38px; width: 0; margin-top: 0; margin-left: -12px; transform: scaleX(0); }
+    
+    .pagination-divider-vert { width: 1px; height: 28px; margin: 0 5px; }
     .cyber-page-btn-vert { width: auto; padding: 8px 16px; }
     #page-prev-btn i, #page-next-btn i { transform: rotate(-90deg); }
-    .page-num-btn { width: 34px; height: 34px; font-size: 0.85rem; }
+    
+    .holo-floor-selector {
+        top: auto; bottom: calc(100% + 20px); right: 50%; left: auto;
+        transform: translateX(50%) translateY(20px);
+    }
+    .holo-floor-selector.open { transform: translateX(50%) translateY(0); }
+    .holo-floor-selector::after {
+        top: auto; bottom: -7px; right: 50%; left: auto; transform: translateX(50%) rotate(45deg);
+        border-top: none; border-right: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 1px solid rgba(255, 255, 255, 0.08); border-left: none;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+    }
 }
 
 @media (max-width: 600px) {
-    /* Оставляем на всякий случай, но основная магия ширины переехала в archive-stacks-3d */
     .archive-flex-grid { flex-direction: column; align-items: center; }
+    .pagination-dock-vertical { border-radius: 12px; padding: 15px; max-width: 100%; }
+    .page-numbers-vert { gap: 10px; }
+    .pagination-divider-vert { display: none; }
 }

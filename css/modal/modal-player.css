@@ -1,8 +1,13 @@
 /* css/modal/modal-player.css */
 
 .modal-video-section { 
-    width: 100%; display: flex; flex-direction: column; 
-    flex-grow: 1; /* Чтобы плеер тянулся на всю высоту, если нет текста */
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    flex-grow: 1; 
+    justify-content: center; 
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .video-container { 
@@ -17,26 +22,35 @@
    ПРАВАЯ КОЛОНКА: ВЕРТИКАЛЬНЫЙ ПЛЕЙЛИСТ
    ========================================= */
 
-.playlist-header {
-    padding: 20px 20px 15px 20px;
-    font-family: 'Orbitron', sans-serif; color: var(--modal-color); 
-    font-size: 1rem; display: flex; align-items: center; gap: 10px; 
-    letter-spacing: 1px; font-weight: 700;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    background: rgba(0,0,0,0.3);
-}
-
 .vertical-scroll-list { 
     display: flex; flex-direction: column; gap: 12px; 
+    min-height: 0; 
+    flex-grow: 1; 
     overflow-y: auto; overflow-x: hidden; 
-    padding: 15px 20px; flex-grow: 1;
+    padding: 25px 20px; 
     
-    --scroll-size: 4px;
-    --scroll-thumb: var(--modal-color);
-    --scroll-track: transparent;
+    /* ИСПРАВЛЕНИЕ: Эффект затухания карточек сверху и снизу списка */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
-/* ВЕРТИКАЛЬНАЯ КАРТОЧКА (Thumb слева, Текст справа) */
+/* ИСПРАВЛЕНИЕ: Стильный неоновый скроллбар специфично для этого плейлиста */
+.vertical-scroll-list::-webkit-scrollbar {
+    width: 3px; /* Тонкая линия */
+}
+.vertical-scroll-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 3px;
+    margin: 15px 0; /* Отступ от краев, чтобы скроллбар "висел" в воздухе */
+}
+.vertical-scroll-list::-webkit-scrollbar-thumb {
+    background: var(--modal-color);
+    border-radius: 3px;
+    box-shadow: 0 0 10px var(--modal-color);
+    transition: background 0.3s ease;
+}
+
+/* ВЕРТИКАЛЬНАЯ КАРТОЧКА */
 .vertical-video-card { 
     display: flex; flex-direction: row; gap: 12px; align-items: center;
     background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); 
@@ -55,7 +69,7 @@
 
 /* Левая часть: Картинка */
 .v-thumb { 
-    width: 100px; height: 60px; /* Фиксированный размер */
+    width: 100px; height: 60px; 
     border-radius: 4px; overflow: hidden; position: relative; 
     background: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.5); flex-shrink: 0; 
 }
@@ -73,12 +87,12 @@
 /* Правая часть: Текст */
 .v-info { 
     display: flex; flex-direction: column; justify-content: center; 
-    min-width: 0; /* Для обрезки текста */
+    min-width: 0; 
 }
 .v-title { 
     font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; 
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
-    overflow: hidden; line-height: 1.2; 
+    overflow: hidden; line-height: 1.2; transition: color 0.3s;
 }
 .vertical-video-card.active .v-title { color: var(--modal-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
 .v-status { 

@@ -26,13 +26,23 @@ export class YoutubeModalManager {
                     
                     <div class="yt-info-section">
                         <div class="hover-reveal-wrapper">
-                            <h2 class="yt-title truncated" id="yt-title">TITLE</h2>
+                            <h2 class="yt-title truncated">
+                                <a href="#" target="_blank" id="yt-title-link" class="title-search-link" title="Искать в Google">
+                                    <span id="yt-title">TITLE</span>
+                                    <i class="fab fa-google search-icon"></i>
+                                </a>
+                            </h2>
                             <div class="hover-reveal-box">
-                                <h2 class="yt-title" id="yt-title-full">TITLE</h2>
+                                <h2 class="yt-title">
+                                    <a href="#" target="_blank" id="yt-title-link-full" class="title-search-link" title="Искать в Google">
+                                        <span id="yt-title-full">TITLE</span>
+                                        <i class="fab fa-google search-icon"></i>
+                                    </a>
+                                </h2>
                             </div>
                         </div>
                         
-                        <div class="hover-reveal-wrapper" style="margin-top: 15px;">
+                        <div class="hover-reveal-wrapper" id="yt-desc-wrapper" style="margin-top: 15px;">
                             <p class="yt-desc truncated" id="yt-desc">Description</p>
                             <div class="hover-reveal-box">
                                 <p class="yt-desc" id="yt-desc-full">Description</p>
@@ -57,6 +67,10 @@ export class YoutubeModalManager {
             
             title: document.getElementById('yt-title'),
             titleFull: document.getElementById('yt-title-full'),
+            titleLink: document.getElementById('yt-title-link'),
+            titleLinkFull: document.getElementById('yt-title-link-full'),
+            
+            descWrapper: document.getElementById('yt-desc-wrapper'),
             desc: document.getElementById('yt-desc'),
             descFull: document.getElementById('yt-desc-full'),
             
@@ -76,6 +90,12 @@ export class YoutubeModalManager {
         });
     }
 
+    updateGoogleLinks(text) {
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
+        if (this.els.titleLink) this.els.titleLink.href = searchUrl;
+        if (this.els.titleLinkFull) this.els.titleLinkFull.href = searchUrl;
+    }
+
     open(item, color) {
         this.currentItem = item;
         this.fallbackColor = color || item.customColor || '#ff0000';
@@ -83,32 +103,39 @@ export class YoutubeModalManager {
         
         this.els.title.textContent = item.title;
         this.els.titleFull.textContent = item.title;
+        this.updateGoogleLinks(item.title);
         
-        let descText = item.description || "Описание отсутствует.";
+        let descText = item.description;
         const effectiveStatus = item.status || 'unknown';
         
-        this.els.desc.innerHTML = '';
-        this.els.descFull.innerHTML = '';
-
-        if (effectiveStatus === 'suggested' && item.suggestedBy) {
-            const prefixSpan = document.createElement('span');
-            prefixSpan.style.color = 'var(--yt-color)';
-            prefixSpan.style.fontWeight = '700';
-            prefixSpan.innerHTML = '<i class="fas fa-user"></i> '; 
-            
-            const authorText = document.createTextNode(`${item.suggestedBy}: `);
-            prefixSpan.appendChild(authorText);
-            
-            const mainDescNode = document.createTextNode(descText);
-            
-            this.els.desc.appendChild(prefixSpan.cloneNode(true));
-            this.els.desc.appendChild(mainDescNode.cloneNode());
-            
-            this.els.descFull.appendChild(prefixSpan);
-            this.els.descFull.appendChild(mainDescNode);
+        // Умное скрытие описания (как в основной модалке)
+        if (!descText || descText.trim() === '' || descText.trim() === '...') {
+            this.els.descWrapper.style.display = 'none';
         } else {
-            this.els.desc.textContent = descText;
-            this.els.descFull.textContent = descText;
+            this.els.descWrapper.style.display = 'block';
+            this.els.desc.innerHTML = '';
+            this.els.descFull.innerHTML = '';
+
+            if (effectiveStatus === 'suggested' && item.suggestedBy) {
+                const prefixSpan = document.createElement('span');
+                prefixSpan.style.color = 'var(--yt-color)';
+                prefixSpan.style.fontWeight = '700';
+                prefixSpan.innerHTML = '<i class="fas fa-user"></i> '; 
+                
+                const authorText = document.createTextNode(`${item.suggestedBy}: `);
+                prefixSpan.appendChild(authorText);
+                
+                const mainDescNode = document.createTextNode(descText);
+                
+                this.els.desc.appendChild(prefixSpan.cloneNode(true));
+                this.els.desc.appendChild(mainDescNode.cloneNode());
+                
+                this.els.descFull.appendChild(prefixSpan);
+                this.els.descFull.appendChild(mainDescNode);
+            } else {
+                this.els.desc.textContent = descText;
+                this.els.descFull.textContent = descText;
+            }
         }
 
         this.renderPlaylist(item.videos, effectiveStatus);
@@ -139,7 +166,7 @@ export class YoutubeModalManager {
         this.els.playlistItems.innerHTML = '';
         let firstValidId = null;
 
-        videos.forEach((url, index) => { // ИСПРАВЛЕНИЕ: Ждем только строку url
+        videos.forEach((url, index) => { 
             const loopYtId = getYouTubeId(url);
             if (!loopYtId) return;
             if (!firstValidId) firstValidId = loopYtId;
@@ -165,13 +192,13 @@ export class YoutubeModalManager {
 
             this.els.playlistItems.appendChild(card);
 
-            // АВТО-ПАРСИНГ ИМЕНИ
             fetch(`https://noembed.com/embed?url=${url}`).then(r => r.json()).then(d => {
                 if (d.title) {
                     titleEl.textContent = d.title;
                     if (card.classList.contains('active') && status === 'suggested') {
                         this.els.title.textContent = d.title;
                         this.els.titleFull.textContent = d.title;
+                        this.updateGoogleLinks(d.title);
                     }
                 }
             }).catch(() => {});
@@ -197,6 +224,7 @@ export class YoutubeModalManager {
         if (this.currentItem.status === 'suggested') {
             this.els.title.textContent = title;
             this.els.titleFull.textContent = title;
+            this.updateGoogleLinks(title);
         }
     }
 

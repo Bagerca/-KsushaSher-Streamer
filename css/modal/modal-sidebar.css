@@ -5,10 +5,12 @@
    ========================================= */
 .modal-sidebar-meta { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
 
+/* БЕЙДЖ СТАТУСА (Цвет задается динамически через JS) */
 .modal-status-badge { 
     padding: 8px 14px; font-family: 'Rajdhani', sans-serif; font-weight: 800; 
-    font-size: 1.1rem; color: #000; border-radius: 4px; box-shadow: 0 0 15px var(--modal-color); 
+    font-size: 1.1rem; border-radius: 4px; 
     text-align: center; text-transform: uppercase; letter-spacing: 2px; 
+    transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .modal-rating-box { 
@@ -22,11 +24,30 @@
 .modal-segment-line.filled { background: currentColor; box-shadow: 0 0 10px currentColor; }
 
 /* ШТРИХКОД И ИДЕНТИФИКАТОР */
-.modal-tech-barcode { margin-top: auto; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px; }
-.barcode-lines { width: 100%; height: 30px; opacity: 0.5; background: repeating-linear-gradient(90deg, #fff, #fff 2px, transparent 2px, transparent 4px, #fff 4px, #fff 5px, transparent 5px, transparent 8px); }
+.modal-tech-barcode { 
+    margin-top: auto; padding-top: 20px; 
+    border-top: 1px dashed rgba(255,255,255,0.1); 
+    display: flex; flex-direction: column; gap: 10px; 
+}
+
+/* Контейнер для SVG штрихкода */
+.barcode-lines { 
+    width: 100%; height: 35px; 
+    opacity: 0.9; 
+    display: flex; align-items: center; justify-content: center; /* Центрируем штрихкод */
+    overflow: hidden;
+}
+
+.modal-barcode-svg {
+    height: 100%;
+    width: auto; /* Штрихкод принимает свой естественный размер, не растягивается */
+    transition: filter 0.3s ease;
+    filter: drop-shadow(0 0 3px var(--modal-color)); /* Свечение строго в цвет модалки */
+}
+
 .tech-info { display: flex; flex-direction: column; font-family: 'monospace'; font-size: 0.75rem; color: #666; letter-spacing: 1px; }
 .tech-info span { display: flex; justify-content: space-between; margin-bottom: 2px; }
-.t-val { color: var(--modal-color); font-weight: bold; text-transform: uppercase; }
+.t-val { color: var(--modal-color); font-weight: bold; text-transform: uppercase; transition: color 0.5s ease; }
 
 @media (max-width: 1400px) {
     .modal-sidebar-meta { width: 100%; max-width: 300px; }

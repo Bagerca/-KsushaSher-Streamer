@@ -1,66 +1,126 @@
 /* css/modal/modal-typography.css */
 
 /* =========================================
-   ТИПОГРАФИКА И ЭФФЕКТ GLASS REVEAL
+   ТИПОГРАФИКА И ОФОРМЛЕНИЕ ТЕКСТА
    ========================================= */
 .modal-dynamic-zone { 
-    padding: 40px 60px; 
+    padding: 25px 40px; 
     display: flex; flex-direction: column; flex-grow: 1; 
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .modal-text-content { margin-bottom: 30px; }
 
-.hover-reveal-wrapper { position: relative; cursor: pointer; }
+/* Обертка больше не реагирует на hover, служит просто контейнером */
+.hover-reveal-wrapper { position: relative; width: 100%; }
 
+/* Отключаем обрезку текста. Текст должен читаться сразу, так как есть скролл */
+.truncated { 
+    white-space: normal !important; 
+    overflow: visible !important; 
+    text-overflow: clip !important; 
+}
+
+/* Полностью отключаем всплывающие окна-дубликаты */
+.hover-reveal-box {
+    display: none !important;
+}
+
+/* Оформление блоков текста */
 .modal-title, .modal-desc { 
     border-left: 3px solid var(--modal-color); 
-    padding-left: 15px; margin: 0;
+    padding: 10px 15px; 
+    margin: 0;
+    border-radius: 0 8px 8px 0;
 }
 
 .modal-title { 
-    font-family: 'Orbitron', sans-serif; font-size: 2.2rem; line-height: 1.2; 
+    font-family: 'Orbitron', sans-serif; font-size: 2.2rem; line-height: 1.3; 
     color: #fff; font-weight: 800; letter-spacing: 1px; 
     text-shadow: 0 5px 15px rgba(0,0,0,0.8); 
+    background: linear-gradient(90deg, color-mix(in srgb, var(--modal-color) 15%, transparent), transparent);
 }
+
 .modal-desc { 
-    color: #ccc; font-size: 1rem; line-height: 1.6; font-family: 'Exo 2', sans-serif; 
+    color: #ccc; font-size: 1.05rem; line-height: 1.6; font-family: 'Exo 2', sans-serif; 
+    background: rgba(255, 255, 255, 0.02);
 }
 
-.truncated { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* REVEAL BOX (ПОКАЗ ПОЛНОГО ТЕКСТА) */
-.hover-reveal-box {
-    position: absolute; top: -10px; left: -10px; right: -10px; 
-    padding: 10px 10px 10px 25px; 
-    background: rgba(10, 11, 16, 0.98); 
-    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.5);
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    
-    opacity: 0; visibility: hidden; transform: translateY(-5px) translateZ(0);
-    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-    z-index: 100;
+/* =========================================
+   КЛИКАБЕЛЬНЫЙ ЗАГОЛОВОК И КНОПКА GOOGLE
+   ========================================= */
+.title-search-link {
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+    display: inline; 
+    transition: all 0.3s ease;
 }
 
-.hover-reveal-box .modal-title, .hover-reveal-box .modal-desc {
-    border-left: none; padding-left: 0;
-    white-space: normal; 
+.title-search-link .search-icon {
+    /* Жесткий сброс глобальных стилей лупы */
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+
+    /* НОВЫЙ ДИЗАЙН: КИБЕР-КНОПКА */
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.95rem !important;
+    margin-left: 14px;
+    vertical-align: middle;
+    margin-top: -6px; /* Идеальное центрирование относительно больших букв */
+
+    /* Стиль стекла (Glassmorphism) */
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6) !important;
+
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 
-.hover-reveal-box::before {
-    content: ''; position: absolute; left: 10px; top: 10px; bottom: 10px;
-    width: 3px; background: var(--modal-color); border-radius: 2px;
+/* Анимация текста при наведении */
+.modal-layout .title-search-link:hover { color: var(--modal-color); text-shadow: 0 0 15px var(--modal-color); }
+.yt-modal-content .title-search-link:hover { color: var(--yt-color); text-shadow: 0 0 15px var(--yt-color); }
+
+/* КРАСИВОЕ СВЕЧЕНИЕ КНОПКИ ПРИ НАВЕДЕНИИ (Основная модалка) */
+.modal-layout .title-search-link:hover .search-icon {
+    background: color-mix(in srgb, var(--modal-color) 15%, transparent) !important;
+    border-color: var(--modal-color) !important;
+    color: var(--modal-color) !important;
+    box-shadow: 
+        0 5px 15px color-mix(in srgb, var(--modal-color) 40%, transparent), 
+        inset 0 0 10px color-mix(in srgb, var(--modal-color) 20%, transparent) !important;
+    transform: translateY(-3px) !important; /* Кнопка слегка приподнимается */
 }
 
-.hover-reveal-wrapper:hover .hover-reveal-box {
-    opacity: 1; visibility: visible; transform: translateY(0) translateZ(0);
+/* КРАСИВОЕ СВЕЧЕНИЕ КНОПКИ ПРИ НАВЕДЕНИИ (YouTube модалка) */
+.yt-modal-content .title-search-link:hover .search-icon {
+    background: color-mix(in srgb, var(--yt-color) 15%, transparent) !important;
+    border-color: var(--yt-color) !important;
+    color: var(--yt-color) !important;
+    box-shadow: 
+        0 5px 15px color-mix(in srgb, var(--yt-color) 40%, transparent), 
+        inset 0 0 10px color-mix(in srgb, var(--yt-color) 20%, transparent) !important;
+    transform: translateY(-3px) !important;
 }
 
 @media (max-width: 1400px) {
-    .modal-dynamic-zone { padding: 30px 40px; }
+    .modal-dynamic-zone { padding: 25px 30px; }
 }
 
 @media (max-width: 768px) {
     .modal-title { font-size: 1.8rem; }
     .modal-dynamic-zone { padding: 20px; }
+    .title-search-link .search-icon { 
+        width: 28px !important; 
+        height: 28px !important; 
+        font-size: 0.8rem !important; 
+        margin-left: 10px; 
+    }
 }

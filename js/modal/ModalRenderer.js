@@ -7,17 +7,10 @@ const STATUS_TEXT_MAP = {
     'suggested': 'ПРЕДЛОЖЕНО'
 };
 
-const STATUS_COLOR_MAP = {
-    'completed': '#39ff14', 'watched': '#39ff14',
-    'playing': '#007bff', 'watching': '#007bff',
-    'dropped': '#ff4444', 'on-hold': '#ffd700', 'suggested': '#ff2d95' 
-};
-
 export class ModalRenderer {
     constructor(els) {
         this.els = els;
         this.transitionTimeouts = []; 
-        // Получаем ссылку на колонку со скроллом для сброса позиции
         this.mainCol = document.getElementById('modal-col-main'); 
     }
 
@@ -41,19 +34,32 @@ export class ModalRenderer {
         this.els.title.textContent = titleText;
         this.els.titleFull.textContent = titleText;
         
-        this.els.id.textContent = currentItem.id || "---";
+        // ГЕНЕРАЦИЯ ССЫЛКИ НА GOOGLE
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(titleText)}`;
+        if (this.els.titleLink) this.els.titleLink.href = searchUrl;
+        if (this.els.titleLinkFull) this.els.titleLinkFull.href = searchUrl;
+        
+        const sysId = currentItem.id || "UNKNOWN";
+        this.els.id.textContent = sysId;
         this.els.type.textContent = type ? type.toUpperCase() : "UNKNOWN";
         
-        const descriptionText = currentItem.description || "Описание отсутствует.";
-        this.els.desc.textContent = descriptionText;
-        this.els.descFull.textContent = descriptionText;
+        const descriptionText = currentItem.description;
+        const descWrapper = this.els.desc.closest('.hover-reveal-wrapper');
+        
+        if (!descriptionText || descriptionText.trim() === '' || descriptionText.trim() === '...') {
+            descWrapper.style.display = 'none';
+        } else {
+            descWrapper.style.display = 'block';
+            this.els.desc.textContent = descriptionText;
+            this.els.descFull.textContent = descriptionText;
+        }
 
         const effectiveStatus = currentItem.status || 'unknown';
         this.els.status.textContent = STATUS_TEXT_MAP[effectiveStatus] || effectiveStatus;
         
-        const statusColor = STATUS_COLOR_MAP[effectiveStatus] || '#fff';
-        this.els.status.style.backgroundColor = statusColor;
-        this.els.status.style.color = ['dropped', 'playing', 'watching'].includes(effectiveStatus) ? '#fff' : '#000';
+        this.els.status.style.backgroundColor = color;
+        this.els.status.style.color = '#000';
+        this.els.status.style.boxShadow = `0 0 15px color-mix(in srgb, ${color} 60%, transparent)`;
 
         if (effectiveStatus === 'suggested') {
             this.els.ratingBox.style.display = 'none';
@@ -78,7 +84,40 @@ export class ModalRenderer {
             }
         }
         
+        this.generateBarcode(sysId.toUpperCase(), color);
+        
         return effectiveStatus; 
+    }
+
+    generateBarcode(textId, color) {
+        if (!this.els.techBarcode) return;
+        
+        const linesContainer = this.els.techBarcode.querySelector('.barcode-lines');
+        if (!linesContainer) return;
+
+        linesContainer.innerHTML = '';
+
+        try {
+            if (window.JsBarcode) {
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.classList.add('modal-barcode-svg');
+                linesContainer.appendChild(svg);
+
+                window.JsBarcode(svg, textId, {
+                    format: "CODE39",
+                    displayValue: false, 
+                    background: "transparent",
+                    lineColor: color, 
+                    margin: 0,
+                    width: 2,
+                    height: 40
+                });
+            } else {
+                linesContainer.innerHTML = `<div style="color:${color}; font-family:monospace; font-size: 0.7rem;">[ DECODING_ERROR ]</div>`;
+            }
+        } catch (e) {
+            console.warn('⚠️ [ModalRenderer] Не удалось сгенерировать штрихкод', e);
+        }
     }
 
     triggerGlitchTransition(callback) {
@@ -94,7 +133,6 @@ export class ModalRenderer {
         });
         
         const t1 = setTimeout(() => {
-            // ИСПРАВЛЕНИЕ: Сброс скролла наверх при смене контента
             if (this.mainCol) this.mainCol.scrollTop = 0;
 
             callback(); 
@@ -106,10 +144,10 @@ export class ModalRenderer {
             
             const t2 = setTimeout(() => {
                 elementsToAnimate.forEach(el => el.classList.remove('fade-in'));
-            }, 300); // 300ms совпадает с CSS анимацией smooth-fade-scale
+            }, 300);
             this.transitionTimeouts.push(t2);
             
-        }, 200); // Ждем 200ms пока контент исчезнет
+        }, 200); 
 
         this.transitionTimeouts.push(t1);
     }

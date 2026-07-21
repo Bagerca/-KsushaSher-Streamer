@@ -15,12 +15,10 @@
     object-fit: cover; border-radius: 12px; 
     background-color: #080808; 
     
-    /* ИСПРАВЛЕНИЕ АРТЕФАКТОВ: настоящий border вместо inset box-shadow + padding-box */
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-clip: padding-box;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     
-    /* ИСПРАВЛЕНИЕ РЕЗКОЙ ВСПЫШКИ: раздельные плавные тайминги */
     transition: 
         transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
         box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
@@ -31,14 +29,12 @@
     opacity: 0; 
     transform-origin: center center;
     
-    /* Аппаратное сглаживание углов в 3D-пространстве */
     backface-visibility: hidden;
     will-change: transform, box-shadow, border-color;
 }
 
 /* =========================================
    БАЗОВОЕ СОСТОЯНИЕ (В покое)
-   Оно одинаковое для всех стопок (уходит вглубь)
    ========================================= */
 .modal-poster-img.is-front { 
     opacity: 1; z-index: 30; 
@@ -62,11 +58,11 @@
 /* =========================================
    ОБЩИЕ СВОЙСТВА ПРИ НАВЕДЕНИИ
    ========================================= */
+/* Курсор "палец" только там, где можно кликать и листать */
 .modal-poster-wrapper.is-interactive { cursor: pointer; }
 
-/* При наведении зажигаются ВСЕ карты */
-.modal-poster-wrapper.is-interactive:hover .modal-poster-img {
-    /* Меняем цвет рамки и добавляем плавную тень */
+/* ИСПРАВЛЕНИЕ: При наведении зажигаются ВСЕ карты (даже если она одна) */
+.modal-poster-wrapper:hover .modal-poster-img {
     border-color: var(--poster-color, var(--modal-color));
     box-shadow: 0 0 15px var(--poster-color, var(--modal-color)), 
                 0 20px 40px rgba(0,0,0,0.8);
@@ -74,43 +70,45 @@
 }
 
 /* У передней карты тень всегда сильнее */
-.modal-poster-wrapper.is-interactive:hover .modal-poster-img.is-front { 
+.modal-poster-wrapper:hover .modal-poster-img.is-front { 
     z-index: 35;
     border-color: var(--poster-color, var(--modal-color));
     box-shadow: 0 0 30px var(--poster-color, var(--modal-color)), 
                 0 30px 60px rgba(0,0,0,0.9);
 }
 
+/* =========================================
+   ХОВЕР ДЛЯ 1 КАРТЫ (Эффект левитации)
+   ========================================= */
+.modal-poster-wrapper.stack-1:hover .modal-poster-img.is-front { 
+    transform: translate3d(0, -8px, 30px) scale(1.02); 
+}
 
 /* =========================================
    ХОВЕР ДЛЯ 3-Х КАРТ (Лево - Центр - Право)
    ========================================= */
-.modal-poster-wrapper.stack-3.is-interactive:hover .modal-poster-img.is-front { 
+.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-front { 
     transform: translate3d(-18px, 6px, 25px) rotateZ(-2deg); 
 }
-.modal-poster-wrapper.stack-3.is-interactive:hover .modal-poster-img.is-back { 
+.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back { 
     transform: translate3d(0, 0, 0) rotateZ(0deg); 
     z-index: 25; 
 }
-.modal-poster-wrapper.stack-3.is-interactive:hover .modal-poster-img.is-back-2 { 
+.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back-2 { 
     transform: translate3d(18px, -6px, -25px) rotateZ(2deg); 
     z-index: 15; 
 }
 
-
 /* =========================================
    ХОВЕР ДЛЯ 2-Х КАРТ (Лево - Право)
    ========================================= */
-.modal-poster-wrapper.stack-2.is-interactive:hover .modal-poster-img.is-front { 
-    /* Едет влево, но не так сильно как в тройной */
+.modal-poster-wrapper.stack-2:hover .modal-poster-img.is-front { 
     transform: translate3d(-12px, 4px, 25px) rotateZ(-2deg); 
 }
-.modal-poster-wrapper.stack-2.is-interactive:hover .modal-poster-img.is-back { 
-    /* Едет симметрично вправо! */
+.modal-poster-wrapper.stack-2:hover .modal-poster-img.is-back { 
     transform: translate3d(12px, -4px, -25px) rotateZ(2deg); 
     z-index: 25; 
 }
-
 
 /* Фоновое свечение */
 .modal-poster-glow { 
@@ -135,10 +133,12 @@
 /* АДАПТИВ */
 @media (max-width: 768px) { 
     .modal-poster-wrapper { width: 220px; margin: 0 auto; } 
+    /* Адаптив 1 карта */
+    .modal-poster-wrapper.stack-1:hover .modal-poster-img.is-front { transform: translate3d(0, -4px, 15px) scale(1.02); }
     /* Адаптив 3 карты */
-    .modal-poster-wrapper.stack-3.is-interactive:hover .modal-poster-img.is-front { transform: translate3d(-10px, 4px, 15px) rotateZ(-1deg); }
-    .modal-poster-wrapper.stack-3.is-interactive:hover .modal-poster-img.is-back-2 { transform: translate3d(10px, -4px, -15px) rotateZ(1deg); }
+    .modal-poster-wrapper.stack-3:hover .modal-poster-img.is-front { transform: translate3d(-10px, 4px, 15px) rotateZ(-1deg); }
+    .modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back-2 { transform: translate3d(10px, -4px, -15px) rotateZ(1deg); }
     /* Адаптив 2 карты */
-    .modal-poster-wrapper.stack-2.is-interactive:hover .modal-poster-img.is-front { transform: translate3d(-6px, 2px, 15px) rotateZ(-1deg); }
-    .modal-poster-wrapper.stack-2.is-interactive:hover .modal-poster-img.is-back { transform: translate3d(6px, -2px, -15px) rotateZ(1deg); }
+    .modal-poster-wrapper.stack-2:hover .modal-poster-img.is-front { transform: translate3d(-6px, 2px, 15px) rotateZ(-1deg); }
+    .modal-poster-wrapper.stack-2:hover .modal-poster-img.is-back { transform: translate3d(6px, -2px, -15px) rotateZ(1deg); }
 }

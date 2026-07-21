@@ -28,6 +28,7 @@ export class GridManager {
         this.isAnimating = false; 
         this.resizeDebounceTimer = null;
         this.gridMode = 'detailed';
+        this.isSelectorOpen = false; 
 
         this.bindEvents();
     }
@@ -47,12 +48,10 @@ export class GridManager {
 
     getColumnsCount() {
         let gridWidth = this.els.gridMain.clientWidth;
-        
         if (gridWidth === 0) {
             const containerMax = Math.min(window.innerWidth * 0.95, 1650);
             gridWidth = containerMax - 52 - 30; 
         }
-
         if (this.gridMode === 'compact') {
             return Math.max(1, Math.floor((gridWidth + 12) / (160 + 12)));
         } else {
@@ -97,8 +96,20 @@ export class GridManager {
             }, 300);
         });
 
-        this.els.prevBtn.addEventListener('click', () => this.changePage(-1));
-        this.els.nextBtn.addEventListener('click', () => this.changePage(1));
+        this.els.prevBtn.addEventListener('click', () => {
+            EventBus.emit('PLAY_SOUND', 'hover');
+            this.changePage(-1);
+        });
+        this.els.nextBtn.addEventListener('click', () => {
+            EventBus.emit('PLAY_SOUND', 'hover');
+            this.changePage(1);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (this.isSelectorOpen && !e.target.closest('#archive-side-pagination')) {
+                this.closeSelector();
+            }
+        });
     }
 
     renderGrid(resetToFirstPage = false) {
@@ -106,7 +117,6 @@ export class GridManager {
 
         const cols = this.getColumnsCount();
         this.stdPerPage = cols * 2; 
-        
         this.ytPerPage = Math.max(2, Math.floor(cols / 2) * 2); 
         
         this.mainPages = Math.ceil(this.store.filteredMainStandard.length / this.stdPerPage);
@@ -138,7 +148,7 @@ export class GridManager {
         if (direction === 0) direction = page > this.currentPage ? 1 : -1;
 
         this.isAnimating = true;
-        EventBus.emit('PLAY_SOUND', 'hover');
+        this.closeSelector(); 
 
         const outClass = direction > 0 ? 'page-slide-up-out' : 'page-slide-down-out';
         this.els.gridMain.classList.add(outClass);
@@ -184,24 +194,14 @@ export class GridManager {
         
         this.els.gridMain.innerHTML = mainHtmlBuf;
 
-        // ИСПРАВЛЕНИЕ: ЖЕСТКАЯ ФИКСАЦИЯ ВЫСОТЫ КОНТЕЙНЕРА
         requestAnimationFrame(() => {
             const gap = this.gridMode === 'compact' ? 12 : 20;
             const cardWidth = this.gridMode === 'compact' ? 160 : 230;
-            
-            // Мы ВСЕГДА вычисляем высоту на основе высоких дефолтных карточек.
-            // Это гарантирует, что контейнер не сузится при переходе на ютуб-страницы.
             const defaultCardHeight = cardWidth * 1.5; 
             const targetMinHeight = (defaultCardHeight * 2) + gap; 
             
             this.els.gridMain.style.minHeight = `${targetMinHeight}px`;
-
-            // Если страница с ютуб роликами, мы центрируем их внутри зафиксированного высокого контейнера.
-            if (isYoutubePage) {
-                this.els.gridMain.style.alignContent = 'center';
-            } else {
-                this.els.gridMain.style.alignContent = 'start';
-            }
+            this.els.gridMain.style.alignContent = isYoutubePage ? 'center' : 'start';
         });
 
         document.querySelectorAll('.archive-card-container:not(.is-observed)').forEach(card => {
@@ -221,51 +221,128 @@ export class GridManager {
         this.renderPageNumbers();
     }
 
+    getPageMetadata(pageIndex) {
+        if (pageIndex < 1 || pageIndex > this.totalPages) return null;
+        
+        if (pageIndex <= this.mainPages) {
+            return { raw: pageIndex, num: pageIndex, type: 'main', icon: '', colorClass: '' };
+        } else if (pageIndex <= this.mainPages + this.suggPages) {
+            return { raw: pageIndex, num: pageIndex - this.mainPages, type: 'sugg', icon: '<i class="fas fa-star"></i>', colorClass: 'sugg-page-btn' };
+        } else {
+            return { raw: pageIndex, num: pageIndex - this.mainPages - this.suggPages, type: 'yt', icon: '<i class="fab fa-youtube"></i>', colorClass: 'yt-page-btn' };
+        }
+    }
+
+    renderTunerSlot(pageIndex, stateClass) {
+        const meta = this.getPageMetadata(pageIndex);
+        if (!meta) return `<button class="tuner-slot empty">[--]</button>`;
+        const content = meta.icon ? `${meta.icon}<span>${meta.num}</span>` : meta.num;
+        return `<button class="tuner-slot ${stateClass} ${meta.colorClass}" data-page="${meta.raw}" title="Этаж ${meta.raw}">${content}</button>`;
+    }
+
     renderPageNumbers() {
-        let html = '';
-        const maxVisible = 5; 
-        const total = this.totalPages;
+        const M = this.mainPages;
+        const S = this.suggPages;
+        const Y = this.ytPages;
         const cur = this.currentPage;
-        let start = Math.max(1, cur - Math.floor(maxVisible / 2));
-        let end = Math.min(total, start + maxVisible - 1);
+        let html = '';
 
-        if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1);
+        // 1. ОПТИЧЕСКИЙ ТЮНЕР
+        html += `<div class="tuner-container">`;
+        html += this.renderTunerSlot(cur - 1, 'prev');
+        html += this.renderTunerSlot(cur, 'active'); 
+        html += this.renderTunerSlot(cur + 1, 'next');
 
-        const getBtnHtml = (i) => {
-            let isSugg = false;
-            let isYt = false;
+        // 2. ГОЛО-МАТРИЦА (Выезжает вправо)
+        html += `<div class="holo-floor-selector" id="holo-floor-selector">
+                    <div class="holo-selector-header">ВЫБОР СЕКТОРА</div>
+                    <div class="holo-selector-body">`;
+        
+        let currentTypeRendered = null;
+        for (let i = 1; i <= this.totalPages; i++) {
+            const meta = this.getPageMetadata(i);
             
-            if (i > this.mainPages && i <= this.mainPages + this.suggPages) isSugg = true;
-            else if (i > this.mainPages + this.suggPages) isYt = true;
-
-            const activeClass = i === cur ? 'active' : '';
-            let extraClass = '';
-            let displayVal = i;
-
-            if (isSugg) {
-                extraClass = 'sugg-page-btn';
-                const suggNum = i - this.mainPages;
-                displayVal = this.suggPages > 1 
-                    ? `<i class="fas fa-star"></i><span style="font-size:0.7em; margin-top:2px;">${suggNum}</span>` 
-                    : `<i class="fas fa-star"></i>`;
-            } else if (isYt) {
-                extraClass = 'yt-page-btn';
-                const ytNum = i - this.mainPages - this.suggPages;
-                displayVal = this.ytPages > 1 
-                    ? `<i class="fab fa-youtube"></i><span style="font-size:0.7em; margin-top:2px;">${ytNum}</span>` 
-                    : `<i class="fab fa-youtube"></i>`;
+            if (meta.type !== currentTypeRendered) {
+                if (currentTypeRendered !== null) html += `</div>`; 
+                let sectorTitle = meta.type === 'main' ? 'MAIN_DB' : (meta.type === 'sugg' ? 'SUGGESTIONS' : 'YOUTUBE_ARCHIVE');
+                let sectorColor = meta.type === 'main' ? 'var(--neon-green)' : (meta.type === 'sugg' ? 'var(--neon-pink)' : '#ff0000');
+                html += `<div class="sector-label" style="color: ${sectorColor}">[ ${sectorTitle} ]</div><div class="sector-grid">`;
+                currentTypeRendered = meta.type;
             }
 
-            return `<button class="page-num-btn ${activeClass} ${extraClass}" data-page="${i}">${displayVal}</button>`;
-        };
+            const activeClass = i === cur ? 'is-current' : '';
+            const content = meta.icon ? `${meta.icon}${meta.num}` : meta.num;
+            html += `<button class="matrix-btn ${meta.colorClass} ${activeClass}" data-page="${meta.raw}">${content}</button>`;
+        }
+        html += `</div></div>`; // Закрываем матрицу
+        html += `</div>`; // Закрываем Тюнер
 
-        if (start > 1) { html += getBtnHtml(1); if (start > 2) html += `<span class="page-dots">...</span>`; }
-        for (let i = start; i <= end; i++) html += getBtnHtml(i);
-        if (end < total) { if (end < total - 1) html += `<span class="page-dots">...</span>`; html += getBtnHtml(total); }
+        // 3. БЛОК-СПУТНИК СЛЕВА (Якоря)
+        html += `<div class="category-jumpers">`;
+        
+        const dbState = cur <= M ? 'active' : '';
+        const dbTarget = M > 0 ? 1 : 0;
+        html += `<button class="jumper-btn db ${dbState}" ${M>0?`data-page="${dbTarget}"`:''} ${M===0?'disabled':''} title="База Данных"><i class="fas fa-database"></i></button>`;
+
+        const suggState = (cur > M && cur <= M + S) ? 'active' : '';
+        const suggTarget = S > 0 ? M + 1 : 0;
+        html += `<button class="jumper-btn sugg ${suggState}" ${S>0?`data-page="${suggTarget}"`:''} ${S===0?'disabled':''} title="Предложка"><i class="fas fa-star"></i></button>`;
+
+        const ytState = cur > M + S ? 'active' : '';
+        const ytTarget = Y > 0 ? M + S + 1 : 0;
+        const ytHiddenClass = this.store.currentType === 'games' ? 'is-hidden' : '';
+        html += `<button class="jumper-btn yt ${ytState} ${ytHiddenClass}" ${Y>0?`data-page="${ytTarget}"`:''} ${Y===0?'disabled':''} title="YouTube"><i class="fab fa-youtube"></i></button>`;
+
+        html += `</div>`;
 
         this.els.pageNumbersContainer.innerHTML = html;
-        this.els.pageNumbersContainer.querySelectorAll('.page-num-btn[data-page]').forEach(btn => {
-            btn.addEventListener('click', (e) => this.goToPage(parseInt(e.currentTarget.dataset.page)));
+
+        // --- СОБЫТИЯ ---
+        this.els.pageNumbersContainer.querySelectorAll('.tuner-slot:not(.active):not(.empty)').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                EventBus.emit('PLAY_SOUND', 'hover');
+                this.goToPage(parseInt(e.currentTarget.dataset.page));
+            });
         });
+
+        this.els.pageNumbersContainer.querySelectorAll('.jumper-btn:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                EventBus.emit('PLAY_SOUND', 'hover');
+                this.goToPage(parseInt(e.currentTarget.dataset.page));
+            });
+        });
+
+        const activeSlot = this.els.pageNumbersContainer.querySelector('.tuner-slot.active');
+        if (activeSlot) {
+            activeSlot.addEventListener('click', () => {
+                EventBus.emit('PLAY_SOUND', 'click');
+                this.toggleSelector();
+            });
+        }
+
+        this.els.pageNumbersContainer.querySelectorAll('.matrix-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                EventBus.emit('PLAY_SOUND', 'click');
+                this.goToPage(parseInt(e.currentTarget.dataset.page));
+            });
+        });
+    }
+
+    toggleSelector() {
+        const selector = document.getElementById('holo-floor-selector');
+        if (!selector) return;
+        this.isSelectorOpen = !this.isSelectorOpen;
+        selector.classList.toggle('open', this.isSelectorOpen);
+        
+        const tuner = document.querySelector('.tuner-container');
+        if (tuner) tuner.classList.toggle('selector-open', this.isSelectorOpen);
+    }
+
+    closeSelector() {
+        this.isSelectorOpen = false;
+        const selector = document.getElementById('holo-floor-selector');
+        const tuner = document.querySelector('.tuner-container');
+        if (selector) selector.classList.remove('open');
+        if (tuner) tuner.classList.remove('selector-open');
     }
 }
