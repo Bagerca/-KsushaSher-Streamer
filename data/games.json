@@ -7,16 +7,20 @@
         "id": "bendy-ink-machine",
         "title": "Bendy and the Ink Machine",
         "rating": 0,
-        "description": "Первая часть. Атмосферный хоррор про ожившие чернила и заброшенную анимационную студию.",
+        "description": "...",
         "image": "assets/images/games/bendy-ink-machine.jpg",
         "status": "on-hold",
-        "videos": ["https://youtu.be/vAEKtyPSgz0", "https://youtu.be/_aJV27IXlwU", "https://youtu.be/RtRBWSAvdMY"]
+        "videos": [
+          "https://youtu.be/vAEKtyPSgz0",
+          "https://youtu.be/_aJV27IXlwU",
+          "https://youtu.be/RtRBWSAvdMY"
+        ]
       },
       {
         "id": "bendy-dark-revival",
         "title": "Bendy and the Dark Revival",
         "rating": 0,
-        "description": "Полноценный сиквел. Графика стала более реалистичной, появилась механика скрытности и новая боевка.",
+        "description": "...",
         "image": "assets/images/games/bendy-dark-revival.jpg",
         "status": "on-hold"
       },
@@ -24,7 +28,7 @@
         "id": "bendy-lone-wolf",
         "title": "Bendy: Lone Wolf",
         "rating": 0,
-        "description": "Новый таинственный проект во вселенной. Ждем больше информации.",
+        "description": "...",
         "image": "assets/images/games/bendy-lone-wolf.jpg",
         "status": "on-hold"
       },
@@ -32,7 +36,7 @@
         "id": "boris-and-the-dark-survival",
         "title": "Boris and the Dark Survival",
         "rating": 0,
-        "description": "Спин-офф про волка Бориса. Бегаем по уровням, собираем припасы и прячемся от чернильного демона.",
+        "description": "...",
         "image": "assets/images/games/boris-and-the-dark-survival.jpg",
         "status": "on-hold"
       },
@@ -40,7 +44,7 @@
         "id": "bendy-secrets-of-the-machine",
         "title": "Bendy: Secrets of the Machine",
         "rating": 0,
-        "description": "Интерактивный тизер следующей части с пространственными головоломками.",
+        "description": "...",
         "image": "assets/images/games/bendy-secrets-of-the-machine.jpg",
         "status": "on-hold"
       }
@@ -54,7 +58,7 @@
         "id": "hollow-knight",
         "title": "Hollow Knight",
         "rating": 0,
-        "description": "Мрачная и красивая метроидвания с хардкорными боссами и глубоким лором.",
+        "description": "...",
         "image": "assets/images/games/hollow-knight.png",
         "status": "on-hold"
       },
@@ -62,162 +66,272 @@
         "id": "hollow-knight-silksong",
         "title": "Hollow Knight: Silksong",
         "rating": 3.0,
-        "description": "Приятная картинка и наличие кооператива. Но геймплей оказался слишком жестким для меня.",
+        "description": "+ Приятная картинка. + Есть кооп. - Очень жеский геймплей для меня.",
         "image": "assets/images/games/hollow-knight-silksong.png",
         "status": "dropped",
-        "videos": ["https://youtu.be/JPGKia9djuA"]
+        "videos": [
+          "https://youtu.be/JPGKia9djuA",
+          "https://youtu.be/deMaQZA9Vc4",
+          "https://youtu.be/7xn2mNWE4Pw"
+        ]
       }
     ]
   },
   {
     "id": "the-floor-above",
     "title": "The Floor Above",
-    "rating": 4.0,
-    "description": "Атмосферный хоррор с новогодним вайбом. Неплохие скримеры разбавлены мемами, что радует.",
+    "rating": 0,
+    "description": "...",
     "image": "assets/images/games/the-floor-above.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/KBkcxV_T2DI"
+    ]
   },
   {
     "id": "stick-fight-the-game",
     "title": "Stick Fight: The Game",
-    "rating": 4.0,
-    "description": "Залипательный кооп с очень приятной музыкой. Играется весело, но контента хватило ненадолго.",
+    "rating": 0,
+    "description": "...",
     "image": "assets/images/games/stick-fight-the-game.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/o1QJ3pcpeUM",
+      "https://youtu.be/6zFv5iVlk6Y"
+    ]
   },
   {
     "id": "supernatural-the-game",
     "title": "Supernatural: The Game",
     "rating": 4.0,
-    "description": "Как фанатке сериала, мне очень зашло. Озвучка героев аутентичная.",
+    "description": "+ Я фАнАтКа, мне зашло. + Озвучка гг, как в сериале. + Есть небольшая привязка к сериалу. - Лагает хорошо, но это простительно. - Короткий сюжет, но я жду полнометражную игру.",
     "image": "assets/images/games/supernatural-the-game.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/f2Mbj35lirQ"
+    ]
   },
   {
     "id": "cursed-digicam",
     "title": "Cursed Digicam",
     "rating": 5.0,
-    "description": "Отличный хоррор с хорошим сюжетом, качественными скримерами и интересными головоломками.",
+    "description": "+ Хорошие скримеры. + Хороший сюжет. + Есть даже рофловые моменты. + Даже есть головоломки. - Минус в том, что их нет.",
     "image": "assets/images/games/cursed-digicam.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/9jQw2NCywLU"
+    ]
   },
   {
     "id": "the-maid",
     "title": "The Maid",
     "rating": 3.0,
-    "description": "Игра порадовала хорошими скримерами, но геймплей показался слишком затянутым.",
+    "description": "+ Хорошие скримеры. - Затянутый геймплей, постоянно ходишь туда сюда в поисках того сего.",
     "image": "assets/images/games/the-maid.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/zwQGqgZrBKo"
+    ]
   },
   {
     "id": "the-cabin-factory",
     "title": "The Cabin Factory",
     "rating": 4.0,
-    "description": "Хоррор с хорошими скримерами и интересной фишкой — взаимодействием с чатом во время игры.",
+    "description": "+ Есть взаимодействие с чатом во время игры. + Хорошие скримеры. - Короткий сюжет.",
     "image": "assets/images/games/the-cabin-factory.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/qZqk1O8p9BU"
+    ]
   },
   {
     "id": "silent-hill-f",
     "title": "Silent Hill f",
     "rating": 2.0,
-    "description": "Красивая картинка и интересный сюжет. Однако боевка отвратительная.",
+    "description": "+ Красивая картинка. + Интересный сюжет. - Отвратительная боевка. - Нетипичный Сайлент Хилл, двоякие ощущения.",
     "image": "assets/images/games/silent-hill-f.png",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/M-xk2GDhAhc",
+      "https://youtu.be/L7KIwjXuCao",
+      "https://youtu.be/NdSCznUi0ek",
+      "https://youtu.be/Bf2IdJrUPmY",
+      "https://youtu.be/EBaPeWK11BU",
+      "https://youtu.be/IMz4cLhEQzE",
+      "https://youtu.be/PUUXPIuBVT4",
+      "https://youtu.be/r2CsTzv1bKE"
+    ]
   },
   {
     "id": "vacation-cafe-simulator",
     "title": "Vacation Cafe Simulator",
     "rating": 4.0,
-    "description": "Красивые виды и возможность плавать под водой. Геймплей приятный и несложный.",
+    "description": "+ Красивые виды. + Можно плавать под водой. + Приятный и не сложный геймплей. - Много багов в демке и мало функций, поэтому ждем полную версию.",
     "image": "assets/images/games/vacation-cafe-simulator.jpg",
-    "status": "playing"
+    "status": "playing",
+    "videos": [
+      "https://youtu.be/8vjTPSYiOuM"
+    ]
   },
   {
     "id": "the-forest",
     "title": "The Forest",
     "rating": 4.0,
-    "description": "Залипательная песочница с поддержкой Chaos Tricks (интерактив за баллы и донаты).",
+    "description": "+ Залипательная песочница. + Есть chaos triks (можно добавлять плюшки за баллы канала или донаты). - Короткий сюжет, но интересный.",
     "image": "assets/images/games/the-forest.png",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/NooBjWBm8oE",
+      "https://youtu.be/TMhmn2_8grg",
+      "https://youtu.be/7juQGdOgNo8",
+      "https://youtu.be/PEhKsp41-9I",
+      "https://youtu.be/fUPisWeQTb0"
+    ]
   },
   {
     "id": "dead-island-2",
     "title": "Dead Island 2",
     "rating": 5.0,
-    "description": "Сочная картинка, классная музыка и залипательное лутание.",
+    "description": "+ Сочная картинка. + Залипательное лутание. + Классная музыка. + Хорошая разрушаемость зомби. - Звуки разрушения мебели не очень подходящие.",
     "image": "assets/images/games/dead-island-2.png",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/_LQRER2rOWg",
+      "https://youtu.be/f7DoiosG1dI",
+      "https://youtu.be/C3ZrneATygY",
+      "https://youtu.be/m-xfz0YISEg",
+      "https://youtu.be/qrRPE5mdCLU",
+      "https://youtu.be/4nWV0EqxfGA",
+      "https://youtu.be/2DiQEA11Vps",
+      "https://youtu.be/QZKG8PHAxsA",
+      "https://youtu.be/56AmmuvlppE"
+    ]
   },
   {
     "id": "repo",
     "title": "R.E.P.O.",
     "rating": 5.0,
-    "description": "Прикольные монстры и залипательное лутание.",
+    "description": "+ Прикольные монстры. + Залипательное лутание. + Есть chaos triks (можно добавлять плюшки за баллы канала или донаты). - В последнее время ужасные пинги.",
     "image": "assets/images/games/repo.png",
-    "status": "playing"
+    "status": "playing",
+    "videos": [
+      "https://youtu.be/INxLtYGWWNI",
+      "https://youtu.be/-Io-aMBFqWg",
+      "https://youtu.be/UKgEd3xHn5g",
+      "https://youtu.be/BUkbzbvlQ44",
+      "https://youtu.be/oudyoE8akHk",
+      "https://youtu.be/PdA7Ebci5lA",
+      "https://youtu.be/YppmFYy0PSk",
+      "https://youtu.be/BuWCaR84mII",
+      "https://youtu.be/BHAVieCDEIA"
+    ]
   },
   {
     "id": "unturned",
     "title": "Unturned",
     "rating": 4.0,
-    "description": "Залипательная боевка и приятный геймплей. Есть кооп, но загрузка — жуть какая долгая.",
+    "description": "+ Залипательная боевка. + Приятный геймплей. + Есть кооп. - Жуть какая долгая загрузка.",
     "image": "assets/images/games/unturned.png",
-    "status": "playing"
+    "status": "playing",
+    "videos": [
+      "https://youtu.be/rzfnAtjE4as",
+      "https://youtu.be/SMsvjKDwdZw",
+      "https://youtu.be/F1nUsoEGR6U",
+      "https://youtu.be/LJa-1BoEbMc"
+    ]
   },
   {
     "id": "bad-cheese",
     "title": "Bad Cheese",
-    "rating": 1.5,
-    "description": "Начало интригует, но дальше начинается сложная психоделика.",
+    "rating": 0,
+    "description": "...",
     "image": "assets/images/games/bad-cheese.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/PIyCxvZzeDA"
+    ]
   },
   {
     "id": "state-of-decay-2",
     "title": "State of Decay 2",
-    "rating": 4.5,
-    "description": "Топовое выживание. Строим базу, лутаем, давим зомби.",
+    "rating": 0,
+    "description": "...",
     "image": "assets/images/games/state-of-decay-2.jpg",
-    "status": "dropped"
+    "status": "dropped",
+    "videos": [
+      "https://youtu.be/4V4y8rO75mA"
+    ]
   },
   {
     "id": "fuck-you-witch",
     "title": "Fuck You Witch",
-    "rating": 2.5,
-    "description": "Мемный хоррор, где нужно орать матом в микрофон, чтобы отпугнуть ведьму.",
+    "rating": 0,
+    "description": "...",
     "image": "assets/images/games/fuck-you-witch.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/07lzMJrVDjg"
+    ]
   },
   {
     "id": "lethal-company",
     "title": "Lethal Company",
-    "rating": 5.0,
-    "description": "Классика нашего кооператива. Процесс сбора лута невероятно затягивает.",
+    "rating": 0,
+    "description": "...",
     "image": "assets/images/games/lethal-company.png",
-    "status": "playing"
+    "status": "playing",
+    "videos": [
+      "https://youtu.be/8rQTRqSYB9I",
+      "https://youtu.be/poR5ososvEw",
+      "https://youtu.be/oGM9v8Mx_mI",
+      "https://youtu.be/yzZkGAWhuaE",
+      "https://youtu.be/hVI6wmxfDXw",
+      "https://youtu.be/OCBMaHUegZ4",
+      "https://youtu.be/spYKfCO6G7Q",
+      "https://youtu.be/7YhFVjOU2-w",
+      "https://youtu.be/QDvf0aRlnjM",
+      "https://youtu.be/pjLLbazxijc",
+      "https://youtu.be/xnyfzVJ_ofU",
+      "https://youtu.be/jRCkXl96YgY",
+      "https://youtu.be/okRrZtWBv7A",
+      "https://youtu.be/t2zId2MtJRc",
+      "https://youtu.be/lLdpUbp4Q2E",
+      "https://youtu.be/YhZJKp--_Vw",
+      "https://youtu.be/Sperc4ypFBk"
+    ]
   },
   {
     "id": "unmourned",
     "title": "Unmourned",
-    "rating": 4.0,
-    "description": "Приятная картинка и действительно качественные скримеры.",
+    "rating": 0,
+    "description": "...",
     "image": "assets/images/games/unmourned.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/ytz5jMFVGdQ",
+      "https://youtu.be/vih6bH6ebSo"
+    ]
   },
   {
     "id": "bioshock-infinite",
     "title": "BioShock Infinite",
     "rating": 4.0,
-    "description": "Красивая графика и расслабляющая стрельба.",
+    "description": "+ Красивая графика. + Расслабляющая стрелялка. + Перемещение во времени для Геймплея это интересно. - Сложный сюжет, пока не совсем понял что к чему и почему.",
     "image": "assets/images/games/bioshock-infinite.png",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/KsBProOxvpY",
+      "https://youtu.be/wvlF0sBKpgA",
+      "https://youtu.be/mFQjB_5FQNs",
+      "https://youtu.be/cXXcKHYQJ2c",
+      "https://youtu.be/jBobUycOKEM"
+    ]
   },
   {
     "id": "gris",
     "title": "GRIS",
     "rating": 0,
-    "description": "Медитативный платформер с потрясающим акварельным визуалом.",
+    "description": "...",
     "image": "assets/images/games/gris.jpg",
     "status": "on-hold"
   },
@@ -225,7 +339,7 @@
     "id": "content-warning",
     "title": "Content Warning",
     "rating": 0,
-    "description": "Снимаем видео с монстрами, чтобы стать популярными.",
+    "description": "...",
     "image": "assets/images/games/content-warning.jpg",
     "status": "on-hold"
   },
@@ -233,15 +347,25 @@
     "id": "minecraft",
     "title": "Minecraft",
     "rating": 0,
-    "description": "Бесконечная кубическая песочница.",
+    "description": "...",
     "image": "assets/images/games/minecraft.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/itXWGMxoTxE",
+      "https://youtu.be/uI0wdrz0SPU",
+      "https://youtu.be/BOPKlz6H6dI",
+      "https://youtu.be/nfbCKaSHfuY",
+      "https://youtu.be/6vsbRs_vpeo",
+      "https://youtu.be/PwPCyw76qEE",
+      "https://youtu.be/18ziK9xbQyQ",
+      "https://youtu.be/MXrwXfB_FB4"
+    ]
   },
   {
     "id": "portal-2",
     "title": "Portal 2",
     "rating": 0,
-    "description": "Лучшая головоломка с порталами и кооперативом.",
+    "description": "...",
     "image": "assets/images/games/portal-2.jpg",
     "status": "on-hold"
   },
@@ -249,15 +373,18 @@
     "id": "cs2",
     "title": "Counter-Strike 2",
     "rating": 0,
-    "description": "Соревновательный тактический шутер.",
+    "description": "...",
     "image": "assets/images/games/cs2.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/TOzV2MFPWM4"
+    ]
   },
   {
     "id": "sally-face",
     "title": "Sally Face",
     "rating": 0,
-    "description": "Мрачная приключенческая игра о мальчике с протезом на лице.",
+    "description": "...",
     "image": "assets/images/games/sally-face.jpg",
     "status": "on-hold"
   },
@@ -265,7 +392,7 @@
     "id": "beholder",
     "title": "Beholder",
     "rating": 0,
-    "description": "Симулятор управдома в тоталитарном государстве.",
+    "description": "...",
     "image": "assets/images/games/beholder.png",
     "status": "on-hold"
   },
@@ -273,15 +400,18 @@
     "id": "mouthwashing",
     "title": "Mouthwashing",
     "rating": 0,
-    "description": "Психологический хоррор от первого лица в космосе.",
+    "description": "...",
     "image": "assets/images/games/mouthwashing.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/Fw2uuw4dGjg"
+    ]
   },
   {
     "id": "cuphead",
     "title": "Cuphead",
     "rating": 0,
-    "description": "Сложный босс-раш платформер в стиле ретро-анимации 30-х годов.",
+    "description": "...",
     "image": "assets/images/games/cuphead.jpg",
     "status": "on-hold"
   },
@@ -289,7 +419,7 @@
     "id": "buckshot-roulette",
     "title": "Buckshot Roulette",
     "rating": 0,
-    "description": "Русская рулетка с дробовиком.",
+    "description": "...",
     "image": "assets/images/games/buckshot-roulette.jpg",
     "status": "on-hold"
   },
@@ -297,7 +427,7 @@
     "id": "undertale",
     "title": "Undertale",
     "rating": 0,
-    "description": "Легендарная RPG, где никого не обязательно убивать.",
+    "description": "...",
     "image": "assets/images/games/undertale.jpg",
     "status": "on-hold"
   },
@@ -305,7 +435,7 @@
     "id": "vrchat",
     "title": "VRChat",
     "rating": 0,
-    "description": "Социальная песочница в виртуальной реальности.",
+    "description": "...",
     "image": "assets/images/games/vrchat.png",
     "status": "on-hold"
   },
@@ -313,7 +443,7 @@
     "id": "alice-madness-returns",
     "title": "Alice: Madness Returns",
     "rating": 0,
-    "description": "Мрачное переосмысление Алисы в Стране Чудес.",
+    "description": "...",
     "image": "assets/images/games/alice-madness-returns.jpg",
     "status": "on-hold"
   },
@@ -321,7 +451,7 @@
     "id": "abyssus",
     "title": "Abyssus",
     "rating": 0,
-    "description": "Экшен в подводном сеттинге.",
+    "description": "...",
     "image": "assets/images/games/abyssus.jpg",
     "status": "on-hold"
   },
@@ -329,7 +459,7 @@
     "id": "helltaker",
     "title": "Helltaker",
     "rating": 0,
-    "description": "Короткая игра-головоломка про сбор гарема из демониц.",
+    "description": "...",
     "image": "assets/images/games/helltaker.png",
     "status": "on-hold"
   },
@@ -337,15 +467,18 @@
     "id": "valorant",
     "title": "Valorant",
     "rating": 0,
-    "description": "Тактический командный шутер с уникальными способностями.",
+    "description": "...",
     "image": "assets/images/games/valorant.png",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/70cQdUmv1qs"
+    ]
   },
   {
     "id": "tomodachi-life-living-the-dream",
     "title": "Tomodachi Life: Living the Dream",
     "rating": 0,
-    "description": "",
+    "description": "...",
     "image": "assets/images/games/tomodachi-life.jpg",
     "status": "on-hold"
   },
@@ -353,7 +486,7 @@
     "id": "xenofeels",
     "title": "Xenofeels",
     "rating": 0,
-    "description": "",
+    "description": "...",
     "image": "assets/images/games/xenofeels.jpg",
     "status": "on-hold"
   },
@@ -361,7 +494,7 @@
     "id": "war-thunder",
     "title": "War Thunder",
     "rating": 0,
-    "description": "Масштабные сражения на танках, самолетах и кораблях.",
+    "description": "...",
     "image": "assets/images/games/war-thunder.jpg",
     "status": "on-hold"
   },
@@ -369,7 +502,7 @@
     "id": "dome-keeper",
     "title": "Dome Keeper",
     "rating": 0,
-    "description": "Копаем недра, добываем ресурсы и защищаем купол от монстров.",
+    "description": "...",
     "image": "assets/images/games/dome-keeper.jpg",
     "status": "on-hold"
   },
@@ -377,7 +510,7 @@
     "id": "subnautica",
     "title": "Subnautica",
     "rating": 0,
-    "description": "Выживание на планете, полностью покрытой водой.",
+    "description": "...",
     "image": "assets/images/games/subnautica.jpg",
     "status": "on-hold"
   },
@@ -387,7 +520,12 @@
     "rating": 0,
     "description": "...",
     "image": "assets/images/games/tiny-bunny.jpg",
-    "status": "completed"
+    "status": "completed",
+    "videos": [
+      "https://youtu.be/EJUHchID_aI",
+      "https://youtu.be/Q8N5ftORIpc",
+      "https://youtu.be/Rkip64Eti6E"
+    ]
   },
   {
     "id": "machinika-museum",
@@ -411,7 +549,10 @@
     "rating": 0,
     "description": "...",
     "image": "assets/images/games/scp-secret-laboratory.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/5OicfmGP_iI"
+    ]
   },
   {
     "id": "scorn",
@@ -444,5 +585,228 @@
     "description": "...",
     "image": "assets/images/games/stalker-soc.jpg",
     "status": "on-hold"
+  },
+  {
+    "id": "fused-240",
+    "title": "Fused 240",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/fused-240.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/tIc8nxi4yyo"
+    ]
+  },
+  {
+    "id": "for-sale",
+    "title": "For Sale",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/for-sale.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/KTucW6rvkHc"
+    ]
+  },
+  {
+    "id": "the-hole",
+    "title": "The Hole",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/the-hole.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/UZ1UAptwgWo"
+    ]
+  },
+  {
+    "id": "little-nightmares-3",
+    "title": "Little Nightmares III",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/little-nightmares-3.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/BjS0l69SZ7E",
+      "https://youtu.be/HoEveNotp2Q",
+      "https://youtu.be/9xS3MqhBn-Q"
+    ]
+  },
+  {
+    "id": "borderlands-2",
+    "title": "Borderlands 2",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/borderlands-2.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/vSTlwArmb50",
+      "https://youtu.be/-upzBtAf32A",
+      "https://youtu.be/B7kk-OH9t1s"
+    ]
+  },
+  {
+    "id": "the-inn-sanity",
+    "title": "The Inn-Sanity",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/the-inn-sanity.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/475e5oxzqyE"
+    ]
+  },
+  {
+    "id": "rv-there-yet",
+    "title": "Rv there yet",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/rv-there-yet.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/Ac-QTtheNvM"
+    ]
+  },
+  {
+    "id": "who-am-i",
+    "title": "Who Am I?",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/who-am-i.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/jvDpFpa65eQ"
+    ]
+  },
+  {
+    "id": "whos-your-daddy",
+    "title": "Who's Your Daddy?",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/whos-your-daddy.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/Z4LzKBxQh4Q"
+    ]
+  },
+  {
+    "id": "pit-of-goblin",
+    "title": "Pit of Goblin",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/pit-of-goblin.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/zeiFzCIl0k0",
+      "https://youtu.be/A1RLqXgMriM",
+      "https://youtu.be/qVKwl12SSP4"
+    ]
+  },
+  {
+    "id": "skuf-fishing",
+    "title": "Скуф на рыбалке",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/skuf-fishing.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/1M5CndRnfoU"
+    ]
+  },
+  {
+    "id": "the-boba-teashop",
+    "title": "The Boba Teashop",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/the-boba-teashop.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/sworfDXasVs"
+    ]
+  },
+  {
+    "id": "kiosk",
+    "title": "Kiosk",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/kiosk.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/xfESYCTnazc"
+    ]
+  },
+  {
+    "id": "banned-tapes",
+    "title": "Banned Tapes",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/banned-tapes.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/V_hR_EklpoY"
+    ]
+  },
+  {
+    "id": "untitled-goose-game",
+    "title": "Untitled Goose Game",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/untitled-goose-game.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/N6edBDUUyOE"
+    ]
+  },
+  {
+    "id": "burger-shift",
+    "title": "Burger Shift Team Rush Prologue",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/burger-shift.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/TtAdMzh2UUw",
+      "https://youtu.be/srYTVe9AleQ",
+      "https://youtu.be/yC9IFd7S9yg"
+    ]
+  },
+  {
+    "id": "mimesis",
+    "title": "MIMESIS",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/mimesis.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/YCQ_mNjtjNo"
+    ]
+  },
+  {
+    "id": "silent-hill-2-remake",
+    "title": "Silent Hill 2 Remake",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/silent-hill-2-remake.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/HUrp1CqdYBs",
+      "https://youtu.be/e-e6Zf2AliQ",
+      "https://youtu.be/DN22y-dkdwc",
+      "https://youtu.be/aXUA4mtTNRo",
+      "https://youtu.be/CBm6Fl_WLBc",
+      "https://youtu.be/cDfAqPRQEh0",
+      "https://youtu.be/6XrTOFpBz_s"
+    ]
+  },
+  {
+    "id": "abzu",
+    "title": "ABZÛ",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/abzu.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/dlCKL4M0maE"
+    ]
   }
 ]

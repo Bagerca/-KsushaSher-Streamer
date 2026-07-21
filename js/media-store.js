@@ -68,8 +68,6 @@ export class MediaStore {
             this.processData();
             EventBus.emit('MEDIA_STORE_LOADED');
             
-            // Лог базы данных при загрузке отключен по просьбе пользователя
-            
         } catch (error) {
             console.error("Ошибка загрузки медиа:", error);
             EventBus.emit('SYS_LOG', { type: 'system', tag: 'DATABASE', action: 'ERROR', value: `LOAD_${type.toUpperCase()}_FAILED`, color: '#ff4444' });
@@ -143,14 +141,9 @@ export class MediaStore {
             item.images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
         }
 
+        // ИСПРАВЛЕНИЕ: Берем рейтинг только первой игры (лица коллекции)
         if (item.rating === undefined) {
-            const ratedItems = item.items.filter(i => i.rating && i.rating > 0);
-            if (ratedItems.length > 0) {
-                const sum = ratedItems.reduce((acc, curr) => acc + curr.rating, 0);
-                item.rating = sum / ratedItems.length;
-            } else {
-                item.rating = 0;
-            }
+            item.rating = firstItem.rating || 0;
         }
 
         item.stackColors = [

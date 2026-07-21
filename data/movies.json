@@ -2,12 +2,16 @@
   {
     "id": "garfield-collection",
     "format": "collection",
+    "title": "Garfield / Гарфилд (Коллекция)",
+    "rating": 5.0,
+    "description": "+ Фильм из детства. + Прикольный сюжет. + Юмор нраится. + Там есть рыжий кот. - Не смогу сказать чего-то прям плохо т.к мультфильм из детства и вызывает только ностальгию и положительные эмоции.",
+    "status": "watched",
     "items": [
       {
         "id": "garfield-1",
         "title": "Garfield / Гарфилд",
         "rating": 5.0,
-        "description": "Фильм детства с тем самым рыжим котом. Классный юмор, ностальгия и только положительные эмоции.",
+        "description": "...",
         "image": "assets/images/movies/garfield-1.jpg",
         "status": "watched"
       },
@@ -15,7 +19,7 @@
         "id": "garfield-2",
         "title": "Garfield: A Tail of Two Kitties / Гарфилд 2",
         "rating": 5.0,
-        "description": "Вторая часть. Приключения в Англии.",
+        "description": "...",
         "image": "assets/images/movies/garfield-2.jpg",
         "status": "watched"
       }
@@ -25,7 +29,7 @@
     "id": "shrek-2",
     "title": "Shrek 2 / Шрек 2",
     "rating": 5.0,
-    "description": "Абсолютная классика. Сочная графика, глубокий смысл, скрытый за отличным юмором. Вызывает чистую ностальгию.",
+    "description": "+ Мультик из детства. + Сочная графика. + Есть моменты для размышлений, но юмор позволяет не углубляться. - Не смогу сказать чего-то прям плохо т.к мультфильм из детства и вызывает только ностальгию и положительные эмоции.",
     "image": "assets/images/movies/shrek-2.jpg",
     "status": "watched"
   },
@@ -33,7 +37,7 @@
     "id": "shark-tale",
     "title": "Shark Tale / Подводная братва",
     "rating": 5.0,
-    "description": "Мультфильм детства. Обожаю подводный мир и этот стиль. Вызывает исключительно теплые чувства.",
+    "description": "+ Мультик из детства. + Сочная графика. + Люблю подводный мир. - Не смогу сказать чего-то прям плохо т.к мультфильм из детства и вызывает только ностальгию и положительные эмоции.",
     "image": "assets/images/movies/shark-tale.jpg",
     "status": "watched"
   },
@@ -42,19 +46,21 @@
     "format": "collection",
     "title": "Arcane / Аркейн",
     "rating": 4.0,
-    "description": "Потрясающая рисованная графика, невероятный уровень анимации от студии Fortiche, отличный саундтрек и глубокая семейная драма на фоне конфликта двух городов.",
+    "description": "+ Красивая и сочная рисованная графика. + Хорошая музыка. + Интересный сюжет. - Пара логических дыр (либо моя логика не ваша логика).",
     "status": "watched",
     "items": [
       {
         "id": "arcane-s1",
         "title": "Arcane: Season 1 / Аркейн: 1 Сезон",
-        "description": "Красивая и сочная рисованная графика, отличная музыка и завязка истории сестер Вай и Джинкс.",
+        "rating": 4.0,
+        "description": "...",
         "image": "assets/images/movies/arcane-s1.jpg"
       },
       {
         "id": "arcane-s2",
         "title": "Arcane: Season 2 / Аркейн: 2 Сезон",
-        "description": "Грандиозный и эмоциональный финал противостояния Пилтовера и Зауна. Каждая серия — настоящее произведение искусства.",
+        "rating": 4.0,
+        "description": "...",
         "image": "assets/images/movies/arcane-s2.jpg"
       }
     ]
@@ -63,7 +69,7 @@
     "id": "wild-robot",
     "title": "The Wild Robot / Дикий робот",
     "rating": 4.0,
-    "description": "Очень трогательный сюжет, пробивает на слёзы. Приятная графика.",
+    "description": "+ Трогательный сюжет. + Пробивает на слёзы. + Приятная графика. - Иногда логичность возмущается, но редко.",
     "image": "assets/images/movies/wild-robot.jpg",
     "status": "watched"
   },
@@ -71,7 +77,7 @@
     "id": "gravity-falls",
     "title": "Gravity Falls / Гравити Фолз",
     "rating": 3.5,
-    "description": "Люблю теории заговора и легкое повествование.",
+    "description": "+ Интересный сюжет (люблю теории заговора). + Легкое повествование. - Моментами слишком детский или глупый.",
     "image": "assets/images/movies/gravity-falls.jpg",
     "status": "watched"
   },
@@ -79,7 +85,7 @@
     "id": "indie-cross",
     "title": "Indie Cross",
     "rating": 3.5,
-    "description": "Прикольная задумка и ностальгия по играм.",
+    "description": "+ Прикольная задумка сюжета. + Вызывает ностальгию по пройденным играм. - Мало игр пройдено мной, от чего слегка теряешься в сюжете.",
     "image": "assets/images/movies/indie-cross.jpg",
     "status": "watched"
   },
@@ -87,7 +93,7 @@
     "id": "nine",
     "title": "9 / Девять",
     "rating": 2.5,
-    "description": "Приятная картинка и звук, есть моменты на подумать.",
+    "description": "+ Приятная графика. + Приятное звуковое сопровождение. + Есть моменты для размышлений. - Есть логические несостыковки (либо я не понел).",
     "image": "assets/images/movies/nine.jpg",
     "status": "watched"
   },
@@ -95,7 +101,7 @@
     "id": "heroes-of-envell",
     "title": "Heroes of Envell / Герои Энвелла",
     "rating": 2.0,
-    "description": "Неплохой сюжет, но рисовка показалась слишком детской. Не зашло.",
+    "description": "+ Неплохой сюжет. - Рисовка слишком детская.",
     "image": "assets/images/movies/heroes-of-envell.jpg",
     "status": "dropped"
   },
@@ -103,7 +109,7 @@
     "id": "spider-man-noir",
     "title": "Spider-Man Noir / Паук-Нуар",
     "rating": 0,
-    "description": "",
+    "description": "...",
     "image": "assets/images/movies/spider-man-noir.jpg",
     "status": "on-hold"
   },
@@ -111,7 +117,7 @@
     "id": "lego-movie",
     "title": "The LEGO Movie / ЛЕГО Фильм",
     "rating": 0,
-    "description": "",
+    "description": "...",
     "image": "assets/images/movies/lego-movie.jpg",
     "status": "on-hold"
   },
@@ -119,7 +125,7 @@
     "id": "lego-batman",
     "title": "The LEGO Batman Movie / Лего Фильм: Бэтмен",
     "rating": 0,
-    "description": "",
+    "description": "...",
     "image": "assets/images/movies/lego-batman.jpg",
     "status": "on-hold"
   },
@@ -127,7 +133,7 @@
     "id": "ready-player-one",
     "title": "Ready Player One / Первому игроку приготовиться",
     "rating": 0,
-    "description": "",
+    "description": "...",
     "image": "assets/images/movies/ready-player-one.jpg",
     "status": "on-hold"
   }
