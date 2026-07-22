@@ -13,7 +13,10 @@
         "videos": [
           "https://youtu.be/vAEKtyPSgz0",
           "https://youtu.be/_aJV27IXlwU",
-          "https://youtu.be/RtRBWSAvdMY"
+          "https://youtu.be/RtRBWSAvdMY",
+          "https://youtu.be/q97ulxbP--E",
+          "https://youtu.be/zdhJNB2HyZo",
+          "https://youtu.be/-t4TN1H8e70"
         ]
       },
       {
@@ -22,7 +25,13 @@
         "rating": 0,
         "description": "...",
         "image": "assets/images/games/bendy-dark-revival.jpg",
-        "status": "on-hold"
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/-6XlV09QirY",
+          "https://youtu.be/sJX6oEBSaqE",
+          "https://youtu.be/TfpTg_OCe4g",
+          "https://youtu.be/_f0DXJ2psus"
+        ]
       },
       {
         "id": "bendy-secrets-of-the-machine",
@@ -73,6 +82,205 @@
           "https://youtu.be/JPGKia9djuA",
           "https://youtu.be/deMaQZA9Vc4",
           "https://youtu.be/7xn2mNWE4Pw"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "silent-hill-franchise",
+    "format": "collection",
+    "items": [
+      {
+        "id": "silent-hill-f",
+        "title": "Silent Hill f",
+        "rating": 2.0,
+        "description": "+ Красивая картинка. + Интересный сюжет. - Отвратительная боевка. - Нетипичный Сайлент Хилл, двоякие ощущения.",
+        "image": "assets/images/games/silent-hill-f.png",
+        "status": "completed",
+        "videos": [
+          "https://youtu.be/M-xk2GDhAhc",
+          "https://youtu.be/L7KIwjXuCao",
+          "https://youtu.be/NdSCznUi0ek",
+          "https://youtu.be/Bf2IdJrUPmY",
+          "https://youtu.be/EBaPeWK11BU",
+          "https://youtu.be/IMz4cLhEQzE",
+          "https://youtu.be/PUUXPIuBVT4",
+          "https://youtu.be/r2CsTzv1bKE"
+        ]
+      },
+      {
+        "id": "silent-hill-2-remake",
+        "title": "Silent Hill 2 Remake",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/silent-hill-2-remake.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/HUrp1CqdYBs",
+          "https://youtu.be/e-e6Zf2AliQ",
+          "https://youtu.be/DN22y-dkdwc",
+          "https://youtu.be/aXUA4mtTNRo",
+          "https://youtu.be/CBm6Fl_WLBc",
+          "https://youtu.be/cDfAqPRQEh0",
+          "https://youtu.be/6XrTOFpBz_s",
+          "https://youtu.be/zM2jyZVGrak",
+          "https://youtu.be/nKqOxETyM18"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "portal-franchise",
+    "format": "collection",
+    "items": [
+      {
+        "id": "portal",
+        "title": "Portal",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/portal.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/dM2jrCpQcls"
+        ]
+      },
+      {
+        "id": "portal-2",
+        "title": "Portal 2",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/portal-2.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/Tm6nA9wjniU",
+          "https://youtu.be/wVCD14BpYcs",
+          "https://youtu.be/1tjJOUPh4DI"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "little-nightmares-franchise",
+    "format": "collection",
+    "items": [
+      {
+        "id": "little-nightmares",
+        "title": "Little Nightmares",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/little-nightmares.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/hJ5ixMGwQIE",
+          "https://youtu.be/uTbIGs0qAkY"
+        ]
+      },
+      {
+        "id": "little-nightmares-2",
+        "title": "Little Nightmares II",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/little-nightmares-2.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/LyKYbsFIbto",
+          "https://youtu.be/8yk1jbHfYp0",
+          "https://youtu.be/SRRdPUNK_pE"
+        ]
+      },
+      {
+        "id": "little-nightmares-3",
+        "title": "Little Nightmares III",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/little-nightmares-3.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/BjS0l69SZ7E",
+          "https://youtu.be/HoEveNotp2Q",
+          "https://youtu.be/9xS3MqhBn-Q"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "creepy-tale-franchise",
+    "format": "collection",
+    "items": [
+      {
+        "id": "creepy-tale",
+        "title": "Creepy Tale",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/creepy-tale.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/KcfE3lCMb3Y"
+        ]
+      },
+      {
+        "id": "creepy-tale-2",
+        "title": "Creepy Tale 2",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/creepy-tale-2.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/9ME00BDSlRU"
+        ]
+      },
+      {
+        "id": "creepy-tale-3",
+        "title": "Creepy Tale 3",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/creepy-tale-3.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/0wp5Xg0Tt0k",
+          "https://youtu.be/dtu-pYk219M"
+        ]
+      },
+      {
+        "id": "creepy-tale-some-other-place",
+        "title": "Creepy Tale Some Other Place",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/creepy-tale-some-other-place.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/8W-W1lnlVUw"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "outlast-franchise",
+    "format": "collection",
+    "items": [
+      {
+        "id": "outlast",
+        "title": "Outlast",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/outlast.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/TkwjrMPd2lo",
+          "https://youtu.be/8htTEED3v3g"
+        ]
+      },
+      {
+        "id": "outlast-2",
+        "title": "Outlast 2",
+        "rating": 0,
+        "description": "...",
+        "image": "assets/images/games/outlast-2.jpg",
+        "status": "on-hold",
+        "videos": [
+          "https://youtu.be/w_X2_E2XKSc",
+          "https://youtu.be/P9Vv6cMMdKk",
+          "https://youtu.be/khAyzBKDfgs"
         ]
       }
     ]
@@ -145,24 +353,6 @@
     ]
   },
   {
-    "id": "silent-hill-f",
-    "title": "Silent Hill f",
-    "rating": 2.0,
-    "description": "+ Красивая картинка. + Интересный сюжет. - Отвратительная боевка. - Нетипичный Сайлент Хилл, двоякие ощущения.",
-    "image": "assets/images/games/silent-hill-f.png",
-    "status": "completed",
-    "videos": [
-      "https://youtu.be/M-xk2GDhAhc",
-      "https://youtu.be/L7KIwjXuCao",
-      "https://youtu.be/NdSCznUi0ek",
-      "https://youtu.be/Bf2IdJrUPmY",
-      "https://youtu.be/EBaPeWK11BU",
-      "https://youtu.be/IMz4cLhEQzE",
-      "https://youtu.be/PUUXPIuBVT4",
-      "https://youtu.be/r2CsTzv1bKE"
-    ]
-  },
-  {
     "id": "vacation-cafe-simulator",
     "title": "Vacation Cafe Simulator",
     "rating": 4.0,
@@ -185,7 +375,11 @@
       "https://youtu.be/TMhmn2_8grg",
       "https://youtu.be/7juQGdOgNo8",
       "https://youtu.be/PEhKsp41-9I",
-      "https://youtu.be/fUPisWeQTb0"
+      "https://youtu.be/fUPisWeQTb0",
+      "https://youtu.be/ZhgXTJqAlkU",
+      "https://youtu.be/EMoiVOpJ_xY",
+      "https://youtu.be/6CwYiCgorfU",
+      "https://youtu.be/YYN2mUoStmU"
     ]
   },
   {
@@ -223,7 +417,15 @@
       "https://youtu.be/PdA7Ebci5lA",
       "https://youtu.be/YppmFYy0PSk",
       "https://youtu.be/BuWCaR84mII",
-      "https://youtu.be/BHAVieCDEIA"
+      "https://youtu.be/BHAVieCDEIA",
+      "https://youtu.be/-cvftERq0Tk",
+      "https://youtu.be/wj6rTHURCzc",
+      "https://youtu.be/2mIbavnsQdQ",
+      "https://youtu.be/lg2ZUkK4yz4",
+      "https://youtu.be/ToQK7hLk-tQ",
+      "https://youtu.be/5-UY3E8XNow",
+      "https://youtu.be/5gLK5O04BRw",
+      "https://youtu.be/sX5NW9QAq_4"
     ]
   },
   {
@@ -297,7 +499,13 @@
       "https://youtu.be/t2zId2MtJRc",
       "https://youtu.be/lLdpUbp4Q2E",
       "https://youtu.be/YhZJKp--_Vw",
-      "https://youtu.be/Sperc4ypFBk"
+      "https://youtu.be/Sperc4ypFBk",
+      "https://youtu.be/BEBprQ6k8-k",
+      "https://youtu.be/VKgIqqQ-uzg",
+      "https://youtu.be/x_d95KJdKuI",
+      "https://youtu.be/ZdM9xaKtEmk",
+      "https://youtu.be/_AZbMERsnr0",
+      "https://youtu.be/dC1NjraQAwI"
     ]
   },
   {
@@ -333,7 +541,10 @@
     "rating": 0,
     "description": "...",
     "image": "assets/images/games/gris.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/gmkLzOrd_jo"
+    ]
   },
   {
     "id": "content-warning",
@@ -358,16 +569,17 @@
       "https://youtu.be/6vsbRs_vpeo",
       "https://youtu.be/PwPCyw76qEE",
       "https://youtu.be/18ziK9xbQyQ",
-      "https://youtu.be/MXrwXfB_FB4"
+      "https://youtu.be/MXrwXfB_FB4",
+      "https://youtu.be/aPCqHH1w17Y",
+      "https://youtu.be/8-E6gVpX5Ws",
+      "https://youtu.be/DPq-_vxUBBI",
+      "https://youtu.be/2c9LXAQZAg8",
+      "https://youtu.be/CdXQo8EiuO4",
+      "https://youtu.be/_HzVU1BM95U",
+      "https://youtu.be/iLGzg84FLic",
+      "https://youtu.be/LBdqtqepIms",
+      "https://youtu.be/7Q995i0dPkg"
     ]
-  },
-  {
-    "id": "portal-2",
-    "title": "Portal 2",
-    "rating": 0,
-    "description": "...",
-    "image": "assets/images/games/portal-2.jpg",
-    "status": "on-hold"
   },
   {
     "id": "cs2",
@@ -386,7 +598,13 @@
     "rating": 0,
     "description": "...",
     "image": "assets/images/games/sally-face.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/VXiSwhhLFGs",
+      "https://youtu.be/M61tnKMqQ_c",
+      "https://youtu.be/lg8l1kWB9vs",
+      "https://youtu.be/ub2K9t7_7z0"
+    ]
   },
   {
     "id": "beholder",
@@ -512,7 +730,11 @@
     "rating": 0,
     "description": "...",
     "image": "assets/images/games/subnautica.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/J4mTX2b8zTk",
+      "https://youtu.be/WtC7yq_oKmo"
+    ]
   },
   {
     "id": "tiny-bunny",
@@ -533,7 +755,10 @@
     "rating": 0,
     "description": "...",
     "image": "assets/images/games/machinika-museum.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/RgdznrgDo64"
+    ]
   },
   {
     "id": "poppy-playtime",
@@ -541,7 +766,12 @@
     "rating": 0,
     "description": "...",
     "image": "assets/images/games/poppy-playtime.jpg",
-    "status": "on-hold"
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/pjOtyK5XP1Y",
+      "https://youtu.be/dGYqzBtaQIU",
+      "https://youtu.be/x9s2fXhuWJ4"
+    ]
   },
   {
     "id": "scp-secret-laboratory",
@@ -620,19 +850,6 @@
     ]
   },
   {
-    "id": "little-nightmares-3",
-    "title": "Little Nightmares III",
-    "rating": 0,
-    "description": "...",
-    "image": "assets/images/games/little-nightmares-3.jpg",
-    "status": "on-hold",
-    "videos": [
-      "https://youtu.be/BjS0l69SZ7E",
-      "https://youtu.be/HoEveNotp2Q",
-      "https://youtu.be/9xS3MqhBn-Q"
-    ]
-  },
-  {
     "id": "borderlands-2",
     "title": "Borderlands 2",
     "rating": 0,
@@ -642,7 +859,8 @@
     "videos": [
       "https://youtu.be/vSTlwArmb50",
       "https://youtu.be/-upzBtAf32A",
-      "https://youtu.be/B7kk-OH9t1s"
+      "https://youtu.be/B7kk-OH9t1s",
+      "https://youtu.be/3LY9qNEa6tY"
     ]
   },
   {
@@ -754,7 +972,8 @@
     "image": "assets/images/games/untitled-goose-game.jpg",
     "status": "on-hold",
     "videos": [
-      "https://youtu.be/N6edBDUUyOE"
+      "https://youtu.be/N6edBDUUyOE",
+      "https://youtu.be/n50v827tqho"
     ]
   },
   {
@@ -782,23 +1001,6 @@
     ]
   },
   {
-    "id": "silent-hill-2-remake",
-    "title": "Silent Hill 2 Remake",
-    "rating": 0,
-    "description": "...",
-    "image": "assets/images/games/silent-hill-2-remake.jpg",
-    "status": "on-hold",
-    "videos": [
-      "https://youtu.be/HUrp1CqdYBs",
-      "https://youtu.be/e-e6Zf2AliQ",
-      "https://youtu.be/DN22y-dkdwc",
-      "https://youtu.be/aXUA4mtTNRo",
-      "https://youtu.be/CBm6Fl_WLBc",
-      "https://youtu.be/cDfAqPRQEh0",
-      "https://youtu.be/6XrTOFpBz_s"
-    ]
-  },
-  {
     "id": "abzu",
     "title": "ABZÛ",
     "rating": 0,
@@ -807,6 +1009,186 @@
     "status": "on-hold",
     "videos": [
       "https://youtu.be/dlCKL4M0maE"
+    ]
+  },
+  {
+    "id": "parasocial",
+    "title": "Parasocial",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/parasocial.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/Xc88fabJKG4"
+    ]
+  },
+  {
+    "id": "fortnite",
+    "title": "Fortnite",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/fortnite.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/Gi7RfRKRiBg"
+    ]
+  },
+  {
+    "id": "jisatsu",
+    "title": "Jisatsu",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/jisatsu.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/ahGQs7R6rXw"
+    ]
+  },
+  {
+    "id": "shinkansen-0",
+    "title": "Shinkansen 0",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/shinkansen-0.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/ZOLRHCP1MNA"
+    ]
+  },
+  {
+    "id": "the-bathhouse",
+    "title": "The Bathhouse",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/the-bathhouse.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/3ra-3Dchhek",
+      "https://youtu.be/PcnYwMW_ZNw"
+    ]
+  },
+  {
+    "id": "winx-club",
+    "title": "Winx Club",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/winx-club.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/trXit5Uzuw4"
+    ]
+  },
+  {
+    "id": "layers-of-fear",
+    "title": "Layers of Fear",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/layers-of-fear.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/6HBlwKjlS0E"
+    ]
+  },
+  {
+    "id": "indika",
+    "title": "Indika",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/indika.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/K8mtR3tgOU0"
+    ]
+  },
+  {
+    "id": "pine-harbor",
+    "title": "Pine Harbor",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/pine-harbor.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/wGGrDZlICSc"
+    ]
+  },
+  {
+    "id": "burglin-gnomes",
+    "title": "Burglin' Gnomes",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/burglin-gnomes.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/HHzTod1PsFk",
+      "https://youtu.be/ES8qE_PUPug",
+      "https://youtu.be/ax8mOYqvQPk",
+      "https://youtu.be/RQCcdSrWQIw",
+      "https://youtu.be/tp5sVaZSsg4",
+      "https://youtu.be/bfevuBOChqg",
+      "https://youtu.be/FsYZou_LZJk"
+    ]
+  },
+  {
+    "id": "no-im-not-a-human",
+    "title": "No, I'm Not a Human",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/no-im-not-a-human.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/uEhfWJhVuvE",
+      "https://youtu.be/bEWiDd5pnr8"
+    ]
+  },
+  {
+    "id": "kholat",
+    "title": "Kholat",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/kholat.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/F8dlfFRtRRY",
+      "https://youtu.be/E02aaBGOz4Y"
+    ]
+  },
+  {
+    "id": "sons-of-the-forest",
+    "title": "Sons Of The Forest",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/sons-of-the-forest.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/PEhKsp41-9I",
+      "https://youtu.be/fUPisWeQTb0"
+    ]
+  },
+  {
+    "id": "resident-evil-revelations-2",
+    "title": "Resident Evil Revelations 2",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/resident-evil-revelations-2.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/bB0n_GzF6E0",
+      "https://youtu.be/PBZhLoLO9Ig",
+      "https://youtu.be/Fz9IubVimfA"
+    ]
+  },
+  {
+    "id": "it-takes-two",
+    "title": "It Takes Two",
+    "rating": 0,
+    "description": "...",
+    "image": "assets/images/games/it-takes-two.jpg",
+    "status": "on-hold",
+    "videos": [
+      "https://youtu.be/fTfefkTEaAE",
+      "https://youtu.be/OOyhCmNbTnY",
+      "https://youtu.be/f7r9blGTCX8",
+      "https://youtu.be/Dr_SGlwnSr8"
     ]
   }
 ]

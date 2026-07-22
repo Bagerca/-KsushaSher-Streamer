@@ -32,27 +32,16 @@ export class YoutubeModalManager {
                                     <i class="fab fa-google search-icon"></i>
                                 </a>
                             </h2>
-                            <div class="hover-reveal-box">
-                                <h2 class="yt-title">
-                                    <a href="#" target="_blank" id="yt-title-link-full" class="title-search-link" title="Искать в Google">
-                                        <span id="yt-title-full">TITLE</span>
-                                        <i class="fab fa-google search-icon"></i>
-                                    </a>
-                                </h2>
-                            </div>
                         </div>
                         
                         <div class="hover-reveal-wrapper" id="yt-desc-wrapper" style="margin-top: 15px;">
                             <p class="yt-desc truncated" id="yt-desc">Description</p>
-                            <div class="hover-reveal-box">
-                                <p class="yt-desc" id="yt-desc-full">Description</p>
-                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Убрали заголовок "Список роликов" -->
                 <div class="yt-playlist-col" id="yt-playlist-col" style="display: none;">
-                    <div class="yt-playlist-header"><i class="fas fa-list"></i> СПИСОК РОЛИКОВ</div>
                     <div class="yt-playlist-items" id="yt-playlist-items"></div>
                 </div>
             </div>
@@ -66,13 +55,10 @@ export class YoutubeModalManager {
             iframe: document.getElementById('yt-iframe'),
             
             title: document.getElementById('yt-title'),
-            titleFull: document.getElementById('yt-title-full'),
             titleLink: document.getElementById('yt-title-link'),
-            titleLinkFull: document.getElementById('yt-title-link-full'),
             
             descWrapper: document.getElementById('yt-desc-wrapper'),
             desc: document.getElementById('yt-desc'),
-            descFull: document.getElementById('yt-desc-full'),
             
             playlistCol: document.getElementById('yt-playlist-col'),
             playlistItems: document.getElementById('yt-playlist-items')
@@ -93,7 +79,6 @@ export class YoutubeModalManager {
     updateGoogleLinks(text) {
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
         if (this.els.titleLink) this.els.titleLink.href = searchUrl;
-        if (this.els.titleLinkFull) this.els.titleLinkFull.href = searchUrl;
     }
 
     open(item, color) {
@@ -102,19 +87,16 @@ export class YoutubeModalManager {
         this.overlay.style.setProperty('--yt-color', this.fallbackColor);
         
         this.els.title.textContent = item.title;
-        this.els.titleFull.textContent = item.title;
         this.updateGoogleLinks(item.title);
         
         let descText = item.description;
         const effectiveStatus = item.status || 'unknown';
         
-        // Умное скрытие описания (как в основной модалке)
         if (!descText || descText.trim() === '' || descText.trim() === '...') {
             this.els.descWrapper.style.display = 'none';
         } else {
             this.els.descWrapper.style.display = 'block';
             this.els.desc.innerHTML = '';
-            this.els.descFull.innerHTML = '';
 
             if (effectiveStatus === 'suggested' && item.suggestedBy) {
                 const prefixSpan = document.createElement('span');
@@ -127,14 +109,10 @@ export class YoutubeModalManager {
                 
                 const mainDescNode = document.createTextNode(descText);
                 
-                this.els.desc.appendChild(prefixSpan.cloneNode(true));
-                this.els.desc.appendChild(mainDescNode.cloneNode());
-                
-                this.els.descFull.appendChild(prefixSpan);
-                this.els.descFull.appendChild(mainDescNode);
+                this.els.desc.appendChild(prefixSpan);
+                this.els.desc.appendChild(mainDescNode);
             } else {
                 this.els.desc.textContent = descText;
-                this.els.descFull.textContent = descText;
             }
         }
 
@@ -174,10 +152,15 @@ export class YoutubeModalManager {
             const card = document.createElement('div');
             card.className = `yt-playlist-card ${index === 0 ? 'active' : ''}`;
             
+            // Внедряем дизайн карточек как в основной модалке
             card.innerHTML = `
-                <div class="yt-thumb"><img src="https://img.youtube.com/vi/${loopYtId}/hqdefault.jpg" alt="thumbnail"></div>
+                <div class="yt-thumb">
+                    <img src="https://img.youtube.com/vi/${loopYtId}/hqdefault.jpg" alt="thumbnail">
+                    <div class="yt-overlay"><i class="fas fa-play play-icon"></i><div class="yt-equalizer"><span></span><span></span><span></span></div></div>
+                </div>
                 <div class="yt-card-info">
-                    <div class="yt-card-title">Ролик #${index + 1}</div>
+                    <div class="yt-card-title">Запись #${index + 1}</div>
+                    <div class="yt-card-status">СМОТРЕТЬ</div>
                 </div>
             `;
             
@@ -197,7 +180,6 @@ export class YoutubeModalManager {
                     titleEl.textContent = d.title;
                     if (card.classList.contains('active') && status === 'suggested') {
                         this.els.title.textContent = d.title;
-                        this.els.titleFull.textContent = d.title;
                         this.updateGoogleLinks(d.title);
                     }
                 }
@@ -223,7 +205,6 @@ export class YoutubeModalManager {
 
         if (this.currentItem.status === 'suggested') {
             this.els.title.textContent = title;
-            this.els.titleFull.textContent = title;
             this.updateGoogleLinks(title);
         }
     }

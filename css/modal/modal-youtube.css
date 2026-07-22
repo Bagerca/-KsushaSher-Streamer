@@ -59,18 +59,19 @@
     transition: border-color 0.3s; margin: 0;
 }
 
-/* --- КОЛОНКА ПЛЕЙЛИСТА --- */
+/* --- КОЛОНКА ПЛЕЙЛИСТА (Унифицировано с играми) --- */
 .yt-playlist-col {
-    background: rgba(0,0,0,0.5); border-left: 1px solid rgba(255,255,255,0.05);
+    background: rgba(5, 5, 8, 0.8); 
+    border-left: 1px solid rgba(255,255,255,0.05);
     display: flex; flex-direction: column;
 }
-.yt-playlist-header {
-    padding: 20px; font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--yt-color);
-    border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.3);
-    transition: color 0.3s; z-index: 10;
-}
+
 .yt-playlist-items {
-    flex-grow: 1; overflow-y: auto; padding: 25px 20px; display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px; 
+    min-height: 0; flex-grow: 1; 
+    overflow-y: auto; overflow-x: hidden; 
+    padding: 25px 20px; 
+    
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
 }
@@ -79,34 +80,82 @@
 .yt-playlist-items::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); border-radius: 3px; margin: 15px 0; }
 .yt-playlist-items::-webkit-scrollbar-thumb { background: var(--yt-color); border-radius: 3px; box-shadow: 0 0 10px var(--yt-color); transition: background 0.3s ease; }
 
+/* КАРТОЧКА ПЛЕЙЛИСТА */
 .yt-playlist-card {
-    display: flex; gap: 15px; align-items: center; padding: 8px; border-radius: 8px;
-    background: rgba(255,255,255,0.02); border: 1px solid transparent; cursor: pointer; transition: 0.2s; flex-shrink: 0;
+    display: flex; flex-direction: row; gap: 12px; align-items: center;
+    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); 
+    border-radius: 8px; padding: 8px; cursor: pointer; transition: 0.3s; 
+    position: relative; overflow: hidden; flex-shrink: 0;
 }
-.yt-playlist-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); transform: translateX(-5px); }
-.yt-playlist-card.active { border-color: var(--yt-color); background: rgba(0,0,0,0.6); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+.yt-playlist-card:hover { 
+    background: rgba(255, 255, 255, 0.05); transform: translateX(-5px); 
+    border-color: rgba(255, 255, 255, 0.2); 
+}
+.yt-playlist-card.active { 
+    background: rgba(0,0,0,0.5); border-color: var(--yt-color); 
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); 
+}
 
-.yt-thumb { width: 120px; height: 68px; flex-shrink: 0; border-radius: 4px; overflow: hidden; position: relative; background: #000;}
-.yt-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.2s; }
+/* Левая часть: Картинка */
+.yt-thumb { 
+    width: 100px; height: 60px; 
+    border-radius: 4px; overflow: hidden; position: relative; 
+    background: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.5); flex-shrink: 0; 
+}
+.yt-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
 .yt-playlist-card:hover .yt-thumb img { opacity: 1; transform: scale(1.1); }
-.yt-playlist-card.active .yt-thumb img { opacity: 1; }
 
-.yt-card-info { flex-grow: 1; min-width: 0; }
-.yt-card-title { font-family: 'Exo 2', sans-serif; font-size: 0.9rem; color: #ccc; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.yt-overlay { 
+    position: absolute; inset: 0; background: rgba(0,0,0,0.4); 
+    display: flex; align-items: center; justify-content: center; 
+    opacity: 0; transition: 0.2s; 
+}
+.yt-playlist-card:hover .yt-overlay { opacity: 1; }
+.yt-overlay i { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
+
+/* Правая часть: Текст */
+.yt-card-info { 
+    display: flex; flex-direction: column; justify-content: center; 
+    min-width: 0; flex-grow: 1;
+}
+.yt-card-title { 
+    font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; 
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+    overflow: hidden; line-height: 1.2; transition: color 0.3s;
+}
 .yt-playlist-card.active .yt-card-title { color: var(--yt-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
+.yt-card-status { 
+    font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; 
+    margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700;
+}
+
+/* Эквалайзер */
+.yt-equalizer { display: none; align-items: flex-end; gap: 3px; height: 14px; }
+.yt-equalizer span { width: 4px; background: var(--yt-color); border-radius: 2px; animation: eq-play 0.6s infinite ease-in-out alternate; box-shadow: 0 0 8px var(--yt-color); }
+.yt-equalizer span:nth-child(1) { animation-delay: 0.0s; }
+.yt-equalizer span:nth-child(2) { animation-delay: 0.2s; }
+.yt-equalizer span:nth-child(3) { animation-delay: 0.4s; }
+
+/* Состояние "Сейчас играет" */
+.yt-playlist-card.active .yt-overlay { opacity: 1; background: rgba(0,0,0,0.7); }
+.yt-playlist-card.active .yt-thumb img { filter: grayscale(1) brightness(0.5); transform: scale(1); }
+.yt-playlist-card.active .play-icon { display: none; }
+.yt-playlist-card.active .yt-equalizer { display: flex; }
 
 @media (max-width: 1024px) {
     .yt-modal-content.has-playlist { grid-template-columns: 1fr; display: flex; flex-direction: column; overflow-y: auto; }
     .yt-main-col { overflow: visible; }
     .yt-playlist-col { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); height: auto; flex-shrink: 0; }
+    
     .yt-playlist-items { 
         flex-direction: row; overflow-x: auto; overflow-y: hidden; 
         -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
         mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
     }
-    .yt-playlist-card { flex-direction: column; width: 200px; flex-shrink: 0; }
+    
+    .yt-playlist-card { flex-direction: column; width: 180px; flex-shrink: 0; align-items: flex-start; }
     .yt-playlist-card:hover { transform: translateY(-5px); }
-    .yt-thumb { width: 100%; height: 110px; }
+    .yt-thumb { width: 100%; height: 90px; }
 }
 @media (max-width: 768px) {
     .yt-title { font-size: 1.5rem; }
