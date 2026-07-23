@@ -3,31 +3,46 @@
     "title": "Awaria",
     "description": "Короткая игра от создателя Helltaker. Чиним генераторы в проклятых туннелях, избегая монстров.",
     "image": "https://cdn2.steamgriddb.com/grid/00b1f760f5b1831e2495c8bb1e99c38e.png",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+    "videos": [
+          "https://youtu.be/Nz1NpnYvpi0"
+        ]
   },
   {
     "title": "Atomic Heart",
     "description": "Шикарный шутер в сеттинге альтернативного СССР. Роботы, полимеры, близняшки и мощный саундтрек от Мика Гордона.",
     "image": "https://cdn2.steamgriddb.com/grid/53f249d8ba9cfab41868236dead77aba.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+    "videos": [
+          "https://youtu.be/0UBiw1xkHl8"
+        ]
   },
   {
     "title": "Cakey's Twisted Bakery",
     "description": "Я сам хз че за игра",
     "image": "https://cdn2.steamgriddb.com/grid/6ee1d3853f229f82f4663f21ea6edf86.png",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+    "videos": [
+          "https://youtu.be/aoCceHy0Hb8"
+        ]
   },
   {
     "title": "Deepest Sword",
     "description": "Игра про большие и не очень мечи",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1647160/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+    "videos": [
+          "https://youtu.be/paHXSEt0d1A"
+        ]
   },
   {
     "title": "Beholder: Conductor",
     "description": "Очередной шедевр в тоталитарном мире",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2825530/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+    "videos": [
+          "https://youtu.be/j81HG7028NA9"
+        ]
   },
   {
     "title": "BioShock Collection",
@@ -37,12 +52,18 @@
       {
         "title": "BioShock Remastered",
         "description": "Первая часть шедевра",
-        "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/409710/library_600x900_2x.jpg"
+        "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/409710/library_600x900_2x.jpg",
+        "videos": [
+          "https://youtu.be/okEmFtH_qgA"
+        ]
       },
       {
         "title": "BioShock 2 Remastered",
         "description": "Вторая часть шедевра",
-        "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/409720/library_600x900_2x.jpg"
+        "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/409720/library_600x900_2x.jpg",
+        "videos": [
+          "https://youtu.be/gd-OSIOEfN8"
+        ]
       }
     ]
   },
@@ -50,42 +71,63 @@
     "title": "Bloons TD 6",
     "description": "Обезьяны против шариков",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/960090/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+        "videos": [
+          "https://youtu.be/cRDbFoDsQ6M"
+        ]
   },
   {
     "title": "CARRION",
     "description": "Ты монстр. Жри людей.",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/953490/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+        "videos": [
+          "https://youtu.be/Ozknd5FBFE4"
+        ]
   },
   {
     "title": "Choo-Choo Charles",
     "description": "Поезд-паук убийца",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1766740/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+        "videos": [
+          "https://youtu.be/p1pnCCmc_OE"
+        ]
   },
   {
     "title": "Despotism 3k",
     "description": "ИИ захватил мир",
     "image": "https://cdn2.steamgriddb.com/grid/29f4077e442da394330b94591c122cd3.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+        "videos": [
+          "https://youtu.be/OT3QJZ_mrJo"
+        ]
   },
   {
     "title": "Hyper Light Drifter",
     "description": "Красивый пиксельный экшен",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/257850/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+        "videos": [
+          "https://youtu.be/nWufEJ1Ava0"
+        ]
   },
   {
     "title": "Maneater",
     "description": "Симулятор акулы-убийцы",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/629820/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+        "videos": [
+          "https://youtu.be/HCRmiOqUgYQ"
+        ]
   },
   {
     "title": "Wall World",
     "description": "Копаем стену",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2187290/library_600x900_2x.jpg",
-    "suggestedBy": "BAGERca"
+    "suggestedBy": "BAGERca",
+        "videos": [
+          "https://youtu.be/0RTpkDFlfok"
+        ]
   }
 ]
