@@ -66,14 +66,8 @@
     opacity: 0; transition: opacity 0.3s ease; mix-blend-mode: screen;
     clip-path: inset(0 0 0 0 round 12px);
 }
-.search-module:focus-within::before {
-    opacity: 1;
-    animation: scanner-glare 2s infinite linear;
-}
-@keyframes scanner-glare {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
+.search-module:focus-within::before { opacity: 1; animation: scanner-glare 2s infinite linear; }
+@keyframes scanner-glare { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* ЛУПА ПРЕВРАЩЕНА В КНОПКУ */
 .search-icon { 
@@ -148,7 +142,6 @@
 .search-suggestions::before { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: -1; background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 15px 15px; opacity: 0.5; }
 .search-suggestions.active { opacity: 1; visibility: visible; transform: translateY(0); max-height: 60vh; overflow-y: auto; pointer-events: auto; }
 
-/* Кастомный скроллбар для списка */
 .search-suggestions::-webkit-scrollbar { width: 6px; }
 .search-suggestions::-webkit-scrollbar-track { background: transparent; }
 .search-suggestions::-webkit-scrollbar-thumb { background: rgba(57, 255, 20, 0.2); border-radius: 4px; }
@@ -168,13 +161,8 @@
 }
 .suggestion-item:last-child { border-bottom: none; }
 @keyframes slideDownSugg { to { opacity: 1; transform: translateY(0); } }
+.suggestion-item:hover, .suggestion-item.keyboard-focus { background: linear-gradient(90deg, rgba(57, 255, 20, 0.08), transparent); border-left-color: var(--neon-green); }
 
-.suggestion-item:hover, .suggestion-item.keyboard-focus { 
-    background: linear-gradient(90deg, rgba(57, 255, 20, 0.08), transparent); 
-    border-left-color: var(--neon-green); 
-}
-
-/* ЛЕВАЯ ЧАСТЬ САДЖЕСТА */
 .sugg-left { display: flex; align-items: center; gap: 12px; flex-grow: 1; min-width: 0; }
 .sugg-thumb-wrapper { position: relative; width: 45px; height: 65px; z-index: 5; flex-shrink: 0; } 
 .sugg-thumb-wrapper.is-youtube { width: 90px; height: 50px; } 
@@ -191,44 +179,20 @@
     display: flex; align-items: center; gap: 3px; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.8); 
 }
 
-/* ИСПРАВЛЕНИЕ ОБРЕЗКИ СВЕЧЕНИЯ: Добавлен padding со всех сторон и компенсирующий margin */
 .sugg-title { 
-    color: #fff; 
-    font-family: 'Rajdhani', sans-serif; 
-    font-weight: 700; 
-    font-size: 1.05rem; 
-    line-height: 1.2; 
-    text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    padding: 10px 15px 10px 10px; 
-    margin-left: -10px; 
+    color: #fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.05rem; 
+    line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.8); white-space: nowrap; 
+    overflow: hidden; text-overflow: ellipsis; padding: 10px 15px 10px 10px; margin-left: -10px; 
 }
 
-/* ПРАВАЯ ЧАСТЬ САДЖЕСТА (С ЦВЕТНЫМИ БЕЙДЖАМИ) */
 .sugg-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-
 .sugg-cyber-status { 
-    font-family: 'Rajdhani', sans-serif; 
-    font-size: 0.65rem; 
-    line-height: 1; 
-    text-transform: uppercase; 
-    font-weight: 800; 
-    padding: 3px 6px 4px 6px; 
-    border-radius: 4px; 
-    border: 1px solid;
-    display: inline-flex; 
-    align-items: center; 
-    justify-content: center;
-    text-shadow: 0 0 5px currentColor;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; line-height: 1; text-transform: uppercase; 
+    font-weight: 800; padding: 3px 6px 4px 6px; border-radius: 4px; border: 1px solid;
+    display: inline-flex; align-items: center; justify-content: center;
+    text-shadow: 0 0 5px currentColor; box-shadow: 0 2px 5px rgba(0,0,0,0.4);
 }
-
-.sugg-cyber-status .status-text {
-    letter-spacing: 1px;
-    margin: 0 4px 0 5px; 
-}
+.sugg-cyber-status .status-text { letter-spacing: 1px; margin: 0 4px 0 5px; }
 
 .sugg-cyber-rating { display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08); }
 .sugg-cyber-rating .segments { display: flex; gap: 2px; }
@@ -268,20 +232,17 @@
 }
 
 @media (max-width: 768px) {
-    /* 📱 ИСПРАВЛЕНИЕ КНОПОК ФИЛЬТРОВ И ВИДА */
     .header-control-bar { 
-        width: 100%; 
-        justify-content: center; 
-        flex-wrap: wrap; /* Позволяем переноситься, если не влезают */
-        padding: 6px 12px; 
-        gap: 8px; /* Уменьшаем отступ между блоками */
-        border-radius: 16px; /* Закругления поменьше для двух строк */
+        width: 100%; justify-content: center; flex-wrap: wrap; 
+        padding: 6px 12px; gap: 8px; border-radius: 16px; 
     }
+    
+    /* 📱 СКРЫВАЕМ ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ НА ТЕЛЕФОНЕ */
+    .density-switcher { display: none !important; }
     
     .switcher-btn { padding: 6px 10px; font-size: 0.75rem; gap: 4px; }
     .sort-btn, .density-btn { width: 30px; height: 30px; font-size: 0.8rem; }
     
-    /* Уменьшаем кнопки статусов */
     .filter-chip { padding: 4px 10px; font-size: 0.65rem; }
     
     .search-module { width: 100%; max-width: none; }

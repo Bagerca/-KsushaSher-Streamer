@@ -1,6 +1,5 @@
 /* css/archive/archive-card.css */
 
-/* ЭФФЕКТ ИСЧЕЗНОВЕНИЯ ПРИ СВОРАЧИВАНИИ */
 .archive-card-container.fold-out {
     opacity: 0 !important;
     transform: scale(0.85) translateY(30px) !important;
@@ -11,18 +10,13 @@
 @keyframes card-load { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 .archive-card-container.animate-entry { opacity: 0; animation: card-load 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
-/* ВОЗВРАЩАЕМ ПРОПОРЦИИ КАРТОЧКАМ */
 .archive-card-container { 
     display: block; position: relative; z-index: 1; background: transparent; 
     perspective: 1000px; transform-style: preserve-3d; 
-    aspect-ratio: 2/3; /* Вертикальный постер */
+    aspect-ratio: 2/3; 
 }
+.archive-card-container.is-youtube { aspect-ratio: 16/9; }
 
-.archive-card-container.is-youtube { 
-    aspect-ratio: 16/9; /* Широкий постер ютуба */
-}
-
-/* ПРОЦЕДУРНАЯ ЗАГЛУШКА */
 .procedural-placeholder { 
     position: absolute; inset: 0; border-radius: 11px; 
     display: flex; align-items: center; justify-content: center; 
@@ -32,25 +26,17 @@
 .procedural-placeholder::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 20px 20px; background-position: center; }
 .placeholder-letter { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900; z-index: 2; user-select: none; opacity: 0.8; }
 
-/* СЛОИ И КОНТЕНТ */
 .card-layer { 
     position: absolute; inset: 0; border-radius: 12px; 
     border: 1px solid rgba(255, 255, 255, 0.1); 
-    background-clip: padding-box; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
-    background-size: cover; 
-    
-    /* ИСПРАВЛЕНИЕ: Центрирование для всех слоев (убирает черные полосы ютуба) */
-    background-position: center center; 
-    
-    background-repeat: no-repeat; 
-    min-width: 0; backface-visibility: hidden; 
+    background-clip: padding-box; box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
+    background-size: cover; background-position: center center; 
+    background-repeat: no-repeat; min-width: 0; backface-visibility: hidden; 
 }
 
 .layer-front { 
     z-index: 10; background-color: #000; overflow: hidden; display: flex; flex-direction: column; 
-    transition: border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
-    transform: translateZ(0); 
+    transition: border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1); transform: translateZ(0); 
 }
 
 .layer-front::after { 
@@ -62,77 +48,41 @@
 .archive-card-container:hover .layer-front::after { left: 150%; opacity: 1; }
 
 .layer-img-bg { 
-    position: absolute; inset: -2px; 
-    background-size: cover; 
-    background-position: center center; 
+    position: absolute; inset: -2px; background-size: cover; background-position: center center; 
     z-index: 3; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
 }
 .archive-card-container:hover .layer-front .layer-img-bg { transform: scale(1.08); filter: brightness(0.65); }
 
-.layer-content { 
-    position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10; 
-    border-radius: 11px; box-shadow: inset 0 0 0 1px #000; pointer-events: none; 
-}
+.layer-content { position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10; border-radius: 11px; box-shadow: inset 0 0 0 1px #000; pointer-events: none; }
 
 .card-info, .youtube-play-overlay, .yt-playlist-badge, .cyber-rating-badge { pointer-events: auto; }
 
-/* БЛОК ИНФОРМАЦИИ */
 .card-info { 
-    margin-top: auto; 
-    padding: 30px 15px 15px 15px;
+    margin-top: auto; padding: 30px 15px 15px 15px;
     background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.8) 50%, transparent 100%); 
-    display: flex; 
-    flex-direction: column; 
-    border-radius: 0 0 11px 11px; 
-    min-width: 0; 
+    display: flex; flex-direction: column; border-radius: 0 0 11px 11px; min-width: 0; 
 }
 
 .card-title { 
-    font-family: 'Rajdhani', sans-serif; 
-    color: #fff; 
-    font-size: 1.05rem; 
-    font-weight: 700; 
-    margin-bottom: 0; 
-    line-height: 1.2; 
-    text-shadow: 0 2px 5px rgba(0,0,0,0.9); 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    width: 100%;
-    display: block;
+    font-family: 'Rajdhani', sans-serif; color: #fff; font-size: 1.05rem; font-weight: 700; margin-bottom: 0; 
+    line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.9); white-space: nowrap; overflow: hidden; 
+    text-overflow: ellipsis; width: 100%; display: block;
 }
 
 .cyber-status { 
-    font-family: 'Rajdhani', sans-serif; 
-    font-size: 0.75rem; 
-    color: var(--custom-color); 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    font-weight: 700; 
-    margin-bottom: 6px; 
-    text-shadow: 0 0 5px rgba(0,0,0,0.8); 
-    transition: color 0.5s ease; 
-    display: flex;
-    align-items: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; color: var(--custom-color); 
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; 
+    text-shadow: 0 0 5px rgba(0,0,0,0.8); transition: color 0.5s ease; display: flex; align-items: center;
 }
 
 .suggested-status { 
-    color: #fff; 
-    background: rgba(0,0,0,0.65);
-    padding: 3px 8px; 
-    border-radius: 4px; 
-    border: 1px solid rgba(255,255,255,0.15); 
-    display: inline-flex; 
-    align-items: center; 
-    gap: 6px; 
-    width: fit-content; 
-    margin-bottom: 6px; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
+    color: #fff; background: rgba(0,0,0,0.65); padding: 3px 8px; border-radius: 4px; 
+    border: 1px solid rgba(255,255,255,0.15); display: inline-flex; align-items: center; 
+    gap: 6px; width: fit-content; margin-bottom: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
 }
-
 .suggested-status i { font-size: 0.7rem; }
 
-/* COMPACT MODE OVERRIDES */
+/* COMPACT MODE OVERRIDES (Десктоп) */
 .compact-mode .cyber-status { display: none !important; }
 .compact-mode .card-info { padding: 20px 10px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%); }
 .compact-mode .card-title { font-size: 0.85rem; margin-bottom: 0; text-align: center; }
@@ -155,3 +105,10 @@
 .youtube-play-overlay i { font-size: 3rem; color: #ff0000; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s ease; filter: drop-shadow(0 0 5px rgba(0,0,0,0.8)); opacity: 0.8; }
 .archive-card-container:hover .youtube-play-overlay { background: rgba(0,0,0,0.4); }
 .archive-card-container:hover .youtube-play-overlay i { transform: scale(1.1); filter: drop-shadow(0 0 5px rgba(0,0,0,1)) drop-shadow(0 0 15px #ff0000); opacity: 1; }
+
+@media (max-width: 768px) {
+    /* 📱 Принудительно применяем стили компактного вида для чистоты на мобилках */
+    .cyber-status { display: none !important; }
+    .card-info { padding: 20px 10px 10px 10px !important; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%) !important; }
+    .card-title { font-size: 0.85rem !important; margin-bottom: 0 !important; text-align: center !important; }
+}

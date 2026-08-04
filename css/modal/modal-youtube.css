@@ -59,7 +59,7 @@
     transition: border-color 0.3s; margin: 0;
 }
 
-/* --- КОЛОНКА ПЛЕЙЛИСТА (Унифицировано с играми) --- */
+/* --- КОЛОНКА ПЛЕЙЛИСТА --- */
 .yt-playlist-col {
     background: rgba(5, 5, 8, 0.8); 
     border-left: 1px solid rgba(255,255,255,0.05);
@@ -71,7 +71,6 @@
     min-height: 0; flex-grow: 1; 
     overflow-y: auto; overflow-x: hidden; 
     padding: 25px 20px; 
-    
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
 }
@@ -96,7 +95,6 @@
     box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); 
 }
 
-/* Левая часть: Картинка */
 .yt-thumb { 
     width: 100px; height: 60px; 
     border-radius: 4px; overflow: hidden; position: relative; 
@@ -105,38 +103,21 @@
 .yt-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
 .yt-playlist-card:hover .yt-thumb img { opacity: 1; transform: scale(1.1); }
 
-.yt-overlay { 
-    position: absolute; inset: 0; background: rgba(0,0,0,0.4); 
-    display: flex; align-items: center; justify-content: center; 
-    opacity: 0; transition: 0.2s; 
-}
+.yt-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; }
 .yt-playlist-card:hover .yt-overlay { opacity: 1; }
 .yt-overlay i { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
 
-/* Правая часть: Текст */
-.yt-card-info { 
-    display: flex; flex-direction: column; justify-content: center; 
-    min-width: 0; flex-grow: 1;
-}
-.yt-card-title { 
-    font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; 
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
-    overflow: hidden; line-height: 1.2; transition: color 0.3s;
-}
+.yt-card-info { display: flex; flex-direction: column; justify-content: center; min-width: 0; flex-grow: 1; }
+.yt-card-title { font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.2; transition: color 0.3s; }
 .yt-playlist-card.active .yt-card-title { color: var(--yt-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
-.yt-card-status { 
-    font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; 
-    margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700;
-}
+.yt-card-status { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
 
-/* Эквалайзер */
 .yt-equalizer { display: none; align-items: flex-end; gap: 3px; height: 14px; }
 .yt-equalizer span { width: 4px; background: var(--yt-color); border-radius: 2px; animation: eq-play 0.6s infinite ease-in-out alternate; box-shadow: 0 0 8px var(--yt-color); }
 .yt-equalizer span:nth-child(1) { animation-delay: 0.0s; }
 .yt-equalizer span:nth-child(2) { animation-delay: 0.2s; }
 .yt-equalizer span:nth-child(3) { animation-delay: 0.4s; }
 
-/* Состояние "Сейчас играет" */
 .yt-playlist-card.active .yt-overlay { opacity: 1; background: rgba(0,0,0,0.7); }
 .yt-playlist-card.active .yt-thumb img { filter: grayscale(1) brightness(0.5); transform: scale(1); }
 .yt-playlist-card.active .play-icon { display: none; }
@@ -146,18 +127,41 @@
     .yt-modal-content.has-playlist { grid-template-columns: 1fr; display: flex; flex-direction: column; overflow-y: auto; }
     .yt-main-col { overflow: visible; }
     .yt-playlist-col { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); height: auto; flex-shrink: 0; }
+}
+
+@media (max-width: 768px) {
+    /* 📱 НАТИВНАЯ ШТОРКА ДЛЯ YOUTUBE */
+    .yt-modal-overlay { align-items: flex-end; }
     
-    .yt-playlist-items { 
-        flex-direction: row; overflow-x: auto; overflow-y: hidden; 
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-        mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    .yt-modal-content { 
+        width: 100%; height: 100dvh; max-height: 100%; 
+        border-radius: 16px 16px 0 0; border: none; border-top: 1px solid rgba(255,255,255,0.1);
+        transform: translateY(100%); 
+    }
+    .yt-modal-overlay.active .yt-modal-content { transform: translateY(0); }
+
+    .yt-modal-content.has-playlist { 
+        display: block; /* Убиваем Flex, монолитный скролл */
+        overflow-y: auto; overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
     }
     
-    .yt-playlist-card { flex-direction: column; width: 180px; flex-shrink: 0; align-items: flex-start; }
-    .yt-playlist-card:hover { transform: translateY(-5px); }
-    .yt-thumb { width: 100%; height: 90px; }
-}
-@media (max-width: 768px) {
+    .yt-main-col { overflow: visible; }
+    .yt-playlist-col { overflow: visible; height: auto; padding-bottom: 40px; border-top: none; }
+    
     .yt-title { font-size: 1.5rem; }
-    .yt-info-section { padding: 20px; }
+    .yt-info-section { padding: 20px 15px; }
+
+    /* Горизонтальный плейлист с удаленными масками (маски лагают на iOS при скролле) */
+    .yt-playlist-items { 
+        flex-direction: row; overflow-x: auto; overflow-y: hidden; 
+        padding: 10px 15px;
+        mask-image: none; -webkit-mask-image: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .yt-playlist-card { flex-direction: column; width: 160px; flex-shrink: 0; align-items: flex-start; }
+    .yt-playlist-card:hover { transform: translateY(-3px); }
+    .yt-thumb { width: 100%; height: 90px; }
 }

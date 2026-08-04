@@ -76,7 +76,6 @@
     --scroll-size: 6px; --scroll-thumb: var(--modal-color);
 }
 
-/* ИСПРАВЛЕНИЕ: Жестко фиксируем высоту, чтобы работал скролл внутри */
 .modal-col-playlist {
     width: 360px; height: 100%; overflow: hidden;
     border-left: 1px solid rgba(255, 255, 255, 0.05); 
@@ -94,14 +93,43 @@
     .modal-layout { grid-template-columns: 340px 1fr; display: flex; flex-direction: column; overflow-y: auto;}
     .modal-col-sidebar { flex-direction: column; align-items: center; padding: 30px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.6); overflow: visible;}
     .modal-col-main { overflow: visible; }
-    
-    /* ИСПРАВЛЕНИЕ: Для планшетов делаем плейлист ограниченным по высоте, чтобы он тоже скроллился */
     .modal-col-playlist { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.1); max-height: 400px; }
-    
     .modal-layout.layout-cinema { display: flex; flex-direction: column; }
 }
 
 @media (max-width: 768px) {
-    .modal-close-btn { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 1.2rem; background: rgba(5, 5, 8, 0.95); border: 1px solid rgba(255,255,255,0.2); z-index: calc(var(--z-modal) + 10); }
-    .modal-col-playlist { max-height: 350px; }
+    /* 📱 ПРЕВРАЩАЕМ В НАТИВНУЮ ШТОРКУ (BOTTOM SHEET) */
+    .media-modal-overlay { align-items: flex-end; } /* Прижимаем к низу */
+    
+    .media-modal-content { 
+        width: 100%; 
+        height: 100dvh; /* Динамическая высота (игнорирует адресную строку) */
+        max-height: 100%; 
+        border-radius: 16px 16px 0 0; 
+        border: none; border-top: 1px solid rgba(255,255,255,0.1);
+        transform: translateY(100%); /* Выезжает снизу */
+    }
+    
+    .media-modal-overlay.active .media-modal-content { transform: translateY(0); }
+    
+    .modal-layout { 
+        display: block; /* Убиваем Flex/Grid, чтобы скролл был монолитным */
+        overflow-y: auto; overflow-x: hidden; 
+        -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+        overscroll-behavior-y: contain; /* Защита от прокрутки фона */
+    }
+    
+    /* Отключаем вложенные скроллы, теперь скроллится вся страница целиком */
+    .modal-col-sidebar, .modal-col-main, .modal-col-playlist {
+        overflow: visible; height: auto; max-height: none;
+    }
+
+    .modal-col-sidebar { padding: 30px 15px 15px 15px; } 
+    .modal-col-playlist { padding-bottom: 40px; } 
+    
+    .modal-close-btn { 
+        position: fixed; /* Прибиваем крестик к экрану */
+        top: 15px; right: 15px; width: 38px; height: 38px; font-size: 1.1rem; 
+        background: rgba(5, 5, 8, 0.95); z-index: calc(var(--z-modal) + 10); 
+    }
 }

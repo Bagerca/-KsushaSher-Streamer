@@ -239,18 +239,16 @@
     
     width: max-content; min-width: 220px; 
     
-    /* Обновленный фон: более глубокий, с кибер-сканлайнами */
     background: linear-gradient(135deg, rgba(14, 15, 22, 0.98) 0%, rgba(8, 9, 13, 0.95) 100%);
     backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
     border: 1px solid rgba(255, 255, 255, 0.08); 
-    border-radius: 8px; /* Более острые углы */
+    border-radius: 8px;
     padding: 20px 18px;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(57, 255, 20, 0.05);
     
     opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 100;
 }
 
-/* Сканлайны (Голографический эффект) */
 .holo-floor-selector::before {
     content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
     background: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px);
@@ -259,28 +257,18 @@
 
 .holo-floor-selector.open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(-50%) translateX(0); }
 
-/* Стрелочка Матрицы (Физический стык) */
 .holo-floor-selector::after {
-    content: ''; position: absolute; top: 50%; 
-    left: -7px; 
-    transform: translateY(-50%) rotate(45deg);
-    width: 14px; height: 14px; 
-    background: #0d0e14; /* Цвет края панели */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: -5px 5px 15px rgba(0,0,0,0.6);
-    z-index: 1;
+    content: ''; position: absolute; top: 50%; left: -7px; transform: translateY(-50%) rotate(45deg);
+    width: 14px; height: 14px; background: #0d0e14; border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+    border-left: 1px solid rgba(255, 255, 255, 0.08); box-shadow: -5px 5px 15px rgba(0,0,0,0.6); z-index: 1;
 }
 
 .holo-selector-header { 
     position: relative; z-index: 2;
     font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; 
     color: #999; letter-spacing: 3px; text-align: center; 
-    margin-bottom: 16px; padding-bottom: 12px; 
-    border-bottom: none; /* Убрали пунктир */
+    margin-bottom: 16px; padding-bottom: 12px; border-bottom: none;
 }
-
-/* Кибер-линия под заголовком */
 .holo-selector-header::after {
     content: ''; position: absolute; bottom: 0; left: 10%; width: 80%; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
@@ -293,56 +281,33 @@
     padding-right: 5px; --scroll-size: 4px; --scroll-thumb: #444; 
 }
 
-/* Блоки данных (Сектора) */
 .sector-label { 
     font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; 
     margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase;
-    
-    /* Магия: цвет берется из инлайн-стиля JS (currentColor) */
-    border-left: 2px solid currentColor;
-    padding-left: 8px;
+    border-left: 2px solid currentColor; padding-left: 8px;
     background: linear-gradient(90deg, color-mix(in srgb, currentColor 10%, transparent), transparent);
 }
 
 .sector-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 5px; }
 
-/* КНОПКИ ВЫБОРА СТРАНИЦЫ */
 .matrix-btn {
-    background: rgba(0, 0, 0, 0.4); 
-    border: 1px solid rgba(255, 255, 255, 0.05); 
-    border-radius: 4px; /* Острые углы */
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
-    color: #777;
+    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 4px; 
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.6); color: #777;
     font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; 
-    width: 42px; height: 42px;
-    display: flex; align-items: center; justify-content: center; 
-    cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); 
-    flex-direction: column;
+    width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); flex-direction: column;
 }
 
 .matrix-btn i { font-size: 0.6em; margin-bottom: 3px; opacity: 0.8; }
+.matrix-btn:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); color: #fff; transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
 
-.matrix-btn:hover { 
-    background: rgba(255,255,255,0.05); 
-    border-color: rgba(255,255,255,0.2);
-    color: #fff; 
-    transform: translateY(-2px); /* Кинематографичный подъем вместо скейла */
-    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-}
-
-/* АКТИВНОЕ СОСТОЯНИЕ (Динамические цвета через переменные) */
 .matrix-btn.is-current { 
-    border-color: var(--active-color); 
-    color: #fff; 
-    background: color-mix(in srgb, var(--active-color) 15%, transparent);
+    border-color: var(--active-color); color: #fff; background: color-mix(in srgb, var(--active-color) 15%, transparent);
     text-shadow: 0 0 8px var(--active-color); 
-    box-shadow: 
-        inset 0 0 10px color-mix(in srgb, var(--active-color) 40%, transparent), 
-        0 4px 15px color-mix(in srgb, var(--active-color) 20%, transparent);
+    box-shadow: inset 0 0 10px color-mix(in srgb, var(--active-color) 40%, transparent), 0 4px 15px color-mix(in srgb, var(--active-color) 20%, transparent);
     transform: translateY(-2px);
 }
 
-/* Маппинг цветов кнопок по классам (совпадает с логикой в JS) */
 .matrix-btn:not(.sugg-page-btn):not(.yt-page-btn) { --active-color: var(--neon-green); }
 .matrix-btn.sugg-page-btn { --active-color: var(--neon-pink); }
 .matrix-btn.yt-page-btn { --active-color: #ff0000; }
@@ -360,7 +325,6 @@
     .archive-side-pagination { position: relative; top: auto; width: 100%; justify-content: center; order: 2; margin-bottom: 20px; }
     .archive-side-pagination::before, .archive-side-pagination::after { display: none; }
     
-    /* 📱 ИСПРАВЛЕНИЕ ПАГИНАЦИИ: Жестко фиксируем в строку без переносов */
     .pagination-dock-vertical { 
         position: relative; top: auto; 
         flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center;
@@ -379,7 +343,6 @@
     
     .pagination-divider-vert { width: 1px; height: 24px; margin: 0 5px; }
     
-    /* Поворачиваем стрелки Влево/Вправо */
     .cyber-page-btn-vert { width: auto; padding: 6px 10px; }
     #page-prev-btn i, #page-next-btn i { transform: rotate(-90deg); }
     
@@ -395,12 +358,17 @@
     }
 }
 
+@media (max-width: 768px) {
+    /* МАГИЯ ЗДЕСЬ: ЖЕСТКИЙ ОТСТУП ДЛЯ МОБИЛОК (12px), 
+       ЧТОБЫ КАРТОЧКИ ВСТАВАЛИ РОВНО ПО ДВЕ ШТУКИ */
+    .archive-flex-grid { gap: 12px !important; }
+}
+
 @media (max-width: 600px) {
     .archive-flex-grid { flex-direction: row; }
     .pagination-dock-vertical { border-radius: 12px; padding: 10px; max-width: 100%; gap: 5px; }
     .pagination-divider-vert { display: none; }
     
-    /* 📱 Сжимаем кнопки, чтобы они влезли на узкий экран телефона */
     .tuner-slot.active { width: 34px; height: 34px; font-size: 1rem; border-radius: 6px; }
     .tuner-slot.prev, .tuner-slot.next { width: 28px; height: 28px; font-size: 0.75rem; border-radius: 6px; }
     .jumper-btn { width: 30px; height: 30px; font-size: 0.85rem; border-radius: 6px; }

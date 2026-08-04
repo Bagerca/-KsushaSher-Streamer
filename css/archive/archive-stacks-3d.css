@@ -1,15 +1,12 @@
 /* css/archive/archive-stacks-3d.css */
 
-/* ИСПРАВЛЕНИЕ: ФИКСИРОВАННЫЕ РАЗМЕРЫ ДЛЯ FLEXBOX */
-/* Жестко задаем ширину, чтобы Flexbox правильно считал перенос строк */
 .archive-card-container { 
     width: 230px;
-    height: auto; /* Высота подтянется по aspect-ratio из archive-card.css */
+    height: auto; 
     flex-shrink: 0;
 }
 
 .archive-card-container.is-youtube { 
-    /* Ширина двух стандартых карт + gap (230*2 + 20) */
     width: 480px; 
 }
 
@@ -18,27 +15,7 @@
     width: 160px;
 }
 .compact-mode .archive-card-container.is-youtube {
-    /* Ширина двух компактных карт + gap (160*2 + 12) */
     width: 332px; 
-}
-
-/* Мобильный адаптив */
-@media (max-width: 600px) {
-    /* 📱 ИСПРАВЛЕНИЕ: Стандартные вертикальные карточки ставим в 2 колонки */
-    .archive-card-container {
-        width: calc(50% - 10px) !important;
-    }
-    
-    /* В компактном режиме тоже 2 колонки (отступ там 12px, поэтому вычитаем 6) */
-    .compact-mode .archive-card-container {
-        width: calc(50% - 6px) !important;
-    }
-    
-    /* А вот широкие 16:9 карточки YouTube оставляем на 100% ширины */
-    .archive-card-container.is-youtube,
-    .compact-mode .archive-card-container.is-youtube { 
-        width: 100% !important; 
-    }
 }
 
 /* СЛОИ */
@@ -106,3 +83,23 @@
 
 .archive-card-container.is-youtube.stack-3:hover .layer-front { transform: scale(0.92) translate(-22px, 22px); }
 .archive-card-container.is-youtube.stack-3:hover .layer-back-deep { transform: scale(0.92) translate(22px, -22px); }
+
+/* Мобильный и Планшетный Адаптив (Принудительный Компактный режим) */
+@media (max-width: 768px) {
+    /* На небольших планшетах - 3 карты в ряд (gap = 12px) */
+    .archive-card-container { width: calc(33.333% - 8px) !important; }
+    /* Широкие карты ютуба - 2 в ряд */
+    .archive-card-container.is-youtube { width: calc(50% - 6px) !important; }
+    
+    /* 📱 Убиваем 3D слои на мобилках для абсолютной чистоты карточек */
+    .layer-back, .layer-back-deep { display: none !important; }
+    .archive-card-container .layer-front { transform: none !important; }
+    .archive-card-container:hover .layer-front { transform: scale(1.03) !important; }
+}
+
+@media (max-width: 550px) {
+    /* На телефонах СТРОГО 2 вертикальные карты в ряд */
+    .archive-card-container { width: calc(50% - 6px) !important; }
+    /* А Ютуб - на всю ширину (1 карта в ряд) */
+    .archive-card-container.is-youtube { width: 100% !important; }
+}

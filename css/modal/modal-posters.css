@@ -36,79 +36,39 @@
 /* =========================================
    БАЗОВОЕ СОСТОЯНИЕ (В покое)
    ========================================= */
-.modal-poster-img.is-front { 
-    opacity: 1; z-index: 30; 
-    transform: translate3d(0, 0, 0); 
-}
-.modal-poster-img.is-back { 
-    opacity: 1; z-index: 20; 
-    transform: translate3d(0, -15px, -50px); 
-    filter: brightness(0.6); 
-}
-.modal-poster-img.is-back-2 { 
-    opacity: 1; z-index: 10; 
-    transform: translate3d(0, -30px, -100px); 
-    filter: brightness(0.3); 
-}
-.modal-poster-img.is-hidden { 
-    opacity: 0; z-index: 0; pointer-events: none;
-    transform: translate3d(0, 20px, -150px) scale(0.8); 
-}
+.modal-poster-img.is-front { opacity: 1; z-index: 30; transform: translate3d(0, 0, 0); }
+.modal-poster-img.is-back { opacity: 1; z-index: 20; transform: translate3d(0, -15px, -50px); filter: brightness(0.6); }
+.modal-poster-img.is-back-2 { opacity: 1; z-index: 10; transform: translate3d(0, -30px, -100px); filter: brightness(0.3); }
+.modal-poster-img.is-hidden { opacity: 0; z-index: 0; pointer-events: none; transform: translate3d(0, 20px, -150px) scale(0.8); }
 
 /* =========================================
    ОБЩИЕ СВОЙСТВА ПРИ НАВЕДЕНИИ
    ========================================= */
-/* Курсор "палец" только там, где можно кликать и листать */
 .modal-poster-wrapper.is-interactive { cursor: pointer; }
 
-/* ИСПРАВЛЕНИЕ: При наведении зажигаются ВСЕ карты (даже если она одна) */
 .modal-poster-wrapper:hover .modal-poster-img {
     border-color: var(--poster-color, var(--modal-color));
-    box-shadow: 0 0 15px var(--poster-color, var(--modal-color)), 
-                0 20px 40px rgba(0,0,0,0.8);
+    box-shadow: 0 0 15px var(--poster-color, var(--modal-color)), 0 20px 40px rgba(0,0,0,0.8);
     filter: brightness(1); 
 }
 
-/* У передней карты тень всегда сильнее */
 .modal-poster-wrapper:hover .modal-poster-img.is-front { 
     z-index: 35;
     border-color: var(--poster-color, var(--modal-color));
-    box-shadow: 0 0 30px var(--poster-color, var(--modal-color)), 
-                0 30px 60px rgba(0,0,0,0.9);
+    box-shadow: 0 0 30px var(--poster-color, var(--modal-color)), 0 30px 60px rgba(0,0,0,0.9);
 }
 
 /* =========================================
-   ХОВЕР ДЛЯ 1 КАРТЫ (Эффект левитации)
+   ХОВЕРЫ 3D
    ========================================= */
-.modal-poster-wrapper.stack-1:hover .modal-poster-img.is-front { 
-    transform: translate3d(0, -8px, 30px) scale(1.02); 
-}
+.modal-poster-wrapper.stack-1:hover .modal-poster-img.is-front { transform: translate3d(0, -8px, 30px) scale(1.02); }
 
-/* =========================================
-   ХОВЕР ДЛЯ 3-Х КАРТ (Лево - Центр - Право)
-   ========================================= */
-.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-front { 
-    transform: translate3d(-18px, 6px, 25px) rotateZ(-2deg); 
-}
-.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back { 
-    transform: translate3d(0, 0, 0) rotateZ(0deg); 
-    z-index: 25; 
-}
-.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back-2 { 
-    transform: translate3d(18px, -6px, -25px) rotateZ(2deg); 
-    z-index: 15; 
-}
+.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-front { transform: translate3d(-18px, 6px, 25px) rotateZ(-2deg); }
+.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back { transform: translate3d(0, 0, 0) rotateZ(0deg); z-index: 25; }
+.modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back-2 { transform: translate3d(18px, -6px, -25px) rotateZ(2deg); z-index: 15; }
 
-/* =========================================
-   ХОВЕР ДЛЯ 2-Х КАРТ (Лево - Право)
-   ========================================= */
-.modal-poster-wrapper.stack-2:hover .modal-poster-img.is-front { 
-    transform: translate3d(-12px, 4px, 25px) rotateZ(-2deg); 
-}
-.modal-poster-wrapper.stack-2:hover .modal-poster-img.is-back { 
-    transform: translate3d(12px, -4px, -25px) rotateZ(2deg); 
-    z-index: 25; 
-}
+.modal-poster-wrapper.stack-2:hover .modal-poster-img.is-front { transform: translate3d(-12px, 4px, 25px) rotateZ(-2deg); }
+.modal-poster-wrapper.stack-2:hover .modal-poster-img.is-back { transform: translate3d(12px, -4px, -25px) rotateZ(2deg); z-index: 25; }
 
 /* Фоновое свечение */
 .modal-poster-glow { 
@@ -119,26 +79,18 @@
 }
 
 /* ПАГИНАЦИЯ (ТОЧКИ) */
-.poster-pagination {
-    display: flex; justify-content: center; gap: 8px; margin-top: 25px; height: 10px;
-}
-.poster-dot {
-    width: 8px; height: 8px; border-radius: 4px;
-    background: rgba(255,255,255,0.2); transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.poster-dot.active {
-    width: 24px; background: var(--modal-color); box-shadow: 0 0 10px var(--modal-color);
-}
+.poster-pagination { display: flex; justify-content: center; gap: 8px; margin-top: 25px; height: 10px; }
+.poster-dot { width: 8px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.2); transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+.poster-dot.active { width: 24px; background: var(--modal-color); box-shadow: 0 0 10px var(--modal-color); }
 
 /* АДАПТИВ */
 @media (max-width: 768px) { 
-    .modal-poster-wrapper { width: 220px; margin: 0 auto; } 
-    /* Адаптив 1 карта */
+    .modal-poster-wrapper { width: 160px; margin: 0 auto; } /* Радикально уменьшили постер */
+    .poster-pagination { margin-top: 15px; }
+    
     .modal-poster-wrapper.stack-1:hover .modal-poster-img.is-front { transform: translate3d(0, -4px, 15px) scale(1.02); }
-    /* Адаптив 3 карты */
-    .modal-poster-wrapper.stack-3:hover .modal-poster-img.is-front { transform: translate3d(-10px, 4px, 15px) rotateZ(-1deg); }
-    .modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back-2 { transform: translate3d(10px, -4px, -15px) rotateZ(1deg); }
-    /* Адаптив 2 карты */
+    .modal-poster-wrapper.stack-3:hover .modal-poster-img.is-front { transform: translate3d(-8px, 4px, 15px) rotateZ(-1deg); }
+    .modal-poster-wrapper.stack-3:hover .modal-poster-img.is-back-2 { transform: translate3d(8px, -4px, -15px) rotateZ(1deg); }
     .modal-poster-wrapper.stack-2:hover .modal-poster-img.is-front { transform: translate3d(-6px, 2px, 15px) rotateZ(-1deg); }
     .modal-poster-wrapper.stack-2:hover .modal-poster-img.is-back { transform: translate3d(6px, -2px, -15px) rotateZ(1deg); }
 }

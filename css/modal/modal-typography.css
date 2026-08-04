@@ -9,28 +9,14 @@
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .modal-text-content { margin-bottom: 30px; }
-
-/* Обертка больше не реагирует на hover, служит просто контейнером */
 .hover-reveal-wrapper { position: relative; width: 100%; }
-
-/* Отключаем обрезку текста. Текст должен читаться сразу, так как есть скролл */
-.truncated { 
-    white-space: normal !important; 
-    overflow: visible !important; 
-    text-overflow: clip !important; 
-}
-
-/* Полностью отключаем всплывающие окна-дубликаты */
-.hover-reveal-box {
-    display: none !important;
-}
+.truncated { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }
+.hover-reveal-box { display: none !important; }
 
 /* Оформление блоков текста */
 .modal-title, .modal-desc { 
     border-left: 3px solid var(--modal-color); 
-    padding: 10px 15px; 
-    margin: 0;
-    border-radius: 0 8px 8px 0;
+    padding: 10px 15px; margin: 0; border-radius: 0 8px 8px 0;
 }
 
 .modal-title { 
@@ -48,65 +34,32 @@
 /* =========================================
    КЛИКАБЕЛЬНЫЙ ЗАГОЛОВОК И КНОПКА GOOGLE
    ========================================= */
-.title-search-link {
-    color: inherit;
-    text-decoration: none;
-    outline: none;
-    display: inline; 
-    transition: all 0.3s ease;
-}
+.title-search-link { color: inherit; text-decoration: none; outline: none; display: inline; transition: all 0.3s ease; }
 
 .title-search-link .search-icon {
-    /* Жесткий сброс глобальных стилей лупы */
-    position: relative !important;
-    left: auto !important;
-    top: auto !important;
-    transform: none !important;
-
-    /* НОВЫЙ ДИЗАЙН: КИБЕР-КНОПКА */
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 0.95rem !important;
-    margin-left: 14px;
-    vertical-align: middle;
-    margin-top: -6px; /* Идеальное центрирование относительно больших букв */
-
-    /* Стиль стекла (Glassmorphism) */
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 8px !important;
-    color: rgba(255, 255, 255, 0.4) !important;
+    position: relative !important; left: auto !important; top: auto !important; transform: none !important;
+    display: inline-flex !important; align-items: center; justify-content: center;
+    width: 32px !important; height: 32px !important; font-size: 0.95rem !important;
+    margin-left: 14px; vertical-align: middle; margin-top: -6px;
+    background: rgba(255, 255, 255, 0.04) !important; border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important; color: rgba(255, 255, 255, 0.4) !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6) !important;
-
     transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 
-/* Анимация текста при наведении */
 .modal-layout .title-search-link:hover { color: var(--modal-color); text-shadow: 0 0 15px var(--modal-color); }
 .yt-modal-content .title-search-link:hover { color: var(--yt-color); text-shadow: 0 0 15px var(--yt-color); }
 
-/* КРАСИВОЕ СВЕЧЕНИЕ КНОПКИ ПРИ НАВЕДЕНИИ (Основная модалка) */
 .modal-layout .title-search-link:hover .search-icon {
     background: color-mix(in srgb, var(--modal-color) 15%, transparent) !important;
-    border-color: var(--modal-color) !important;
-    color: var(--modal-color) !important;
-    box-shadow: 
-        0 5px 15px color-mix(in srgb, var(--modal-color) 40%, transparent), 
-        inset 0 0 10px color-mix(in srgb, var(--modal-color) 20%, transparent) !important;
-    transform: translateY(-3px) !important; /* Кнопка слегка приподнимается */
+    border-color: var(--modal-color) !important; color: var(--modal-color) !important;
+    box-shadow: 0 5px 15px color-mix(in srgb, var(--modal-color) 40%, transparent), inset 0 0 10px color-mix(in srgb, var(--modal-color) 20%, transparent) !important;
+    transform: translateY(-3px) !important; 
 }
-
-/* КРАСИВОЕ СВЕЧЕНИЕ КНОПКИ ПРИ НАВЕДЕНИИ (YouTube модалка) */
 .yt-modal-content .title-search-link:hover .search-icon {
     background: color-mix(in srgb, var(--yt-color) 15%, transparent) !important;
-    border-color: var(--yt-color) !important;
-    color: var(--yt-color) !important;
-    box-shadow: 
-        0 5px 15px color-mix(in srgb, var(--yt-color) 40%, transparent), 
-        inset 0 0 10px color-mix(in srgb, var(--yt-color) 20%, transparent) !important;
+    border-color: var(--yt-color) !important; color: var(--yt-color) !important;
+    box-shadow: 0 5px 15px color-mix(in srgb, var(--yt-color) 40%, transparent), inset 0 0 10px color-mix(in srgb, var(--yt-color) 20%, transparent) !important;
     transform: translateY(-3px) !important;
 }
 
@@ -115,12 +68,11 @@
 }
 
 @media (max-width: 768px) {
-    .modal-title { font-size: 1.8rem; }
-    .modal-dynamic-zone { padding: 20px; }
+    .modal-dynamic-zone { padding: 20px 15px; }
+    .modal-title { font-size: 1.5rem; padding: 8px 12px; }
+    .modal-desc { font-size: 0.95rem; padding: 10px 12px; line-height: 1.5; }
     .title-search-link .search-icon { 
-        width: 28px !important; 
-        height: 28px !important; 
-        font-size: 0.8rem !important; 
-        margin-left: 10px; 
+        width: 26px !important; height: 26px !important; 
+        font-size: 0.75rem !important; margin-left: 8px; margin-top: -3px; 
     }
 }
