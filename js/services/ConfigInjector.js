@@ -60,18 +60,28 @@ export class ConfigInjector {
         setHref('.hud-btn.discord', links.discord);
         setHref('.hud-btn.tiktok', links.tiktok);
         setHref('.hud-btn.fetta', links.fetta);
-        setHref('.hud-btn.steam', links.steam); /* ДОБАВЛЕНО: STEAM */
+        setHref('.hud-btn.steam', links.steam);
         setHref('.twitch-link', links.twitch);
     }
 
     static injectDonations() {
-        const daLink = document.querySelector('a[href*="donationalerts"]');
-        const maLink = document.querySelector('a[href*="memealerts"]');
-        const subLink = document.querySelector('a[href*="twitch.tv"]');
-
-        if (daLink) daLink.href = AppConfig.donations.donationAlerts;
-        if (maLink) maLink.href = AppConfig.donations.memeAlerts;
-        if (subLink) subLink.href = AppConfig.socials.twitch;
+        // ИСПРАВЛЕНИЕ: Ищем карточки по их заголовкам (тексту в <h3>), а не по ссылкам
+        const donateCards = document.querySelectorAll('.donate-card');
+        
+        donateCards.forEach(card => {
+            const titleEl = card.querySelector('h3');
+            if (!titleEl) return;
+            
+            const titleText = titleEl.textContent.toLowerCase();
+            
+            if (titleText.includes('donationalerts')) {
+                card.href = AppConfig.donations.donationAlerts;
+            } else if (titleText.includes('memealerts')) {
+                card.href = AppConfig.donations.memeAlerts;
+            } else if (titleText.includes('twitch')) {
+                card.href = AppConfig.socials.twitch; // Сабка ведет на твич канал
+            }
+        });
     }
 
     static injectFooterInfo() {
