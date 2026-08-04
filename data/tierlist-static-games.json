@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "generatedAt": "2026-08-04T19:42:52.687Z",
+    "category": "games"
+  },
+  "tiers": [
+    {
+      "id": "tier_S",
+      "name": "S",
+      "color": "#ff2d95",
+      "items": [
+        "Alice: Madness Returns",
+        "ABZÛ",
+        "GRIS",
+        "Winx Club"
+      ]
+    },
+    {
+      "id": "tier_A",
+      "name": "A",
+      "color": "#ff8c00",
+      "items": [
+        "Borderlands 2",
+        "State of Decay 2",
+        "Dead Island 2",
+        "The Bathhouse",
+        "Cursed Digicam",
+        "Jisatsu",
+        "Silent Hill 2 Remake",
+        "Portal",
+        "Portal 2",
+        "Bendy and the Ink Machine",
+        "Bendy and the Dark Revival",
+        "Minecraft",
+        "Little Nightmares",
+        "Little Nightmares II",
+        "Little Nightmares III",
+        "BioShock Infinite",
+        "Outlast",
+        "Supernatural: The Game",
+        "Dome Keeper",
+        "Vacation Cafe Simulator",
+        "Sally Face",
+        "Content Warning",
+        "Tomodachi Life: Living the Dream",
+        "Lethal Company",
+        "R.E.P.O.",
+        "Burglin' Gnomes",
+        "Burger Shift Team Rush Prologue",
+        "Buckshot Roulette",
+        "Tiny Bunny",
+        "The Inn-Sanity",
+        "No, I'm Not a Human",
+        "Layers of Fear",
+        "It Takes Two",
+        "The Boba Teashop",
+        "Kiosk",
+        "Resident Evil Revelations 2",
+        "The Forest",
+        "Untitled Goose Game",
+        "Indika"
+      ]
+    },
+    {
+      "id": "tier_B",
+      "name": "B",
+      "color": "#ffd700",
+      "items": [
+        "Parasocial",
+        "For Sale",
+        "Pine Harbor",
+        "Unmourned",
+        "Mouthwashing",
+        "The Maid",
+        "Subnautica",
+        "Stick Fight: The Game",
+        "The Cabin Factory",
+        "The Floor Above",
+        "Sons Of The Forest",
+        "The Hole",
+        "Who Am I?",
+        "Bendy: Secrets of the Machine",
+        "Bendy: Lone Wolf",
+        "Boris and the Dark Survival",
+        "Bad Cheese",
+        "Banned Tapes",
+        "Unturned",
+        "Beholder",
+        "Creepy Tale",
+        "Creepy Tale 2",
+        "Creepy Tale 3",
+        "Creepy Tale Some Other Place",
+        "Abyssus",
+        "Counter-Strike 2",
+        "Pit of Goblin",
+        "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+        "Скуф на рыбалке",
+        "Kholat",
+        "Shinkansen 0",
+        "Outlast 2",
+        "Rv there yet",
+        "MIMESIS",
+        "Who's Your Daddy?",
+        "Fuck You Witch",
+        "Xenofeels"
+      ]
+    },
+    {
+      "id": "tier_C",
+      "name": "C",
+      "color": "#39ff14",
+      "items": [
+        "Silent Hill f",
+        "Hollow Knight",
+        "Hollow Knight: Silksong",
+        "Undertale",
+        "SIGame",
+        "Helltaker",
+        "Machinika: Museum",
+        "Cuphead",
+        "VRChat",
+        "SCP: Secret Laboratory"
+      ]
+    },
+    {
+      "id": "tier_D",
+      "name": "D",
+      "color": "#00ccff",
+      "items": [
+        "Fused 240"
+      ]
+    },
+    {
+      "id": "tier_TRASH",
+      "name": "TRASH",
+      "color": "#555555",
+      "items": [
+        "Poppy Playtime",
+        "Valorant",
+        "Fortnite",
+        "War Thunder"
+      ]
+    }
+  ],
+  "unassigned": [
+    "Scorn",
+    "SpiderHeck"
+  ]
+}
