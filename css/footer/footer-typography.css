@@ -23,7 +23,6 @@
     box-shadow: 0 0 10px rgba(255, 45, 149, 0.4);
 }
 
-/* Копирайт переехал в центр, делаем его чуть светлее */
 .copyright {
     font-family: 'Exo 2', sans-serif;
     font-size: 0.75rem;
@@ -55,5 +54,8 @@
 }
 
 @media (max-width: 768px) {
-    .footer-brand { font-size: 1.5rem; }
+    .footer-brand { font-size: 1.25rem; }
+    .brand-ver { font-size: 0.7rem; padding: 1px 5px; }
+    .dev-credits { font-size: 0.7rem; }
+    .copyright { font-size: 0.7rem; }
 }

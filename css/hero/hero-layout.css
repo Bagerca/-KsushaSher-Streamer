@@ -49,7 +49,6 @@
 
 .hud-side-panel {
     width: 400px;
-    /* ИСПРАВЛЕНИЕ: Увеличили высоту панелей с 580px до 650px */
     height: 650px;
     position: relative;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -131,7 +130,24 @@
     .hud-side-panel.right { order: 3; } 
     .hero-section-hud { height: auto; padding-top: 50px; padding-bottom: 100px; } 
 }
+@media (max-width: 768px) { 
+    /* 📱 МОБИЛЬНЫЙ ВИД: Убираем терминал и отряд полностью */
+    .hud-side-panel.left,
+    .hud-side-panel.right { display: none !important; }
+    
+    .hud-main-display { margin-bottom: 0px; margin-top: 0px; }
+    .hero-title-hud { font-size: 3rem; } 
+    
+    /* Центрируем все по экрану */
+    .hero-section-hud { 
+        min-height: 100vh; 
+        justify-content: center; 
+        padding-top: 0; 
+        padding-bottom: 120px; 
+    }
+    .hud-container { margin-top: 0; margin-bottom: 20px; justify-content: center; }
+}
 @media (max-width: 600px) { 
-    .hud-side-panel { width: 100%; max-width: 350px; height: auto; min-height: 550px; } 
-    .hero-title-hud { font-size: 2.5rem; } 
+    .hero-title-hud { font-size: 2.2rem; } 
+    .hero-subtitle-hud { font-size: 0.9rem; }
 }

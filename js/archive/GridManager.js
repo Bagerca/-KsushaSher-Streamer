@@ -116,8 +116,15 @@ export class GridManager {
         if (resetToFirstPage) this.currentPage = 1;
 
         const cols = this.getColumnsCount();
-        this.stdPerPage = cols * 2; 
-        this.ytPerPage = Math.max(2, Math.floor(cols / 2) * 2); 
+        
+        // 📱 ИСПРАВЛЕНИЕ ДЛЯ МОБИЛОК: Жестко задаем 6 карточек на страницу для телефонов
+        if (window.innerWidth <= 600) {
+            this.stdPerPage = 6; 
+            this.ytPerPage = 3; 
+        } else {
+            this.stdPerPage = cols * 2; 
+            this.ytPerPage = Math.max(2, Math.floor(cols / 2) * 2); 
+        }
         
         this.mainPages = Math.ceil(this.store.filteredMainStandard.length / this.stdPerPage);
         this.suggPages = Math.ceil(this.store.filteredSuggStandard.length / this.stdPerPage);
@@ -195,12 +202,16 @@ export class GridManager {
         this.els.gridMain.innerHTML = mainHtmlBuf;
 
         requestAnimationFrame(() => {
-            const gap = this.gridMode === 'compact' ? 12 : 20;
-            const cardWidth = this.gridMode === 'compact' ? 160 : 230;
-            const defaultCardHeight = cardWidth * 1.5; 
-            const targetMinHeight = (defaultCardHeight * 2) + gap; 
-            
-            this.els.gridMain.style.minHeight = `${targetMinHeight}px`;
+            // 📱 ИСПРАВЛЕНИЕ: Для мобилок убираем резервирование высоты
+            if (window.innerWidth <= 600) {
+                this.els.gridMain.style.minHeight = '0px'; 
+            } else {
+                const gap = this.gridMode === 'compact' ? 12 : 20;
+                const cardWidth = this.gridMode === 'compact' ? 160 : 230;
+                const defaultCardHeight = cardWidth * 1.5; 
+                const targetMinHeight = (defaultCardHeight * 2) + gap; 
+                this.els.gridMain.style.minHeight = `${targetMinHeight}px`;
+            }
             this.els.gridMain.style.alignContent = isYoutubePage ? 'center' : 'start';
         });
 
@@ -247,13 +258,11 @@ export class GridManager {
         const cur = this.currentPage;
         let html = '';
 
-        // 1. ОПТИЧЕСКИЙ ТЮНЕР
         html += `<div class="tuner-container">`;
         html += this.renderTunerSlot(cur - 1, 'prev');
         html += this.renderTunerSlot(cur, 'active'); 
         html += this.renderTunerSlot(cur + 1, 'next');
 
-        // 2. ГОЛО-МАТРИЦА (Выезжает вправо)
         html += `<div class="holo-floor-selector" id="holo-floor-selector">
                     <div class="holo-selector-header">ВЫБОР СЕКТОРА</div>
                     <div class="holo-selector-body">`;
@@ -274,10 +283,9 @@ export class GridManager {
             const content = meta.icon ? `${meta.icon}${meta.num}` : meta.num;
             html += `<button class="matrix-btn ${meta.colorClass} ${activeClass}" data-page="${meta.raw}">${content}</button>`;
         }
-        html += `</div></div>`; // Закрываем матрицу
-        html += `</div>`; // Закрываем Тюнер
+        html += `</div></div>`; 
+        html += `</div>`; 
 
-        // 3. БЛОК-СПУТНИК СЛЕВА (Якоря)
         html += `<div class="category-jumpers">`;
         
         const dbState = cur <= M ? 'active' : '';
@@ -297,7 +305,6 @@ export class GridManager {
 
         this.els.pageNumbersContainer.innerHTML = html;
 
-        // --- СОБЫТИЯ ---
         this.els.pageNumbersContainer.querySelectorAll('.tuner-slot:not(.active):not(.empty)').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 EventBus.emit('PLAY_SOUND', 'hover');

@@ -1,4 +1,5 @@
 /* css/about/cyber-monitor.css */
+
 .cyber-monitor {
     padding: 40px; position: relative; z-index: 2; 
     display: flex; flex-direction: column; justify-content: center; align-items: center; 
@@ -28,4 +29,9 @@
 @media (max-width: 1200px) {
     .cyber-monitor { padding: 0; }
     .video-wrapper { width: 100%; }
+}
+
+@media (max-width: 768px) {
+    /* 📱 МОБИЛЬНЫЙ ВИД: Полностью скрываем блок трейлера */
+    .cyber-monitor { display: none !important; }
 }

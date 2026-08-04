@@ -1,4 +1,5 @@
 /* css/hub/hub-radar.css */
+
 /* РАДАР */
 .network-list { display: flex; flex-direction: column; gap: 10px; }
 .network-loading { font-family: 'monospace'; color: #666; text-align: center; padding: 20px; }
@@ -56,7 +57,50 @@
 
 @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 5px var(--neon-green); transform: scale(1); } 50% { box-shadow: 0 0 12px var(--neon-green); transform: scale(1.2); } }
 
+/* 📱 МОБИЛЬНЫЙ АДАПТИВ */
 @media (max-width: 768px) {
     .sched-desc { display: none; }
-    .sched-datetime { border-left: none; padding-left: 0; }
+    
+    /* Сжимаем карточку расписания: делаем её тоньше и компактнее */
+    .sched-card { 
+        flex-wrap: wrap; 
+        padding: 8px 10px; /* Уменьшили padding */
+        align-items: flex-start; 
+        gap: 8px; /* Уменьшили расстояние между точкой и текстом */
+    }
+    
+    /* Слегка уменьшаем саму розовую/зеленую точку */
+    .sched-indicator { margin-top: 4px; }
+    .sched-dot { width: 6px; height: 6px; }
+    
+    /* Контент занимает всё место минус точка слева */
+    .sched-content { width: calc(100% - 16px); } 
+    
+    /* Название стрима: меньше размер, разрешаем перенос */
+    .sched-game { 
+        white-space: normal; 
+        word-break: break-word; 
+        font-size: 0.9rem; /* Был 1.05rem */
+        line-height: 1.2;
+    } 
+    
+    /* Блок с датой и временем: ставим в строку, делаем мелким */
+    .sched-datetime { 
+        width: 100%; 
+        border-left: none; 
+        padding-left: 14px; /* Выравнивание под текстом игры */
+        flex-direction: row; 
+        justify-content: flex-start; 
+        gap: 8px;
+        align-items: center;
+        margin-top: 2px;
+    }
+    
+    /* День и время еще меньше */
+    .sched-day { margin-bottom: 0; font-size: 0.65rem; letter-spacing: 0.5px; }
+    .sched-time { font-size: 0.7rem; }
+    .sched-time i { font-size: 0.6rem; }
+    
+    /* Полностью скрываем Радар */
+    .network-panel { display: none !important; }
 }

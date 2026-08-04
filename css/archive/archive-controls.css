@@ -259,6 +259,7 @@
 .filter-chip.status-suggested { border-color: rgba(255, 45, 149, 0.5) !important; color: #ff2d95 !important; }
 .filter-chip.status-suggested.active { background: #ff2d95 !important; color: #fff !important; box-shadow: 0 0 15px rgba(255, 45, 149, 0.5); transform: translateY(-3px); }
 
+
 /* АДАПТИВНОСТЬ ДЛЯ ПЛАНШЕТОВ И МОБИЛЬНЫХ */
 @media (max-width: 1024px) {
     .filters-wrapper { align-items: center; } 
@@ -267,6 +268,22 @@
 }
 
 @media (max-width: 768px) {
+    /* 📱 ИСПРАВЛЕНИЕ КНОПОК ФИЛЬТРОВ И ВИДА */
+    .header-control-bar { 
+        width: 100%; 
+        justify-content: center; 
+        flex-wrap: wrap; /* Позволяем переноситься, если не влезают */
+        padding: 6px 12px; 
+        gap: 8px; /* Уменьшаем отступ между блоками */
+        border-radius: 16px; /* Закругления поменьше для двух строк */
+    }
+    
+    .switcher-btn { padding: 6px 10px; font-size: 0.75rem; gap: 4px; }
+    .sort-btn, .density-btn { width: 30px; height: 30px; font-size: 0.8rem; }
+    
+    /* Уменьшаем кнопки статусов */
+    .filter-chip { padding: 4px 10px; font-size: 0.65rem; }
+    
     .search-module { width: 100%; max-width: none; }
     .search-hotkey { display: none !important; }
     .suggestion-item { flex-direction: column; align-items: flex-start; gap: 10px; }

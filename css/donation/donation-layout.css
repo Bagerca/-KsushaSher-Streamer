@@ -86,7 +86,20 @@
 
 .donation-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 40px; }
 
+/* =========================================
+   АДАПТИВНОСТЬ (МОБИЛЬНЫЕ И ПЛАНШЕТЫ)
+   ========================================= */
+
 @media (max-width: 768px) {
-    #donation .section-title { font-size: 2.5rem; }
-    #donation .section-title::before, #donation .section-title::after { width: 120%; }
+    #donation .section-title { font-size: 2.5rem; letter-spacing: 2px; }
+    #donation .section-title::before, #donation .section-title::after { width: 120%; padding-bottom: 120%; }
+    .section-subtitle { font-size: 0.95rem; margin-bottom: 30px; padding: 0 10px; }
+    .donation-grid { gap: 15px; margin-bottom: 30px; }
+}
+
+/* Совсем узкие экраны (Телефоны вертикально) */
+@media (max-width: 480px) {
+    #donation .section-title { font-size: 1.8rem; letter-spacing: 1px; margin-bottom: 15px; }
+    #donation .section-title::before, #donation .section-title::after { width: 110%; padding-bottom: 110%; }
+    .section-subtitle { font-size: 0.85rem; }
 }

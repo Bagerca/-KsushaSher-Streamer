@@ -357,26 +357,30 @@
     .archive-full-grid-wrapper { flex-direction: column; align-items: center; gap: 20px; }
     .archive-grid-content { width: 100%; order: 1; }
     
-    .archive-side-pagination { position: relative; top: auto; width: 100%; justify-content: center; order: 2; }
+    .archive-side-pagination { position: relative; top: auto; width: 100%; justify-content: center; order: 2; margin-bottom: 20px; }
     .archive-side-pagination::before, .archive-side-pagination::after { display: none; }
     
+    /* 📱 ИСПРАВЛЕНИЕ ПАГИНАЦИИ: Жестко фиксируем в строку без переносов */
     .pagination-dock-vertical { 
-        position: relative; top: auto; flex-direction: row; flex-wrap: wrap; justify-content: center;
-        padding: 12px 20px; width: 100%; max-width: 550px; border-radius: 50px; 
+        position: relative; top: auto; 
+        flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center;
+        padding: 12px 15px; width: 100%; max-width: 550px; border-radius: 50px; 
     }
     
-    .page-numbers-vert { flex-direction: row; width: auto; gap: 15px; flex-wrap: wrap; justify-content: center; }
-    .tuner-container { flex-direction: row; height: auto; gap: 12px; }
+    .page-numbers-vert { flex-direction: row; width: auto; gap: 10px; flex-wrap: nowrap; justify-content: center; }
+    .tuner-container { flex-direction: row; height: auto; gap: 8px; }
     
     .category-jumpers { 
         position: relative; top: auto; right: auto; transform: none;
-        flex-direction: row; gap: 12px; background: transparent; border: none; padding: 0; box-shadow: none; 
+        flex-direction: row; gap: 8px; background: transparent; border: none; padding: 0; box-shadow: none; 
     }
     .category-jumpers::before, .category-jumpers::after { display: none; } 
-    .jumper-btn.yt.is-hidden { height: 38px; width: 0; margin-top: 0; margin-left: -12px; transform: scaleX(0); }
+    .jumper-btn.yt.is-hidden { height: 38px; width: 0; margin-top: 0; margin-left: -8px; transform: scaleX(0); }
     
-    .pagination-divider-vert { width: 1px; height: 28px; margin: 0 5px; }
-    .cyber-page-btn-vert { width: auto; padding: 8px 16px; }
+    .pagination-divider-vert { width: 1px; height: 24px; margin: 0 5px; }
+    
+    /* Поворачиваем стрелки Влево/Вправо */
+    .cyber-page-btn-vert { width: auto; padding: 6px 10px; }
     #page-prev-btn i, #page-next-btn i { transform: rotate(-90deg); }
     
     .holo-floor-selector {
@@ -392,8 +396,17 @@
 }
 
 @media (max-width: 600px) {
-    .archive-flex-grid { flex-direction: column; align-items: center; }
-    .pagination-dock-vertical { border-radius: 12px; padding: 15px; max-width: 100%; }
-    .page-numbers-vert { gap: 10px; }
+    .archive-flex-grid { flex-direction: row; }
+    .pagination-dock-vertical { border-radius: 12px; padding: 10px; max-width: 100%; gap: 5px; }
     .pagination-divider-vert { display: none; }
+    
+    /* 📱 Сжимаем кнопки, чтобы они влезли на узкий экран телефона */
+    .tuner-slot.active { width: 34px; height: 34px; font-size: 1rem; border-radius: 6px; }
+    .tuner-slot.prev, .tuner-slot.next { width: 28px; height: 28px; font-size: 0.75rem; border-radius: 6px; }
+    .jumper-btn { width: 30px; height: 30px; font-size: 0.85rem; border-radius: 6px; }
+    .cyber-page-btn-vert { padding: 4px; font-size: 1.1rem; }
+    
+    .holo-floor-selector { min-width: 280px; padding: 15px; }
+    .sector-grid { gap: 6px; }
+    .matrix-btn { width: 36px; height: 36px; font-size: 0.8rem; }
 }

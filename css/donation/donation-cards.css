@@ -21,6 +21,14 @@
 .donate-card:hover .donate-info h3 { color: var(--card-color); }
 .donate-card:hover .donate-arrow { color: #fff; transform: translateX(5px); }
 
+
+/* =========================================
+   АДАПТИВНОСТЬ (МОБИЛЬНЫЕ И ПЛАНШЕТЫ)
+   ========================================= */
 @media (max-width: 768px) {
-    .donate-card { width: 100%; }
+    .donate-card { width: 100%; height: auto; min-height: 85px; }
+    .card-inner { padding: 15px; }
+    .donate-icon { width: 45px; height: 45px; font-size: 1.2rem; margin-right: 12px; }
+    .donate-info h3 { font-size: 1rem; }
+    .donate-info p { font-size: 0.75rem; }
 }

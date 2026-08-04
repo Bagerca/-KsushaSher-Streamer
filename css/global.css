@@ -157,7 +157,7 @@ section { padding: 80px 0; position: relative; z-index: var(--z-content); scroll
     top: 40px; 
     right: 20px; 
     width: 40px; 
-    height: calc(100vh - 80px); /* Отступаем сверху и снизу */
+    height: calc(100vh - 80px);
     z-index: var(--z-system); 
     pointer-events: none;
 }
@@ -231,18 +231,15 @@ section { padding: 80px 0; position: relative; z-index: var(--z-content); scroll
 .nav-marker::before { top: 0; left: 0; border-right: none; border-bottom: none; transform: translate(5px, 5px); }
 .nav-marker::after { bottom: 0; right: 0; border-left: none; border-top: none; transform: translate(-5px, -5px); }
 
-
 /* АКТИВНОЕ СОСТОЯНИЕ */
 .nav-marker.active .nav-shape { 
     border-color: var(--audio-color, var(--neon-green)); 
-    /* Возвращаем глухой темный фон, чтобы перекрыть луч под маркером */
     background-color: #050508; 
     transform: rotate(45deg) scale(calc(1.3 + var(--audio-scale, 0)));
     box-shadow: 0 0 15px var(--audio-color, var(--neon-green)), 
                 inset 0 0 8px var(--audio-color, var(--neon-green));
 }
 .nav-marker.active .nav-shape::before {
-    /* Легкое внутреннее свечение */
     opacity: calc(0.4 + var(--audio-scale, 0));
 }
 
@@ -328,14 +325,16 @@ section { padding: 80px 0; position: relative; z-index: var(--z-content); scroll
 /* FX STATES */
 body.state-no-comets #comet-system, body.state-no-comets #comet-system-fg { display: none !important; }
 
-/* АДАПТИВ */
+/* =========================================
+   АДАПТИВ (MOBILE)
+   ========================================= */
 @media (max-width: 768px) {
-    .magic-menu-container { bottom: 20px; left: 20px; }
-    .magic-menu-container.above-footer { transform: translateY(-160px); }
-    .cyber-nav-rail { right: 10px; }
+    /* Полностью скрываем боковой скролл и меню на мобильных устройствах */
+    .magic-menu-container,
+    .cyber-nav-rail {
+        display: none !important;
+    }
 }
-
-/* В конец css/global.css */
 
 /* =========================================
    MODAL LOCK STATE (БЛОКИРОВКА UI)

@@ -53,9 +53,13 @@ const UI_TEMPLATES = {
                 <i class="fab fa-vk" style="color:#0077FF; font-size:1.2rem; width:24px; text-align:center;"></i>
                 <a href="${s.vk}" target="_blank" class="term-link vk">VKONTAKTE_HUB</a>
             </div>
-            <div class="cmd-list-row" style="align-items: center; margin-bottom: 0;">
+            <div class="cmd-list-row" style="align-items: center; margin-bottom: 12px;">
                 <i class="fab fa-discord" style="color:#5865F2; font-size:1.2rem; width:24px; text-align:center;"></i>
                 <a href="${s.discord}" target="_blank" class="term-link ds">DISCORD_SERVER</a>
+            </div>
+            <div class="cmd-list-row" style="align-items: center; margin-bottom: 0;">
+                <i class="fas fa-bolt" style="color:#ffd700; font-size:1.2rem; width:24px; text-align:center;"></i>
+                <a href="${s.fetta}" target="_blank" class="term-link fetta">FETTA_PROFILE</a>
             </div>
         </div>
     `,

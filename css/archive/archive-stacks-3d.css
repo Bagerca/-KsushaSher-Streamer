@@ -24,8 +24,17 @@
 
 /* Мобильный адаптив */
 @media (max-width: 600px) {
-    .archive-card-container,
-    .compact-mode .archive-card-container,
+    /* 📱 ИСПРАВЛЕНИЕ: Стандартные вертикальные карточки ставим в 2 колонки */
+    .archive-card-container {
+        width: calc(50% - 10px) !important;
+    }
+    
+    /* В компактном режиме тоже 2 колонки (отступ там 12px, поэтому вычитаем 6) */
+    .compact-mode .archive-card-container {
+        width: calc(50% - 6px) !important;
+    }
+    
+    /* А вот широкие 16:9 карточки YouTube оставляем на 100% ширины */
     .archive-card-container.is-youtube,
     .compact-mode .archive-card-container.is-youtube { 
         width: 100% !important; 

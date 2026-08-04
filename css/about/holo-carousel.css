@@ -71,10 +71,38 @@
 @media (max-width: 1200px) {
     .subs-marquee-wrapper { margin-top: 40px; border-top: 1px solid rgba(57, 255, 20, 0.3); }
 }
+
 @media (max-width: 768px) {
-    .subs-marquee-wrapper { height: 450px; margin-top: 40px; }
-    .holo-card { width: 260px; height: 360px; padding: 30px 20px; }
-    .holo-avatar-container { width: 120px; height: 120px; }
-    .avatar-ring { width: 140px; height: 140px; margin-left: -70px; margin-top: -70px; }
-    .holo-name { font-size: 1.5rem; }
+    /* 📱 ИСПРАВЛЕНИЕ: Убираем жесткую высоту, ставим auto + min-height. 
+       Секция будет подстраиваться под размер карточек */
+    .subs-marquee-wrapper { 
+        height: auto; 
+        min-height: 480px; 
+        margin-top: 40px; 
+        padding: 40px 0; 
+    }
+    
+    .marquee-header-centered { margin-bottom: 25px; }
+    
+    /* Добавляем вертикальный padding (20px сверху и снизу), чтобы тени и кольца не резались */
+    .marquee-track { gap: 20px; padding: 20px; }
+    
+    /* Делаем затенение по краям менее агрессивным */
+    .marquee-track-container {
+        mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    }
+
+    /* Карточка компактнее для узких экранов */
+    .holo-card { width: 240px; height: 320px; padding: 20px 15px; border-radius: 12px; }
+    .holo-card .card-top-deco { margin-bottom: 10px; font-size: 0.9rem; }
+    
+    /* Уменьшаем аватар */
+    .holo-avatar-container { width: 100px; height: 100px; margin-bottom: 10px; }
+    .avatar-ring { width: 120px; height: 120px; margin-left: -60px; margin-top: -60px; }
+    
+    /* Уменьшаем шрифты */
+    .holo-name { font-size: 1.3rem; }
+    .holo-role { font-size: 0.8rem; letter-spacing: 1px; }
+    .card-stat-bar { margin-top: 15px; }
 }

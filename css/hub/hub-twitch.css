@@ -1,7 +1,7 @@
 /* css/hub/hub-twitch.css */
-.player-panel { padding: 12px; flex-shrink: 0; } /* Было 15px */
+.player-panel { padding: 12px; flex-shrink: 0; } 
 
-.chat-panel { flex-grow: 1; padding: 12px; display: flex; flex-direction: column; } /* Было 15px */
+.chat-panel { flex-grow: 1; padding: 12px; display: flex; flex-direction: column; } 
 
 .twitch-player-wrapper, .twitch-chat-wrapper {
     width: 100%; background: #000;
@@ -13,7 +13,7 @@
 
 .twitch-player-wrapper { aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
 
-.twitch-chat-wrapper { flex-grow: 1; min-height: 240px; } /* Было 250px */
+.twitch-chat-wrapper { flex-grow: 1; min-height: 240px; } 
 
 .twitch-iframe {
     position: absolute; inset: 0;
@@ -23,4 +23,15 @@
 
 .player-loader { font-family: 'Orbitron', sans-serif; color: var(--neon-pink); letter-spacing: 2px; font-weight: bold; }
 
-@media (max-width: 1200px) { .twitch-player-wrapper { max-width: 800px; margin: 0 auto; } }
+@media (max-width: 1200px) { 
+    .twitch-player-wrapper { max-width: 800px; margin: 0 auto; } 
+}
+
+/* 📱 МОБИЛЬНЫЙ АДАПТИВ */
+@media (max-width: 768px) { 
+    .player-panel { padding: 10px; width: 100%; box-sizing: border-box; }
+    .twitch-player-wrapper { max-width: 100%; border-radius: 6px; }
+    
+    /* 📱 МОБИЛЬНЫЙ ВИД: Полностью вырезаем чат */
+    .chat-panel { display: none !important; } 
+}

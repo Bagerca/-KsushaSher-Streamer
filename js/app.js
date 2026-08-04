@@ -4,6 +4,7 @@ import EventBus from './event-bus.js';
 import { AppConfig } from './config.js'; 
 import { SynthEngine } from './services/SynthEngine.js'; 
 import { ConfigInjector } from './services/ConfigInjector.js';
+import { MobileOptimizer } from './services/MobileOptimizer.js'; 
 
 import { TerminalController } from './terminal-core.js';
 import { SettingsMenu } from './settings-menu.js';
@@ -12,7 +13,7 @@ import { registerTerminalCommands } from './terminal-commands.js';
 import { initScrollPhysics } from './ui/scroll-physics.js';
 import { initCryptoWidget } from './ui/crypto-widget.js';
 import { initNavRail } from './ui/nav-rail.js';
-import { initSpecs } from './ui/SpecsRenderer.js'; // <-- ДОБАВЛЕН НОВЫЙ МОДУЛЬ ЖЕЛЕЗА
+import { initSpecs } from './ui/SpecsRenderer.js'; 
 
 import { initMediaArchive } from './media-manager.js';
 import { HeroController } from './hero-controller.js';
@@ -45,14 +46,20 @@ async function bootstrap() {
         // 1. Инициализация базовых сервисов
         new SynthEngine(); 
         terminalCtrl = new TerminalController();
-        settingsMenu = new SettingsMenu();
         fxController = new FXController();
         
         // 2. Инициализация UI модулей
-        initScrollPhysics();
+        // 📱 ОТКЛЮЧАЕМ ТЯЖЕЛЫЙ UI И КАСТОМНЫЙ СКРОЛЛ НА МОБИЛКАХ
+        if (!MobileOptimizer.isMobile()) {
+            settingsMenu = new SettingsMenu();
+            initScrollPhysics();
+            initNavRail();
+        } else {
+            console.log('⚡ [UI] Нативный скролл оставлен, навигация и меню скрыты (Mobile Mode)');
+        }
+        
         initCryptoWidget();
-        initNavRail();
-        initSpecs(); // <-- ЗАПУСК НОВОГО МОДУЛЯ ЖЕЛЕЗА
+        initSpecs(); 
         
         ConfigInjector.init(); 
         
@@ -64,6 +71,9 @@ async function bootstrap() {
         // 3. Настройка графики и глобальных событий
         fxController.init();
         registerGlobalEvents();
+
+        // 📱 ПРИМЕНЯЕМ МОБИЛЬНЫЕ ПАТЧИ ПРОИЗВОДИТЕЛЬНОСТИ
+        MobileOptimizer.applyMobilePatches(terminalCtrl, fxController);
         
         // 4. Параллельная загрузка данных
         await Promise.all([
@@ -103,7 +113,6 @@ function registerGlobalEvents() {
     EventBus.on('CMD_MUSIC', () => EventBus.emit('UI_CLICK_MUSIC'));
     EventBus.on('CMD_PLAYER', () => EventBus.emit('UI_CLICK_MUSIC'));
     
-    // Инициализация модуля с контентными командами и пасхалками
     registerTerminalCommands();
 
     EventBus.on('UI_CLICK_MUSIC', () => toggleMusicMode());
@@ -113,17 +122,14 @@ function registerGlobalEvents() {
     });
 }
 
-// Глобальный перехват ошибок
 window.addEventListener('error', e => console.error('🚨 [System] Uncaught Error:', e.error));
 
-// Запуск
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootstrap); 
 } else {
     bootstrap();
 }
 
-// Экспорты для вызовов извне (если нужны)
 export function addLogLine(html, isTyping = false, forceScroll = false) { 
     if (terminalCtrl) return terminalCtrl.addLogLine(html, isTyping, forceScroll); 
 }

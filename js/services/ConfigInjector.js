@@ -59,6 +59,7 @@ export class ConfigInjector {
         setHref('.hud-btn.vk', links.vk); 
         setHref('.hud-btn.discord', links.discord);
         setHref('.hud-btn.tiktok', links.tiktok);
+        setHref('.hud-btn.fetta', links.fetta);
         setHref('.twitch-link', links.twitch);
     }
 
