@@ -8,7 +8,7 @@ export class ConfigInjector {
         this.injectSocials();
         this.injectDonations();
         this.injectFooterInfo();
-        this.injectRealBarcode(); // Запускаем генерацию штрихкода
+        this.injectRealBarcode(); 
         console.log('💉 [ConfigInjector] Статические данные успешно внедрены в DOM');
     }
 
@@ -60,6 +60,7 @@ export class ConfigInjector {
         setHref('.hud-btn.discord', links.discord);
         setHref('.hud-btn.tiktok', links.tiktok);
         setHref('.hud-btn.fetta', links.fetta);
+        setHref('.hud-btn.steam', links.steam); /* ДОБАВЛЕНО: STEAM */
         setHref('.twitch-link', links.twitch);
     }
 
@@ -89,22 +90,18 @@ export class ConfigInjector {
         }
     }
 
-    // НОВЫЙ МЕТОД: Генерация секретного штрихкода
     static async injectRealBarcode() {
         const container = document.querySelector('.footer-barcode-container');
         if (!container) return;
 
-        // Массив секретных фраз (можешь добавлять сюда любые новые)
         const secrets = [
-            "01010011 01001111 01010011", // SOS
+            "01010011 01001111 01010011", 
             "angel",
             "godmode"
         ];
-        // Выбираем рандомный код
         const randomSecret = secrets[Math.floor(Math.random() * secrets.length)];
 
         try {
-            // Фоново, не мешая загрузке сайта, подгружаем микро-библиотеку генератора
             if (!window.JsBarcode) {
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script');
@@ -115,20 +112,18 @@ export class ConfigInjector {
                 });
             }
 
-            // Создаем SVG элемент
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.classList.add('barcode-svg');
             container.appendChild(svg);
 
-            // Генерируем реальный считываемый код
             window.JsBarcode(svg, randomSecret, {
                 format: "CODE128",
-                displayValue: false,  // Скрываем текст под кодом, чтобы его можно было только отсканировать
+                displayValue: false,  
                 background: "transparent",
-                lineColor: "#ffffff", // Изначальный цвет линий
+                lineColor: "#ffffff", 
                 margin: 0,
                 width: 2,
-                height: 30 // Высота линий (обрежется CSS для красоты)
+                height: 30 
             });
             
             console.log('🕵️‍♂️ [Secret] Штрих-код сгенерирован.');

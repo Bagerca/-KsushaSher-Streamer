@@ -42,6 +42,7 @@
 .hud-btn.discord  { --btn-border-color: #5865F2; }
 .hud-btn.tiktok   { --btn-border-color: #ff2d95; }
 .hud-btn.fetta    { --btn-border-color: #ffd700; }
+.hud-btn.steam    { --btn-border-color: #66c0f4; } /* Steam Color */
 
 /* ВТОРАЯ КНОПКА YOUTUBE (Изначально серебристая) */
 .hud-btn.youtube-alt { --btn-border-color: #888888; }
@@ -75,8 +76,8 @@
         justify-content: center; 
         flex-wrap: wrap; 
         gap: 12px 10px; 
-        /* МАГИЯ ЗДЕСЬ: Ограничиваем ширину контейнера, чтобы ровно 4 кнопки влезало в ряд */
-        max-width: 200px; 
+        /* Увеличена ширина, чтобы уместилось 5 кнопок в ряд */
+        max-width: 250px; 
         margin: 0 auto;
     }
     

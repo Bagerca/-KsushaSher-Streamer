@@ -37,7 +37,8 @@ export const AppConfig = {
         vk: 'https://vk.com/k_sher', 
         discord: 'https://discord.gg/tV5YdkyhU',
         tiktok: 'https://www.tiktok.com/@_ksusha_sher_',
-        fetta: 'https://fetta.app/u/ksusha__sher'
+        fetta: 'https://fetta.app/u/ksusha__sher',
+        steam: 'https://steamcommunity.com/chat/invite/maP92FQx'
     },
     donations: {
         donationAlerts: 'https://www.donationalerts.com/r/ksusha__sher',

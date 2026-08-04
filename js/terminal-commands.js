@@ -3,9 +3,6 @@ import EventBus from './event-bus.js';
 import { AppConfig } from './config.js';
 import { loadData } from './api.js';
 
-/**
- * БЛОК 1: HTML-ШАБЛОНЫ ДЛЯ UI ТЕРМИНАЛА
- */
 const UI_TEMPLATES = {
     help: () => `
         <div style="border: 1px solid rgba(57,255,20,0.3); background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; margin: 10px 0; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);">
@@ -57,6 +54,10 @@ const UI_TEMPLATES = {
             <div class="cmd-list-row" style="align-items: center; margin-bottom: 12px;">
                 <i class="fab fa-discord" style="color:#5865F2; font-size:1.2rem; width:24px; text-align:center;"></i>
                 <a href="${s.discord}" target="_blank" class="term-link ds">DISCORD_SERVER</a>
+            </div>
+            <div class="cmd-list-row" style="align-items: center; margin-bottom: 12px;">
+                <i class="fab fa-steam" style="color:#66c0f4; font-size:1.2rem; width:24px; text-align:center;"></i>
+                <a href="${s.steam}" target="_blank" class="term-link steam">STEAM_GROUP</a>
             </div>
             <div class="cmd-list-row" style="align-items: center; margin-bottom: 0;">
                 <i class="fas fa-bolt" style="color:#ffd700; font-size:1.2rem; width:24px; text-align:center;"></i>
@@ -131,23 +132,15 @@ Shell: Bash (Cyber_edition)`,
 sys /  &#96;-.&#92;=/.-'  &#92; ()`
 };
 
-
-/**
- * БЛОК 2: СЛОВАРЬ КОМАНД (HANDLERS)
- */
 const CommandHandlers = {
-    
     HELP: () => EventBus.emit('SYS_LOG', { html: UI_TEMPLATES.help(), forceScroll: true }),
-    
     SOCIALS: () => EventBus.emit('SYS_LOG', { html: UI_TEMPLATES.socials(AppConfig.socials), forceScroll: true }),
-    
     SPECS: () => {
         EventBus.emit('SYS_SPINNER', {
             text: "СКАНИРОВАНИЕ ЖЕЛЕЗА", duration: 1500,
             finalHtml: UI_TEMPLATES.specs(AppConfig.hardware)
         });
     },
-
     SCHEDULE: () => {
         EventBus.emit('SYS_SPINNER', {
             text: "СИНХРОНИЗАЦИЯ С БАЗОЙ ТРАНСЛЯЦИЙ", duration: 1000,
@@ -172,7 +165,6 @@ const CommandHandlers = {
             }
         }, 1000);
     },
-
     TIERLIST: () => {
         EventBus.emit('SYS_SPINNER', {
             text: "ЗАПУСК ПРОТОКОЛА [TIER_MAKER]", duration: 1500,
@@ -182,49 +174,38 @@ const CommandHandlers = {
             window.open('tierlist.html', '_blank');
         }, 1500);
     },
-
     HACK: (args) => {
         const target = args.join(' ') || 'Аноним';
         if (target.toLowerCase() === 'tetla') {
             return EventBus.emit('SYS_LOG', { html: `<span style='color:#ff4444'>[FATAL] Попытка взломать ИИ отклонена. Вы забанены. (Шутка)</span>`, forceScroll: true });
         }
-
         EventBus.emit('SYS_SPINNER', {
             text: `<span style='color:var(--neon-pink)'>[TETLA]</span> Подбор пароля к ${target}`, duration: 2500,
             finalHtml: UI_TEMPLATES.hackComplete(target)
         });
     },
-
     '8BALL': (args) => {
         if (args.length === 0) return EventBus.emit('SYS_LOG', { html: `<span style='color:#888'>Использование: 8ball [ваш вопрос]</span>`, forceScroll: true });
-        
         const answers = [
             "Бесспорно.", "Предрешено.", "Определённо да.", "Можешь быть уверен.", "Вероятнее всего.",
             "Знаки говорят — «да».", "Пока не ясно.", "Спроси позже.", "Сейчас нельзя предсказать.", 
             "Даже не думай.", "Мой ответ — «нет».", "Перспективы не очень хорошие.", "Весьма сомнительно."
         ];
         const answer = answers[Math.floor(Math.random() * answers.length)];
-        
         EventBus.emit('SYS_SPINNER', {
             text: "Подключение к астралу", duration: 1000,
             finalHtml: `> <span style="color:var(--neon-pink)">[TETLA]</span> Анализ вероятностей... Ответ: <span style="color:#fff; font-weight:bold;">${answer}</span>`
         });
     },
-
     ROLL: () => {
         const roll = Math.floor(Math.random() * 100) + 1;
         let style = "color:#fff;", text = "Вы бросили кости: ";
-        
         if (roll === 100) { style = "color:#ffd700; font-weight:bold; font-size:1.2rem; text-shadow: 0 0 10px #ffd700;"; text = "КРИТИЧЕСКИЙ УСПЕХ! Выпало: "; } 
         else if (roll === 1) { style = "color:#ff4444; font-weight:bold;"; text = "КРИТИЧЕСКАЙ ПРОВАЛ... Выпало: "; }
-        
         EventBus.emit('SYS_LOG', { html: `> [TETLA] ${text} <span style="${style}">${roll}</span>`, forceScroll: true });
     },
-
     WHOAMI: () => EventBus.emit('SYS_LOG', { html: "USER: <span style='color:var(--neon-green)'>Agent_Anonymous</span><br>ROLE: <span style='color:#888'>Viewer</span><br>STATUS: <span style='color:var(--neon-pink)'>Пешка в большой игре.</span>", forceScroll: true }),
-    
     PING: () => EventBus.emit('SYS_LOG', { html: "<span style='color:var(--neon-green)'>PONG!</span> Обнаружена потеря пакетов нервных клеток.", forceScroll: true }),
-    
     SUDO: (args) => {
         const cmd = args.join(' ');
         if (cmd.includes('rm -rf /')) {
@@ -236,15 +217,11 @@ const CommandHandlers = {
             EventBus.emit('SYS_LOG', { html: "<span style='color:#ff4444; font-weight:bold;'>[ERR]</span> У вас нет прав суперпользователя на этом стриме.", forceScroll: true });
         }
     },
-
     NEOFETCH: () => EventBus.emit('SYS_LOG', { html: `<pre style="font-family:monospace; line-height:1.1; font-size:0.75rem;">${UI_TEMPLATES.asciiNeofetch()}</pre>`, forceScroll: true }),
     ANGEL: () => EventBus.emit('SYS_LOG', { html: `<pre style="color:var(--angel-color); font-family:monospace; font-size:0.8rem; line-height:1.1;">${UI_TEMPLATES.asciiAngel()}</pre>`, forceScroll: true }),
     BAGERCA: () => EventBus.emit('SYS_LOG', { html: `<pre style="color:var(--bagerka-color); font-family:monospace; font-size:0.8rem; line-height:1.1;">${UI_TEMPLATES.asciiBagerca()}</pre>`, forceScroll: true })
 };
 
-/**
- * БЛОК 3: ИНИЦИАЛИЗАЦИЯ
- */
 export function registerTerminalCommands() {
     Object.keys(CommandHandlers).forEach(cmdKey => {
         EventBus.on(`CMD_${cmdKey}`, CommandHandlers[cmdKey]);
