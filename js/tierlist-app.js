@@ -5,7 +5,6 @@ import { SynthEngine } from './services/SynthEngine.js';
 import { MediaModalManager } from './modal/MediaModalManager.js';
 import { YoutubeModalManager } from './modal/YoutubeModalManager.js';
 
-// Встроенный переключатель раскладки для умного поиска
 const EN_TO_RU = {'q':'й', 'w':'ц', 'e':'у', 'r':'к', 't':'е', 'y':'н', 'u':'г', 'i':'ш', 'o':'щ', 'p':'з', '[':'х', ']':'ъ', 'a':'ф', 's':'ы', 'd':'в', 'f':'а', 'g':'п', 'h':'р', 'j':'о', 'k':'л', 'l':'д', ';':'ж', "'":'э', 'z':'я', 'x':'ч', 'c':'с', 'v':'м', 'b':'и', 'n':'т', 'm':'ь', ',':'б', '.':'ю'};
 function switchLayout(str) {
     let res = '';
@@ -27,19 +26,18 @@ class TierMaker {
         this.board = document.getElementById('tier-board');
         this.pool = document.getElementById('tier-pool');
         this.counterEl = document.getElementById('pool-counter');
-        
-        // Поиск
         this.searchModule = document.getElementById('search-module');
         this.searchInput = document.getElementById('pool-search');
         this.suggestionsBox = document.getElementById('search-suggestions');
         
         this.currentMode = 'games';
         this.dataBank = []; 
-        
         this.draggedCard = null;
         this.draggedRow = null; 
-        
         this.tiers = [];
+
+        // Изначально мы в режиме просмотра (Статика)
+        this.isEditMode = false;
 
         new SynthEngine();
         new MediaModalManager();
@@ -52,6 +50,8 @@ class TierMaker {
         this.setupButtons();
         this.setupBoardDropzone(); 
         this.setupSearch();
+        
+        // Загружаем статичный вид при первом открытии
         await this.loadCategory('games');
     }
 
@@ -62,16 +62,7 @@ class TierMaker {
         document.getElementById('btn-load-games').classList.toggle('active', type === 'games');
         document.getElementById('btn-load-movies').classList.toggle('active', type === 'movies');
 
-        const savedState = JSON.parse(localStorage.getItem(`tierlist_master_${type}`));
-
-        if (savedState && savedState.tiers) {
-            this.tiers = savedState.tiers;
-        } else {
-            this.tiers = JSON.parse(JSON.stringify(DEFAULT_TIERS));
-        }
-
-        const itemLocations = savedState ? savedState.items : {};
-
+        // Всегда скачиваем общую базу, чтобы знать пути к картинкам
         const endpoint = type === 'games' ? 'games.json' : 'movies.json';
         let rawData = await loadData(endpoint, []);
         
@@ -83,6 +74,67 @@ class TierMaker {
                 this.dataBank.push(item);
             }
         });
+
+        // Маршрутизатор режимов
+        if (this.isEditMode) {
+            await this.renderEditState(type);
+        } else {
+            await this.renderStaticState(type);
+        }
+
+        this.bindCardEvents(); // ПКМ (Детали) работают в обоих режимах
+    }
+
+    // ==========================================
+    // ЛОГИКА РЕЖИМА ПРОСМОТРА (STATIC MODE)
+    // ==========================================
+    async renderStaticState(type) {
+        let staticFile = type === 'games' ? 'tierlist-static-games.json' : 'tierlist-static-movies.json';
+        let staticData = await loadData(staticFile, null);
+
+        // Если файла нет (еще не сохранили) — показываем пустые стандартные ряды
+        if (!staticData || !staticData.tiers) {
+            this.tiers = JSON.parse(JSON.stringify(DEFAULT_TIERS));
+            this.renderBoard();
+            return;
+        }
+
+        this.tiers = staticData.tiers;
+        this.renderBoard();
+
+        // Вставляем карточки только в ряды, пул скрыт
+        staticData.tiers.forEach(tier => {
+            const zone = document.querySelector(`.tier-content[data-zone="${tier.id}"]`);
+            if (!zone) return;
+
+            tier.items.forEach(itemId => {
+                const item = this.dataBank.find(i => i.title === itemId);
+                if (item) {
+                    const imgUrl = item.image || (item.images && item.images[0]) || 'https://via.placeholder.com/65x95?text=NO+IMG';
+                    const cardHTML = `
+                        <div class="t-card" draggable="false" data-title="${item.title}" data-id="${item.title}">
+                            <img src="${imgUrl}" alt="${item.title}">
+                        </div>
+                    `;
+                    zone.insertAdjacentHTML('beforeend', cardHTML);
+                }
+            });
+        });
+    }
+
+    // ==========================================
+    // ЛОГИКА РЕЖИМА РЕДАКТИРОВАНИЯ (EDIT MODE)
+    // ==========================================
+    async renderEditState(type) {
+        const savedState = JSON.parse(localStorage.getItem(`tierlist_master_${type}`));
+
+        if (savedState && savedState.tiers) {
+            this.tiers = savedState.tiers;
+        } else {
+            this.tiers = JSON.parse(JSON.stringify(DEFAULT_TIERS));
+        }
+
+        const itemLocations = savedState ? savedState.items : {};
 
         this.renderBoard();
         this.pool.innerHTML = '';
@@ -101,27 +153,35 @@ class TierMaker {
             (targetZone || this.pool).insertAdjacentHTML('beforeend', cardHTML);
         });
 
-        this.bindCardEvents();
         this.updateCounter();
     }
 
+    // ==========================================
+    // ОТРИСОВКА РЯДОВ И ПРИВЯЗКА ФИЗИКИ
+    // ==========================================
     renderBoard() {
         this.board.innerHTML = '';
         
-        this.tiers.forEach((tier) => {
+        this.tiers.forEach((tier, index) => {
             const row = document.createElement('div');
             row.className = 'tier-row';
             row.dataset.id = tier.id;
-            row.draggable = true; 
+            
+            // В режиме просмотра таскать ряды нельзя
+            row.draggable = this.isEditMode; 
             row.style.setProperty('--tier-color', tier.color);
             
+            // editableText в зависимости от режима
+            const contentAttr = this.isEditMode ? 'contenteditable="true"' : 'contenteditable="false"';
+
             row.innerHTML = `
                 <div class="tier-label-container">
-                    <div class="drag-grip no-capture" title="Перетащить категорию"><i class="fas fa-grip-vertical"></i></div>
-                    <div class="tier-label" contenteditable="true" spellcheck="false">${tier.name}</div>
+                    <div class="drag-grip no-capture edit-only" title="Перетащить категорию"><i class="fas fa-grip-vertical"></i></div>
+                    <div class="tier-label" ${contentAttr} spellcheck="false">${tier.name}</div>
                 </div>
                 <div class="tier-content dropzone" data-zone="${tier.id}"></div>
-                <div class="row-settings no-capture">
+                
+                <div class="row-settings no-capture edit-only">
                     <div class="color-picker-wrapper" title="Цвет категории">
                         <div class="color-preview"></div>
                         <input type="color" value="${tier.color}">
@@ -130,13 +190,15 @@ class TierMaker {
                 </div>
             `;
 
-            this.bindRowControls(row, tier);
-            this.bindRowDragEvents(row);
-            this.setupDropzone(row.querySelector('.tier-content'));
+            if (this.isEditMode) {
+                this.bindRowControls(row, tier);
+                this.bindRowDragEvents(row);
+                this.setupDropzone(row.querySelector('.tier-content'));
+            }
             this.board.appendChild(row);
         });
 
-        this.setupDropzone(this.pool);
+        if (this.isEditMode) this.setupDropzone(this.pool);
     }
 
     bindRowControls(row, tier) {
@@ -170,7 +232,6 @@ class TierMaker {
     bindRowDragEvents(row) {
         row.addEventListener('dragstart', (e) => {
             if (e.target.classList.contains('t-card') || e.target.closest('.t-card')) return;
-            
             this.draggedRow = row;
             e.dataTransfer.effectAllowed = 'move';
             setTimeout(() => row.classList.add('is-dragging-row'), 0);
@@ -188,9 +249,8 @@ class TierMaker {
 
     setupBoardDropzone() {
         this.board.addEventListener('dragover', e => {
-            if (!this.draggedRow) return; 
+            if (!this.isEditMode || !this.draggedRow) return; 
             e.preventDefault();
-            
             const afterElement = this.getDragAfterRow(this.board, e.clientY);
             if (afterElement == null) {
                 this.board.appendChild(this.draggedRow);
@@ -205,9 +265,7 @@ class TierMaker {
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            }
+            if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; }
             return closest;
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
@@ -217,12 +275,9 @@ class TierMaker {
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
             const inSameRow = y >= box.top && y <= box.bottom;
-
             if (inSameRow) {
                 const offset = x - box.left - box.width / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                }
+                if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; }
             }
             return closest;
         }, { offset: Number.NEGATIVE_INFINITY }).element;
@@ -230,7 +285,7 @@ class TierMaker {
 
     setupDropzone(zone) {
         zone.addEventListener('dragover', e => {
-            if (!this.draggedCard) return; 
+            if (!this.isEditMode || !this.draggedCard) return; 
             e.preventDefault(); 
             zone.classList.add('drag-over');
 
@@ -242,15 +297,12 @@ class TierMaker {
             }
         });
 
-        zone.addEventListener('dragleave', () => {
-            zone.classList.remove('drag-over');
-        });
+        zone.addEventListener('dragleave', () => { zone.classList.remove('drag-over'); });
 
         zone.addEventListener('drop', e => {
-            if (!this.draggedCard) return;
+            if (!this.isEditMode || !this.draggedCard) return;
             e.preventDefault();
             zone.classList.remove('drag-over');
-            
             this.saveState();
             this.updateCounter();
         });
@@ -259,13 +311,17 @@ class TierMaker {
     bindCardEvents() {
         const cards = document.querySelectorAll('.t-card');
         cards.forEach(card => {
+            
+            // Drag and drop вешаем только если включено редактирование
             card.addEventListener('dragstart', (e) => {
+                if (!this.isEditMode) { e.preventDefault(); return; }
                 e.stopPropagation(); 
                 this.draggedCard = card;
                 setTimeout(() => card.classList.add('is-dragging'), 0);
             });
             
             card.addEventListener('dragend', () => {
+                if (!this.isEditMode) return;
                 if(this.draggedCard) {
                     this.draggedCard.classList.remove('is-dragging');
                     this.saveState(); 
@@ -274,6 +330,7 @@ class TierMaker {
                 this.draggedCard = null;
             });
 
+            // ПКМ (открытие модалки) работает всегда!
             card.addEventListener('contextmenu', (e) => {
                 e.preventDefault(); 
                 const itemTitle = card.dataset.id;
@@ -303,6 +360,7 @@ class TierMaker {
     }
 
     updateCounter() {
+        if (!this.isEditMode) return;
         const unassigned = this.pool.querySelectorAll('.t-card').length;
         this.counterEl.textContent = `ОСТАЛОСЬ: ${unassigned}`;
         if (unassigned === 0) {
@@ -316,18 +374,36 @@ class TierMaker {
         }
     }
 
-    // ИМБОВЫЙ ПОИСКОВИК
+    // ==========================================
+    // ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
+    // ==========================================
+    toggleEditMode(enable) {
+        this.isEditMode = enable;
+        
+        if (enable) {
+            document.body.classList.remove('view-mode');
+            document.body.classList.add('edit-mode');
+        } else {
+            document.body.classList.add('view-mode');
+            document.body.classList.remove('edit-mode');
+        }
+
+        // Перезагружаем текущую категорию в нужном стейте
+        this.loadCategory(this.currentMode);
+    }
+
+    // ==========================================
+    // ПОИСК
+    // ==========================================
     setupSearch() {
         let debounceTimer;
-
         document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k' && this.isEditMode) {
                 e.preventDefault();
                 this.searchInput.focus();
             }
         });
 
-        // Закрываем по клику вне
         document.addEventListener('click', (e) => {
             if (!this.searchModule.contains(e.target)) {
                 this.toggleSuggestions(false);
@@ -343,13 +419,11 @@ class TierMaker {
 
             if (query.length === 0) {
                 this.toggleSuggestions(false);
-                this.filterGlobalPool(''); // Сброс
+                this.filterGlobalPool(''); 
                 return;
             }
 
-            debounceTimer = setTimeout(() => {
-                this.renderSuggestions(query);
-            }, 300);
+            debounceTimer = setTimeout(() => { this.renderSuggestions(query); }, 300);
         });
 
         this.searchInput.addEventListener('keydown', (e) => {
@@ -370,14 +444,12 @@ class TierMaker {
 
     renderSuggestions(query) {
         const layoutSwitched = switchLayout(query);
-        
-        // Ищем совпадения ТОЛЬКО среди карточек, которые лежат в ПУЛЕ (не в тирах)
         const poolCards = Array.from(this.pool.querySelectorAll('.t-card'));
         
         const matches = poolCards.filter(card => {
             const title = card.dataset.title.toLowerCase();
             return title.includes(query) || title.includes(layoutSwitched);
-        }).slice(0, 8); // Показываем максимум 8 результатов в подсказке
+        }).slice(0, 8); 
 
         if (matches.length === 0) {
             this.suggestionsBox.innerHTML = '<div style="padding: 15px; color: #888; text-align: center;">Ничего не найдено в базе</div>';
@@ -393,7 +465,6 @@ class TierMaker {
                 `;
             }).join('');
 
-            // Клик по подсказке применяет фильтр на всё
             this.suggestionsBox.querySelectorAll('.suggestion-item').forEach(item => {
                 item.addEventListener('click', () => {
                     this.searchInput.value = item.dataset.title;
@@ -402,7 +473,6 @@ class TierMaker {
                 });
             });
         }
-        
         this.toggleSuggestions(true);
     }
 
@@ -421,10 +491,15 @@ class TierMaker {
     }
 
     setupButtons() {
+        // Переключение режимов
+        document.getElementById('btn-enable-edit').addEventListener('click', () => this.toggleEditMode(true));
+        document.getElementById('btn-exit-edit').addEventListener('click', () => this.toggleEditMode(false));
+
         document.getElementById('btn-load-games').addEventListener('click', () => this.loadCategory('games'));
         document.getElementById('btn-load-movies').addEventListener('click', () => this.loadCategory('movies'));
 
         document.getElementById('btn-add-row').addEventListener('click', () => {
+            if (!this.isEditMode) return;
             const newId = 'tier_' + Date.now().toString(36);
             this.tiers.push({ id: newId, color: '#888888', name: 'NEW' });
             
@@ -436,11 +511,11 @@ class TierMaker {
             
             row.innerHTML = `
                 <div class="tier-label-container">
-                    <div class="drag-grip no-capture" title="Перетащить категорию"><i class="fas fa-grip-vertical"></i></div>
+                    <div class="drag-grip no-capture edit-only" title="Перетащить категорию"><i class="fas fa-grip-vertical"></i></div>
                     <div class="tier-label" contenteditable="true" spellcheck="false">NEW</div>
                 </div>
                 <div class="tier-content dropzone" data-zone="${newId}"></div>
-                <div class="row-settings no-capture">
+                <div class="row-settings no-capture edit-only">
                     <div class="color-picker-wrapper" title="Цвет категории">
                         <div class="color-preview"></div>
                         <input type="color" value="#888888">
@@ -459,6 +534,7 @@ class TierMaker {
         });
 
         document.getElementById('btn-reset').addEventListener('click', () => {
+            if (!this.isEditMode) return;
             if(confirm('Сбросить весь тирлист к заводским настройкам? Все данные будут утеряны.')) {
                 localStorage.removeItem(`tierlist_master_${this.currentMode}`);
                 this.loadCategory(this.currentMode);
@@ -466,6 +542,7 @@ class TierMaker {
         });
 
         document.getElementById('btn-export-json').addEventListener('click', () => {
+            if (!this.isEditMode) return;
             const exportData = {
                 metadata: { generatedAt: new Date().toISOString(), category: this.currentMode },
                 tiers: this.tiers.map(t => {
@@ -479,30 +556,25 @@ class TierMaker {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
             const dlAnchorElem = document.createElement('a');
             dlAnchorElem.setAttribute("href", dataStr);
-            dlAnchorElem.setAttribute("download", `TierList_Data_${this.currentMode}_${Date.now()}.json`);
+            dlAnchorElem.setAttribute("download", `tierlist-static-${this.currentMode}.json`);
             dlAnchorElem.click();
         });
 
         document.getElementById('btn-export-png').addEventListener('click', async () => {
+            if (!this.isEditMode) return;
             const btn = document.getElementById('btn-export-png');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ОБРАБОТКА...';
             
-            // ИСПРАВЛЕНИЕ: Идеальный экспорт PNG. Убираем ВСЕ ограничения высоты, снимаем скриншот всей страницы
             window.scrollTo(0, 0);
             document.body.classList.add('is-exporting');
             
-            // Ждем 2 фрейма для перестроения DOM без overflow:hidden
             await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
             
             const captureZone = document.getElementById('capture-zone');
             
             try {
                 const canvas = await html2canvas(captureZone, {
-                    backgroundColor: '#050508', 
-                    scale: 2, 
-                    logging: false,
-                    useCORS: true,
-                    scrollY: -window.scrollY // Защита от сдвигов
+                    backgroundColor: '#050508', scale: 2, logging: false, useCORS: true, scrollY: -window.scrollY
                 });
 
                 const link = document.createElement('a');
@@ -530,6 +602,7 @@ class TierMaker {
     }
 
     saveState() {
+        if (!this.isEditMode) return;
         const masterState = { tiers: this.tiers, items: this.collectItemsState() };
         localStorage.setItem(`tierlist_master_${this.currentMode}`, JSON.stringify(masterState));
     }

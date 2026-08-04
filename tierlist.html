@@ -21,61 +21,62 @@
     <link rel="stylesheet" href="css/modal/modal-player.css">
     <link rel="stylesheet" href="css/modal/modal-youtube.css">
 </head>
-<body>
+<!-- ИЗНАЧАЛЬНО СТРАНИЦА ГРУЗИТСЯ В РЕЖИМЕ ПРОСМОТРА -->
+<body class="view-mode">
     <div id="comet-system"></div>
 
-    <!-- ОСНОВНАЯ ЗОНА ТИРЛИСТА (Будет скриншотиться) -->
     <main class="tier-board-wrapper">
         <div id="capture-zone" class="capture-container">
-            <!-- Водяной знак для скриншота (виден только на PNG) -->
+            <!-- Водяной знак для скриншота -->
             <div class="watermark-export">TETLA_OS // TIER MAKER</div>
             
             <div class="tier-board" id="tier-board">
                 <!-- Ряды генерируются через JS -->
             </div>
             
-            <!-- Кнопка добавления ряда (скрывается при экспорте) -->
-            <button id="btn-add-row" class="add-row-btn no-capture">
+            <button id="btn-add-row" class="add-row-btn no-capture edit-only">
                 <i class="fas fa-plus"></i> ДОБАВИТЬ КАТЕГОРИЮ
             </button>
         </div>
     </main>
 
-    <!-- ПОДВАЛ С КАРТОЧКАМИ И УПРАВЛЕНИЕМ -->
-    <footer class="tier-pool-wrapper">
+    <!-- ПОДВАЛ (Скрыт в режиме просмотра) -->
+    <footer class="tier-pool-wrapper edit-only">
         <div class="pool-header">
             
-            <!-- Кнопки управления (Слева) -->
             <div class="pool-controls-group">
                 <button id="btn-load-games" class="cyber-btn active"><i class="fas fa-gamepad"></i> ИГРЫ</button>
                 <button id="btn-load-movies" class="cyber-btn"><i class="fas fa-film"></i> КИНО</button>
                 <div class="divider"></div>
-                <button id="btn-reset" class="cyber-btn danger" title="Сбросить"><i class="fas fa-trash"></i></button>
-                <button id="btn-export-json" class="cyber-btn warning" title="Сохранить JSON"><i class="fas fa-file-code"></i></button>
-                <button id="btn-export-png" class="cyber-btn success" title="Сохранить скриншот"><i class="fas fa-camera"></i> PNG</button>
+                
+                <!-- Кнопки РЕДАКТИРОВАНИЯ -->
+                <button id="btn-reset" class="cyber-btn danger edit-only" title="Сбросить"><i class="fas fa-trash"></i></button>
+                <button id="btn-export-json" class="cyber-btn warning edit-only" title="Сохранить JSON"><i class="fas fa-file-code"></i></button>
+                <button id="btn-export-png" class="cyber-btn success edit-only" title="Сохранить скриншот"><i class="fas fa-camera"></i> PNG</button>
             </div>
             
-            <!-- Счетчик (По центру) -->
-            <div class="pool-title">
+            <div class="pool-title edit-only">
                 <span class="pool-counter" id="pool-counter">ОСТАЛОСЬ: 0</span>
             </div>
             
-            <!-- Имбовый поисковик (Справа) -->
-            <div class="search-module" id="search-module">
+            <div class="search-module edit-only" id="search-module">
                 <i class="fas fa-search search-icon" id="search-icon-default"></i>
                 <input type="text" id="pool-search" placeholder="Поиск по базе..." autocomplete="off">
                 <div class="search-hotkey" id="search-hotkey-hint">Ctrl+K</div>
-                
-                <!-- Выпадающий список поиска -->
                 <div class="search-suggestions" id="search-suggestions"></div>
             </div>
             
         </div>
         
-        <div class="tier-pool dropzone" id="tier-pool"></div>
+        <div class="tier-pool dropzone edit-only" id="tier-pool"></div>
     </footer>
 
-    <!-- Библиотека для скриншотов -->
+    <!-- ПАНЕЛЬ УПРАВЛЕНИЯ РЕЖИМАМИ (Фиксированная сверху справа) -->
+    <div class="mode-controls">
+        <button id="btn-enable-edit" class="cyber-btn warning view-only"><i class="fas fa-pen"></i> ИЗМЕНИТЬ</button>
+        <button id="btn-exit-edit" class="cyber-btn danger edit-only"><i class="fas fa-times"></i> ОТМЕНА</button>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="module" src="js/tierlist-app.js"></script>
 </body>
