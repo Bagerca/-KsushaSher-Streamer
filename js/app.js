@@ -120,6 +120,15 @@ function registerGlobalEvents() {
         await scheduleMgr.init(); 
         await statsMgr.init();
     });
+
+    // Секретная комбинация Shift + T открывает Тирлист
+    document.addEventListener('keydown', (e) => {
+        if (e.shiftKey && e.code === 'KeyT' && !document.body.classList.contains('modal-open')) {
+            if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                EventBus.emit('CMD_TIERLIST');
+            }
+        }
+    });
 }
 
 window.addEventListener('error', e => console.error('🚨 [System] Uncaught Error:', e.error));

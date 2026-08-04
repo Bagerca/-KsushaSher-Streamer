@@ -17,6 +17,7 @@ const UI_TEMPLATES = {
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="specs">SPECS</span><span class="cmd-desc">- Спецификация железа</span></div>
 
             <div style="color:#fff; margin:15px 0 8px 0; font-weight:bold; font-size:0.85rem;">> ИНТЕРАКТИВ И ИГРЫ:</div>
+            <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="tierlist">TIERLIST</span><span class="cmd-desc">- Конструктор тирлиста (Shift+T)</span></div>
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="hack">HACK</span><span class="cmd-desc">- Взлом цели (Пример: hack bagerca)</span></div>
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="8ball">8BALL</span><span class="cmd-desc">- Задай вопрос (Пример: 8ball Идем в КС?)</span></div>
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="roll">ROLL</span><span class="cmd-desc">- Бросок кубика (1-100)</span></div>
@@ -64,7 +65,6 @@ const UI_TEMPLATES = {
         </div>
     `,
     
-    // ОБНОВЛЕННЫЙ ШАБЛОН SPECS
     specs: (hardware) => `
         <div style="border: 1px solid rgba(255,45,149,0.3); background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; margin: 10px 0; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); border-left: 3px solid var(--neon-pink);">
             <div style="color:var(--neon-pink); font-family:'Orbitron', sans-serif; font-weight:bold; margin-bottom:15px; letter-spacing:1px; border-bottom: 1px dashed rgba(255,45,149,0.3); padding-bottom: 8px;">[ SYSTEM_SPECS ]</div>
@@ -171,6 +171,16 @@ const CommandHandlers = {
                 EventBus.emit('SYS_LOG', { html: `<span style='color:#ff4444'>[ERR] Ошибка чтения расписания.</span>`, forceScroll: true });
             }
         }, 1000);
+    },
+
+    TIERLIST: () => {
+        EventBus.emit('SYS_SPINNER', {
+            text: "ЗАПУСК ПРОТОКОЛА [TIER_MAKER]", duration: 1500,
+            finalHtml: "<span style='color:var(--neon-pink); font-weight:bold;'>Инициализация изолированной среды...</span>"
+        });
+        setTimeout(() => {
+            window.open('tierlist.html', '_blank');
+        }, 1500);
     },
 
     HACK: (args) => {
