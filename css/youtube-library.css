@@ -1,0 +1,221 @@
+/* css/youtube-library.css */
+
+.yt-library-page-wrapper {
+    position: relative; 
+    width: 100vw; 
+    min-height: 100vh;
+    background: var(--color-bg-dark); 
+    display: flex; 
+    flex-direction: column; 
+    z-index: 100;
+}
+
+.yt-library-cinematic-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 0, 0, 0.05) 0%, transparent 40%), 
+        radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.05) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+}
+
+/* =========================================
+   ЛИПКАЯ СТЕКЛЯННАЯ ШАПКА
+   ========================================= */
+.yt-library-header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(5, 5, 8, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 20px 0 15px 0;
+}
+
+.yt-library-top-bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 0; /* Убрал лишний марджин, так как sub-bar больше нет */
+}
+
+/* ИСПРАВЛЕНИЕ: Flexbox для кнопки назад и счетчика */
+.yt-lib-action-area { 
+    grid-column: 1; justify-self: start; 
+    display: flex; align-items: center; gap: 15px; flex-wrap: wrap; 
+}
+
+.yt-lib-logo-area { 
+    grid-column: 2; 
+    justify-self: center; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    font-family: var(--font-header);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+}
+.yt-lib-logo-area i { color: #ff0000; font-size: 1.8rem; }
+
+.yt-lib-search-area { grid-column: 3; justify-self: end; width: 100%; max-width: 500px; }
+
+/* Красивая кнопка ХАБ (Красная тема) */
+.btn-yt-lib-back {
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.05) 0%, transparent 100%);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    color: var(--color-text-white);
+    height: 54px;
+    padding: 0 30px;
+    font-family: var(--font-header);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all var(--transition-normal);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    cursor: pointer;
+}
+.btn-yt-lib-back i {
+    font-size: 1.1rem;
+    color: #ff0000;
+    transition: transform var(--transition-normal);
+}
+.btn-yt-lib-back:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: #ff0000;
+    color: var(--color-text-white);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+.btn-yt-lib-back:hover i {
+    transform: translateX(-4px);
+    text-shadow: 0 0 10px #ff0000;
+}
+
+.yt-lib-counter {
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    height: 40px;
+}
+.yt-lib-counter-label {
+    font-family: var(--font-tech);
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+.yt-lib-counter-val { 
+    font-family: var(--font-header);
+    color: #ff0000; 
+    font-size: 1.2rem; 
+    font-weight: 800;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); 
+}
+
+/* =========================================
+   ИЗОЛИРОВАННЫЙ ПОИСКОВИК (Красный)
+   ========================================= */
+.yt-library-page-wrapper .search-module { position: relative; width: 100%; display: flex; align-items: center; }
+
+.yt-library-page-wrapper .search-module::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 54px; 
+    border-radius: 12px; pointer-events: none; z-index: 201;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 0, 0, 0.2) 50%, transparent 100%);
+    background-size: 200% 100%; background-position: -200% 0; opacity: 0; transition: opacity var(--transition-normal); mix-blend-mode: screen; clip-path: inset(0 0 0 0 round 12px);
+}
+.yt-library-page-wrapper .search-module:focus-within::before { opacity: 1; animation: scanner-glare 2s infinite linear; }
+
+.yt-library-page-wrapper .search-icon { 
+    position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted); font-size: 1.1rem; transition: all var(--transition-normal); z-index: 205; cursor: pointer; pointer-events: auto;
+}
+.yt-library-page-wrapper .search-icon:hover, .yt-library-page-wrapper .search-module:focus-within .search-icon:hover { 
+    background: #ff0000; color: var(--color-text-dark); border-color: #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); 
+}
+.yt-library-page-wrapper .search-icon.loading-icon { pointer-events: none; background: transparent; border-color: transparent; color: #ff0000; animation: spin-center 1s linear infinite !important; }
+
+.yt-library-page-wrapper input { 
+    width: 100%; padding: 0 60px 0 55px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; 
+    color: var(--color-text-white); font-family: var(--font-primary); font-size: 1rem; letter-spacing: 1px; height: 54px; box-sizing: border-box;
+    backdrop-filter: blur(10px); position: relative; z-index: 200; transition: all var(--transition-normal); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); 
+}
+.yt-library-page-wrapper .search-module.suggestions-open input { border-radius: 12px 12px 0 0; background: rgba(8, 9, 13, 0.98); border-color: #ff0000; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8); border-bottom-color: transparent; }
+.yt-library-page-wrapper input:focus { background: rgba(0, 0, 0, 0.7); border-color: #ff0000; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.2); outline: none; }
+.yt-library-page-wrapper .search-module:focus-within .search-icon:not(:hover) { border-color: rgba(255, 0, 0, 0.5); color: #ff0000; }
+
+.yt-library-page-wrapper .search-hotkey { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 4px; padding: 2px 6px; font-family: var(--font-header); font-size: 0.65rem; color: var(--color-text-muted); pointer-events: none; z-index: 202; box-shadow: 0 2px 0 rgba(0,0,0,0.5); transition: var(--transition-normal); }
+.yt-library-page-wrapper .search-module:focus-within .search-hotkey { opacity: 0; transform: translateY(-50%) scale(0.8); }
+
+.yt-library-page-wrapper .search-suggestions { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(8, 9, 13, 0.98); backdrop-filter: blur(20px); border: 1px solid #ff0000; border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.95); margin-top: 0px; padding: 0; z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 0; overflow: hidden; }
+.yt-library-page-wrapper .search-suggestions.active { opacity: 1; visibility: visible; transform: translateY(0); max-height: 60vh; overflow-y: auto; pointer-events: auto; }
+.yt-library-page-wrapper .search-suggestions::-webkit-scrollbar { width: 6px; }
+.yt-library-page-wrapper .search-suggestions::-webkit-scrollbar-thumb { background: rgba(255, 0, 0, 0.5); border-radius: 4px; }
+.yt-library-page-wrapper .suggestion-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 30px 20px; color: #777; text-align: center; font-family: var(--font-primary); }
+
+/* =========================================
+   БЕСКОНЕЧНАЯ СЕТКА КАРТОЧЕК (Широкие карточки)
+   ========================================= */
+.yt-library-container {
+    padding-top: 30px;
+    max-width: 1600px; 
+}
+
+.yt-library-full-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 20px;
+    padding-bottom: 80px;
+    position: relative;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.yt-library-full-grid .archive-card-container.is-youtube {
+    width: 480px !important; 
+    flex-shrink: 0;
+}
+
+.yt-library-full-grid .archive-card-container.animate-entry {
+    animation: yt-lib-card-entry 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0; transform: translateY(30px) scale(0.95);
+}
+
+@keyframes yt-lib-card-entry {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* =========================================
+   АДАПТИВ
+   ========================================= */
+@media (max-width: 1024px) {
+    .yt-library-top-bar { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+    .yt-lib-action-area { justify-content: center; width: 100%; }
+    .yt-lib-search-area { max-width: 100%; }
+}
+
+@media (max-width: 768px) {
+    .yt-library-header-sticky { padding: 15px 0; }
+    
+    .yt-library-full-grid .archive-card-container.is-youtube {
+        width: 100% !important; 
+    }
+}

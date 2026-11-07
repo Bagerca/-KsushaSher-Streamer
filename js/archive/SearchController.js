@@ -1,11 +1,12 @@
 /* js/archive/SearchController.js */
 import EventBus from '../event-bus.js';
-import { STATUS_MAP } from '../media-store.js';
-import { getYouTubeId } from '../utils.js';
+import { AppStore } from '../store.js';
+import { AppRouter } from '../router.js';
+import { SearchEngine } from '../services/SearchEngine.js';
+import { optimizeImageUrl } from '../utils.js';
 
 export class SearchController {
-    constructor(store) {
-        this.store = store;
+    constructor() {
         this.els = {
             input: document.getElementById('archive-search'),
             module: document.getElementById('search-module'),
@@ -34,8 +35,7 @@ export class SearchController {
             this.els.iconDefault.addEventListener('click', () => {
                 if (this.els.input.value.trim().length > 0) {
                     EventBus.emit('PLAY_SOUND', 'click');
-                    this.store.setSearchQuery(this.els.input.value);
-                    this.toggleSugg(false);
+                    this.executeSearch(this.els.input.value);
                 }
             });
         }
@@ -63,9 +63,14 @@ export class SearchController {
         });
 
         EventBus.on('MEDIA_STORE_LOADED', () => { 
-            this.els.input.value = ''; 
-            this.handleInput('');
+            const stateQuery = AppStore.getState().media.searchQuery;
+            this.els.input.value = stateQuery || ''; 
         });
+    }
+
+    executeSearch(query) {
+        this.toggleSugg(false);
+        AppRouter.updateQuery({ search: query.trim() ? query : null });
     }
 
     toggleSugg(isOpen) {
@@ -91,19 +96,70 @@ export class SearchController {
         if (query.trim().length < 1) {
             this.toggleSugg(false);
             this.toggleLoading(false);
-            if (this.store.searchQuery !== '') this.store.setSearchQuery('');
+            if (AppStore.getState().media.searchQuery !== '') {
+                this.executeSearch('');
+            }
             return;
         }
 
         this.toggleLoading(true);
 
         this.debounceTimer = setTimeout(() => {
-            this.currentMatches = this.store.getSearchSuggestions(query);
-            this.selectedIndex = -1; 
-            this.renderSuggestions(this.currentMatches, query);
+            // ИСПРАВЛЕНИЕ: Прямой поиск по центральному хранилищу AppStore
+            const state = AppStore.getState();
+            if (!state.data.isMediaLoaded) {
+                this.toggleLoading(false);
+                return;
+            }
+
+            const queryLower = query.toLowerCase().trim();
+            let flattenedList = [];
+            
+            state.data.media.forEach(item => {
+                if (item.format === 'collection' && item.items) {
+                    item.items.forEach(sub => flattenedList.push({ ...sub, status: sub.status || item.status, isSubItem: true }));
+                } else {
+                    flattenedList.push(item);
+                }
+            });
+
+            // Убираем дубликаты
+            const uniqueMap = new Map();
+            flattenedList.forEach(item => uniqueMap.set(item.id, item));
+            flattenedList = Array.from(uniqueMap.values());
+
+            let matches = flattenedList.map(item => ({
+                ...item,
+                score: SearchEngine.scoreItemForSuggestions(item.title, queryLower)
+            })).filter(item => item.score > 15);
+
+            matches = matches.sort((a, b) => b.score - a.score).slice(0, 5);
+
+            this.currentMatches = matches;
+            this.renderSuggestions(matches);
             this.toggleLoading(false);
-            this.toggleSugg(true);
         }, 350); 
+    }
+
+    renderSuggestions(matches) {
+        if (matches.length === 0) {
+            this.suggestionsBox.innerHTML = '<div class="suggestion-empty"><i class="fas fa-search"></i>Совпадений не найдено</div>';
+        } else {
+            this.suggestionsBox.innerHTML = matches.map((item, idx) => {
+                const img = item.image || (item.images ? item.images[0] : '') || 'https://via.placeholder.com/45x65?text=NO+IMG';
+                return `
+                    <div class="suggestion-item" data-index="${idx}">
+                        <div class="sugg-left">
+                            <div class="sugg-thumb-wrapper ${item.format === 'youtube' ? 'is-youtube' : ''}">
+                                <img src="${optimizeImageUrl(img, 100, 70)}" class="sugg-thumb">
+                            </div>
+                            <span class="sugg-title">${item.title}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        this.toggleSugg(true);
     }
 
     handleKeyDown(e) {
@@ -112,7 +168,7 @@ export class SearchController {
         if (!isDropdownOpen || this.currentMatches.length === 0) {
             if (e.key === 'Enter') {
                 EventBus.emit('PLAY_SOUND', 'click');
-                this.store.setSearchQuery(this.els.input.value);
+                this.executeSearch(this.els.input.value);
             }
             return;
         }
@@ -133,8 +189,7 @@ export class SearchController {
                 this.applySelection(this.currentMatches[this.selectedIndex]);
             } else {
                 EventBus.emit('PLAY_SOUND', 'click');
-                this.toggleSugg(false);
-                this.store.setSearchQuery(this.els.input.value);
+                this.executeSearch(this.els.input.value);
             }
         } 
         else if (e.key === 'Escape') {
@@ -159,93 +214,6 @@ export class SearchController {
         this.els.input.value = item.title;
         if (this.els.hotkeyHint) this.els.hotkeyHint.style.display = 'none';
         
-        this.toggleSugg(false);
-        this.store.setSearchQuery(item.title);
-    }
-
-    highlightText(text, query) {
-        if (!query) return text;
-        const escapedQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`(${escapedQuery})`, 'gi');
-        return text.replace(regex, `<mark class="search-match">$1</mark>`);
-    }
-
-    renderSuggestions(matches, query) {
-        if (matches.length === 0) {
-            this.suggestionsBox.innerHTML = `
-                <div class="suggestion-empty">
-                    <i class="fas fa-satellite-dish"></i>
-                    <span>Сигнал не найден. По запросу "${query}" ничего нет.</span>
-                </div>`;
-            return;
-        }
-
-        const STATUS_COLORS = {
-            'completed': '#39ff14', 'watched': '#39ff14',
-            'playing': '#00ccff', 'watching': '#00ccff',
-            'on-hold': '#ffd700',
-            'dropped': '#ff4444',
-            'suggested': '#ff2d95'
-        };
-        
-        this.suggestionsBox.innerHTML = matches.map((item, index) => {
-            const titleText = item.title || "";
-            const titleHtml = this.highlightText(titleText, query);
-            const color = item.customColor || '#fff';
-
-            let thumbUrl = item.image;
-            if (!thumbUrl && item.format === 'youtube' && item.videos && item.videos.length > 0) {
-                const vUrl = typeof item.videos[0] === 'string' ? item.videos[0] : item.videos[0].url;
-                const ytId = getYouTubeId(vUrl);
-                if (ytId) thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
-            }
-            if (!thumbUrl) thumbUrl = 'https://via.placeholder.com/65x95?text=NO+IMG';
-
-            const isCollection = item.format === 'collection';
-            const isYouTube = item.format === 'youtube'; // ИСПРАВЛЕНИЕ: Проверяем ютуб
-
-            // ИСПРАВЛЕНИЕ: Добавляем класс is-youtube, если это видеоформат
-            let thumbClasses = "sugg-thumb-wrapper";
-            if (isCollection) thumbClasses += " is-collection";
-            if (isYouTube) thumbClasses += " is-youtube";
-
-            const collectionBadge = (isCollection && item.items) 
-                ? `<div class="sugg-collection-badge" style="border-color:${color};"><i class="fas fa-folder-open" style="color:${color};"></i> <span>${item.items.length}</span></div>` 
-                : '';
-
-            const rawStatus = STATUS_MAP[item.status] || item.status;
-            const badgeColor = STATUS_COLORS[item.status] || '#888';
-            
-            const statusHtml = `<span class="sugg-cyber-status" style="color: ${badgeColor}; border-color: color-mix(in srgb, ${badgeColor} 40%, transparent); background: color-mix(in srgb, ${badgeColor} 10%, transparent);">[<span class="status-text">${rawStatus}</span>]</span>`;
-
-            const displayRating = item.rating || 0;
-            let ratingHtml = '';
-            if (displayRating > 0 && item.status !== 'suggested') {
-                const rScore = Math.round(displayRating);
-                let segments = '';
-                for(let i=0; i<5; i++) {
-                    segments += `<div class="sugg-cyber-segment ${i < rScore ? 'filled' : ''}" style="--seg-color: ${color}"></div>`;
-                }
-                ratingHtml = `<div class="sugg-cyber-rating"><div class="segments">${segments}</div><span class="val" style="color:${color}">${displayRating.toFixed(1)}</span></div>`;
-            }
-
-            const animDelay = index * 40;
-
-            return `
-                <div class="suggestion-item" data-index="${index}" style="animation-delay: ${animDelay}ms">
-                    <div class="sugg-left">
-                        <div class="${thumbClasses}">
-                            <img src="${thumbUrl}" class="sugg-thumb" onerror="this.src='https://via.placeholder.com/65x95?text=ERR'">
-                            ${collectionBadge}
-                        </div>
-                        <span class="sugg-title" title="${titleText}">${titleHtml}</span>
-                    </div>
-                    <div class="sugg-right">
-                        ${statusHtml}
-                        ${ratingHtml}
-                    </div>
-                </div>
-            `;
-        }).join('');
+        this.executeSearch(item.title);
     }
 }

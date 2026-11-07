@@ -69,9 +69,17 @@ class SmoothScrollManager {
     init() {
         document.addEventListener('click', (e) => {
             const anchor = e.target.closest('a[href^="#"]');
-            if (anchor && anchor.getAttribute('href') !== '#') {
+            if (anchor) {
+                const href = anchor.getAttribute('href');
+                
+                // ИСПРАВЛЕНИЕ: Игнорируем SPA-роуты (начинаются с #/) и пустые хэши (#)
+                // Позволяем браузеру сменить URL, чтобы сработал router.js
+                if (href === '#' || href.startsWith('#/')) {
+                    return; 
+                }
+                
                 e.preventDefault();
-                const targetId = anchor.getAttribute('href').substring(1);
+                const targetId = href.substring(1);
                 this.scrollTo(targetId);
             }
         });
@@ -132,7 +140,6 @@ class SmoothWheelScroller {
         // Если крутим внутри списка - отдаем управление браузеру
         if (isInsideScrollable) return; 
 
-        // ИСПРАВЛЕНИЕ: Если открыта модалка, блокируем и дефолтный скролл, и наш кастомный. Сайт не сдвинется.
         if (document.body.classList.contains('modal-open')) {
             e.preventDefault();
             return;

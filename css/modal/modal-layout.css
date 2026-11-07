@@ -5,9 +5,9 @@
    ========================================= */
 .media-modal-overlay { 
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    background: rgba(5, 5, 8, 0.95); backdrop-filter: blur(15px); 
+    background: var(--color-bg-overlay); backdrop-filter: blur(15px); 
     z-index: var(--z-modal); display: flex; justify-content: center; align-items: center; 
-    opacity: 0; pointer-events: none; transition: 0.3s; 
+    opacity: 0; pointer-events: none; transition: var(--transition-normal); 
 }
 .media-modal-overlay.active { opacity: 1; pointer-events: auto; }
 .media-modal-overlay.is-cinema-mode .modal-cinematic-bg { filter: blur(30px) brightness(0.15) saturate(0.5) !important; }
@@ -25,14 +25,14 @@
     position: fixed; top: 30px; right: 40px; 
     background: rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); 
     border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; 
-    color: #fff; cursor: pointer; transition: all 0.3s ease; 
+    color: var(--color-text-white); cursor: pointer; transition: all var(--transition-normal); 
     z-index: calc(var(--z-modal) + 1); 
     display: flex; align-items: center; justify-content: center; 
     backdrop-filter: blur(5px);
 }
 .modal-close-btn:hover { 
     background: var(--modal-color, #fff); border-color: var(--modal-color, #fff); 
-    color: #000; transform: rotate(90deg) scale(1.1); box-shadow: 0 0 20px var(--modal-color, #fff); 
+    color: var(--color-text-dark); transform: rotate(90deg) scale(1.1); box-shadow: 0 0 20px var(--modal-color, #fff); 
 }
 
 /* =========================================
@@ -40,7 +40,7 @@
    ========================================= */
 .media-modal-content { 
     position: relative; width: 95%; max-width: 1650px; height: 90vh; 
-    background: #050508; border: 1px solid rgba(255, 255, 255, 0.1); 
+    background: var(--color-bg-dark); border: 1px solid rgba(255, 255, 255, 0.1); 
     border-radius: 16px; box-shadow: 0 0 80px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0,0,0,0.5); 
     transform: scale(0.95) translateY(30px); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
     display: flex; flex-direction: column; overflow: hidden; z-index: 100;
@@ -64,7 +64,7 @@
 .modal-col-sidebar { 
     padding: 30px; display: flex; flex-direction: column; gap: 20px; 
     border-right: 1px solid rgba(255, 255, 255, 0.05); 
-    background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    background: linear-gradient(90deg, var(--color-bg-panel) 0%, rgba(0,0,0,0.4) 100%);
     overflow-y: auto; scrollbar-width: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
@@ -79,7 +79,7 @@
 .modal-col-playlist {
     width: 360px; height: 100%; overflow: hidden;
     border-left: 1px solid rgba(255, 255, 255, 0.05); 
-    background: rgba(5, 5, 8, 0.8); display: flex; flex-direction: column;
+    background: var(--color-bg-overlay); display: flex; flex-direction: column;
 }
 
 /* РЕЖИМ КИНО (CINEMA MODE) */
@@ -130,6 +130,6 @@
     .modal-close-btn { 
         position: fixed; /* Прибиваем крестик к экрану */
         top: 15px; right: 15px; width: 38px; height: 38px; font-size: 1.1rem; 
-        background: rgba(5, 5, 8, 0.95); z-index: calc(var(--z-modal) + 10); 
+        background: var(--color-bg-overlay); z-index: calc(var(--z-modal) + 10); 
     }
 }

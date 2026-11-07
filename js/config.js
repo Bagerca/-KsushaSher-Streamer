@@ -9,8 +9,9 @@ export const AppConfig = {
         mainAvatar: 'assets/images/ksusha.jpg',
         botName: 'TETLA',
         botAvatar: 'assets/images/tetlabot.jpg',
-        squadTitle: 'ГРУППА ПОДДЕРЖКИ',
-        squadMembers: ['bagerka', 'angel', 'kiriki', 'raku6chka', 'nikita', 'hardwell', 'roma', 'dragon', 'dark'] 
+        squadTitle: 'КОМАНДОВАНИЕ',
+        // Убрали лишних людей из боковой панели Hero, оставили только костяк
+        squadMembers: ['bagerca', 'angel','nikita','dragon','tetla'] 
     },
     system: {
         osVersion: 'v5.6',

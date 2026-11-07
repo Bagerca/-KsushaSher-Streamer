@@ -11,7 +11,7 @@
 }
 
 .video-container { 
-    position: relative; width: 100%; background: #000; overflow: hidden; 
+    position: relative; width: 100%; background: var(--color-bg-dark); overflow: hidden; 
     border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); 
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); 
 }
@@ -34,13 +34,13 @@
 
 .vertical-scroll-list::-webkit-scrollbar { width: 3px; }
 .vertical-scroll-list::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); border-radius: 3px; margin: 15px 0; }
-.vertical-scroll-list::-webkit-scrollbar-thumb { background: var(--modal-color); border-radius: 3px; box-shadow: 0 0 10px var(--modal-color); transition: background 0.3s ease; }
+.vertical-scroll-list::-webkit-scrollbar-thumb { background: var(--modal-color); border-radius: 3px; box-shadow: 0 0 10px var(--modal-color); transition: background var(--transition-normal); }
 
 /* ВЕРТИКАЛЬНАЯ КАРТОЧКА */
 .vertical-video-card { 
     display: flex; flex-direction: row; gap: 12px; align-items: center;
     background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); 
-    border-radius: 8px; padding: 8px; cursor: pointer; transition: 0.3s; 
+    border-radius: 8px; padding: 8px; cursor: pointer; transition: var(--transition-normal); 
     position: relative; overflow: hidden; flex-shrink: 0;
 }
 
@@ -56,9 +56,9 @@
 .v-thumb { 
     width: 100px; height: 60px; 
     border-radius: 4px; overflow: hidden; position: relative; 
-    background: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.5); flex-shrink: 0; 
+    background: var(--color-bg-dark); box-shadow: 0 5px 10px rgba(0,0,0,0.5); flex-shrink: 0; 
 }
-.v-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
+.v-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: var(--transition-normal); }
 .vertical-video-card:hover .v-thumb img { opacity: 1; transform: scale(1.1); }
 
 .v-overlay { 
@@ -67,16 +67,16 @@
     opacity: 0; transition: 0.2s; 
 }
 .vertical-video-card:hover .v-overlay { opacity: 1; }
-.v-overlay i { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
+.v-overlay i { font-size: 1.2rem; color: var(--color-text-white); text-shadow: 0 0 10px rgba(0,0,0,0.8); }
 
 .v-info { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
 .v-title { 
-    font-family: 'Exo 2', sans-serif; font-size: 0.85rem; color: #ddd; 
+    font-family: var(--font-primary); font-size: 0.85rem; color: var(--color-text-light); 
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
-    overflow: hidden; line-height: 1.2; transition: color 0.3s;
+    overflow: hidden; line-height: 1.2; transition: color var(--transition-normal);
 }
 .vertical-video-card.active .v-title { color: var(--modal-color); font-weight: 700; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
-.v-status { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+.v-status { font-size: 0.65rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; font-family: var(--font-tech); font-weight: 700; }
 
 .v-equalizer { display: none; align-items: flex-end; gap: 3px; height: 14px; }
 .v-equalizer span { width: 4px; background: var(--modal-color); border-radius: 2px; animation: eq-play 0.6s infinite ease-in-out alternate; box-shadow: 0 0 8px var(--modal-color); }

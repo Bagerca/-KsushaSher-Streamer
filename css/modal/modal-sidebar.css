@@ -7,7 +7,7 @@
 
 /* БЕЙДЖ СТАТУСА */
 .modal-status-badge { 
-    padding: 8px 14px; font-family: 'Rajdhani', sans-serif; font-weight: 800; 
+    padding: 8px 14px; font-family: var(--font-tech); font-weight: 800; 
     font-size: 1.1rem; border-radius: 4px; 
     text-align: center; text-transform: uppercase; letter-spacing: 2px; 
     transition: background-color 0.5s ease, box-shadow 0.5s ease;
@@ -18,9 +18,9 @@
     background: rgba(0, 0, 0, 0.4); padding: 10px 20px; border-radius: 6px; 
     border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); 
 }
-#modal-rating-val { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 800; line-height: 1; text-shadow: 0 0 10px currentColor; }
+#modal-rating-val { font-family: var(--font-header); font-size: 1.8rem; font-weight: 800; line-height: 1; text-shadow: 0 0 10px currentColor; }
 .modal-segments { display: flex; gap: 4px; }
-.modal-segment-line { width: 6px; height: 20px; transform: skewX(-15deg); background: rgba(255,255,255,0.1); transition: 0.3s; }
+.modal-segment-line { width: 6px; height: 20px; transform: skewX(-15deg); background: rgba(255,255,255,0.1); transition: var(--transition-normal); }
 .modal-segment-line.filled { background: currentColor; box-shadow: 0 0 10px currentColor; }
 
 /* ШТРИХКОД И ИДЕНТИФИКАТОР */
@@ -34,10 +34,10 @@
     display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
 .modal-barcode-svg {
-    height: 100%; width: auto; transition: filter 0.3s ease;
+    height: 100%; width: auto; transition: filter var(--transition-normal);
     filter: drop-shadow(0 0 3px var(--modal-color));
 }
-.tech-info { display: flex; flex-direction: column; font-family: 'monospace'; font-size: 0.75rem; color: #666; letter-spacing: 1px; }
+.tech-info { display: flex; flex-direction: column; font-family: var(--font-code); font-size: 0.75rem; color: var(--color-text-muted); letter-spacing: 1px; }
 .tech-info span { display: flex; justify-content: space-between; margin-bottom: 2px; }
 .t-val { color: var(--modal-color); font-weight: bold; text-transform: uppercase; transition: color 0.5s ease; }
 
@@ -61,6 +61,5 @@
     }
     #modal-rating-val { font-size: 1.4rem; }
     
-    /* Скрываем штрихкод, чтобы не жрал высоту экрана */
     .modal-tech-barcode { display: none; }
 }

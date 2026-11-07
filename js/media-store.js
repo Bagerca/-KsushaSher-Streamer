@@ -3,6 +3,7 @@ import { loadData } from './api.js';
 import EventBus from './event-bus.js';
 import { SearchEngine } from './services/SearchEngine.js';
 import { getYouTubeId } from './utils.js';
+import { AppStore } from './store.js';
 
 export const STATUS_MAP = {
     'completed': 'ПРОЙДЕНО', 'watched': 'ПОСМОТРЕНО',
@@ -13,7 +14,6 @@ export const STATUS_MAP = {
 
 export class MediaStore {
     constructor() {
-        this.currentType = 'games';
         this.dataMain = [];
         this.dataSuggestions = [];
         
@@ -21,16 +21,43 @@ export class MediaStore {
         this.filteredSuggestions = [];
         this.combinedData = [];
         
-        this.activeFilters = new Set(); 
-        this.searchQuery = '';
-        this.sort = 'name';
-        this.sortDirection = 'asc';
+        this.filteredMainStandard = [];
+        this.filteredSuggStandard = [];
+        this.filteredYoutube = []; // Оставляем массив пустым для обратной совместимости (чтобы ничего не крашнулось)
+        
+        this.currentLoadId = 0; 
+        this.activeLoadedType = null; 
+        
+        AppStore.subscribe((state, prevState) => {
+            const m1 = state.media;
+            const m2 = prevState?.media || {};
+            
+            if (m1.type !== m2.type && m1.type) {
+                this.loadType(m1.type);
+            } 
+            else if (
+                m1.searchQuery !== m2.searchQuery ||
+                JSON.stringify(m1.filters) !== JSON.stringify(m2.filters) ||
+                m1.sort !== m2.sort ||
+                m1.sortDirection !== m2.sortDirection
+            ) {
+                this.processData();
+                EventBus.emit('MEDIA_STORE_UPDATED');
+            }
+        });
+
+        const initialType = AppStore.getState().media.type || 'games';
+        this.loadType(initialType);
     }
 
     async loadType(type) {
-        this.currentType = type;
-        this.activeFilters.clear();
-        this.searchQuery = '';
+        if (this.activeLoadedType === type) return;
+        this.activeLoadedType = type;
+
+        this.currentLoadId++;
+        const loadId = this.currentLoadId;
+        
+        EventBus.emit('MEDIA_STORE_LOADING');
         
         const endpoint = type === 'games' ? 'games.json' : 'movies.json';
         
@@ -42,6 +69,10 @@ export class MediaStore {
                 loadData('suggestions-movies.json', []),
                 loadData('suggestions-youtube.json', [])
             ]);
+            
+            if (this.currentLoadId !== loadId) {
+                return; 
+            }
             
             const injectMeta = (array, defaultType, defaultFormat, idPrefix) => {
                 return (Array.isArray(array) ? array : []).map((item, index) => ({
@@ -60,23 +91,32 @@ export class MediaStore {
 
             const rawSuggestions = [...pGames, ...pMovies, ...pYt].map(item => ({...item, status: 'suggested'}));
             
-            this.dataSuggestions = rawSuggestions.filter(item => item.type === type);
+            // Оставляем YouTube-видео в глобальном кэше всегда для новой страницы YouTube
+            this.dataSuggestions = rawSuggestions.filter(item => item.type === type || item.format === 'youtube');
             
-            await this.preprocessDataAsync(this.dataMain);
-            await this.preprocessDataAsync(this.dataSuggestions);
+            this.fastPreprocess(this.dataMain);
+            this.fastPreprocess(this.dataSuggestions);
                 
+            const allMedia = [...this.dataMain, ...this.dataSuggestions];
+            AppStore.dispatch({ type: 'DATA_SET_MEDIA', payload: allMedia });
+
             this.processData();
             EventBus.emit('MEDIA_STORE_LOADED');
+            
+            this.fetchMissingTitles(allMedia, loadId);
             
         } catch (error) {
             console.error("Ошибка загрузки медиа:", error);
             EventBus.emit('SYS_LOG', { type: 'system', tag: 'DATABASE', action: 'ERROR', value: `LOAD_${type.toUpperCase()}_FAILED`, color: '#ff4444' });
+            
+            if (this.currentLoadId === loadId) {
+                this.activeLoadedType = null; 
+                EventBus.emit('MEDIA_STORE_LOADED'); 
+            }
         }
     }
 
-    async preprocessDataAsync(list) {
-        const fetchPromises = [];
-
+    fastPreprocess(list) {
         for (const item of list) {
             if (item.format === 'collection') {
                 this._normalizeCollection(item);
@@ -89,46 +129,49 @@ export class MediaStore {
                 if (ytId && !item.image) {
                     item.image = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
                 }
-                
                 if (!item.description) {
                     item.description = "Описание от зрителя отсутствует.";
                 }
-
                 if (!item.title) {
                     item.title = "Установка связи..."; 
-                    
-                    const fetchUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(firstVid)}&format=json`;
-                    
-                    const p = fetch(fetchUrl)
-                        .then(r => {
-                            if(!r.ok) throw new Error('oEmbed error');
-                            return r.json();
-                        })
-                        .then(d => {
-                            if (d.title && item.title === "Установка связи...") item.title = d.title;
-                        }).catch(() => {
-                            return fetch(`https://noembed.com/embed?url=${encodeURIComponent(firstVid)}`)
-                                .then(r => r.json())
-                                .then(d => {
-                                    if (d.title && item.title === "Установка связи...") item.title = d.title;
-                                });
-                        }).catch(() => {
-                            if (item.title === "Установка связи...") item.title = "Засекреченный видеофайл";
-                        });
-                        
-                    fetchPromises.push(p);
                 }
             }
         }
+    }
+
+    async fetchMissingTitles(list, loadId) {
+        let hasChanges = false;
+        
+        const fetchPromises = list.filter(i => i.format === 'youtube' && i.title === "Установка связи...").map(item => {
+            const firstVid = item.videos[0];
+            const fetchUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(firstVid)}&format=json`;
+            
+            return fetch(fetchUrl)
+                .then(r => { if(!r.ok) throw new Error(); return r.json(); })
+                .then(d => { if (d.title) { item.title = d.title; hasChanges = true; } })
+                .catch(() => {
+                    return fetch(`https://noembed.com/embed?url=${encodeURIComponent(firstVid)}`)
+                        .then(r => r.json())
+                        .then(d => { if (d.title) { item.title = d.title; hasChanges = true; } });
+                })
+                .catch(() => { item.title = "Засекреченный видеофайл"; hasChanges = true; });
+        });
 
         if (fetchPromises.length > 0) {
             await Promise.allSettled(fetchPromises);
+            
+            if (this.currentLoadId !== loadId) return; 
+            
+            if (hasChanges) {
+                AppStore.dispatch({ type: 'DATA_SET_MEDIA', payload: [...list] });
+                this.processData();
+                EventBus.emit('MEDIA_STORE_SILENT_UPDATE'); 
+            }
         }
     }
 
     _normalizeCollection(item) {
         if (!item.items || item.items.length === 0) return;
-
         const firstItem = item.items[0];
 
         item.title = item.title || firstItem.title;
@@ -140,7 +183,6 @@ export class MediaStore {
         if (!item.images) {
             item.images = item.items.slice(0, 3).map(sub => sub.image).filter(Boolean);
         }
-
         if (item.rating === undefined) {
             item.rating = firstItem.rating || 0;
         }
@@ -152,111 +194,41 @@ export class MediaStore {
         ];
     }
 
-    toggleFilter(val) {
-        if (this.activeFilters.has(val)) {
-            this.activeFilters.delete(val);
-        } else {
-            this.activeFilters.clear();
-            this.activeFilters.add(val);
-        }
-        this.processData();
-        EventBus.emit('MEDIA_STORE_UPDATED');
-    }
-
-    setSearchQuery(query) {
-        this.searchQuery = query.toLowerCase().trim();
-        this.processData();
-        EventBus.emit('MEDIA_STORE_UPDATED');
-    }
-
-    setSort(sortType) {
-        if (this.sort === sortType) {
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            this.sort = sortType;
-            this.sortDirection = sortType === 'rating' ? 'desc' : 'asc';
-        }
-        this.processData();
-        EventBus.emit('MEDIA_STORE_UPDATED');
-    }
-
-    getItemById(id) {
-        return [...this.dataMain, ...this.dataSuggestions].find(i => i.id === id);
-    }
-
-    getSearchSuggestions(query) {
-        if (query.trim().length < 1) return [];
-
-        let flattenedList = [];
-        const fullList = [...this.dataMain, ...this.dataSuggestions];
-
-        // ИСПРАВЛЕНИЕ БАГА: Не добавляем саму коллекцию в поиск, берем только её "детей"
-        fullList.forEach(item => {
-            if (item.format === 'collection' && item.items && item.items.length > 0) {
-                // Если это коллекция, добавляем только элементы внутри неё
-                item.items.forEach(sub => {
-                    flattenedList.push({ ...sub, status: sub.status || item.status, isSubItem: true });
-                });
-            } else {
-                // Если это обычная игра/фильм, добавляем как есть
-                flattenedList.push(item);
-            }
-        });
-
-        // Убираем полные дубликаты по ID (на всякий случай)
-        const uniqueMap = new Map();
-        flattenedList.forEach(item => {
-            if (!uniqueMap.has(item.id)) uniqueMap.set(item.id, item);
-        });
-        flattenedList = Array.from(uniqueMap.values());
-
-        // Прогоняем через движок поиска
-        let matches = flattenedList.map(item => {
-            const score = SearchEngine.scoreItemForSuggestions(item.title, query);
-            return { ...item, score };
-        }).filter(item => item.score > 15);
-
-        return matches.sort((a, b) => b.score - a.score).slice(0, 5);
-    }
-
     processData() {
-        const isAllSelected = this.activeFilters.size === 0;
+        const { searchQuery, filters, sort, sortDirection } = AppStore.getState().media;
+        const isAllSelected = filters.length === 0;
 
         const filterFn = (item) => {
             let matchScore = 1;
             
-            if (this.searchQuery.length > 0) {
+            if (searchQuery.length > 0) {
                 let textToSearch = `${item.title || ''} ${item.description || ''}`.toLowerCase();
                 if (item.format === 'collection' && item.items) {
                     item.items.forEach(sub => {
                         textToSearch += ` ${sub.title || ''} ${sub.description || ''}`;
                     });
                 }
-                
-                matchScore = SearchEngine.scoreItemForGrid(textToSearch, item.title, this.searchQuery);
+                matchScore = SearchEngine.scoreItemForGrid(textToSearch, item.title, searchQuery);
             }
             
             item._matchScore = matchScore;
 
-            if (this.searchQuery.length > 0 && matchScore === 0) return false;
+            if (searchQuery.length > 0 && matchScore === 0) return false;
             if (isAllSelected) return true;
 
-            return this.activeFilters.has(item.status);
+            return filters.includes(item.status);
         };
 
         let filteredMain = this.dataMain.filter(filterFn);
         let filteredSuggestions = this.dataSuggestions.filter(filterFn);
 
-        const dir = this.sortDirection === 'asc' ? 1 : -1;
+        const dir = sortDirection === 'asc' ? 1 : -1;
         const sortFn = (a, b) => {
-            if (this.searchQuery.length > 0 && Math.abs(a._matchScore - b._matchScore) > 0.1) {
-                return b._matchScore - a._matchScore;
+            if (searchQuery.length > 0 && Math.abs((a._matchScore||0) - (b._matchScore||0)) > 0.1) {
+                return (b._matchScore||0) - (a._matchScore||0);
             }
-            
-            if (this.sort === 'rating') {
-                const ratingA = a.rating || 0;
-                const ratingB = b.rating || 0;
-                return (ratingA - ratingB) * dir;
+            if (sort === 'rating') {
+                return ((a.rating || 0) - (b.rating || 0)) * dir;
             }
             return (a.title || "").localeCompare(b.title || "") * dir;
         };
@@ -268,13 +240,9 @@ export class MediaStore {
         this.filteredSuggestions = filteredSuggestions;
         this.combinedData = [...filteredMain, ...filteredSuggestions];
 
+        // Отдаем в Основной Архив только стандартные карточки (Без YouTube)
         this.filteredMainStandard = filteredMain.filter(i => i.format !== 'youtube');
         this.filteredSuggStandard = filteredSuggestions.filter(i => i.format !== 'youtube');
-        
-        this.filteredYoutube = [
-            ...filteredMain.filter(i => i.format === 'youtube'), 
-            ...filteredSuggestions.filter(i => i.format === 'youtube')
-        ];
-        this.filteredYoutube.sort(sortFn); 
+        this.filteredYoutube = []; // Обнуляем, YouTube больше не нужен на главной странице
     }
 }

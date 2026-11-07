@@ -17,11 +17,11 @@
     align-items: center; 
     gap: 14px; 
     padding: 14px 18px; 
-    background: rgba(10, 11, 16, 0.8); 
+    background: var(--color-bg-dark); 
     border-radius: 8px; 
     border: 1px solid rgba(255, 255, 255, 0.08); 
     box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    transition: all 0.3s ease; 
+    transition: all var(--transition-normal); 
     min-width: 0; 
 }
 
@@ -56,18 +56,18 @@
 }
 
 .stat-label { 
-    font-family: 'Rajdhani', sans-serif; 
+    font-family: var(--font-tech); 
     font-size: 0.7rem; 
-    color: #888; 
+    color: var(--color-text-muted); 
     letter-spacing: 1px; 
     font-weight: 700; 
     text-transform: uppercase;
 }
 
 .stat-value { 
-    font-family: 'Orbitron', sans-serif; 
+    font-family: var(--font-header); 
     font-size: 1.2rem; 
-    color: #fff; 
+    color: var(--color-text-white); 
     font-weight: 800; 
     line-height: 1.2; 
     text-shadow: 0 0 15px currentColor; 
@@ -81,23 +81,22 @@
 
 .stat-value.small { 
     font-size: 0.95rem; 
-    font-family: 'Exo 2', sans-serif;
+    font-family: var(--font-primary);
     font-weight: 700;
     text-shadow: none; 
 }
 
 /* Утилиты цветов */
-.stat-color-green { color: var(--neon-green); }
-.stat-color-blue { color: #00ccff; }
-.stat-color-pink { color: var(--neon-pink); }
-.stat-color-yellow { color: #ffd700; }
-.stat-color-gray { color: #888; }
+.stat-color-green { color: var(--color-neon-green); }
+.stat-color-blue { color: var(--color-accent-blue); }
+.stat-color-pink { color: var(--color-neon-pink); }
+.stat-color-yellow { color: var(--color-warning-yellow); }
+.stat-color-gray { color: var(--color-text-muted); }
 
 /* Адаптивность */
 @media (max-width: 1400px) { 
     .stats-grid-container { grid-template-columns: repeat(2, 1fr); } 
 }
 @media (max-width: 768px) { 
-    /* 📱 МОБИЛЬНЫЙ ВИД: Полностью скрываем статистику */
     .stats-panel { display: none !important; } 
 }

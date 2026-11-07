@@ -1,6 +1,8 @@
 /* js/modal/YoutubeModalManager.js */
 import EventBus from '../event-bus.js';
 import { getYouTubeId, extractColorFromImageAsync } from '../utils.js';
+import { AppStore } from '../store.js';
+import { AppRouter } from '../router.js';
 
 export class YoutubeModalManager {
     constructor() {
@@ -10,70 +12,98 @@ export class YoutubeModalManager {
     }
 
     buildDOM() {
-        this.overlay = document.createElement('div');
-        this.overlay.className = 'yt-modal-overlay';
-        this.overlay.id = 'yt-modal-overlay';
+        this.dialog = document.createElement('dialog');
+        this.dialog.className = 'cyber-dialog';
         
-        this.overlay.innerHTML = `
-            <div class="yt-cinematic-bg" id="yt-cinematic-bg"></div>
-            <button class="modal-close-btn" id="yt-close-btn" title="Закрыть (Esc)"><i class="fas fa-times"></i></button>
-            
-            <div class="yt-modal-content" id="yt-modal-content">
-                <div class="yt-main-col">
-                    <div class="yt-player-wrapper">
-                        <iframe id="yt-iframe" src="" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>
-                    </div>
-                    
-                    <div class="yt-info-section">
-                        <div class="hover-reveal-wrapper">
-                            <h2 class="yt-title truncated">
-                                <a href="#" target="_blank" id="yt-title-link" class="title-search-link" title="Искать в Google">
-                                    <span id="yt-title">TITLE</span>
-                                    <i class="fab fa-google search-icon"></i>
-                                </a>
-                            </h2>
+        this.dialog.innerHTML = `
+            <div class="yt-modal-overlay" id="yt-modal-overlay">
+                <div class="yt-cinematic-bg" id="yt-cinematic-bg"></div>
+                <button class="modal-close-btn" id="yt-close-btn" title="Закрыть (Esc)"><i class="fas fa-times"></i></button>
+                
+                <div class="yt-modal-content" id="yt-modal-content">
+                    <div class="yt-main-col">
+                        <div class="yt-player-wrapper">
+                            <iframe id="yt-iframe" src="" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>
                         </div>
                         
-                        <div class="hover-reveal-wrapper" id="yt-desc-wrapper" style="margin-top: 15px;">
-                            <p class="yt-desc truncated" id="yt-desc">Description</p>
+                        <div class="yt-info-section">
+                            <div class="hover-reveal-wrapper">
+                                <h2 class="yt-title truncated">
+                                    <a href="#" target="_blank" id="yt-title-link" class="title-search-link" title="Искать в Google">
+                                        <span id="yt-title">TITLE</span>
+                                        <i class="fab fa-google search-icon"></i>
+                                    </a>
+                                </h2>
+                            </div>
+                            
+                            <div class="hover-reveal-wrapper" id="yt-desc-wrapper" style="margin-top: 15px;">
+                                <p class="yt-desc truncated" id="yt-desc">Description</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Убрали заголовок "Список роликов" -->
-                <div class="yt-playlist-col" id="yt-playlist-col" style="display: none;">
-                    <div class="yt-playlist-items" id="yt-playlist-items"></div>
+                    <div class="yt-playlist-col" id="yt-playlist-col" style="display: none;">
+                        <div class="yt-playlist-items" id="yt-playlist-items"></div>
+                    </div>
                 </div>
             </div>
         `;
-        document.body.appendChild(this.overlay);
+        document.getElementById('modals-root').appendChild(this.dialog);
 
+        this.overlay = this.dialog.querySelector('#yt-modal-overlay');
         this.els = {
-            content: document.getElementById('yt-modal-content'),
-            bg: document.getElementById('yt-cinematic-bg'),
-            closeBtn: document.getElementById('yt-close-btn'),
-            iframe: document.getElementById('yt-iframe'),
-            
-            title: document.getElementById('yt-title'),
-            titleLink: document.getElementById('yt-title-link'),
-            
-            descWrapper: document.getElementById('yt-desc-wrapper'),
-            desc: document.getElementById('yt-desc'),
-            
-            playlistCol: document.getElementById('yt-playlist-col'),
-            playlistItems: document.getElementById('yt-playlist-items')
+            content: this.dialog.querySelector('#yt-modal-content'),
+            bg: this.dialog.querySelector('#yt-cinematic-bg'),
+            closeBtn: this.dialog.querySelector('#yt-close-btn'),
+            iframe: this.dialog.querySelector('#yt-iframe'),
+            title: this.dialog.querySelector('#yt-title'),
+            titleLink: this.dialog.querySelector('#yt-title-link'),
+            descWrapper: this.dialog.querySelector('#yt-desc-wrapper'),
+            desc: this.dialog.querySelector('#yt-desc'),
+            playlistCol: this.dialog.querySelector('#yt-playlist-col'),
+            playlistItems: this.dialog.querySelector('#yt-playlist-items')
         };
     }
 
     initListeners() {
-        this.els.closeBtn.addEventListener('click', () => { EventBus.emit('PLAY_SOUND', 'click'); this.close(); });
-        this.overlay.addEventListener('click', (e) => { if (e.target === this.overlay || e.target === this.els.bg) this.close(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.overlay.classList.contains('active')) this.close(); });
+        this.els.closeBtn.addEventListener('click', () => { EventBus.emit('PLAY_SOUND', 'click'); this.closeAction(); });
+        this.overlay.addEventListener('click', (e) => { if (e.target === this.overlay || e.target === this.els.bg) this.closeAction(); });
         
-        EventBus.on('MODAL_OPEN_YOUTUBE', ({ item, triggerElement }) => {
-            const precalculatedColor = triggerElement ? triggerElement.dataset.extractedColor : null;
-            this.open(item, precalculatedColor);
+        this.dialog.addEventListener('cancel', (e) => {
+            e.preventDefault(); 
+            this.closeAction();
         });
+
+        AppStore.subscribe((state, prevState) => {
+            const wasOpen = prevState?.modal?.isOpen && prevState?.modal?.type === 'youtube';
+            const isOpen = state.modal.isOpen && state.modal.type === 'youtube';
+            const idChanged = state.modal.dataId !== prevState?.modal?.dataId;
+            const dataJustLoaded = state.data.isMediaLoaded && !prevState?.data?.isMediaLoaded;
+
+            if ((isOpen && !wasOpen) || (isOpen && idChanged) || (isOpen && dataJustLoaded)) {
+                this.tryOpen(state.modal.dataId);
+            } else if (!isOpen && wasOpen) {
+                this.closeDOM();
+            }
+        });
+    }
+
+    tryOpen(id) {
+        const state = AppStore.getState();
+        if (!state.data.isMediaLoaded) return; 
+
+        const item = state.data.media.find(i => i.id === id || i.title === id);
+        
+        if (item) {
+            this.open(item, null);
+        } else {
+            console.warn(`[YoutubeModal] Видео с ID "${id}" не найдено в базе.`);
+            this.closeAction();
+        }
+    }
+
+    closeAction() {
+        AppRouter.updateQuery({ modal: null, id: null });
     }
 
     updateGoogleLinks(text) {
@@ -119,7 +149,8 @@ export class YoutubeModalManager {
         this.renderPlaylist(item.videos, effectiveStatus);
 
         document.body.classList.add('modal-open');
-        this.overlay.classList.add('active');
+        this.dialog.showModal();
+        requestAnimationFrame(() => this.overlay.classList.add('active'));
     }
 
     async extractAndApplyColor(imageUrl) {
@@ -152,7 +183,6 @@ export class YoutubeModalManager {
             const card = document.createElement('div');
             card.className = `yt-playlist-card ${index === 0 ? 'active' : ''}`;
             
-            // Внедряем дизайн карточек как в основной модалке
             card.innerHTML = `
                 <div class="yt-thumb">
                     <img src="https://img.youtube.com/vi/${loopYtId}/hqdefault.jpg" alt="thumbnail">
@@ -209,9 +239,12 @@ export class YoutubeModalManager {
         }
     }
 
-    close() {
+    closeDOM() {
         this.overlay.classList.remove('active');
         document.body.classList.remove('modal-open');
-        setTimeout(() => { this.els.iframe.src = ''; }, 300);
+        setTimeout(() => { 
+            this.els.iframe.src = ''; 
+            this.dialog.close();
+        }, 300);
     }
 }

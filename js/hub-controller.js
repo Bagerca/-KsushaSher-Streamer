@@ -22,14 +22,17 @@ export class HubController {
 
     embedTwitch() {
         let domain = window.location.hostname || "localhost";
-        if (domain === "127.0.0.1") domain = "localhost";
+        // Twitch не принимает пустой домен или 127.0.0.1 в качестве parent
+        if (domain === "127.0.0.1" || domain === "") domain = "localhost";
 
         if (this.els.playerContainer) {
+            // Добавлен autoplay=false чтобы плеер не падал при блокировках браузером
             this.els.playerContainer.innerHTML = `
                 <iframe 
-                    src="https://player.twitch.tv/?channel=${AppConfig.twitch.channel}&parent=${domain}&muted=true" 
+                    src="https://player.twitch.tv/?channel=${AppConfig.twitch.channel}&parent=${domain}&muted=true&autoplay=false" 
                     allowfullscreen="true"
-                    class="twitch-iframe">
+                    class="twitch-iframe"
+                    sandbox="allow-scripts allow-same-origin allow-presentation">
                 </iframe>
             `;
         }
@@ -38,7 +41,8 @@ export class HubController {
             this.els.chatContainer.innerHTML = `
                 <iframe 
                     src="https://www.twitch.tv/embed/${AppConfig.twitch.channel}/chat?darkpopout&parent=${domain}"
-                    class="twitch-iframe">
+                    class="twitch-iframe"
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             `;
         }
@@ -77,7 +81,5 @@ export class HubController {
                 </a>
             `;
         }).join('');
-        
-        // Лог радара при обновлении отключен по просьбе пользователя
     }
 }

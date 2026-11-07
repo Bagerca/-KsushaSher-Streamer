@@ -1,7 +1,7 @@
 /* js/hero-controller.js */
 import { AppConfig } from './config.js';
 import EventBus from './event-bus.js';
-import { Typewriter } from './utils/Typewriter.js'; // Подключаем наш новый модуль
+import { Typewriter } from './utils/Typewriter.js';
 
 export class HeroController {
     constructor() {
@@ -26,21 +26,17 @@ export class HeroController {
     init() {
         if (!this.els.heroSection) return;
         
-        // Инициализируем бегущую строку через наш новый класс
         if (this.els.dataTicker) {
             this.typewriter = new Typewriter(this.els.dataTicker);
-            // Передаем функцию () => this.messages, чтобы при обновлении массива машинка подхватывала новые данные
             setTimeout(() => this.typewriter.loop(() => this.messages), 1000);
         }
         
-        // Подписываемся на реальные данные с Twitch API
         EventBus.on('TWITCH_DATA_UPDATED', (data) => this.updateDynamicData(data));
     }
 
     updateDynamicData(data) {
         const formatNum = (num) => num >= 1000 ? (num / 1000).toFixed(1) + 'K' : num.toString();
 
-        // 1. Обновляем массив сообщений
         let newMessages = [
             "АНАЛИЗ СТАТИСТИКИ КАНАЛА...",
             `АГЕНТОВ В СЕТИ: ${formatNum(data.followers)}`,
@@ -57,10 +53,10 @@ export class HeroController {
 
         this.messages = newMessages;
 
-        // 2. Обновляем UI бейджа статуса
         if (this.els.statusText && this.els.statusDot && this.els.statusOuter) {
             const isLive = data.isLive;
-            const color = isLive ? '#ff4444' : 'var(--neon-pink)';
+            // ИСПРАВЛЕНИЕ: была опечатка в имени CSS-переменной
+            const color = isLive ? '#ff4444' : 'var(--color-neon-pink)';
             const text = isLive ? 'В ЭФИРЕ' : 'СИСТЕМА АКТИВНА';
             
             this.els.statusText.textContent = text;

@@ -3,36 +3,36 @@
 .crypto-terminal-wrapper {
     max-width: 500px; margin: 0 auto;
     background: rgba(0, 0, 0, 0.6); 
-    border: 1px solid rgba(57, 255, 20, 0.2);
+    border: 1px solid color-mix(in srgb, var(--color-neon-green) 20%, transparent);
     border-radius: 16px 0 16px 0; padding: 30px;
     position: relative; backdrop-filter: blur(10px); 
-    transition: transform 0.3s ease; z-index: 20; 
+    transition: transform var(--transition-normal); z-index: 20; 
 }
 .crypto-terminal-wrapper:hover { transform: translateY(-2px); }
 
 .crypto-terminal-wrapper::before, .crypto-terminal-wrapper::after {
-    content: ''; position: absolute; width: 25px; height: 25px; border: 2px solid var(--neon-green); 
-    transition: width 0.4s ease-out, height 0.4s ease-out, filter 0.3s ease; pointer-events: none; box-sizing: border-box; z-index: 10;
+    content: ''; position: absolute; width: 25px; height: 25px; border: 2px solid var(--color-neon-green); 
+    transition: width 0.4s ease-out, height 0.4s ease-out, filter var(--transition-normal); pointer-events: none; box-sizing: border-box; z-index: 10;
 }
 .crypto-terminal-wrapper::before { top: -1px; left: -1px; border-right: none; border-bottom: none; border-radius: 16px 0 0 0; }
 .crypto-terminal-wrapper::after { bottom: -1px; right: -1px; border-left: none; border-top: none; border-radius: 0 0 16px 0; }
-.crypto-terminal-wrapper:hover::before, .crypto-terminal-wrapper:hover::after { width: calc(100% + 2px); height: calc(100% + 2px); filter: drop-shadow(0 0 5px var(--neon-green)); }
+.crypto-terminal-wrapper:hover::before, .crypto-terminal-wrapper:hover::after { width: calc(100% + 2px); height: calc(100% + 2px); filter: drop-shadow(0 0 5px var(--color-neon-green)); }
 
-.terminal-label { font-family: 'monospace'; color: var(--neon-green); font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 2px; opacity: 0.7; transition: 0.3s; line-height: 1.4; }
-.crypto-terminal-wrapper:hover .terminal-label { opacity: 1; text-shadow: 0 0 5px var(--neon-green); }
+.terminal-label { font-family: var(--font-code); color: var(--color-neon-green); font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 2px; opacity: 0.7; transition: var(--transition-normal); line-height: 1.4; }
+.crypto-terminal-wrapper:hover .terminal-label { opacity: 1; text-shadow: 0 0 5px var(--color-neon-green); }
 
-.card-number-box { background: linear-gradient(135deg, #222 0%, #111 100%); border: 1px solid #444; border-radius: 10px; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; position: relative; overflow: hidden; transition: 0.3s; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); min-height: 80px; }
-.card-number-box:hover { border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+.card-number-box { background: linear-gradient(135deg, #222 0%, #111 100%); border: 1px solid #444; border-radius: 10px; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; position: relative; overflow: hidden; transition: var(--transition-normal); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); min-height: 80px; }
+.card-number-box:hover { border-color: var(--color-text-white); box-shadow: 0 0 15px rgba(255,255,255,0.1); }
 
 .card-chip { width: 40px; height: 30px; background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%); border-radius: 4px; margin-right: 10px; position: relative; }
 .card-chip::before { content: ''; position: absolute; inset: 0; background: url('data:image/svg+xml;utf8,<svg width="40" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg"><path d="M10 0v30M30 0v30M0 15h40M10 10h20M10 20h20" stroke="rgba(0,0,0,0.3)" fill="none" stroke-width="1"/></svg>'); }
 
-.card-digits { font-family: 'Orbitron', monospace; font-size: 1.25rem; font-weight: 700; color: #fff; letter-spacing: 0.5px; display: flex; gap: 5px; justify-content: center; transition: color 0.3s ease, text-shadow 0.3s ease; }
-.card-digits.success-mode { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green); gap: 0; letter-spacing: 3px; font-size: 1.2rem; }
+.card-digits { font-family: var(--font-header), monospace; font-size: 1.25rem; font-weight: 700; color: var(--color-text-white); letter-spacing: 0.5px; display: flex; gap: 5px; justify-content: center; transition: color 0.3s ease, text-shadow 0.3s ease; }
+.card-digits.success-mode { color: var(--color-neon-green); text-shadow: 0 0 10px var(--color-neon-green), 0 0 20px var(--color-neon-green); gap: 0; letter-spacing: 3px; font-size: 1.2rem; }
 
-.copy-icon { color: #666; font-size: 1.2rem; transition: 0.3s; margin-left: 10px; flex-shrink: 0; }
-.card-number-box:hover .copy-icon { color: var(--neon-green); }
-.card-number-box.copied .copy-icon { color: var(--neon-green); opacity: 0.5; }
+.copy-icon { color: var(--color-text-muted); font-size: 1.2rem; transition: var(--transition-normal); margin-left: 10px; flex-shrink: 0; }
+.card-number-box:hover .copy-icon { color: var(--color-neon-green); }
+.card-number-box.copied .copy-icon { color: var(--color-neon-green); opacity: 0.5; }
 
 .scan-line { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-20deg); transition: 0.5s; }
 .card-number-box:hover .scan-line { left: 150%; transition: 0.7s ease-in-out; }
@@ -42,23 +42,16 @@
    ========================================= */
 
 @media (max-width: 768px) {
-    /* Уменьшаем отступы внешней рамки, чтобы карточка могла стать шире */
     .crypto-terminal-wrapper { padding: 25px 15px; }
-    
-    /* Делаем заголовок мельче и разрешаем правильный перенос */
     .terminal-label { font-size: 0.65rem; letter-spacing: 1px; word-break: break-word; padding: 0 10px; }
-    
     .card-number-box { padding: 15px 12px; min-height: 65px; }
     .card-chip { display: none; }
     
-    /* Уменьшаем шрифт цифр и убираем отступы между блоками цифр */
     .card-digits { font-size: 0.95rem; gap: 2px; letter-spacing: 0; }
     .card-digits.success-mode { font-size: 0.8rem; letter-spacing: 1px; }
-    
     .copy-icon { font-size: 1rem; margin-left: 8px; }
 }
 
-/* Для совсем узких экранов (iPhone SE и т.д. < 360px) */
 @media (max-width: 380px) {
     .crypto-terminal-wrapper { padding: 20px 10px; }
     .card-number-box { padding: 12px 10px; }

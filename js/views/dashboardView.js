@@ -1,0 +1,244 @@
+/* js/views/dashboardView.js */
+import { getArchiveView } from './archiveView.js';
+
+export function getDashboardView() {
+    return `
+    <!-- СЕКЦИЯ 1: HERO -->
+    <section class="hero-section-hud" id="hero">
+        <div class="hud-container">
+            <div class="hud-side-panel left">
+                <div class="panel-content">
+                    <div class="panel-header"><span class="header-title">СОЮЗНИК</span><span class="header-deco-line"></span></div>
+                    <div class="ally-container">
+                        <img src="" alt="Ally Avatar" class="panel-avatar main-photo tetla" data-character="tetla">
+                        <h3><span id="inject-bot-name">BOT</span> <span class="bot-version">v0.0</span></h3>
+                    </div>
+                    <div class="ally-terminal" id="terminal-box">
+                        <div id="terminal-history"></div>
+                        <div class="command-line"><span class="prompt">></span><input type="text" id="cmd-input" autocomplete="off" spellcheck="false"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-main-display">
+                <div class="main-avatar-container">
+                    <div class="main-display-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+                    <img src="" alt="Main Avatar" class="main-display-avatar main-photo ksusha" data-character="ksusha">
+                </div>
+                <div class="main-display-status">
+                    <div id="live-status-container" class="status-container-inner">
+                        <span class="status-indicator"></span><span class="status-text">ПРЯМАЯ ТРАНСЛЯЦИЯ</span>
+                    </div>
+                    <div id="music-controls-container" class="music-controls-inner">
+                        <button class="music-btn" id="btn-prev" title="Предыдущий трек"><i class="fas fa-backward-step"></i></button>
+                        <button class="music-btn play-btn" id="btn-play" title="Играть/Пауза"><i class="fas fa-play"></i></button>
+                        <button class="music-btn" id="btn-next" title="Следующий трек"><i class="fas fa-forward-step"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-side-panel right" id="squad-panel">
+                <div class="panel-content">
+                    <div class="squad-default-view" id="squad-view">
+                        <div class="panel-header"><span class="header-title">ОТРЯД</span><span class="header-deco-line"></span></div>
+                        <div class="squad-list"></div>
+                    </div>
+                    
+                    <div class="squad-detail-view"></div>
+                    
+                    <div class="music-playlist-view" id="music-view">
+                        <div class="panel-header music-panel-header">
+                            <span class="header-title" style="background: var(--color-neon-pink); color: #fff;">MUSIC</span>
+                            <div class="volume-ticks-container" id="volume-ticks"></div>
+                        </div>
+                        <div class="music-progress-area" id="progress-area">
+                            <div class="music-progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="playlist-container" id="playlist-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-content-hud">
+            <h1 class="hero-title-hud" id="inject-main-name">STREAMER</h1>
+            <p class="hero-subtitle-hud" id="data-ticker">INIT...</p>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 2: ОБО МНЕ -->
+    <section id="about" class="about-cyber-section">
+        <div class="container">
+            <div class="about-layout-wrapper">
+                <div class="about-top-row">
+                    <article class="dossier-text">
+                        <div class="bio-header"><span class="bio-icon"><i class="fas fa-terminal"></i></span><h3 class="bio-title">БИОГРАФИЯ</h3></div>
+                        <p id="twitch-bio-text">Инициализация био...</p>
+                        <p>Мой канал — это место, где хардкорный гейминг встречается с душевными разговорами. Мы проходим хорроры, смеемся над багами и строим самое <span class="pink-highlight">дружное комьюнити</span> на <a href="#" target="_blank" class="twitch-link">Twitch</a>.</p>
+                        <div class="dossier-stats"><div class="stat-tag">🎮 Variety</div><div class="stat-tag">💬 Just Chatting</div><div class="stat-tag">👻 Horror</div></div>
+                    </article>
+                    <aside class="cyber-monitor">
+                        <div class="video-wrapper">
+                            <div class="monitor-header"><span>REC <span class="rec-dot">●</span></span><span>CAM_01 [LIVE]</span></div>
+                            <!-- Добавлены атрибуты защиты для YouTube iframe -->
+                            <div class="video-frame"><iframe src="" title="Обо мне" frameborder="0" allowfullscreen loading="lazy" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"></iframe><div class="screen-grid"></div></div>
+                            <div class="monitor-footer"><span>SIGNAL: <span class="signal-status">STRONG</span></span><span>1080p / 60FPS</span></div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div> 
+        <div class="subs-marquee-wrapper">
+            <div class="marquee-header-centered"><span class="pulse-dot"></span> АКТИВНЫЕ АГЕНТЫ СЕТИ</div>
+            <div class="marquee-track-container"><div class="marquee-track" id="subscribers-track"></div></div>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 3: DASHBOARD -->
+    <section id="command-center" class="command-center-section">
+        <div class="hud-grid-bg"></div>
+        <div class="container">
+            <div class="command-header">
+                <div class="cyber-header-wrapper">
+                    <div class="cyber-header-sub">MISSION_CONTROL // NETWORK_HUB</div>
+                    <h2 class="cyber-header-main">КОМАНДНЫЙ ЦЕНТР</h2>
+                    <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
+                </div>
+            </div>
+            <div class="hub-grid">
+                <div class="cmd-panel stats-panel">
+                    <div class="hud-bracket top-left"></div>
+                    <div class="hud-bracket bottom-right"></div>
+                    <div class="stats-grid-container">
+                        <div class="stat-box">
+                            <i class="fas fa-users stat-icon stat-color-green"></i>
+                            <div class="stat-info">
+                                <div class="stat-label">АГЕНТЫ В СЕТИ</div>
+                                <div class="stat-value" id="stat-followers">----</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-comment-dots stat-icon stat-color-blue" id="stat-icon-viewers"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-viewers">АКТИВНОСТЬ ЧАТА</div>
+                                <div class="stat-value stat-color-blue" id="stat-viewers">----</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-quote-left stat-icon stat-color-pink"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-game">ПОСЛЕДНИЙ ЭФИР</div>
+                                <div class="stat-value small stat-color-pink" id="stat-game">----</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-clock stat-icon stat-color-yellow" id="stat-icon-time"></i>
+                            <div class="stat-info">
+                                <div class="stat-label" id="stat-label-time">ПОСЛЕДНИЙ ВХОД</div>
+                                <div class="stat-value stat-color-yellow" id="stat-time">----</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hub-col-main">
+                    <div class="cmd-panel player-panel">
+                        <div class="hud-bracket top-left"></div>
+                        <div class="cmd-panel-header"><span class="header-tag">BROADCAST</span><h3><i class="fas fa-video"></i> ПРЯМОЙ ЭФИР</h3><div class="header-line"></div></div>
+                        <div class="twitch-player-wrapper" id="hub-player-container"><div class="player-loader"><i class="fas fa-circle-notch fa-spin"></i> УСТАНОВКА СВЯЗИ...</div></div>
+                    </div>
+                    <div class="cmd-panel chat-panel">
+                        <div class="hud-bracket bottom-left"></div>
+                        <div class="twitch-chat-wrapper" id="hub-chat-container"></div>
+                    </div>
+                </div>
+
+                <div class="hub-col-side">
+                    <div class="cmd-panel network-panel">
+                        <div class="hud-bracket top-right"></div>
+                        <div class="cmd-panel-header"><span class="header-tag">RADAR</span><h3><i class="fas fa-satellite-dish"></i> СОЮЗНАЯ СЕТЬ</h3><div class="header-line"></div></div>
+                        <div class="network-list" id="hub-network-list"><div class="network-loading">СКАНИРОВАНИЕ ЧАСТОТ...</div></div>
+                    </div>
+                    <div class="cmd-panel mission-panel">
+                        <div class="hud-bracket bottom-right"></div>
+                        <div class="cmd-panel-header"><span class="header-tag">PLANNING</span><h3><i class="fab fa-twitch"></i> РАСПИСАНИЕ TWITCH</h3><div class="header-line"></div></div>
+                        <div class="mission-timeline" id="schedule-container"><div class="network-loading">СИНХРОНИЗАЦИЯ С TWITCH...</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ВСТРАИВАЕМ АРХИВ -->
+    ${getArchiveView()}
+
+    <!-- СЕКЦИЯ 5: SPECS -->
+    <section id="specs" class="specs-section">
+        <div class="specs-bg-grid"></div>
+        <div class="container">
+            <div class="cyber-header-wrapper">
+                <div class="cyber-header-sub">SYSTEM_CONFIGURATION // V.2.0</div>
+                <h2 class="cyber-header-main">МОЕ ЖЕЛЕЗО</h2>
+                <div class="cyber-header-lines"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
+            </div>
+            <div class="specs-grid"></div>
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ 6: DONATION -->
+    <section id="donation" class="donation-section">
+        <div class="container">
+            <h2 class="section-title">ПОДДЕРЖАТЬ</h2>
+            <p class="section-subtitle">Внеси свой вклад в развитие трансляции и улучшение качества контента</p>
+            <div class="donation-grid">
+                <a href="#" target="_blank" class="donate-card" style="--card-color: #ff8c00;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-sack-dollar"></i></div><div class="donate-info"><h3>DonationAlerts</h3><p>Отправить сообщение</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
+                <a href="#" target="_blank" class="donate-card" style="--card-color: #ff2d95;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fas fa-ghost"></i></div><div class="donate-info"><h3>MemeAlerts</h3><p>Напугать стримера</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
+                <a href="#" target="_blank" class="donate-card" style="--card-color: #9146ff;"><div class="card-glow"></div><div class="card-inner"><div class="donate-icon"><i class="fab fa-twitch"></i></div><div class="donate-info"><h3>Twitch Sub</h3><p>Оформить подписку</p></div><div class="donate-arrow"><i class="fas fa-chevron-right"></i></div></div></a>
+            </div>
+            <div class="crypto-terminal-wrapper">
+                <div class="terminal-label">DIRECT_TRANSFER_PROTOCOL // SBER</div>
+                <div class="card-number-box" id="card-number">
+                    <div class="card-chip"></div>
+                    <div class="card-digits"><span>4276</span><span>1805</span><span>5058</span><span>1960</span></div>
+                    <div class="copy-icon"><i class="far fa-copy"></i></div>
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="cyber-footer">
+        <div class="footer-line"></div>
+        <div class="footer-bg-grid"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <h3 class="footer-brand"><span id="inject-footer-brand">STREAMER</span> <span class="brand-ver">OS v.5.6</span></h3>
+                    <p class="dev-credits">SYSTEM ARCHITECT: <a href="https://github.com/Bagerca" target="_blank" class="dev-name"></a></p>
+                </div>
+                <div class="footer-center">
+                    <div class="footer-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">СИСТЕМА ЗАЩИЩЕНА</span>
+                    </div>
+                    <div class="footer-barcode-container" title="[ HIDDEN DATA_LINK // SCAN TO DECODE ]"></div>
+                    <p class="copyright"></p>
+                </div>
+                <div class="footer-right">
+                    <div class="social-hud">
+                        <a href="#" target="_blank" class="hud-btn twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
+                        <a href="#" target="_blank" class="hud-btn youtube" title="YouTube (Main)"><i class="fab fa-youtube"></i></a>
+                        <a href="#" target="_blank" class="hud-btn youtube-alt" title="YouTube (Live/VOD)"><i class="fab fa-youtube"></i></a>
+                        <a href="#" target="_blank" class="hud-btn telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a href="#" target="_blank" class="hud-btn vk" title="VKontakte"><i class="fab fa-vk"></i></a>
+                        <a href="#" target="_blank" class="hud-btn discord" title="Discord"><i class="fab fa-discord"></i></a>
+                        <a href="#" target="_blank" class="hud-btn tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" target="_blank" class="hud-btn fetta" title="Fetta"><i class="fas fa-bolt"></i></a>
+                        <a href="#" target="_blank" class="hud-btn steam" title="Steam"><i class="fab fa-steam"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    `;
+}

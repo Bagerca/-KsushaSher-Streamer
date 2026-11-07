@@ -99,7 +99,7 @@ export class TerminalController {
         this.availableCommands = [
             'help', 'clear', 'status', 'music', 'player', 'dragon', 'lizard', 
             'comet', 'godmode', 'whoami', 'neofetch', 'ping', 'sudo', 
-            'socials', 'schedule', 'specs', 'hack', '8ball', 'roll', 'angel', 'bagerca'
+            'socials', 'schedule', 'specs', 'youtube', 'scan', 'hack', '8ball', 'roll', 'angel', 'bagerca'
         ];
         
         this.init();
@@ -112,7 +112,6 @@ export class TerminalController {
         this.fx.startSystemNoise();
     }
     
-    // ИСПРАВЛЕНИЕ: Добавлены новые теги в словарь раскраски (REPO, BIOSHOCK и т.д.)
     colorizeLog(text) {
         return text.replace(/^\[(.*?)\]/, (match, prefix) => {
             let color = '#00ccff'; 

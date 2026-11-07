@@ -1,10 +1,14 @@
 /* css/hub/hub-twitch.css */
 .player-panel { padding: 12px; flex-shrink: 0; } 
 
-.chat-panel { flex-grow: 1; padding: 12px; display: flex; flex-direction: column; } 
+/* ИСПРАВЛЕНИЕ: Выносим панель чата выше всех комет (у комет z-index: 10) */
+.chat-panel { 
+    flex-grow: 1; padding: 12px; display: flex; flex-direction: column; 
+    position: relative; z-index: 50; 
+} 
 
 .twitch-player-wrapper, .twitch-chat-wrapper {
-    width: 100%; background: #000;
+    width: 100%; background: var(--color-bg-dark);
     border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
     position: relative; 
     z-index: 100;
@@ -21,7 +25,7 @@
     z-index: 101;
 }
 
-.player-loader { font-family: 'Orbitron', sans-serif; color: var(--neon-pink); letter-spacing: 2px; font-weight: bold; }
+.player-loader { font-family: var(--font-header); color: var(--color-neon-pink); letter-spacing: 2px; font-weight: bold; }
 
 @media (max-width: 1200px) { 
     .twitch-player-wrapper { max-width: 800px; margin: 0 auto; } 

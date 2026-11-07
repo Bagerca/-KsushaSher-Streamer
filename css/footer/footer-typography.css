@@ -1,55 +1,55 @@
 /* css/footer/footer-typography.css */
 
 .footer-brand {
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-header);
     font-size: 1.3rem;
-    color: #fff;
+    color: var(--color-text-white);
     letter-spacing: 2px;
     text-shadow: 0 0 10px rgba(255,255,255,0.2);
     margin: 0;
 }
 
 .brand-ver {
-    font-family: 'Rajdhani', sans-serif;
+    font-family: var(--font-tech);
     font-size: 0.75rem;
-    background: var(--neon-pink);
+    background: var(--color-neon-pink);
     padding: 2px 6px;
     border-radius: 4px;
     vertical-align: middle;
     margin-left: 8px;
     font-weight: 800;
-    color: #fff;
+    color: var(--color-text-white);
     letter-spacing: 1px;
-    box-shadow: 0 0 10px rgba(255, 45, 149, 0.4);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--color-neon-pink) 40%, transparent);
 }
 
 .copyright {
-    font-family: 'Exo 2', sans-serif;
+    font-family: var(--font-primary);
     font-size: 0.75rem;
-    color: #777;
+    color: var(--color-text-muted);
     margin: 0;
     letter-spacing: 1px;
 }
 
 .dev-credits {
-    font-family: 'Rajdhani', sans-serif;
+    font-family: var(--font-tech);
     font-size: 0.8rem;
-    color: #555;
+    color: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
     text-transform: uppercase;
     margin: 0;
     letter-spacing: 1px;
 }
 
 .dev-name {
-    color: var(--bagerka-color, #ff4444);
+    color: var(--squad-bagerka);
     font-weight: 700;
-    transition: 0.3s;
+    transition: var(--transition-normal);
     text-decoration: none;
     display: inline-block;
 }
 
 .dev-name:hover {
-    text-shadow: 0 0 10px var(--bagerka-color, #ff4444);
+    text-shadow: 0 0 10px var(--squad-bagerka);
     transform: scale(1.05);
 }
 

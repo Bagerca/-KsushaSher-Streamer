@@ -1,0 +1,75 @@
+/* css/variables.css */
+
+/* =========================================
+   DESIGN TOKENS (ЕДИНЫЙ РЕЕСТР ПЕРЕМЕННЫХ)
+   ========================================= */
+:root {
+    /* --- 1. ПАЛИТРА БРЕНДА (BRAND COLORS) --- */
+    --color-neon-green: #39ff14;
+    --color-neon-pink: #ff2d95;
+    --color-accent-blue: #00ccff;
+    --color-warning-yellow: #ffd700;
+    --color-danger-red: #ff4444;
+    
+    /* --- 2. БРЕНДЫ СОЦСЕТЕЙ (SOCIAL COLORS) --- */
+    --color-twitch: #9146ff;
+    --color-youtube: #ff0000;
+    --color-telegram: #00ccff;
+    --color-vk: #0077FF;
+    --color-discord: #5865F2;
+    --color-steam: #66c0f4;
+    --color-tiktok: var(--color-neon-pink);
+    --color-fetta: var(--color-warning-yellow);
+    
+    /* --- 3. БАЗОВЫЕ ЦВЕТА ФОНА (BACKGROUNDS) --- */
+    --color-bg-dark: #050508;
+    --color-bg-medium: #0a0b10;
+    --color-bg-panel: rgba(10, 11, 16, 0.95);
+    --color-bg-overlay: rgba(5, 5, 8, 0.95);
+    
+    /* --- 4. ЦВЕТА ТЕКСТА (TYPOGRAPHY COLORS) --- */
+    --color-text-white: #ffffff;
+    --color-text-light: #cccccc;
+    --color-text-muted: #888888;
+    --color-text-dark: #000000;
+
+    /* --- 5. СЕМАНТИЧЕСКИЕ СТАТУСЫ (STATUS COLORS) --- */
+    --status-completed: var(--color-neon-green);
+    --status-playing: var(--color-accent-blue);
+    --status-dropped: var(--color-danger-red);
+    --status-on-hold: var(--color-warning-yellow);
+    --status-suggested: var(--color-neon-pink);
+
+    /* --- 6. ЦВЕТА ОТКРЯДА (SQUAD COLORS) --- */
+    --squad-bagerka: var(--color-danger-red);
+    --squad-angel: #ff4504;
+    --squad-kiriki: var(--color-accent-blue);
+
+    /* --- 7. ТИПОГРАФИКА (FONTS) --- */
+    --font-primary: 'Exo 2', sans-serif;
+    --font-header: 'Orbitron', sans-serif;
+    --font-tech: 'Rajdhani', sans-serif;
+    --font-code: monospace;
+
+    /* --- 8. ГЛОБАЛЬНАЯ СИСТЕМА СЛОЕВ (Z-INDEX MATRIX) --- */
+    --z-matrix: -10;
+    --z-bg: 0;
+    --z-base: 1;
+    --z-content: 10;
+    --z-controls: 50;
+    --z-header: 100;
+    --z-overlay: 500;
+    --z-modal: 1000;
+    --z-system: 9999;
+
+    /* --- 9. ПАРАМЕТРЫ АНИМАЦИЙ (TRANSITIONS) --- */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* --- 10. СКРОЛЛБАРЫ (SCROLLBARS) --- */
+    --scroll-size: 6px;
+    --scroll-track: rgba(255, 255, 255, 0.05);
+    --scroll-thumb: var(--color-neon-green);
+    --scroll-thumb-hover: var(--color-text-white);
+}

@@ -1,6 +1,5 @@
 /* js/audio-core.js */
 import EventBus from './event-bus.js';
-import { loadData } from './api.js';
 import { AppConfig } from './config.js';
 
 export class AudioCore {
@@ -22,14 +21,10 @@ export class AudioCore {
     }
 
     async loadTracks() {
-        try {
-            const data = await loadData('music.json', AppConfig.audio.fallbackTracks);
-            this.tracks = Array.isArray(data) && data.length > 0 ? data : AppConfig.audio.fallbackTracks;
-            console.log(`🎵 [AudioCore] Загружено треков: ${this.tracks.length}`);
-        } catch (error) {
-            console.error("❌ [AudioCore] Ошибка загрузки плейлиста:", error);
-            this.tracks = AppConfig.audio.fallbackTracks;
-        }
+        // Берем треки напрямую из конфига, без попыток fetch-запросов к music.json
+        this.tracks = AppConfig.audio.fallbackTracks || [];
+        console.log(`🎵 [AudioCore] Загружено треков из конфига: ${this.tracks.length}`);
+        return Promise.resolve();
     }
 
     initListeners() {

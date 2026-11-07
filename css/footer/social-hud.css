@@ -8,9 +8,9 @@
 .hud-btn {
     width: 40px; height: 40px; 
     display: flex; align-items: center; justify-content: center;
-    color: #aaa;
+    color: var(--color-text-light);
     font-size: 1.1rem;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: all var(--transition-normal);
     position: relative;
     border: none;
     background-color: var(--btn-border-color, rgba(255, 255, 255, 0.15));
@@ -22,36 +22,36 @@
     content: '';
     position: absolute;
     inset: 1px; 
-    background: #0a0a0a;
+    background: var(--color-bg-medium);
     clip-path: var(--clip-shape);
     z-index: 1;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
 }
 
 .hud-btn i {
     position: relative;
     z-index: 2; 
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
 }
 
-/* Цветовые переменные брендов */
-.hud-btn.twitch   { --btn-border-color: #9146ff; }
-.hud-btn.youtube  { --btn-border-color: #ff0000; }
-.hud-btn.telegram { --btn-border-color: #0088cc; }
-.hud-btn.vk       { --btn-border-color: #0077FF; }
-.hud-btn.discord  { --btn-border-color: #5865F2; }
-.hud-btn.tiktok   { --btn-border-color: #ff2d95; }
-.hud-btn.fetta    { --btn-border-color: #ffd700; }
-.hud-btn.steam    { --btn-border-color: #66c0f4; } /* Steam Color */
+/* Цветовые переменные брендов теперь берутся из variables.css */
+.hud-btn.twitch   { --btn-border-color: var(--color-twitch); }
+.hud-btn.youtube  { --btn-border-color: var(--color-youtube); }
+.hud-btn.telegram { --btn-border-color: var(--color-telegram); }
+.hud-btn.vk       { --btn-border-color: var(--color-vk); }
+.hud-btn.discord  { --btn-border-color: var(--color-discord); }
+.hud-btn.tiktok   { --btn-border-color: var(--color-tiktok); }
+.hud-btn.fetta    { --btn-border-color: var(--color-fetta); }
+.hud-btn.steam    { --btn-border-color: var(--color-steam); } 
 
 /* ВТОРАЯ КНОПКА YOUTUBE (Изначально серебристая) */
-.hud-btn.youtube-alt { --btn-border-color: #888888; }
-.hud-btn.youtube-alt i { color: #888; }
+.hud-btn.youtube-alt { --btn-border-color: var(--color-text-muted); }
+.hud-btn.youtube-alt i { color: var(--color-text-muted); }
 
 /* Состояние Hover */
 .hud-btn:hover {
     transform: translateY(-2px);
-    color: #fff;
+    color: var(--color-text-white);
     filter: drop-shadow(0 0 8px var(--btn-border-color));
 }
 
@@ -60,12 +60,12 @@
 }
 
 .hud-btn:hover i { 
-    color: #fff; 
+    color: var(--color-text-white); 
 }
 
 /* Особый Hover для второй кнопки (Становится красной) */
 .hud-btn.youtube-alt:hover {
-    --btn-border-color: #ff0000;
+    --btn-border-color: var(--color-youtube);
 }
 
 /* =========================================
@@ -76,7 +76,6 @@
         justify-content: center; 
         flex-wrap: wrap; 
         gap: 12px 10px; 
-        /* Увеличена ширина, чтобы уместилось 5 кнопок в ряд */
         max-width: 250px; 
         margin: 0 auto;
     }

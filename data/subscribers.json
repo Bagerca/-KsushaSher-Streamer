@@ -1,25 +1,39 @@
 [
   {
+    "id": "ksusha",
+    "name": "ksusha__sher",
+    "squadName": "Ksusha Sher",
+    "twitch": "ksusha__sher",
+    "role": "Creator / Streamer",
+    "createdAt": "2020-04-15",
+    "color": "#ff2d95",
+    "mainIcon": "fas fa-crown",
+    "typeIcon": "fas fa-star",
+    "avatarPath": "assets/images/ksusha.jpg",
+    "description": "Создательница этого хаоса и главная стримерша. Контролирует всё.",
+    "hasTierlist": true
+  },
+  {
     "id": "tetla",
     "name": "Tetlabot",
+    "twitch": "tetlabits",
     "role": "fish",
-    "level": 99,
+    "createdAt": "2021-08-06",
     "color": "#319a24",
     "mainIcon": "fas fa-fish",
     "typeIcon": "fas fa-water",
-    "stats": 100,
     "description": "Искусственный интеллект, контролирующий систему. Любит рыб."
   },
   {
-    "id": "bagerka",
+    "id": "bagerca",
     "name": "BAGERcaa",
     "squadName": "BAGERca",
+    "twitch": "bagercaa",
     "role": "DEV / TECH",
-    "level": 80,
+    "createdAt": "2022-01-23",
     "color": "#ff4444",
     "mainIcon": "fas fa-laptop-code",
     "typeIcon": "fas fa-code",
-    "stats": 95,
     "avatarPath": "assets/images/bagerca.jpg",
     "description": "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах."
   },
@@ -27,12 +41,12 @@
     "id": "angel",
     "name": "to_be_ang",
     "squadName": "Angel",
+    "twitch": "to_be_ang",
     "role": "The Shining Angel",
-    "level": 75,
+    "createdAt": "2014-11-10",
     "color": "#ff4504",
     "mainIcon": "fas fa-sun",
     "typeIcon": "fas fa-star",
-    "stats": 90,
     "avatarPath": "assets/images/angel.jpg",
     "description": "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию."
   },
@@ -40,73 +54,185 @@
     "id": "kiriki",
     "name": "kiriki_oni",
     "squadName": "Kiriki",
+    "twitch": "kiriki_oni",
     "role": "Neuro wave",
-    "level": 70,
+    "createdAt": "",
     "color": "#007bff",
     "mainIcon": "fas fa-wave-square",
     "typeIcon": "fas fa-music",
-    "stats": 85,
     "avatarPath": "assets/images/kiriki.jpg",
-    "description": "Нейро-композитор и повелитель алгоритмов. Создает уникальную музыку с помощью нейросетей, превращая искусственный интеллект в инструмент искусства."
+    "description": "Нейро-композитор и повелитель алгоритмов. Создает уникальную музыку с помощью нейросетей."
   },
   {
     "id": "dragon",
     "name": "dragonsmaddison",
+    "twitch": "dragonsmaddison",
     "role": "DragonDildo",
-    "level": 69,
+    "createdAt": "2021-11-01",
     "color": "#ff000a",
     "mainIcon": "fas fa-dragon",
-    "typeIcon": "fas fa-fire",
-    "stats": 80
+    "typeIcon": "fas fa-fire"
   },
   {
     "id": "dark",
     "name": "Darkl1us",
+    "twitch": "darkl1us",
     "role": "Military Beer",
-    "level": 40,
+    "createdAt": "2015-10-08",
     "color": "#bd00ff",
     "mainIcon": "fas fa-beer",
-    "typeIcon": "fas fa-medal",
-    "stats": 60
+    "typeIcon": "fas fa-medal"
   },
   {
     "id": "nikita",
     "name": "Nikitakgc",
+    "twitch": "nikitakgc",
     "role": "Forest Expert",
-    "level": 50,
+    "createdAt": "2025-09-29",
     "color": "#2e8b57",
     "mainIcon": "fas fa-tree",
     "typeIcon": "fas fa-campground",
-    "stats": 70
+    "description": ""
   },
   {
     "id": "roma",
     "name": "Roma99...",
+    "twitch": "roma99000000",
     "role": "Orenburg Brother",
-    "level": 45,
+    "createdAt": "",
     "color": "#00ffff",
     "mainIcon": "fas fa-city",
     "typeIcon": "fas fa-user-friends",
-    "stats": 65
+    "description": ""
   },
   {
     "id": "raku6chka",
     "name": "raku6chka",
+    "twitch": "raku6chka",
     "role": "Irkutsk Brother",
-    "level": 42,
+    "createdAt": "2021-11-18",
     "color": "#17a2b8",
     "mainIcon": "far fa-handshake",
-    "typeIcon": "fas fa-map-marker-alt",
-    "stats": 62
+    "typeIcon": "fas fa-map-marker-alt"
   },
   {
     "id": "hardwell",
     "name": "h1rdwell",
+    "twitch": "h1rdwell",
     "role": "Hard Worker",
-    "level": 35,
+    "createdAt": "2017-02-23",
     "color": "#e67e22",
     "mainIcon": "fas fa-hammer",
-    "typeIcon": "fas fa-hard-hat",
-    "stats": 55
+    "typeIcon": "fas fa-hard-hat"
+  },
+  {
+    "id": "ih1mkaaaa",
+    "name": "ih1mkaaaa",
+    "squadName": "ih1mka",
+    "twitch": "ih1mkaaaa",
+    "role": "Agent",
+    "createdAt": "2025-10-11",
+    "color": "#B21F1D",
+    "mainIcon": "fas fa-user",
+    "typeIcon": "fas fa-star"
+  },
+  {
+    "id": "apalonzv",
+    "name": "apalonzv",
+    "twitch": "apalonzv",
+    "role": "Agent",
+    "color": "#bd00ff",
+    "mainIcon": "fas fa-user",
+    "typeIcon": "fas fa-terminal",
+    "createdAt": "2021-06-04"
+  },
+  {
+    "id": "redfyr",
+    "name": "RedFyr",
+    "twitch": "redfyr",
+    "role": "Agent",
+    "color": "#ff4444",
+    "mainIcon": "fas fa-fire",
+    "typeIcon": "fas fa-star",
+    "createdAt": "2017-07-27"
+  },
+  {
+    "id": "wotfot",
+    "name": "Wotfot",
+    "twitch": "wotfot",
+    "role": "Agent",
+    "color": "#39ff14",
+    "mainIcon": "fas fa-eye",
+    "typeIcon": "fas fa-satellite-dish"
+  },
+  {
+    "id": "akipi20",
+    "name": "akipi20",
+    "twitch": "akipi20",
+    "role": "Agent",
+    "color": "#ffd700",
+    "mainIcon": "fas fa-bolt",
+    "typeIcon": "fas fa-microchip",
+    "createdAt": "2022-02-27"
+  },
+  {
+    "id": "svarshik_s1d",
+    "name": "svarshik_s1d",
+    "twitch": "svarshik_s1d",
+    "role": "Agent",
+    "color": "#e67e22",
+    "mainIcon": "fas fa-hard-hat",
+    "typeIcon": "fas fa-hammer",
+    "createdAt": "2025-05-08"
+  },
+  {
+    "id": "pristalihe",
+    "name": "pristalihe",
+    "twitch": "pristalihe",
+    "role": "Agent",
+    "color": "#00ffff",
+    "mainIcon": "fas fa-ghost",
+    "typeIcon": "fas fa-skull",
+    "createdAt": "2021-07-08"
+  },
+  {
+    "id": "ayyysms",
+    "name": "ayyysms",
+    "twitch": "ayyysms",
+    "role": "Agent",
+    "color": "#ff2d95",
+    "mainIcon": "fas fa-comment-dots",
+    "typeIcon": "fas fa-terminal",
+    "createdAt": "2025-11-28"
+  },
+  {
+    "id": "me1leve",
+    "name": "Me1leve",
+    "twitch": "me1leve",
+    "role": "Agent",
+    "color": "#ff8c00",
+    "mainIcon": "fas fa-heart",
+    "typeIcon": "fas fa-music",
+    "createdAt": "2026-03-06"
+  },
+  {
+    "id": "rater_12355",
+    "name": "rater_12355",
+    "twitch": "rater_12355",
+    "role": "Agent",
+    "color": "#00ccff",
+    "mainIcon": "fas fa-database",
+    "typeIcon": "fas fa-memory",
+    "createdAt": "2024-10-25"
+  },
+  {
+    "id": "cotara_gold",
+    "name": "cotara_gold",
+    "twitch": "cotara_gold",
+    "role": "Agent",
+    "color": "#ffd700",
+    "mainIcon": "fas fa-sack-dollar",
+    "typeIcon": "fas fa-medal",
+    "createdAt": "2022-01-22"
   }
 ]

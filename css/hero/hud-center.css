@@ -1,13 +1,13 @@
 /* css/hero/hud-center.css */
 
-.hud-main-display { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; width: 300px; height: 300px; background: radial-gradient(closest-side, #050508 40%, rgba(5, 5, 8, 0) 100%); }
+.hud-main-display { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; width: 300px; height: 300px; background: radial-gradient(closest-side, var(--color-bg-dark) 40%, transparent 100%); }
 
 .main-avatar-container { position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
 
 .main-display-avatar { 
     width: 250px; height: 250px; border-radius: 50%; object-fit: cover; 
-    border: 3px solid var(--neon-pink); padding: 5px; 
-    background-color: rgba(7, 7, 17, 0.8); filter: drop-shadow(0 0 20px var(--neon-pink)); 
+    border: 3px solid var(--color-neon-pink); padding: 5px; 
+    background-color: color-mix(in srgb, var(--color-bg-dark) 80%, transparent); filter: drop-shadow(0 0 20px var(--color-neon-pink)); 
     margin: 0 auto; position: relative; z-index: 2; transition: filter 0.1s ease-out; 
 }
 
@@ -26,26 +26,26 @@
     box-shadow: 0 0 calc(5px + var(--beat, 0) * 15px) calc(var(--beat, 0) * 6px) var(--ring-color);
 }
 
-.ring-1 { width: 340px; height: 340px; margin-left: -170px; margin-top: -170px; border: 1px solid rgba(57, 255, 20, 0.1); animation: rotate-only 20s linear infinite; --ring-color: var(--neon-green); }
+.ring-1 { width: 340px; height: 340px; margin-left: -170px; margin-top: -170px; border: 1px solid color-mix(in srgb, var(--color-neon-green) 10%, transparent); animation: rotate-only 20s linear infinite; --ring-color: var(--color-neon-green); }
 .ring-1::after { 
     content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%;
-    background: conic-gradient(from 0deg, transparent 0%, transparent 20%, rgba(57, 255, 20, 0) 30%, var(--neon-green) 50%, rgba(57, 255, 20, 0) 70%, transparent 80%, transparent 100%); 
+    background: conic-gradient(from 0deg, transparent 0%, transparent 20%, rgba(57, 255, 20, 0) 30%, var(--color-neon-green) 50%, rgba(57, 255, 20, 0) 70%, transparent 80%, transparent 100%); 
     -webkit-mask: radial-gradient(transparent 68%, black 69%); mask: radial-gradient(transparent 68%, black 69%); 
     opacity: calc(0.7 + var(--beat, 0) * 0.3);
 }
 
-.ring-2 { width: 440px; height: 440px; margin-left: -220px; margin-top: -220px; border: 1px solid rgba(255, 68, 68, 0.1); animation: rotate-only 30s linear infinite reverse; --ring-color: var(--bagerka-color); }
+.ring-2 { width: 440px; height: 440px; margin-left: -220px; margin-top: -220px; border: 1px solid color-mix(in srgb, var(--color-danger-red) 10%, transparent); animation: rotate-only 30s linear infinite reverse; --ring-color: var(--squad-bagerka); }
 .ring-2::after { 
     content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%;
-    background: conic-gradient(from 180deg, transparent 0%, transparent 25%, rgba(255, 68, 68, 0) 35%, var(--bagerka-color) 55%, rgba(255, 68, 68, 0) 75%, transparent 100%); 
+    background: conic-gradient(from 180deg, transparent 0%, transparent 25%, rgba(255, 68, 68, 0) 35%, var(--squad-bagerka) 55%, rgba(255, 68, 68, 0) 75%, transparent 100%); 
     -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%); 
     opacity: calc(0.7 + var(--beat, 0) * 0.3);
 }
 
-.ring-3 { width: 580px; height: 580px; margin-left: -290px; margin-top: -290px; border: 1px dashed rgba(0, 123, 255, 0.2); animation: rotate-only 60s linear infinite; --ring-color: var(--kiriki-color); }
+.ring-3 { width: 580px; height: 580px; margin-left: -290px; margin-top: -290px; border: 1px dashed color-mix(in srgb, var(--squad-kiriki) 20%, transparent); animation: rotate-only 60s linear infinite; --ring-color: var(--squad-kiriki); }
 .ring-3::after { 
     content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 50%;
-    background: conic-gradient(from 90deg, transparent 0%, var(--kiriki-color) 25%, transparent 50%, var(--kiriki-color) 75%, transparent 100%); 
+    background: conic-gradient(from 90deg, transparent 0%, var(--squad-kiriki) 25%, transparent 50%, var(--squad-kiriki) 75%, transparent 100%); 
     -webkit-mask: radial-gradient(transparent 69%, black 70%); mask: radial-gradient(transparent 69%, black 70%); 
     opacity: calc(0.5 + var(--beat, 0) * 0.5); 
 }
@@ -54,17 +54,18 @@
 .main-display-status { 
     position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%); z-index: 12; 
     display: flex; align-items: center; justify-content: center; 
-    background: rgba(10, 11, 20, 0.95); padding: 8px 20px; 
-    border: 1px solid var(--neon-pink); border-radius: 6px; 
-    font-family: 'Orbitron', sans-serif; color: var(--neon-pink); 
+    background: var(--color-bg-panel); padding: 8px 20px; 
+    border: 1px solid var(--color-neon-pink); border-radius: 6px; 
+    font-family: var(--font-header); color: var(--color-neon-pink); 
     letter-spacing: 2px; white-space: nowrap; width: auto; 
-    box-shadow: 0 0 15px rgba(255, 45, 149, 0.2); 
+    box-shadow: 0 0 15px color-mix(in srgb, var(--color-neon-pink) 20%, transparent); 
     transition: transform 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.2s; 
     transform-origin: center center; 
 }
 
 .main-display-status.status-switching { transform: translateX(-50%) scaleY(0); opacity: 0; filter: blur(5px); }
-.status-indicator { width: 8px; height: 8px; background: var(--neon-pink); border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; }
+/* ИСПРАВЛЕНИЕ: Добавлен flex-shrink: 0 и display: block для стабильности */
+.status-indicator { display: block; flex-shrink: 0; width: 8px; height: 8px; background: var(--color-neon-pink); border-radius: 50%; margin-right: 10px; animation: pulse 1.5s infinite; }
 
 @keyframes rotate-only { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes ring-breathing { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 0.6; } 100% { transform: scale(1); opacity: 0.8; } }

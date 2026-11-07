@@ -1,33 +1,26 @@
 /* js/subscribers.js */
 import { loadData } from './api.js';
-
-// Вынесли словарь цветов из метода рендера (чистота кода)
-const ROLE_COLORS = {
-    'green': '#39ff14', 'red': '#ff4444', 'orange': '#ff8c00',
-    'blue': '#007bff', 'pink': '#ff2d95', 'cyan': '#00ffff', 'purple': '#bd00ff'
-};
+import EventBus from './event-bus.js';
+import { AgentCard } from './components/AgentCard.js';
+import { AppRouter } from './router.js';
 
 export class SubscribersManager {
     constructor() {
         this.track = document.getElementById('subscribers-track');
         
-        // Физика карусели
         this.speed = 1.0; 
         this.currentX = 0;
         this.originalWidth = 0;
         this.isHovered = false;
         
-        // Drag (перетаскивание)
         this.isDragging = false;
         this.startX = 0;
         
-        // Инерция (Glide)
         this.velocity = 0;
         this.lastX = 0;
         this.lastTime = 0;
         this.animationId = null;
         
-        // Биндим контекст 
         this.animate = this.animate.bind(this);
         this.onPointerDown = this.onPointerDown.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
@@ -51,39 +44,11 @@ export class SubscribersManager {
         }
     }
 
-    // Генерация HTML карточек
     renderCards(subscribers) {
-        const html = subscribers.map(sub => {
-            const colorVal = ROLE_COLORS[sub.color] || sub.color || '#39ff14';
-            const avatarContent = sub.image 
-                ? `<img src="${sub.image}" onerror="this.style.display='none'">` 
-                : (sub.customHtml || `<i class="${sub.mainIcon}"></i>`);
-
-            return `
-            <div class="holo-card" style="--sub-color: ${colorVal}">
-                <div class="card-top-deco">
-                    <span>LVL.${sub.level}</span> 
-                    <i class="${sub.typeIcon}"></i>
-                </div>
-                <div class="holo-avatar-container">
-                    <div class="holo-avatar">${avatarContent}</div>
-                    <div class="avatar-ring"></div>
-                </div>
-                <div class="holo-info">
-                    <div class="holo-name" title="${sub.name}">${sub.name}</div>
-                    <div class="holo-role">${sub.role}</div>
-                </div>
-                <div class="card-stat-bar">
-                    <div class="fill" style="width: ${sub.stats}%"></div>
-                </div>
-            </div>
-            `;
-        }).join('');
-
+        const html = subscribers.map(sub => AgentCard.createHTML(sub)).join('');
         this.track.innerHTML = html;
     }
 
-    // Настройка клонирования для создания "бесконечного" кольца
     setupEngine() {
         const cards = Array.from(this.track.children);
         if (cards.length === 0) return;
@@ -111,6 +76,17 @@ export class SubscribersManager {
         this.track.addEventListener('mouseenter', () => { this.isHovered = true; });
         this.track.addEventListener('mouseleave', () => { this.isHovered = false; });
         this.track.addEventListener('dragstart', e => e.preventDefault());
+        
+        this.track.addEventListener('contextmenu', (e) => {
+            const card = e.target.closest('.agent-card-component');
+            if (card) {
+                e.preventDefault();
+                const agentId = card.dataset.id;
+                EventBus.emit('PLAY_SOUND', 'expand');
+                // Перенаправляем на новую полноэкранную страницу
+                AppRouter.navigate('/agents', { id: agentId });
+            }
+        });
     }
 
     onPointerDown(e) {

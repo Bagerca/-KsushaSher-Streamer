@@ -1,5 +1,6 @@
 /* js/audio-ui.js */
 import EventBus from './event-bus.js';
+import { AppStore } from './store.js';
 
 const VOLUME_TICKS_COUNT = 20;
 
@@ -87,7 +88,12 @@ export class AudioUI {
             this.els.progressFill.style.width = `${(currentTime / duration) * 100}%`;
         });
 
-        EventBus.on('UI_CLICK_MUSIC', () => this.toggleMode());
+        // Слушаем центральное хранилище вместо EventBus напрямую
+        AppStore.subscribe((state, prevState) => {
+            if (state.audio.isMusicModeActive !== prevState?.audio?.isMusicModeActive) {
+                this.toggleMode(state.audio.isMusicModeActive);
+            }
+        });
     }
 
     handleVolumeInput(e) {
@@ -150,7 +156,8 @@ export class AudioUI {
         }
     }
 
-    toggleMode() {
+    toggleMode(isActive) {
+        if (this.isMusicModeActive === isActive) return;
         const panelContent = document.querySelector('.hud-side-panel.right .panel-content');
         const statusContainer = document.querySelector('.main-display-status');
         
@@ -160,9 +167,10 @@ export class AudioUI {
         if (statusContainer) statusContainer.classList.add('status-switching');
 
         setTimeout(() => {
-            this.isMusicModeActive = !this.isMusicModeActive;
+            this.isMusicModeActive = isActive;
             
             EventBus.emit('SYS_SET_NOISE', !this.isMusicModeActive);
+            // Извещаем визуализатор напрямую через шину событий (пока что)
             EventBus.emit('STATE_MUSIC_CHANGED', this.isMusicModeActive);
 
             if (this.isMusicModeActive) {

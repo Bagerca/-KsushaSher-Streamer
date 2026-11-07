@@ -17,7 +17,7 @@
 .media-archive-section .container { position: relative; z-index: 5; max-width: 1650px; }
 
 /* =========================================
-   ВЕРХНЯЯ ПАНЕЛЬ (GRID: Лево - Центр - Право)
+   ВЕРХНЯЯ ПАНЕЛЬ (Лево: Кнопка, Центр: Фильтры, Право: Поиск)
    ========================================= */
 .archive-top-bar {
     display: grid;
@@ -30,14 +30,19 @@
     padding-top: 15px;
 }
 
+.archive-action-area { 
+    grid-column: 1; display: flex; flex-direction: column; 
+    align-items: flex-start; justify-self: start; width: 100%; 
+}
+
 .archive-tools { 
     grid-column: 2; display: flex; flex-direction: column; 
     align-items: center; justify-self: center; gap: 12px; 
 }
 
-.archive-search-area { 
-    grid-column: 3; display: flex; flex-direction: column; 
-    align-items: flex-end; justify-self: end; width: 100%; max-width: 550px; 
+.archive-search-area {
+    grid-column: 3; display: flex; flex-direction: column;
+    align-items: flex-end; justify-self: end; width: 100%; max-width: 450px;
 }
 
 /* =========================================
@@ -80,7 +85,7 @@
 /* 2. НЕОНОВЫЙ СТЕРЖЕНЬ (Статический) */
 .archive-side-pagination::after { 
     content: ''; position: absolute; top: 15px; bottom: 15px; left: 50%; transform: translateX(-50%); 
-    width: 2px; background: linear-gradient(to bottom, rgba(57, 255, 20, 0.1) 0%, rgba(57, 255, 20, 0.4) 40%, var(--neon-green) 50%, rgba(57, 255, 20, 0.4) 60%, rgba(57, 255, 20, 0.1) 100%);
+    width: 2px; background: linear-gradient(to bottom, color-mix(in srgb, var(--color-neon-green) 10%, transparent) 0%, color-mix(in srgb, var(--color-neon-green) 40%, transparent) 40%, var(--color-neon-green) 50%, color-mix(in srgb, var(--color-neon-green) 40%, transparent) 60%, color-mix(in srgb, var(--color-neon-green) 10%, transparent) 100%);
     z-index: 0; mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
@@ -107,7 +112,7 @@
 
 .pagination-divider-vert { 
     width: 28px; height: 1px; background: rgba(255, 255, 255, 0.15); 
-    margin: 4px 0; transition: 0.3s; 
+    margin: 4px 0; transition: var(--transition-normal); 
 }
 
 .cyber-page-btn-vert { 
@@ -115,7 +120,7 @@
     border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; 
     display: flex; align-items: center; justify-content: center; width: 100%; 
 }
-.cyber-page-btn-vert:hover:not(:disabled) { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); transform: scale(1.1); }
+.cyber-page-btn-vert:hover:not(:disabled) { color: var(--color-neon-green); text-shadow: 0 0 10px var(--color-neon-green); transform: scale(1.1); }
 .cyber-page-btn-vert:disabled { opacity: 0.2; cursor: not-allowed; }
 
 /* =========================================
@@ -136,22 +141,22 @@
 .tuner-slot {
     background: transparent; border: 1px solid transparent; 
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-family: 'Orbitron', sans-serif; font-weight: 700; transition: all 0.3s ease;
+    font-family: var(--font-header); font-weight: 700; transition: all var(--transition-normal);
     flex-shrink: 0; cursor: pointer; line-height: 1; overflow: hidden;
 }
 
 .tuner-slot.prev, .tuner-slot.next { width: 36px; height: 36px; border-radius: 8px; font-size: 0.85rem; color: #555; background: rgba(255,255,255,0.02); }
-.tuner-slot.prev:hover, .tuner-slot.next:hover { background: rgba(255,255,255,0.08); color: #fff; transform: scale(1.1); }
+.tuner-slot.prev:hover, .tuner-slot.next:hover { background: rgba(255,255,255,0.08); color: var(--color-text-white); transform: scale(1.1); }
 .tuner-slot.empty { width: 36px; height: 36px; border-radius: 8px; font-size: 0.75rem; color: #333; pointer-events: none; cursor: default; border: 1px dashed rgba(255,255,255,0.05); }
 
 .tuner-slot.active {
-    width: 44px; height: 44px; border-radius: 10px; font-size: 1.15rem; color: #000; background: var(--neon-green);
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.5), inset 0 0 10px rgba(255,255,255,0.5); border-color: #fff; z-index: 10;
+    width: 44px; height: 44px; border-radius: 10px; font-size: 1.15rem; color: var(--color-text-dark); background: var(--color-neon-green);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-neon-green) 50%, transparent), inset 0 0 10px rgba(255,255,255,0.5); border-color: var(--color-text-white); z-index: 10;
 }
-.tuner-slot.active:hover { transform: scale(1.05); box-shadow: 0 0 25px var(--neon-green), inset 0 0 10px rgba(255,255,255,0.8); }
+.tuner-slot.active:hover { transform: scale(1.05); box-shadow: 0 0 25px var(--color-neon-green), inset 0 0 10px rgba(255,255,255,0.8); }
 .tuner-container.selector-open .tuner-slot.active { transform: scale(0.95); box-shadow: inset 0 5px 15px rgba(0,0,0,0.8); filter: brightness(0.8); }
 
-.tuner-slot.sugg-page-btn.active { background: var(--neon-pink); box-shadow: 0 0 20px rgba(255, 45, 149, 0.5); }
+.tuner-slot.sugg-page-btn.active { background: var(--color-neon-pink); box-shadow: 0 0 20px color-mix(in srgb, var(--color-neon-pink) 50%, transparent); }
 .tuner-slot.yt-page-btn.active { background: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
 .tuner-slot i { font-size: 0.8em; margin-bottom: 2px; }
 .tuner-slot.active i { font-size: 0.6em; opacity: 0.8; }
@@ -216,7 +221,7 @@
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     overflow: hidden; transform-origin: top;
 }
-.jumper-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2); }
+.jumper-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: var(--color-text-white); border-color: rgba(255,255,255,0.2); }
 .jumper-btn:disabled { opacity: 0.1; cursor: default; }
 
 .jumper-btn.yt.is-hidden {
@@ -225,9 +230,9 @@
 }
 
 .jumper-btn.active { opacity: 1; }
-.jumper-btn.db.active { color: #000; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); border-color: var(--neon-green); }
-.jumper-btn.sugg.active { color: #000; background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); border-color: var(--neon-pink); }
-.jumper-btn.yt.active { color: #fff; background: #ff0000; box-shadow: 0 0 10px #ff0000; border-color: #ff0000; }
+.jumper-btn.db.active { color: var(--color-text-dark); background: var(--color-neon-green); box-shadow: 0 0 10px var(--color-neon-green); border-color: var(--color-neon-green); }
+.jumper-btn.sugg.active { color: var(--color-text-dark); background: var(--color-neon-pink); box-shadow: 0 0 10px var(--color-neon-pink); border-color: var(--color-neon-pink); }
+.jumper-btn.yt.active { color: var(--color-text-white); background: #ff0000; box-shadow: 0 0 10px #ff0000; border-color: #ff0000; }
 
 /* =========================================
    ГОЛОГРАФИЧЕСКАЯ МАТРИЦА (ВЫЕЗЖАЕТ ВПРАВО)
@@ -244,7 +249,7 @@
     border: 1px solid rgba(255, 255, 255, 0.08); 
     border-radius: 8px;
     padding: 20px 18px;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(57, 255, 20, 0.05);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 30px color-mix(in srgb, var(--color-neon-green) 5%, transparent);
     
     opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 100;
 }
@@ -265,7 +270,7 @@
 
 .holo-selector-header { 
     position: relative; z-index: 2;
-    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; 
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.85rem; 
     color: #999; letter-spacing: 3px; text-align: center; 
     margin-bottom: 16px; padding-bottom: 12px; border-bottom: none;
 }
@@ -282,7 +287,7 @@
 }
 
 .sector-label { 
-    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; 
+    font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; 
     margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase;
     border-left: 2px solid currentColor; padding-left: 8px;
     background: linear-gradient(90deg, color-mix(in srgb, currentColor 10%, transparent), transparent);
@@ -293,23 +298,23 @@
 .matrix-btn {
     background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 4px; 
     box-shadow: inset 0 0 8px rgba(0,0,0,0.6); color: #777;
-    font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; 
+    font-family: var(--font-header); font-size: 0.9rem; font-weight: 700; 
     width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; 
     cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); flex-direction: column;
 }
 
 .matrix-btn i { font-size: 0.6em; margin-bottom: 3px; opacity: 0.8; }
-.matrix-btn:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); color: #fff; transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
+.matrix-btn:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); color: var(--color-text-white); transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
 
 .matrix-btn.is-current { 
-    border-color: var(--active-color); color: #fff; background: color-mix(in srgb, var(--active-color) 15%, transparent);
+    border-color: var(--active-color); color: var(--color-text-white); background: color-mix(in srgb, var(--active-color) 15%, transparent);
     text-shadow: 0 0 8px var(--active-color); 
     box-shadow: inset 0 0 10px color-mix(in srgb, var(--active-color) 40%, transparent), 0 4px 15px color-mix(in srgb, var(--active-color) 20%, transparent);
     transform: translateY(-2px);
 }
 
-.matrix-btn:not(.sugg-page-btn):not(.yt-page-btn) { --active-color: var(--neon-green); }
-.matrix-btn.sugg-page-btn { --active-color: var(--neon-pink); }
+.matrix-btn:not(.sugg-page-btn):not(.yt-page-btn) { --active-color: var(--color-neon-green); }
+.matrix-btn.sugg-page-btn { --active-color: var(--color-neon-pink); }
 .matrix-btn.yt-page-btn { --active-color: #ff0000; }
 
 /* =========================================
@@ -317,6 +322,7 @@
    ========================================= */
 @media (max-width: 1024px) {
     .archive-top-bar { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .archive-action-area { align-items: center; justify-self: center; width: 100%; }
     .archive-search-area { max-width: 100%; width: 100%; align-items: center; }
     
     .archive-full-grid-wrapper { flex-direction: column; align-items: center; gap: 20px; }

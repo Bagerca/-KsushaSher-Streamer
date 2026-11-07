@@ -1,0 +1,75 @@
+/* css/item/item-posters.css */
+
+/* ИСПРАВЛЕНИЕ: Сайдбар теперь тоже sticky для удобства */
+.item-sidebar { 
+    display: flex; flex-direction: column; gap: 20px; 
+    position: sticky; top: 30px; 
+    align-self: start;
+}
+
+.item-poster-wrapper {
+    position: relative; width: 100%; aspect-ratio: 2/3; z-index: 5;
+    perspective: 1200px; transform-style: preserve-3d;
+}
+
+.modal-poster-img { 
+    position: absolute; inset: 0; width: 100%; height: 100%; 
+    object-fit: cover; border-radius: 12px; background-color: #080808; 
+    border: 1px solid rgba(255, 255, 255, 0.1); background-clip: padding-box; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s ease, opacity var(--transition-normal); 
+    opacity: 0; transform-origin: center center; backface-visibility: hidden; will-change: transform, box-shadow, border-color;
+}
+
+.modal-poster-img.is-front { opacity: 1; z-index: 30; transform: translate3d(0, 0, 0); }
+.modal-poster-img.is-back { opacity: 1; z-index: 20; transform: translate3d(0, -15px, -50px); filter: brightness(0.6); }
+.modal-poster-img.is-back-2 { opacity: 1; z-index: 10; transform: translate3d(0, -30px, -100px); filter: brightness(0.3); }
+.modal-poster-img.is-hidden { opacity: 0; z-index: 0; pointer-events: none; transform: translate3d(0, 20px, -150px) scale(0.8); }
+
+.item-poster-wrapper.is-interactive { cursor: pointer; }
+.item-poster-wrapper:hover .modal-poster-img { border-color: var(--item-color); box-shadow: 0 0 15px var(--item-color), 0 20px 40px rgba(0,0,0,0.8); filter: brightness(1); }
+.item-poster-wrapper:hover .modal-poster-img.is-front { z-index: 35; border-color: var(--item-color); box-shadow: 0 0 30px var(--item-color), 0 30px 60px rgba(0,0,0,0.9); }
+
+.item-poster-wrapper.stack-1:hover .modal-poster-img.is-front { transform: translate3d(0, -8px, 30px) scale(1.02); }
+.item-poster-wrapper.stack-3:hover .modal-poster-img.is-front { transform: translate3d(-18px, 6px, 25px) rotateZ(-2deg); }
+.item-poster-wrapper.stack-3:hover .modal-poster-img.is-back { transform: translate3d(0, 0, 0) rotateZ(0deg); z-index: 25; }
+.item-poster-wrapper.stack-3:hover .modal-poster-img.is-back-2 { transform: translate3d(18px, -6px, -25px) rotateZ(2deg); z-index: 15; }
+.item-poster-wrapper.stack-2:hover .modal-poster-img.is-front { transform: translate3d(-12px, 4px, 25px) rotateZ(-2deg); }
+.item-poster-wrapper.stack-2:hover .modal-poster-img.is-back { transform: translate3d(12px, -4px, -25px) rotateZ(2deg); z-index: 25; }
+
+.modal-poster-glow { position: absolute; inset: -30px; background: radial-gradient(circle at center, transparent 30%, var(--item-color) 100%); opacity: 0.15; pointer-events: none; mix-blend-mode: screen; filter: blur(40px); transition: background 0.5s ease, opacity 0.5s ease; }
+
+.poster-pagination { display: flex; justify-content: center; gap: 8px; margin-bottom: 5px; height: 10px; }
+.poster-dot { width: 8px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.2); transition: all 0.3s; }
+.poster-dot.active { width: 24px; background: var(--item-color); box-shadow: 0 0 10px var(--item-color); }
+
+/* РЕЙТИНГ И БАРКОД */
+/* ИСПРАВЛЕНИЕ: Выравнивание рейтинга и N/A */
+.item-rating-box { 
+    display: flex; align-items: center; justify-content: space-between; gap: 15px;
+    background: rgba(0, 0, 0, 0.5); padding: 15px 20px; border-radius: 8px; 
+    border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); 
+}
+#item-rating-val { 
+    font-family: var(--font-header); font-size: 2rem; font-weight: 800; line-height: 1; 
+    color: var(--item-color); text-shadow: 0 0 15px var(--item-color); transition: color 0.3s; 
+    flex-shrink: 0;
+}
+.modal-segments { display: flex; gap: 5px; flex-grow: 1; }
+.modal-segment-line { width: 8px; height: 24px; transform: skewX(-15deg); background: rgba(255,255,255,0.1); transition: var(--transition-normal); }
+.modal-segment-line.filled { background: var(--item-color); box-shadow: 0 0 10px var(--item-color); }
+
+/* ИСПРАВЛЕНИЕ: Выравнивание штрихкода */
+.modal-tech-barcode { border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 20px; display: flex; flex-direction: column; gap: 15px; }
+.barcode-lines { width: 100%; height: 35px; opacity: 0.9; display: flex; align-items: center; justify-content: center; overflow: hidden; filter: drop-shadow(0 0 3px var(--item-color)); transition: filter 0.3s; }
+.tech-info { display: flex; flex-direction: column; font-family: var(--font-code); font-size: 0.75rem; color: var(--color-text-muted); letter-spacing: 1px; }
+.tech-info span { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.t-val { color: var(--item-color); font-weight: bold; text-transform: uppercase; transition: color 0.3s ease; text-align: right;}
+
+@media (max-width: 1400px) {
+    .media-item-page.has-playlist #item-sidebar { display: none; }
+}
+
+@media (max-width: 768px) {
+    .item-sidebar { position: static; width: 220px; margin: 0 auto; display: flex !important; }
+    .media-item-page.has-playlist #item-sidebar { display: flex !important; } 
+}

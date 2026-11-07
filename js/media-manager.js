@@ -12,18 +12,17 @@ export async function initMediaArchive() {
         
         const store = new MediaStore();
         
-        // Создаем фасад для передачи состояния режима сетки
+        // Лямбда для получения текущего режима сетки (detailed/compact)
         const getGridMode = () => gridManager ? gridManager.gridMode : 'detailed';
         
         const factory = new CardFactory(getGridMode);
         const lazyLoader = new LazyLoader(getGridMode);
         
+        // GridManager теперь инициализирует внутри себя новый ArchivePagination
         const gridManager = new GridManager(store, factory, lazyLoader);
         
-        new SearchController(store);
-        new FilterController(store, gridManager);
-        
-        await store.loadType('games');
+        new SearchController();
+        new FilterController(gridManager);
         
     } catch (error) {
         console.error("❌ [MediaArchive] Критическая ошибка при инициализации:", error);
