@@ -4,13 +4,13 @@ import EventBus from './event-bus.js';
 import { AppConfig } from './config.js'; 
 import { AppStore } from './store.js'; 
 import { AppRouter } from './router.js'; 
+import { PreloaderController } from './services/PreloaderController.js'; 
 
 import { getDashboardView } from './views/dashboardView.js';
 import { getTierlistView } from './views/tierlistView.js';
 import { getMediaItemView } from './views/mediaItemView.js';
 import { getLibraryView } from './views/libraryView.js';
 import { getYoutubeLibraryView } from './views/youtubeLibraryView.js';
-// ДОБАВЛЕНО: Новый View для Агентов
 import { getAgentsView } from './views/agentsView.js';
 
 import { SynthEngine } from './services/SynthEngine.js'; 
@@ -26,6 +26,7 @@ import { initScrollPhysics } from './ui/scroll-physics.js';
 import { initCryptoWidget } from './ui/crypto-widget.js';
 import { initNavRail } from './ui/nav-rail.js';
 import { initSpecs } from './ui/SpecsRenderer.js'; 
+import { CursorController } from './ui/CursorController.js'; // ДОБАВЛЕН ИМПОРТ
 
 import { initMediaArchive } from './media-manager.js';
 import { HeroController } from './hero-controller.js';
@@ -42,7 +43,6 @@ import { TierlistController } from './tierlist/TierlistController.js';
 import { MediaItemController } from './media-item-controller.js';
 import { LibraryController } from './library-controller.js';
 import { YoutubeLibraryController } from './youtube-library-controller.js';
-// ДОБАВЛЕНО: Новый контроллер для Агентов
 import { AgentsController } from './agents-controller.js';
 
 let terminalCtrl;
@@ -66,6 +66,8 @@ function bootstrap() {
     
     try {
         console.log(`🚀 [Boot] Запуск системы ${AppConfig.system.osName} ${AppConfig.system.osVersion}...`);
+        
+        PreloaderController.init();
         
         const appRoot = document.getElementById('app');
         if (appRoot) {
@@ -93,6 +95,7 @@ function bootstrap() {
             new SettingsMenu();
             initScrollPhysics();
             window.navRailInstance = initNavRail();
+            new CursorController(); // ЗАПУСК КУРСОРНОГО ДВИЖКА ТОЛЬКО НА ПК
         }
         
         initCryptoWidget();
@@ -180,7 +183,6 @@ function bootstrap() {
                     agentsEl.style.display = 'block';
                     AppStore.dispatch({ type: 'FX_SET_PAUSE', payload: true });
                     agentsCtrl.mount(state.route.params.id);
-                    // Восстанавливаем скролл, если мы просто переключились на другого агента, и сбрасываем, если пришли извне
                     if (prevPath && prevPath.startsWith('/agents')) {
                         setTimeout(() => window.scrollTo(0, agentsScrollPosition), 10);
                     } else {
@@ -248,4 +250,4 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
 else { bootstrap(); }
 
 export function addLogLine(html, isTyping = false, forceScroll = false) { if (terminalCtrl) return terminalCtrl.addLogLine(html, isTyping, forceScroll); }
-export function setSystemNoiseState(isEnabled) { if (terminalCtrl) terminalCtrl.setSystemNoiseState(isEnabled); }
+export function setSystemNoiseState(isEnabled) { if (terminalCtrl) terminalCtrl.setSystemNoiseState(isEnabled); }   

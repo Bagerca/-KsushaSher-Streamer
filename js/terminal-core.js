@@ -96,8 +96,9 @@ export class TerminalController {
         
         this.cmdHistory = []; 
         this.historyIndex = -1;
+        // ДОБАВЛЕНА КОМАНДА reboot В МАССИВ АВТОДОПОЛНЕНИЯ (Кнопка TAB)
         this.availableCommands = [
-            'help', 'clear', 'status', 'music', 'player', 'dragon', 'lizard', 
+            'help', 'reboot', 'clear', 'status', 'music', 'player', 'dragon', 'lizard', 
             'comet', 'godmode', 'whoami', 'neofetch', 'ping', 'sudo', 
             'socials', 'schedule', 'specs', 'youtube', 'scan', 'hack', '8ball', 'roll', 'angel', 'bagerca'
         ];

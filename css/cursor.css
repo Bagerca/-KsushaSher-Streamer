@@ -1,0 +1,117 @@
+/* css/cursor.css */
+
+/* Отключаем системный курсор АБСОЛЮТНО ВЕЗДЕ на устройствах с точной мышью */
+@media (pointer: fine) {
+    *, *::before, *::after {
+        cursor: none !important;
+    }
+}
+
+/* 
+ * ОСНОВНОЙ КОНТЕЙНЕР
+ * Используем position: fixed, чтобы не зависеть от скролла. 
+ * Координаты будем обновлять через clientX/clientY.
+ */
+#cyber-cursor-dot,
+#cyber-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999999; /* Поверх вообще всего, включая модалки и прелоадер */
+    will-change: transform;
+}
+
+/* 1. МГНОВЕННАЯ ЦЕНТРАЛЬНАЯ ТОЧКА */
+#cyber-cursor-dot {
+    width: 4px;
+    height: 4px;
+    background-color: var(--color-neon-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-neon-green);
+    margin: -2px 0 0 -2px; 
+    transition: background-color 0.2s, box-shadow 0.2s, width 0.2s, height 0.2s, margin 0.2s, border-radius 0.2s;
+}
+
+/* 2. ПЛАВНЫЙ ВНЕШНИЙ ПРИЦЕЛ (LERP) */
+#cyber-cursor-ring {
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), margin 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+}
+
+/* 4 Уголка прицела */
+.cursor-corner {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--color-neon-green);
+    transition: border-color 0.3s, filter 0.3s, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cursor-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; transform: translate(3px, 3px); }
+.cursor-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; transform: translate(-3px, 3px); }
+.cursor-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; transform: translate(3px, -3px); }
+.cursor-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; transform: translate(-3px, -3px); }
+
+/* =========================================
+   СОСТОЯНИЯ (HOVER, CLICK, TEXT)
+   ========================================= */
+
+/* A. Наведение на кликабельный элемент (TARGET LOCK) */
+#cyber-cursor-ring.is-hovering {
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+}
+
+#cyber-cursor-ring.is-hovering .cursor-corner {
+    border-color: var(--color-neon-pink);
+    filter: drop-shadow(0 0 5px var(--color-neon-pink));
+    transform: translate(0, 0); /* Уголки разъезжаются по краям */
+}
+
+#cyber-cursor-dot.is-hovering {
+    background-color: var(--color-neon-pink);
+    box-shadow: 0 0 10px var(--color-neon-pink);
+}
+
+/* B. Клик (Импульс) */
+#cyber-cursor-ring.is-clicking {
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+}
+
+#cyber-cursor-ring.is-clicking .cursor-corner {
+    border-width: 3px;
+    filter: drop-shadow(0 0 10px var(--color-neon-pink));
+    transform: translate(2px, 2px); /* Резко сжимаются */
+}
+
+#cyber-cursor-ring.is-clicking .cursor-corner.tr { transform: translate(-2px, 2px); }
+#cyber-cursor-ring.is-clicking .cursor-corner.bl { transform: translate(2px, -2px); }
+#cyber-cursor-ring.is-clicking .cursor-corner.br { transform: translate(-2px, -2px); }
+
+/* Уменьшаем саму точку при клике через размеры, чтобы не сбивать translate3d в JS */
+#cyber-cursor-dot.is-clicking {
+    width: 2px;
+    height: 2px;
+    margin: -1px 0 0 -1px;
+}
+
+/* C. Наведение на текст (Кибер-каретка) */
+#cyber-cursor-ring.is-text {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+#cyber-cursor-dot.is-text {
+    width: 2px;
+    height: 20px;
+    margin: -10px 0 0 -1px;
+    border-radius: 0;
+    background-color: var(--color-neon-green);
+    animation: blink 1s infinite;
+}

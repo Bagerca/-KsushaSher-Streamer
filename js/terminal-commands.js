@@ -2,7 +2,8 @@
 import EventBus from './event-bus.js';
 import { AppConfig } from './config.js';
 import { loadData } from './api.js';
-import { AppRouter } from './router.js'; 
+import { AppRouter } from './router.js';
+import { PreloaderController } from './services/PreloaderController.js'; 
 
 const UI_TEMPLATES = {
     help: () => `
@@ -23,6 +24,7 @@ const UI_TEMPLATES = {
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="roll">ROLL</span><span class="cmd-desc">- Бросок кубика (1-100)</span></div>
 
             <div class="term-ui-section-title">> ВИЗУАЛЬНЫЕ ПРОТОКОЛЫ:</div>
+            <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="reboot">REBOOT</span><span class="cmd-desc">- Анимация загрузки системы (Кибер-Лис)</span></div>
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="dragon">DRAGON</span><span class="cmd-desc">- Вызов неонового стража</span></div>
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="lizard">LIZARD</span><span class="cmd-desc">- Запуск кибер-ящерицы</span></div>
             <div class="cmd-list-row"><span class="interactive-cmd" data-cmd="comet">COMET</span><span class="cmd-desc">- Метеоритный шторм</span></div>
@@ -136,6 +138,12 @@ sys /  &#96;-.&#92;=/.-'  &#92; ()`
 
 const CommandHandlers = {
     HELP: () => EventBus.emit('SYS_LOG', { html: UI_TEMPLATES.help(), forceScroll: true }),
+    REBOOT: () => {
+        EventBus.emit('SYS_LOG', { html: "<span style='color:var(--color-neon-pink);'>[SYS] ИНИЦИАЛИЗАЦИЯ ПЕРЕЗАГРУЗКИ ИНТЕРФЕЙСА...</span>", forceScroll: true });
+        setTimeout(() => {
+            PreloaderController.trigger();
+        }, 800);
+    },
     SOCIALS: () => EventBus.emit('SYS_LOG', { html: UI_TEMPLATES.socials(AppConfig.socials), forceScroll: true }),
     YOUTUBE: () => {
         EventBus.emit('SYS_SPINNER', {
