@@ -3,7 +3,7 @@ import EventBus from '../event-bus.js';
 import { AppRouter } from '../router.js';
 import { AppStore } from '../store.js';
 import { ArchivePagination } from './ArchivePagination.js';
-import { SearchEngine } from '../services/SearchEngine.js'; // Подключаем движок для точного скоринга
+import { SearchEngine } from '../services/SearchEngine.js';
 
 export class GridManager {
     constructor(store, cardFactory, lazyLoader) {
@@ -216,7 +216,6 @@ export class GridManager {
         const allData = this.store.combinedData || [];
         const searchQuery = state.searchQuery || '';
 
-        // БАКЕТЫ СТАТУСОВ (Порядок важен)
         const categoryDefs = [
             { id: 'completed', match: ['completed', 'watched'] },
             { id: 'playing', match: ['playing', 'watching'] },
@@ -248,7 +247,9 @@ export class GridManager {
                     if (matchingItems.length > 0) {
                         const virtualCollection = {
                             ...item,
-                            items: matchingItems,
+                            // ИСПРАВЛЕНИЕ: Берем правильный статус, а массив items оставляем целым для счетчика!
+                            status: matchingItems[0].status || item.status, 
+                            items: item.items, 
                             image: matchingItems[0].image || item.image,
                             images: matchingItems.slice(0, 3).map(i => i.image).filter(Boolean),
                             customColor: matchingItems[0].customColor || item.customColor,

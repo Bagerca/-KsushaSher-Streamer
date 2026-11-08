@@ -48,7 +48,7 @@ export function getLibraryView() {
                 <!-- НИЖНИЙ РЯД: 5 БОЛЬШИХ ВКЛАДОК СТАТУСОВ -->
                 <div class="library-tabs-nav" id="library-tabs-nav">
                     <button class="lib-tab-btn active" data-tab="completed">
-                        <div class="tab-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tab-icon"><i class="fas fa-medal"></i></div>
                         <div class="tab-info">
                             <span class="tab-label" id="label-completed">ПРОЙДЕНО</span>
                             <span class="tab-count" id="count-completed">0</span>
@@ -64,7 +64,7 @@ export function getLibraryView() {
                     </button>
                     
                     <button class="lib-tab-btn" data-tab="on-hold">
-                        <div class="tab-icon"><i class="fas fa-pause-circle"></i></div>
+                        <div class="tab-icon"><i class="fas fa-pause"></i></div>
                         <div class="tab-info">
                             <span class="tab-label">НА ПАУЗЕ</span>
                             <span class="tab-count" id="count-on-hold">0</span>
@@ -72,7 +72,7 @@ export function getLibraryView() {
                     </button>
                     
                     <button class="lib-tab-btn" data-tab="dropped">
-                        <div class="tab-icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="tab-icon"><i class="fas fa-times"></i></div>
                         <div class="tab-info">
                             <span class="tab-label">БРОШЕНО</span>
                             <span class="tab-count" id="count-dropped">0</span>

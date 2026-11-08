@@ -188,9 +188,12 @@ body:not(.route-dashboard) .magic-menu-container {
     transition: top 0.35s cubic-bezier(0.25, 1, 0.5, 1), height 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: top, height;
     
+    /* МАГИЯ ТУТ: Плавное затухание (fade-in и fade-out) по 15% с обоих концов луча */
     --beam-grad: linear-gradient(to bottom, 
-        var(--audio-color, var(--color-neon-green)) 0%, 
-        color-mix(in srgb, var(--audio-color, var(--color-neon-green)) calc(var(--beam-progress, 0) * 100%), transparent) 100%
+        transparent 0%,
+        var(--audio-color, var(--color-neon-green)) 15%, 
+        color-mix(in srgb, var(--audio-color, var(--color-neon-green)) calc(var(--beam-progress, 0) * 100%), transparent) 85%,
+        transparent 100%
     );
     background: var(--beam-grad);
 }
@@ -259,7 +262,6 @@ body:not(.route-dashboard) .magic-menu-container {
 .magic-items li { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); list-style: none; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transition-delay: calc(0.05s * var(--i)); }
 .magic-items li a { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; background: rgba(5, 5, 8, 0.9); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; color: var(--color-text-white); font-size: 1.1rem; transition: var(--transition-normal); backdrop-filter: blur(5px); opacity: 0; pointer-events: none; }
 
-/* ДЕЛИМ НА 5, ТАК КАК ИМЕЕМ 6 КНОПОК ОТ 0 ДО 5 */
 .magic-menu-container.active .magic-items li { transform: rotate(calc(270deg + (90deg / 5 * var(--i)))) translateX(190px) rotate(calc(-270deg - (90deg / 5 * var(--i)))); }
 .magic-menu-container.active .magic-items li a { opacity: 1; pointer-events: auto; }
 

@@ -9,7 +9,6 @@ export class CardFactory {
 
     createCardHTML(item, delay) {
         if (item.isDivider) {
-            // ИСПРАВЛЕНИЕ: Замена grid-column на width: 100% для совместимости с Flexbox
             return `
             <div class="archive-divider-row animate-entry" style="width: 100%; animation-delay: ${delay}ms">
                 <div class="divider-line"></div><div class="divider-text">${item.title}</div><div class="divider-line"></div>
@@ -71,9 +70,11 @@ export class CardFactory {
             ratingHtml = `<div class="cyber-rating-badge"><div class="cyber-rating"><div class="segments">${segments}</div><span class="val">${rating.toFixed(1)}</span></div></div>`;
         }
 
+        // ИСПРАВЛЕНИЕ: Оставляем статус ТОЛЬКО для предложки, чтобы было видно, от кого игра. 
+        // В остальных случаях возвращаем пустую строку.
         const statusHtml = status === 'suggested' && item.suggestedBy 
             ? `<div class="cyber-status suggested-status"><i class="fas fa-user" style="color: ${getUserColor(item.suggestedBy)}"></i> ${item.suggestedBy}</div>`
-            : `<div class="cyber-status">[ ${STATUS_MAP[status] || status} ]</div>`;
+            : ``;
 
         return `
         <div class="archive-card-container stack-${stackCount} ${isYouTube ? 'is-youtube' : ''} animate-entry" 

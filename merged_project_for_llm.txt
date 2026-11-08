@@ -300,8 +300,10 @@ File: index.html
     <link rel="stylesheet" href="css/library.css">
     <link rel="stylesheet" href="css/youtube-library.css">
     
-    <!-- ДОБАВЛЕНО: Стили новой страницы Агентов -->
-    <link rel="stylesheet" href="css/agents-layout.css">
+    <!-- ДЕКОМПОЗИРОВАННЫЕ СТИЛИ СТРАНИЦЫ АГЕНТОВ -->
+    <link rel="stylesheet" href="css/agents/agents-layout.css">
+    <link rel="stylesheet" href="css/agents/agent-detail.css">
+    <link rel="stylesheet" href="css/agents/agent-marquee.css">
 
     <link rel="stylesheet" href="css/donation/donation-layout.css">        
     <link rel="stylesheet" href="css/donation/donation-cards.css">        
@@ -847,515 +849,6 @@ File: assets\icons\youtube.svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
 
 ================================================================================
-File: css\agents-layout.css
-================================================================================
-
-/* css/agents-layout.css */
-
-/* Блокируем скролл на уровне body, чтобы страница стояла мертво (только для десктопа) */
-@media (min-width: 901px) {
-    body.route-agents {
-        overflow: hidden !important;
-    }
-}
-
-.agents-page-wrapper {
-    position: relative; 
-    width: 100vw; 
-    min-height: 100vh;
-    background: var(--color-bg-dark); 
-    display: flex; 
-    flex-direction: column; 
-    z-index: 100;
-}
-
-/* Скрываем скроллбар глобально на странице (для мобилок) */
-.agents-page-wrapper {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-}
-.agents-page-wrapper::-webkit-scrollbar {
-    display: none !important;
-}
-
-.agents-cinematic-bg {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background-image: 
-        radial-gradient(circle at 30% 50%, color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 8%, transparent) 0%, transparent 60%),
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 100% 100%, 30px 30px, 30px 30px;
-    transition: background-image 0.5s ease;
-}
-
-/* ШАПКА С КНОПКОЙ НАЗАД */
-.agents-top-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    max-width: 1650px; width: 100%; margin: 0 auto;
-    padding: 30px 40px 15px 40px; position: relative; z-index: 10;
-}
-
-.btn-agents-back {
-    background: rgba(0,0,0,0.8); 
-    border-color: var(--agent-color, var(--color-neon-green)); 
-    color: var(--agent-color, var(--color-neon-green));
-}
-.btn-agents-back:hover {
-    background: var(--agent-color, var(--color-neon-green)); 
-    color: var(--color-text-dark); 
-    box-shadow: 0 0 15px var(--agent-color, var(--color-neon-green));
-}
-
-/* ОСНОВНАЯ СЕТКА */
-.agents-content-wrapper {
-    flex-grow: 1; position: relative; z-index: 10; max-width: 1650px; 
-    margin: 0 auto; width: 100%; padding: 15px 40px 60px 40px; 
-}
-
-.agents-layout {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 30px;
-    align-items: start;
-}
-
-/* =========================================
-   ЖЕСТКИЙ ЛОК СКРОЛЛА ДЛЯ ДЕСКТОПА
-   ========================================= */
-@media (min-width: 901px) {
-    .agents-page-wrapper {
-        height: 100vh;
-        overflow: hidden;
-    }
-    .agents-content-wrapper {
-        height: calc(100vh - 85px); 
-        padding-bottom: 30px;
-    }
-    .agents-layout {
-        height: 100%;
-        overflow: hidden;
-    }
-    .agents-list-col {
-        position: relative;
-        top: 0;
-        height: 100%;
-        max-height: 100%;
-    }
-    .agent-detail-zone {
-        height: 100%;
-        overflow-y: auto;
-        scrollbar-width: none; 
-    }
-    .agent-detail-zone::-webkit-scrollbar {
-        display: none;
-    }
-}
-
-/* =========================================
-   ЛЕВАЯ ЧАСТЬ: ДЕТАЛЬНОЕ ДОСЬЕ
-   ========================================= */
-.agent-detail-zone {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-top: 4px solid var(--agent-color, var(--color-neon-green));
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    transition: border-color 0.4s ease, opacity 0.3s ease;
-}
-
-.agent-detail-zone.is-glitching {
-    animation: text-glitch-swap 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-.agent-header-row {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-}
-
-/* Аватарка */
-.agent-big-avatar {
-    width: 140px; height: 140px;
-    border-radius: 50%;
-    background: var(--color-bg-dark);
-    border: 3px solid var(--agent-color, var(--color-neon-green));
-    box-shadow: 0 0 25px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 4rem; color: var(--agent-color, var(--color-neon-green));
-    overflow: hidden; flex-shrink: 0;
-    transition: all 0.4s ease;
-}
-.agent-big-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-/* Инфо */
-.agent-header-info {
-    display: flex; flex-direction: column; flex-grow: 1; justify-content: center; min-width: 0;
-}
-.agent-name {
-    font-family: var(--font-header);
-    font-size: 3rem;
-    font-weight: 900;
-    margin: 0 0 5px 0;
-    text-transform: uppercase;
-    color: var(--color-text-white);
-    text-shadow: 0 0 15px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 60%, transparent);
-    line-height: 1.1;
-    transition: text-shadow 0.4s ease;
-}
-.agent-role {
-    font-family: var(--font-primary);
-    font-size: 1.2rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--agent-color, var(--color-neon-green));
-    margin-bottom: 15px;
-    transition: color 0.4s ease;
-}
-
-/* Плашки уровня и возраста */
-.agent-stats-row {
-    display: flex; gap: 15px; align-items: center; flex-wrap: wrap;
-}
-.agent-stat-badge {
-    background: color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 15%, transparent);
-    border: 1px solid color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
-    color: var(--color-text-white);
-    padding: 6px 14px; border-radius: 6px;
-    font-family: var(--font-tech); font-weight: 700; font-size: 0.9rem;
-    display: flex; align-items: center; gap: 8px;
-    transition: all 0.4s ease;
-}
-.agent-stat-badge i { color: var(--agent-color, var(--color-neon-green)); }
-
-/* Кнопка Твича */
-.agent-twitch-btn {
-    background: rgba(145, 70, 255, 0.1);
-    border: 1px solid rgba(145, 70, 255, 0.4);
-    color: #fff;
-    padding: 6px 14px; border-radius: 6px;
-    font-family: var(--font-tech); font-weight: 700; font-size: 0.9rem;
-    display: flex; align-items: center; gap: 8px;
-    text-decoration: none;
-    transition: all var(--transition-normal);
-}
-.agent-twitch-btn i { color: #9146ff; transition: color var(--transition-normal); }
-.agent-twitch-btn:hover {
-    background: #9146ff;
-    border-color: #9146ff;
-    box-shadow: 0 0 15px rgba(145, 70, 255, 0.6);
-}
-.agent-twitch-btn:hover i { color: #fff; }
-
-/* Блок Прогресса */
-.agent-progress-block {
-    margin-top: 20px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 15px;
-    width: 100%;
-}
-.agent-progress-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 10px;
-}
-.ap-title {
-    font-family: var(--font-tech);
-    font-size: 0.75rem; font-weight: 700; color: var(--color-text-muted);
-    letter-spacing: 2px; text-transform: uppercase;
-}
-.ap-text {
-    font-family: var(--font-header);
-    font-size: 0.95rem; font-weight: 700;
-    color: var(--agent-color, var(--color-neon-green));
-    text-shadow: 0 0 10px color-mix(in srgb, var(--agent-color) 40%, transparent);
-}
-.agent-level-bar-container {
-    width: 100%; background: rgba(255,255,255,0.05);
-    height: 8px; border-radius: 4px; overflow: hidden;
-}
-.agent-level-fill {
-    height: 100%;
-    background: var(--agent-color, var(--color-neon-green));
-    box-shadow: 0 0 10px var(--agent-color, var(--color-neon-green));
-    transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.4s ease;
-}
-.agent-progress-footer {
-    margin-top: 10px; text-align: right;
-    font-family: var(--font-primary); font-size: 0.75rem; color: rgba(255, 255, 255, 0.3);
-}
-
-/* Описание */
-.agent-description {
-    font-family: var(--font-primary);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: var(--color-text-light);
-    background: rgba(255,255,255,0.02);
-    padding: 20px;
-    border-radius: 8px;
-    border-left: 3px solid var(--agent-color, var(--color-neon-green));
-    transition: border-color 0.4s ease;
-}
-
-/* Секретные данные (Заглушка) */
-.agent-secret-data {
-    border: 1px dashed color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 30%, transparent);
-    border-radius: 8px;
-    padding: 40px 20px;
-    text-align: center;
-    color: var(--color-text-muted);
-    font-family: var(--font-tech);
-    letter-spacing: 2px;
-    transition: border-color 0.4s ease;
-}
-.agent-secret-data i {
-    font-size: 2.5rem;
-    color: color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
-    margin-bottom: 15px;
-    transition: color 0.4s ease;
-}
-
-
-/* =========================================
-   МИНИ ТИРЛИСТ (ИНТЕГРАЦИЯ)
-   ========================================= */
-.agent-tierlist-block {
-    margin-top: 10px;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-.agent-tierlist-title {
-    font-family: var(--font-header);
-    font-size: 1.1rem;
-    color: var(--color-text-white);
-    letter-spacing: 2px;
-    margin-bottom: 15px;
-    display: flex; align-items: center; gap: 10px;
-}
-
-/* Сам контейнер превью, реагирующий на ховер */
-.agent-tierlist-preview {
-    position: relative;
-    cursor: pointer;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.agent-tierlist-preview:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px color-mix(in srgb, var(--agent-color) 40%, transparent);
-    border-color: var(--agent-color);
-}
-.agent-tierlist-preview::after {
-    content: 'ОТКРЫТЬ ПОЛНЫЙ ТИРЛИСТ';
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    color: var(--agent-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-header);
-    font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    backdrop-filter: blur(3px);
-}
-.agent-tierlist-preview:hover::after {
-    opacity: 1;
-}
-
-/* Структура микро-тирлиста */
-.mini-tl-container {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    background: var(--color-bg-dark);
-    padding: 3px;
-}
-.mini-tl-row {
-    display: flex;
-    background: rgba(255,255,255,0.03);
-    min-height: 40px;
-}
-.mini-tl-label {
-    width: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-header);
-    font-weight: 900;
-    font-size: 1rem;
-    color: #111;
-    flex-shrink: 0;
-    text-shadow: 0 0 5px rgba(255,255,255,0.3);
-}
-.mini-tl-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 4px;
-    flex-grow: 1;
-}
-.mini-tl-card {
-    width: 28px;
-    height: 40px;
-    border-radius: 3px;
-    overflow: hidden;
-    background: #000;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.mini-tl-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-
-/* =========================================
-   ПРАВАЯ ЧАСТЬ: СПИСОК АГЕНТОВ
-   ========================================= */
-.agents-list-col {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.agents-list-header {
-    padding: 20px;
-    font-family: var(--font-header);
-    font-weight: 800;
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--color-text-white);
-    flex-shrink: 0;
-    display: flex; justify-content: space-between; align-items: center;
-}
-.agents-count { color: var(--color-neon-green); font-family: var(--font-tech); }
-
-/* МАГИЯ ПЛАВНОГО ЗАТУХАНИЯ И СКРОЛЛА */
-.agents-scroll-list {
-    flex-grow: 1;
-    min-height: 0; /* Обязательно для флекс-контейнеров со скроллом */
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 20px 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    
-    /* Эффект растворения краев списка в пустоте */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
-    
-    /* Для Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: var(--agent-color, var(--color-neon-green)) transparent;
-}
-
-/* Для Chrome/Safari/Edge */
-.agents-scroll-list::-webkit-scrollbar { width: 4px; }
-.agents-scroll-list::-webkit-scrollbar-track { background: transparent; margin: 15px 0; }
-.agents-scroll-list::-webkit-scrollbar-thumb { 
-    background: var(--agent-color, var(--color-neon-green)); 
-    border-radius: 4px; 
-    box-shadow: 0 0 10px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 50%, transparent); 
-    transition: background var(--transition-normal); 
-}
-
-/* Горизонтальная карточка агента */
-.agent-list-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 10px;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    flex-shrink: 0; /* Чтобы карты не сплющивались */
-}
-.agent-list-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    transform: translateX(-5px);
-}
-.agent-list-card.active {
-    background: rgba(0, 0, 0, 0.6);
-    border-color: var(--card-color);
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 4px 10px rgba(0,0,0,0.5);
-}
-
-.alc-avatar {
-    width: 45px; height: 45px;
-    border-radius: 50%;
-    background: var(--color-bg-dark);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--card-color); border: 2px solid var(--card-color);
-    font-size: 1.2rem; flex-shrink: 0; overflow: hidden;
-}
-.alc-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.agent-list-card.active .alc-avatar { box-shadow: 0 0 10px var(--card-color); }
-
-.alc-info {
-    display: flex; flex-direction: column; justify-content: center; flex-grow: 1; min-width: 0;
-}
-.alc-name {
-    font-family: var(--font-header); font-size: 0.95rem; font-weight: 700;
-    color: var(--color-text-white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    transition: color 0.3s;
-}
-.agent-list-card.active .alc-name { color: var(--card-color); text-shadow: 0 0 5px var(--card-color); }
-.alc-role {
-    font-family: var(--font-primary); font-size: 0.75rem; color: var(--color-text-muted);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.alc-lvl {
-    font-family: var(--font-tech); font-weight: 700; font-size: 0.8rem;
-    color: var(--card-color); padding: 2px 6px; background: color-mix(in srgb, var(--card-color) 15%, transparent);
-    border-radius: 4px; flex-shrink: 0;
-}
-
-/* =========================================
-   АДАПТИВНОСТЬ
-   ========================================= */
-@media (max-width: 1200px) {
-    .agents-layout { grid-template-columns: 1fr 300px; gap: 20px; }
-}
-
-@media (max-width: 900px) {
-    .agents-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
-    .agents-list-col { max-height: 500px; width: 100%; }
-    .agents-top-nav { padding: 15px 20px; }
-    .agents-content-wrapper { padding: 0 15px 40px 15px; }
-    
-    .agent-header-row { flex-direction: column; text-align: center; gap: 15px; }
-    .agent-stats-row { justify-content: center; }
-
-    /* На iOS и Android маски часто ломают отрисовку, поэтому убираем */
-    .agents-scroll-list {
-        mask-image: none;
-        -webkit-mask-image: none;
-        padding: 10px 15px;
-    }
-}
-
-================================================================================
 File: css\global.css
 ================================================================================
 
@@ -1549,9 +1042,12 @@ body:not(.route-dashboard) .magic-menu-container {
     transition: top 0.35s cubic-bezier(0.25, 1, 0.5, 1), height 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: top, height;
     
+    /* МАГИЯ ТУТ: Плавное затухание (fade-in и fade-out) по 15% с обоих концов луча */
     --beam-grad: linear-gradient(to bottom, 
-        var(--audio-color, var(--color-neon-green)) 0%, 
-        color-mix(in srgb, var(--audio-color, var(--color-neon-green)) calc(var(--beam-progress, 0) * 100%), transparent) 100%
+        transparent 0%,
+        var(--audio-color, var(--color-neon-green)) 15%, 
+        color-mix(in srgb, var(--audio-color, var(--color-neon-green)) calc(var(--beam-progress, 0) * 100%), transparent) 85%,
+        transparent 100%
     );
     background: var(--beam-grad);
 }
@@ -1620,7 +1116,6 @@ body:not(.route-dashboard) .magic-menu-container {
 .magic-items li { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); list-style: none; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transition-delay: calc(0.05s * var(--i)); }
 .magic-items li a { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; background: rgba(5, 5, 8, 0.9); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; color: var(--color-text-white); font-size: 1.1rem; transition: var(--transition-normal); backdrop-filter: blur(5px); opacity: 0; pointer-events: none; }
 
-/* ДЕЛИМ НА 5, ТАК КАК ИМЕЕМ 6 КНОПОК ОТ 0 ДО 5 */
 .magic-menu-container.active .magic-items li { transform: rotate(calc(270deg + (90deg / 5 * var(--i)))) translateX(190px) rotate(calc(-270deg - (90deg / 5 * var(--i)))); }
 .magic-menu-container.active .magic-items li a { opacity: 1; pointer-events: auto; }
 
@@ -1658,16 +1153,18 @@ File: css\library.css
     display: flex; 
     flex-direction: column; 
     z-index: 100;
+    --active-tab-color: var(--color-neon-green); /* Дефолтный цвет фона */
 }
 
 .library-cinematic-bg {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.05) 0%, transparent 40%), 
-        radial-gradient(circle at 90% 80%, rgba(255, 45, 149, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 10% 20%, color-mix(in srgb, var(--active-tab-color) 10%, transparent) 0%, transparent 40%), 
+        radial-gradient(circle at 90% 80%, color-mix(in srgb, var(--active-tab-color) 5%, transparent) 0%, transparent 40%),
         linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+    transition: background-image 0.5s ease;
 }
 
 /* =========================================
@@ -1680,24 +1177,21 @@ File: css\library.css
     background: rgba(5, 5, 8, 0.85);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    padding: 20px 0 15px 0;
+    border-bottom: 2px solid var(--active-tab-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px color-mix(in srgb, var(--active-tab-color) 15%, transparent);
+    padding: 20px 0 0 0; 
+    transition: border-bottom-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .library-top-bar {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: auto 1fr 1fr;
     align-items: center;
     gap: 30px;
     margin-bottom: 20px;
 }
 
-/* ИСПРАВЛЕНИЕ: Flexbox для кнопки назад и счетчика */
-.lib-action-area { 
-    grid-column: 1; justify-self: start; 
-    display: flex; align-items: center; gap: 15px; flex-wrap: wrap;
-}
+.lib-action-area { grid-column: 1; justify-self: start; display: flex; align-items: center; }
 .lib-tools-area { grid-column: 2; justify-self: center; }
 .lib-search-area { grid-column: 3; justify-self: end; width: 100%; max-width: 500px; }
 
@@ -1719,56 +1213,107 @@ File: css\library.css
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     cursor: pointer;
 }
-.btn-lib-back i {
-    font-size: 1.1rem;
-    color: var(--color-neon-pink);
-    transition: transform var(--transition-normal);
-}
+.btn-lib-back i { font-size: 1.1rem; transition: transform var(--transition-normal); }
 .btn-lib-back:hover {
-    background: rgba(255, 45, 149, 0.1);
-    border-color: var(--color-neon-pink);
-    color: var(--color-text-white);
-    box-shadow: 0 0 15px color-mix(in srgb, var(--color-neon-pink) 40%, transparent), 
-                inset 0 0 10px color-mix(in srgb, var(--color-neon-pink) 20%, transparent);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--active-tab-color);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--active-tab-color) 30%, transparent);
     transform: translateY(-2px);
 }
-.btn-lib-back:hover i {
-    transform: translateX(-4px);
-    text-shadow: 0 0 10px var(--color-neon-pink);
-}
+.btn-lib-back:hover i { transform: translateX(-4px); text-shadow: 0 0 10px var(--color-text-white); }
 
-.library-sub-bar {
+/* =========================================
+   НОВЫЕ ВЕЛИКИЕ 5 ВКЛАДОК
+   ========================================= */
+.library-tabs-nav {
     display: flex;
-    justify-content: center; /* Центрируем фильтры, так как счетчик уехал */
-    align-items: center;
-    border-top: 1px dashed rgba(255,255,255,0.05);
-    padding-top: 15px;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 5px;
+    margin-top: 15px;
+    margin-bottom: -2px; /* Врастаем в нижний бордер хедера */
 }
 
-.lib-counter {
-    display: flex; 
-    align-items: center; 
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 6px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-    height: 40px;
+.lib-tab-btn {
+    flex-grow: 1; flex-basis: 0;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: none; 
+    border-radius: 12px 12px 0 0;
+    padding: 12px 15px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    --tab-color: #666; /* Цвет по умолчанию (переопределяется классами) */
 }
-.lib-counter-label {
+
+.lib-tab-btn[data-tab="completed"] { --tab-color: var(--color-neon-green); }
+.lib-tab-btn[data-tab="playing"] { --tab-color: var(--color-accent-blue); }
+.lib-tab-btn[data-tab="on-hold"] { --tab-color: var(--color-warning-yellow); }
+.lib-tab-btn[data-tab="dropped"] { --tab-color: var(--color-danger-red); }
+.lib-tab-btn[data-tab="suggested"] { --tab-color: var(--color-neon-pink); }
+
+.tab-icon {
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.tab-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.tab-label {
     font-family: var(--font-tech);
-    color: var(--color-text-muted);
     font-size: 0.85rem;
-    letter-spacing: 2px;
     font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    transition: color 0.3s;
 }
-.lib-counter-val { 
+
+.tab-count {
     font-family: var(--font-header);
-    color: var(--color-neon-green); 
-    font-size: 1.2rem; 
-    font-weight: 800;
-    text-shadow: 0 0 10px color-mix(in srgb, var(--color-neon-green) 50%, transparent); 
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.3);
+    line-height: 1;
+    transition: all 0.3s;
+}
+
+/* Ховер состояние */
+.lib-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.lib-tab-btn:hover .tab-icon { color: color-mix(in srgb, var(--tab-color) 60%, transparent); }
+.lib-tab-btn:hover .tab-label { color: var(--color-text-light); }
+
+/* Активное состояние */
+.lib-tab-btn.active {
+    background: color-mix(in srgb, var(--tab-color) 10%, transparent);
+    border-color: var(--tab-color);
+    box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
+    transform: translateY(-2px);
+    padding-top: 14px;
+}
+
+.lib-tab-btn.active .tab-icon {
+    color: var(--tab-color);
+    filter: drop-shadow(0 0 5px var(--tab-color));
+    transform: scale(1.1);
+}
+.lib-tab-btn.active .tab-label { color: var(--color-text-white); }
+.lib-tab-btn.active .tab-count {
+    color: var(--tab-color);
+    text-shadow: 0 0 10px var(--tab-color);
 }
 
 /* =========================================
@@ -1779,7 +1324,7 @@ File: css\library.css
 .library-page-wrapper .search-module::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 54px; 
     border-radius: 12px; pointer-events: none; z-index: 201;
-    background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--color-neon-green) 15%, transparent) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--active-tab-color) 15%, transparent) 50%, transparent 100%);
     background-size: 200% 100%; background-position: -200% 0; opacity: 0; transition: opacity var(--transition-normal); mix-blend-mode: screen; clip-path: inset(0 0 0 0 round 12px);
 }
 .library-page-wrapper .search-module:focus-within::before { opacity: 1; animation: scanner-glare 2s infinite linear; }
@@ -1790,7 +1335,7 @@ File: css\library.css
     color: var(--color-text-muted); font-size: 1.1rem; transition: all var(--transition-normal); z-index: 205; cursor: pointer; pointer-events: auto;
 }
 .library-page-wrapper .search-icon:hover, .library-page-wrapper .search-module:focus-within .search-icon:hover { 
-    background: var(--color-neon-green); color: var(--color-text-dark); border-color: var(--color-neon-green); box-shadow: 0 0 15px color-mix(in srgb, var(--color-neon-green) 50%, transparent); 
+    background: var(--active-tab-color); color: var(--color-text-dark); border-color: var(--active-tab-color); box-shadow: 0 0 15px color-mix(in srgb, var(--active-tab-color) 50%, transparent); 
 }
 .library-page-wrapper .search-icon.loading-icon { pointer-events: none; background: transparent; border-color: transparent; color: var(--color-neon-pink); animation: spin-center 1s linear infinite !important; }
 
@@ -1799,21 +1344,21 @@ File: css\library.css
     color: var(--color-text-white); font-family: var(--font-primary); font-size: 1rem; letter-spacing: 1px; height: 54px; box-sizing: border-box;
     backdrop-filter: blur(10px); position: relative; z-index: 200; transition: all var(--transition-normal); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); 
 }
-.library-page-wrapper .search-module.suggestions-open input { border-radius: 12px 12px 0 0; background: rgba(8, 9, 13, 0.98); border-color: var(--color-neon-green); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8); border-bottom-color: transparent; }
-.library-page-wrapper input:focus { background: rgba(0, 0, 0, 0.7); border-color: var(--color-neon-green); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px color-mix(in srgb, var(--color-neon-green) 15%, transparent); outline: none; }
-.library-page-wrapper .search-module:focus-within .search-icon:not(:hover) { border-color: color-mix(in srgb, var(--color-neon-green) 50%, transparent); color: var(--color-neon-green); }
+.library-page-wrapper .search-module.suggestions-open input { border-radius: 12px 12px 0 0; background: rgba(8, 9, 13, 0.98); border-color: var(--active-tab-color); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8); border-bottom-color: transparent; }
+.library-page-wrapper input:focus { background: rgba(0, 0, 0, 0.7); border-color: var(--active-tab-color); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px color-mix(in srgb, var(--active-tab-color) 15%, transparent); outline: none; }
+.library-page-wrapper .search-module:focus-within .search-icon:not(:hover) { border-color: color-mix(in srgb, var(--active-tab-color) 50%, transparent); color: var(--active-tab-color); }
 
 .library-page-wrapper .search-hotkey { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 4px; padding: 2px 6px; font-family: var(--font-header); font-size: 0.65rem; color: var(--color-text-muted); pointer-events: none; z-index: 202; box-shadow: 0 2px 0 rgba(0,0,0,0.5); transition: var(--transition-normal); }
 .library-page-wrapper .search-module:focus-within .search-hotkey { opacity: 0; transform: translateY(-50%) scale(0.8); }
 
-.library-page-wrapper .search-suggestions { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(8, 9, 13, 0.98); backdrop-filter: blur(20px); border: 1px solid var(--color-neon-green); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.95); margin-top: 0px; padding: 0; z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 0; overflow: hidden; }
+.library-page-wrapper .search-suggestions { position: absolute; top: 100%; left: 0; width: 100%; background: rgba(8, 9, 13, 0.98); backdrop-filter: blur(20px); border: 1px solid var(--active-tab-color); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.95); margin-top: 0px; padding: 0; z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 0; overflow: hidden; }
 .library-page-wrapper .search-suggestions.active { opacity: 1; visibility: visible; transform: translateY(0); max-height: 60vh; overflow-y: auto; pointer-events: auto; }
 .library-page-wrapper .search-suggestions::-webkit-scrollbar { width: 6px; }
-.library-page-wrapper .search-suggestions::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--color-neon-green) 20%, transparent); border-radius: 4px; }
+.library-page-wrapper .search-suggestions::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--active-tab-color) 20%, transparent); border-radius: 4px; }
 .library-page-wrapper .suggestion-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 30px 20px; color: #777; text-align: center; font-family: var(--font-primary); }
 
 /* =========================================
-   БЕСКОНЕЧНАЯ СЕТКА КАРТОЧЕК (FLEXBOX)
+   БЕСКОНЕЧНАЯ СЕТКА КАРТОЧЕК
    ========================================= */
 .library-container {
     padding-top: 30px;
@@ -1846,20 +1391,6 @@ File: css\library.css
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.library-full-grid .archive-divider-row {
-    width: 100%; display: flex; align-items: center; justify-content: center; gap: 20px; margin: 40px 0 20px 0;
-}
-.library-full-grid .archive-divider-row.animate-entry {
-    opacity: 0; animation: lib-card-entry 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-.library-full-grid .archive-divider-row .divider-line { flex-grow: 1; height: 2px; position: relative; border-radius: 2px; }
-.library-full-grid .archive-divider-row .divider-line::before { content: ''; position: absolute; inset: 0; filter: blur(5px); opacity: 0.9; }
-.library-full-grid .archive-divider-row .divider-line:first-child,
-.library-full-grid .archive-divider-row .divider-line:first-child::before { background: linear-gradient(90deg, transparent 0%, var(--color-neon-pink) 100%); }
-.library-full-grid .archive-divider-row .divider-line:last-child,
-.library-full-grid .archive-divider-row .divider-line:last-child::before { background: linear-gradient(90deg, var(--color-neon-pink) 0%, transparent 100%); }
-.library-full-grid .archive-divider-row .divider-text { font-family: var(--font-header); color: var(--color-text-white); font-weight: 800; font-size: 1.5rem; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 15px var(--color-neon-pink), 0 0 5px var(--color-text-white); white-space: nowrap; padding: 0 10px; }
-
 /* =========================================
    АДАПТИВ
    ========================================= */
@@ -1867,12 +1398,19 @@ File: css\library.css
     .library-top-bar { display: flex; flex-direction: column; gap: 15px; align-items: center; }
     .lib-action-area { justify-content: center; width: 100%; }
     .lib-search-area { max-width: 100%; }
-    .library-sub-bar { flex-direction: column; gap: 15px; justify-content: center; }
+    
+    .library-tabs-nav { flex-wrap: wrap; margin-top: 5px; }
+    .lib-tab-btn { flex-basis: 30%; border-bottom: 1px solid rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 5px; }
+    .library-header-sticky { border-bottom: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 }
 
 @media (max-width: 768px) {
-    .library-header-sticky { padding: 15px 0; }
-    .library-full-grid .archive-divider-row .divider-text { font-size: 1rem; letter-spacing: 2px; }
+    .library-header-sticky { padding: 15px 0 10px 0; }
+    .library-tabs-nav { gap: 5px; }
+    .lib-tab-btn { flex-basis: 48%; padding: 8px; gap: 8px; flex-direction: row; }
+    .tab-icon { font-size: 1.2rem; }
+    .tab-label { font-size: 0.7rem; }
+    .tab-count { font-size: 1rem; }
     .library-full-grid .archive-card-container:not(.archive-divider-row) { width: calc(33.333% - 15px) !important; }
 }
 
@@ -2858,6 +2396,454 @@ File: css\about\holo-carousel.css
 }
 
 ================================================================================
+File: css\agents\agent-detail.css
+================================================================================
+
+/* css/agents/agent-detail.css */
+
+.agent-detail-zone {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 4px solid var(--agent-color, var(--color-neon-green));
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    padding: 60px 40px 40px 40px; /* Увеличили верхний паддинг под вкладку */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    transition: border-color 0.4s ease, opacity 0.3s ease;
+    position: relative; /* Для позиционирования вкладки Назад */
+}
+
+/* КИБЕР-ВКЛАДКА "НАЗАД" */
+.agent-back-tab {
+    position: absolute;
+    top: -4px; /* Идеальное перекрытие верхнего цветного бордера */
+    left: -1px; /* Идеальное перекрытие левого бордера */
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid var(--agent-color, var(--color-neon-green));
+    border-left: 4px solid var(--agent-color, var(--color-neon-green));
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px 0 12px 0; /* Скругление совпадает с досье */
+    
+    color: var(--color-text-white);
+    font-family: var(--font-header);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 10px 20px 10px 15px;
+    
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    backdrop-filter: blur(10px);
+    z-index: 20;
+}
+
+.agent-back-tab:hover {
+    background: var(--agent-color, var(--color-neon-green));
+    color: var(--color-text-dark);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+}
+
+.agent-back-tab i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.agent-back-tab:hover i {
+    transform: translateX(-4px);
+}
+
+/* Анимация переключения агента */
+.agent-detail-zone.is-glitching {
+    animation: text-glitch-swap 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.agent-header-row {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+/* Аватарка */
+.agent-big-avatar {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: var(--color-bg-dark);
+    border: 3px solid var(--agent-color, var(--color-neon-green));
+    box-shadow: 0 0 25px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; color: var(--agent-color, var(--color-neon-green));
+    overflow: hidden; flex-shrink: 0;
+    transition: all 0.4s ease;
+}
+.agent-big-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Инфо */
+.agent-header-info {
+    display: flex; flex-direction: column; flex-grow: 1; justify-content: center; min-width: 0;
+}
+.agent-name {
+    font-family: var(--font-header);
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0 0 5px 0;
+    text-transform: uppercase;
+    color: var(--color-text-white);
+    text-shadow: 0 0 15px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 60%, transparent);
+    line-height: 1.1;
+    transition: text-shadow 0.4s ease;
+}
+.agent-role {
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--agent-color, var(--color-neon-green));
+    margin-bottom: 15px;
+    transition: color 0.4s ease;
+}
+
+/* Плашки уровня и возраста */
+.agent-stats-row {
+    display: flex; gap: 15px; align-items: center; flex-wrap: wrap;
+}
+.agent-stat-badge {
+    background: color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+    color: var(--color-text-white);
+    padding: 6px 14px; border-radius: 6px;
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.4s ease;
+}
+.agent-stat-badge i { color: var(--agent-color, var(--color-neon-green)); }
+
+/* Кнопка Твича */
+.agent-twitch-btn {
+    background: rgba(145, 70, 255, 0.1);
+    border: 1px solid rgba(145, 70, 255, 0.4);
+    color: #fff;
+    padding: 6px 14px; border-radius: 6px;
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+    transition: all var(--transition-normal);
+}
+.agent-twitch-btn i { color: #9146ff; transition: color var(--transition-normal); }
+.agent-twitch-btn:hover {
+    background: #9146ff;
+    border-color: #9146ff;
+    box-shadow: 0 0 15px rgba(145, 70, 255, 0.6);
+}
+.agent-twitch-btn:hover i { color: #fff; }
+
+/* Блок Прогресса */
+.agent-progress-block {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+}
+.agent-progress-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+}
+.ap-title {
+    font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; 
+    color: var(--color-text-muted); letter-spacing: 2px; text-transform: uppercase;
+}
+.ap-text {
+    font-family: var(--font-header); font-size: 0.95rem; font-weight: 700;
+    color: var(--agent-color, var(--color-neon-green));
+    text-shadow: 0 0 10px color-mix(in srgb, var(--agent-color) 40%, transparent);
+}
+.agent-level-bar-container {
+    width: 100%; background: rgba(255,255,255,0.05);
+    height: 8px; border-radius: 4px; overflow: hidden;
+}
+.agent-level-fill {
+    height: 100%; background: var(--agent-color, var(--color-neon-green));
+    box-shadow: 0 0 10px var(--agent-color, var(--color-neon-green));
+    transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.4s ease;
+}
+.agent-progress-footer {
+    margin-top: 10px; text-align: right;
+    font-family: var(--font-primary); font-size: 0.75rem; color: rgba(255, 255, 255, 0.3);
+}
+
+/* Описание */
+.agent-description {
+    font-family: var(--font-primary); font-size: 1.1rem; line-height: 1.6;
+    color: var(--color-text-light); background: rgba(255,255,255,0.02);
+    padding: 20px; border-radius: 8px;
+    border-left: 3px solid var(--agent-color, var(--color-neon-green));
+    transition: border-color 0.4s ease;
+}
+
+/* Секретные данные (Заглушка) */
+.agent-secret-data {
+    border: 1px dashed color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 30%, transparent);
+    border-radius: 8px; padding: 40px 20px; text-align: center;
+    color: var(--color-text-muted); font-family: var(--font-tech); letter-spacing: 2px;
+    transition: border-color 0.4s ease;
+}
+.agent-secret-data i {
+    font-size: 2.5rem; color: color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+    margin-bottom: 15px; transition: color 0.4s ease;
+}
+
+/* МИНИ ТИРЛИСТ */
+.agent-tierlist-block {
+    margin-top: 10px; background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px;
+    padding: 20px; display: flex; flex-direction: column;
+}
+.agent-tierlist-title {
+    font-family: var(--font-header); font-size: 1.1rem; color: var(--color-text-white);
+    letter-spacing: 2px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
+}
+.agent-tierlist-preview {
+    position: relative; cursor: pointer; border-radius: 6px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.agent-tierlist-preview:hover {
+    transform: translateY(-4px); border-color: var(--agent-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px color-mix(in srgb, var(--agent-color) 40%, transparent);
+}
+.agent-tierlist-preview::after {
+    content: 'ОТКРЫТЬ ПОЛНЫЙ ТИРЛИСТ'; position: absolute; inset: 0;
+    background: rgba(0,0,0,0.85); color: var(--agent-color); display: flex;
+    align-items: center; justify-content: center; font-family: var(--font-header);
+    font-size: 1.4rem; font-weight: 800; letter-spacing: 2px; opacity: 0;
+    transition: opacity 0.3s; backdrop-filter: blur(3px);
+}
+.agent-tierlist-preview:hover::after { opacity: 1; }
+
+.mini-tl-container { display: flex; flex-direction: column; gap: 3px; background: var(--color-bg-dark); padding: 3px; }
+.mini-tl-row { display: flex; background: rgba(255,255,255,0.03); min-height: 40px; }
+.mini-tl-label { width: 45px; display: flex; align-items: center; justify-content: center; font-family: var(--font-header); font-weight: 900; font-size: 1rem; color: #111; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+.mini-tl-content { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; flex-grow: 1; }
+.mini-tl-card { width: 28px; height: 40px; border-radius: 3px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.1); }
+.mini-tl-card img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 900px) {
+    .agent-detail-zone {
+        padding: 55px 20px 20px 20px; /* На мобилках вкладка тоже помещается */
+    }
+    .agent-header-row { flex-direction: column; text-align: center; gap: 15px; }
+    .agent-stats-row { justify-content: center; }
+}
+
+================================================================================
+File: css\agents\agent-marquee.css
+================================================================================
+
+/* css/agents/agent-marquee.css */
+
+.agents-list-col {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.agents-list-header {
+    padding: 20px;
+    font-family: var(--font-header);
+    font-weight: 800;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-white);
+    flex-shrink: 0;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.agents-count { color: var(--color-neon-green); font-family: var(--font-tech); }
+
+/* МАГИЯ ЛЕНТЫ И ЗАТУХАНИЯ */
+.agents-scroll-container {
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden; /* Полностью прячем нативные скроллбары */
+    position: relative;
+    padding: 20px 15px;
+    
+    /* Эффект растворения краев списка в пустоте */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.agents-vertical-track {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    cursor: grab;
+    will-change: transform;
+    touch-action: pan-x; /* Блокируем вертикальный браузерный скролл, разрешаем только гориз. свайп (на всякий случай) */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.agents-vertical-track.is-dragging {
+    cursor: grabbing;
+}
+
+/* Во время драга блокируем мышиные эвенты у всех вложенных карт */
+.agents-vertical-track.is-dragging * {
+    pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* Горизонтальная карточка агента */
+.agent-list-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    flex-shrink: 0; 
+}
+
+.agent-list-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateX(-5px);
+}
+.agent-list-card.active {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: var(--card-color);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.alc-avatar {
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    background: var(--color-bg-dark);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--card-color); border: 2px solid var(--card-color);
+    font-size: 1.2rem; flex-shrink: 0; overflow: hidden;
+}
+.alc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.agent-list-card.active .alc-avatar { box-shadow: 0 0 10px var(--card-color); }
+
+.alc-info {
+    display: flex; flex-direction: column; justify-content: center; flex-grow: 1; min-width: 0;
+}
+.alc-name {
+    font-family: var(--font-header); font-size: 0.95rem; font-weight: 700;
+    color: var(--color-text-white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    transition: color 0.3s;
+}
+.agent-list-card.active .alc-name { color: var(--card-color); text-shadow: 0 0 5px var(--card-color); }
+.alc-role {
+    font-family: var(--font-primary); font-size: 0.75rem; color: var(--color-text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.alc-lvl {
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.8rem;
+    color: var(--card-color); padding: 2px 6px; background: color-mix(in srgb, var(--card-color) 15%, transparent);
+    border-radius: 4px; flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    /* На мобильных устройствах убираем маску, так как она часто вызывает баги с GPU */
+    .agents-scroll-container {
+        mask-image: none;
+        -webkit-mask-image: none;
+        padding: 10px 15px;
+    }
+}
+
+================================================================================
+File: css\agents\agents-layout.css
+================================================================================
+
+/* css/agents/agents-layout.css */
+
+/* Блокируем скролл на уровне body, чтобы страница стояла мертво (только для десктопа) */
+@media (min-width: 901px) {
+    body.route-agents {
+        overflow: hidden !important;
+    }
+}
+
+.agents-page-wrapper {
+    position: relative; 
+    width: 100vw; 
+    min-height: 100vh;
+    background: var(--color-bg-dark); 
+    display: flex; 
+    flex-direction: column; 
+    z-index: 100;
+}
+
+/* Скрываем скроллбар глобально на странице (для мобилок) */
+.agents-page-wrapper {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+.agents-page-wrapper::-webkit-scrollbar {
+    display: none !important;
+}
+
+.agents-cinematic-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: 
+        radial-gradient(circle at 30% 50%, color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 8%, transparent) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 30px 30px, 30px 30px;
+    transition: background-image 0.5s ease;
+}
+
+/* ОСНОВНАЯ СЕТКА */
+.agents-content-wrapper {
+    flex-grow: 1; position: relative; z-index: 10; max-width: 1650px; 
+    margin: 0 auto; width: 100%; 
+    padding: 40px 40px 60px 40px; /* Увеличили отступ сверху, так как отдельной панели больше нет */
+}
+
+.agents-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
+    align-items: start;
+}
+
+/* ЖЕСТКИЙ ЛОК СКРОЛЛА ДЛЯ ДЕСКТОПА */
+@media (min-width: 901px) {
+    .agents-page-wrapper { height: 100vh; overflow: hidden; }
+    .agents-content-wrapper { height: 100vh; padding-bottom: 30px; }
+    .agents-layout { height: 100%; overflow: hidden; }
+    .agents-list-col { position: relative; top: 0; height: 100%; max-height: 100%; }
+    .agent-detail-zone { height: 100%; overflow-y: auto; scrollbar-width: none; }
+    .agent-detail-zone::-webkit-scrollbar { display: none; }
+}
+
+@media (max-width: 1200px) {
+    .agents-layout { grid-template-columns: 1fr 300px; gap: 20px; }
+}
+
+@media (max-width: 900px) {
+    .agents-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .agents-list-col { max-height: 500px; width: 100%; }
+    .agents-content-wrapper { padding: 30px 15px 40px 15px; }
+}
+
+================================================================================
 File: css\archive\archive-card.css
 ================================================================================
 
@@ -2920,27 +2906,31 @@ File: css\archive\archive-card.css
 
 .card-info, .youtube-play-overlay, .yt-playlist-badge, .cyber-rating-badge { pointer-events: auto; }
 
+/* ИСПРАВЛЕНИЕ: Центрирование контента внутри инфоблока */
 .card-info { 
     margin-top: auto; padding: 30px 15px 15px 15px;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.8) 50%, transparent 100%); 
-    display: flex; flex-direction: column; border-radius: 0 0 11px 11px; min-width: 0; 
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.7) 60%, transparent 100%); 
+    display: flex; flex-direction: column; align-items: center; /* Центрируем по горизонтали */
+    border-radius: 0 0 11px 11px; min-width: 0; 
 }
 
+/* ИСПРАВЛЕНИЕ: Центрирование текста заголовка */
 .card-title { 
     font-family: var(--font-tech); color: var(--color-text-white); font-size: 1.05rem; font-weight: 700; margin-bottom: 0; 
     line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.9); white-space: nowrap; overflow: hidden; 
-    text-overflow: ellipsis; width: 100%; display: block;
+    text-overflow: ellipsis; width: 100%; display: block; text-align: center; 
 }
 
 .cyber-status { 
     font-family: var(--font-tech); font-size: 0.75rem; color: var(--custom-color); 
     text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; 
     text-shadow: 0 0 5px rgba(0,0,0,0.8); transition: color 0.5s ease; display: flex; align-items: center;
+    justify-content: center;
 }
 
 .suggested-status { 
     color: var(--color-text-white); background: rgba(0,0,0,0.65); padding: 3px 8px; border-radius: 4px; 
-    border: 1px solid rgba(255,255,255,0.15); display: inline-flex; align-items: center; 
+    border: 1px solid rgba(255,255,255,0.15); display: inline-flex; align-items: center; justify-content: center;
     gap: 6px; width: fit-content; margin-bottom: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
 }
 .suggested-status i { font-size: 0.7rem; }
@@ -2970,7 +2960,6 @@ File: css\archive\archive-card.css
 .archive-card-container:hover .youtube-play-overlay i { transform: scale(1.1); filter: drop-shadow(0 0 5px rgba(0,0,0,1)) drop-shadow(0 0 15px #ff0000); opacity: 1; }
 
 @media (max-width: 768px) {
-    /* 📱 Принудительно применяем стили компактного вида для чистоты на мобилках */
     .cyber-status { display: none !important; }
     .card-info { padding: 20px 10px 10px 10px !important; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%) !important; }
     .card-title { font-size: 0.85rem !important; margin-bottom: 0 !important; text-align: center !important; }
@@ -3106,28 +3095,101 @@ File: css\archive\archive-controls.css
 .sugg-cyber-rating .val { font-family: var(--font-header); font-size: 0.75rem; font-weight: 800; text-shadow: 0 0 5px currentColor; }
 .search-match { background: transparent; color: var(--color-neon-green); text-shadow: 0 0 8px var(--color-neon-green); font-weight: 900; }
 
-/* СТАТУСЫ */
-.filters-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; }
-.filter-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.filter-chip { padding: 6px 18px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; background: rgba(0,0,0,0.4); transition: all var(--transition-normal); font-weight: 700; user-select: none; }
-.filter-chip:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-.filter-chip.status-completed, .filter-chip.status-watched { border-color: color-mix(in srgb, var(--status-completed) 30%, transparent); color: var(--status-completed); }
-.filter-chip.status-completed.active, .filter-chip.status-watched.active { background: var(--status-completed); color: var(--color-text-dark); border-color: var(--status-completed); box-shadow: 0 0 15px color-mix(in srgb, var(--status-completed) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-playing, .filter-chip.status-watching { border-color: color-mix(in srgb, var(--status-playing) 30%, transparent); color: var(--status-playing); }
-.filter-chip.status-playing.active, .filter-chip.status-watching.active { background: var(--status-playing); color: var(--color-text-dark); border-color: var(--status-playing); box-shadow: 0 0 15px color-mix(in srgb, var(--status-playing) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-on-hold { border-color: color-mix(in srgb, var(--status-on-hold) 30%, transparent); color: var(--status-on-hold); }
-.filter-chip.status-on-hold.active { background: var(--status-on-hold); color: var(--color-text-dark); border-color: var(--status-on-hold); box-shadow: 0 0 15px color-mix(in srgb, var(--status-on-hold) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-dropped { border-color: color-mix(in srgb, var(--status-dropped) 30%, transparent); color: var(--status-dropped); }
-.filter-chip.status-dropped.active { background: var(--status-dropped); color: var(--color-text-white); border-color: var(--status-dropped); box-shadow: 0 0 15px color-mix(in srgb, var(--status-dropped) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-suggested { border-color: color-mix(in srgb, var(--status-suggested) 50%, transparent) !important; color: var(--status-suggested) !important; }
-.filter-chip.status-suggested.active { background: var(--status-suggested) !important; color: var(--color-text-white) !important; box-shadow: 0 0 15px color-mix(in srgb, var(--status-suggested) 50%, transparent); transform: translateY(-3px); }
+/* 5 КНОПОК-ЯКОРЕЙ (КАТЕГОРИИ СЛЕВА) ИСПРАВЛЕНИЕ: Идеальное слияние с доком */
+.category-jumpers {
+    position: absolute;
+    top: 50%;
+    right: 100%; /* Прижимаем к левому краю .pagination-dock-vertical */
+    margin-right: -1px; /* Накладываем бордеры */
+    transform: translateY(-50%);
+    
+    display: flex; flex-direction: column; gap: 10px;
+    background: rgba(8, 9, 13, 0.98); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-right: none; 
+    border-radius: 16px 0 0 16px; 
+    
+    padding: 12px 10px; 
+    padding-right: 12px; /* Оставляем немного места справа для дыхания */
+    box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.9); 
+    transition: all 0.4s ease;
+    z-index: 60;
+    backdrop-filter: none;
+}
+
+/* Псевдоэлементы для бесшовного скругления */
+.category-jumpers::before,
+.category-jumpers::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    pointer-events: none;
+    z-index: 1; 
+    transition: all 0.4s ease;
+}
+
+.category-jumpers::before {
+    bottom: 100%; 
+    border-bottom-right-radius: 16px;
+    box-shadow: 
+        1px 1px 0 0 rgba(255, 255, 255, 0.1),
+        6px 6px 0 6px rgba(8, 9, 13, 0.98);
+}
+
+.category-jumpers::after {
+    top: 100%; 
+    border-top-right-radius: 16px;
+    box-shadow: 
+        1px -1px 0 0 rgba(255, 255, 255, 0.1),
+        6px -6px 0 6px rgba(8, 9, 13, 0.98);
+}
+
+.jumper-btn {
+    position: relative;
+    z-index: 5;
+    width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.02); color: #555; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden; transform-origin: top;
+}
+.jumper-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: var(--color-text-white); border-color: rgba(255,255,255,0.2); }
+.jumper-btn:disabled { opacity: 0.1; cursor: default; }
+
+.jumper-btn.active { opacity: 1; }
+.jumper-btn.j-completed.active { color: var(--color-text-dark); background: var(--color-neon-green); box-shadow: 0 0 10px var(--color-neon-green); border-color: var(--color-neon-green); }
+.jumper-btn.j-playing.active { color: var(--color-text-dark); background: var(--color-accent-blue); box-shadow: 0 0 10px var(--color-accent-blue); border-color: var(--color-accent-blue); }
+.jumper-btn.j-on-hold.active { color: var(--color-text-dark); background: var(--color-warning-yellow); box-shadow: 0 0 10px var(--color-warning-yellow); border-color: var(--color-warning-yellow); }
+.jumper-btn.j-dropped.active { color: var(--color-text-white); background: var(--color-danger-red); box-shadow: 0 0 10px var(--color-danger-red); border-color: var(--color-danger-red); }
+.jumper-btn.j-suggested.active { color: var(--color-text-dark); background: var(--color-neon-pink); box-shadow: 0 0 10px var(--color-neon-pink); border-color: var(--color-neon-pink); }
+
+/* ЦВЕТА КНОПОК В МАТРИЦЕ И ТЮНЕРЕ */
+.matrix-btn.btn-completed.is-current, .tuner-slot.btn-completed.active { --active-color: var(--color-neon-green); }
+.matrix-btn.btn-playing.is-current, .tuner-slot.btn-playing.active { --active-color: var(--color-accent-blue); }
+.matrix-btn.btn-on-hold.is-current, .tuner-slot.btn-on-hold.active { --active-color: var(--color-warning-yellow); }
+.matrix-btn.btn-dropped.is-current, .tuner-slot.btn-dropped.active { --active-color: var(--color-danger-red); }
+.matrix-btn.btn-suggested.is-current, .tuner-slot.btn-suggested.active { --active-color: var(--color-neon-pink); }
+
+.tuner-slot.active {
+    background: var(--active-color, var(--color-neon-green));
+    box-shadow: 0 0 20px color-mix(in srgb, var(--active-color, var(--color-neon-green)) 50%, transparent), inset 0 0 10px rgba(255,255,255,0.5);
+    border-color: var(--color-text-white);
+    color: var(--color-text-dark);
+}
+.tuner-slot.active:hover { box-shadow: 0 0 25px var(--active-color, var(--color-neon-green)), inset 0 0 10px rgba(255,255,255,0.8); }
+
+/* Исключение для красного, чтобы темный текст читался */
+.matrix-btn.btn-dropped.is-current, .tuner-slot.btn-dropped.active { color: #fff; } 
 
 @media (max-width: 768px) {
     .header-control-bar { width: 100%; justify-content: center; flex-wrap: wrap; padding: 6px 12px; gap: 8px; border-radius: 12px; height: auto !important; }
     .density-switcher { display: none !important; }
     .switcher-btn { padding: 6px 10px; font-size: 0.75rem; gap: 4px; }
     .sort-btn, .density-btn { width: 30px; height: 30px; font-size: 0.8rem; }
-    .filter-chip { padding: 4px 10px; font-size: 0.65rem; }
+    
     .search-module { width: 100%; max-width: none; }
     .search-hotkey { display: none !important; }
     .suggestion-item { flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -8502,9 +8564,8 @@ File: js\agents-controller.js
 import EventBus from './event-bus.js';
 import { AppStore } from './store.js';
 import { AppRouter } from './router.js';
-import { AgentCard } from './components/AgentCard.js';
-import { loadData } from './api.js';
-import { optimizeImageUrl } from './utils.js';
+import { AgentsDetailRenderer } from './agents/AgentsDetailRenderer.js';
+import { AgentsMarquee } from './agents/AgentsMarquee.js';
 
 export class AgentsController {
     constructor() {
@@ -8512,32 +8573,17 @@ export class AgentsController {
         if (!this.container) return;
 
         this.els = {
-            page: document.getElementById('agents-page'),
-            backBtn: document.getElementById('btn-agents-back'),
-            bg: document.getElementById('agents-cinematic-bg'),
-            detailZone: document.getElementById('agent-detail-zone'),
-            
-            avatar: document.getElementById('agent-big-avatar'),
-            name: document.getElementById('agent-name'),
-            role: document.getElementById('agent-role'),
-            statsRow: document.getElementById('agent-stats-row'),
-            lvlBadge: document.getElementById('agent-lvl-badge').querySelector('span'),
-            timeBadge: document.getElementById('agent-time-badge').querySelector('span'),
-            
-            expText: document.getElementById('agent-exp-text'),
-            levelFill: document.getElementById('agent-level-fill'),
-            expHint: document.getElementById('agent-exp-hint'),
-            
-            desc: document.getElementById('agent-desc'),
-            dynamicContent: document.getElementById('agent-dynamic-content'),
-            
-            listContainer: document.getElementById('agents-scroll-list'),
-            totalCount: document.getElementById('agents-total-count')
+            backBtn: document.getElementById('btn-agents-back')
         };
 
         this.agentsData = [];
         this.currentAgentId = null;
         this.isListRendered = false; 
+
+        this.detailRenderer = new AgentsDetailRenderer();
+        this.marquee = new AgentsMarquee((clickedAgentId) => {
+            AppRouter.navigate('/agents', { id: clickedAgentId });
+        });
 
         this.bindEvents();
         this.subscribeToStore();
@@ -8546,10 +8592,18 @@ export class AgentsController {
     mount(targetId) {
         console.log('👤 [Agents] Компонент смонтирован');
         this.loadDataAndRender(targetId);
+        
+        // ВАЖНО: Если мы вернулись на страницу, мы ВЫЗЫВАЕМ resume(), 
+        // который сам убьет старый цикл, если он завис, и запустит чистый.
+        if (this.isListRendered) {
+            this.marquee.resume();
+        }
     }
 
     unmount() {
         console.log('👤 [Agents] Компонент размонтирован');
+        // Ставим на жесткую паузу при уходе, чтобы не жрать CPU в фоне
+        this.marquee.pause();
     }
 
     subscribeToStore() {
@@ -8576,7 +8630,6 @@ export class AgentsController {
     loadDataAndRender(targetId) {
         const state = AppStore.getState();
         
-        // Нам нужна и база агентов, и медиа (для картинок тирлиста)
         if (!state.data.isAgentsLoaded || !state.data.isMediaLoaded) {
             const unsubscribe = AppStore.subscribe((newState) => {
                 if (newState.data.isAgentsLoaded && newState.data.isMediaLoaded) {
@@ -8594,18 +8647,19 @@ export class AgentsController {
             return;
         }
 
-        if (!this.isListRendered) {
-            this.renderList();
-            this.isListRendered = true;
-        }
-
         let agent = this.agentsData.find(a => a.id === targetId || a.name === targetId);
         if (!agent) {
             agent = this.agentsData[0];
             AppRouter.navigate('/agents', { id: agent.id });
-        } else {
-            this.renderDetail(agent);
+            return;
         }
+
+        if (!this.isListRendered) {
+            this.marquee.render(this.agentsData, agent.id);
+            this.isListRendered = true;
+        }
+
+        this.renderDetail(agent);
     }
     
     switchAgent(targetId) {
@@ -8615,172 +8669,10 @@ export class AgentsController {
         }
     }
 
-    renderList() {
-        this.els.totalCount.textContent = this.agentsData.length;
-        
-        this.els.listContainer.innerHTML = this.agentsData.map(agent => {
-            const colorVal = AgentCard.getRoleColor(agent.color);
-            const { level } = AgentCard.calculateLevelData(agent.createdAt);
-            
-            const avatarContent = agent.avatarPath || agent.image 
-                ? `<img src="${agent.avatarPath || agent.image}" onerror="this.style.display='none'">` 
-                : (agent.customHtml || `<i class="${agent.mainIcon || 'fas fa-user'}"></i>`);
-
-            const displayName = agent.squadName || agent.name;
-
-            return `
-                <div class="agent-list-card" data-id="${agent.id}" style="--card-color: ${colorVal}">
-                    <div class="alc-avatar">${avatarContent}</div>
-                    <div class="alc-info">
-                        <div class="alc-name">${displayName}</div>
-                        <div class="alc-role">${agent.role || 'Агент'}</div>
-                    </div>
-                    <div class="alc-lvl">LVL.${level}</div>
-                </div>
-            `;
-        }).join('');
-
-        this.els.listContainer.querySelectorAll('.agent-list-card').forEach(card => {
-            card.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                AppRouter.navigate('/agents', { id: card.dataset.id });
-            });
-        });
-    }
-
     renderDetail(agent) {
-        if (!agent) return;
         this.currentAgentId = agent.id;
-
-        // 1. Обновляем классы активности
-        this.els.listContainer.querySelectorAll('.agent-list-card').forEach(card => {
-            card.classList.toggle('active', card.dataset.id === agent.id);
-        });
-
-        // 2. Анимация Глитча
-        this.els.detailZone.classList.remove('is-glitching');
-        void this.els.detailZone.offsetWidth; // Reflow
-        this.els.detailZone.classList.add('is-glitching');
-
-        setTimeout(() => {
-            const colorVal = AgentCard.getRoleColor(agent.color);
-            const { level, progress, daysActive, currentExp, nextLevelExp, daysLeft } = AgentCard.calculateLevelData(agent.createdAt);
-
-            this.els.page.style.setProperty('--agent-color', colorVal);
-
-            // Тексты
-            this.els.name.textContent = agent.squadName || agent.name;
-            this.els.role.textContent = agent.role || 'Агент';
-            this.els.lvlBadge.textContent = `LVL.${level}`;
-            this.els.timeBadge.textContent = agent.createdAt ? `${daysActive} дн. в сети` : `ДАННЫЕ ЗАСЕКРЕЧЕНЫ`;
-            this.els.desc.innerHTML = agent.description || 'Информация о данном агенте отсутствует в базе.';
-
-            // Удаляем старую кнопку твича, если была
-            const oldTwitchBtn = this.els.statsRow.querySelector('.agent-twitch-btn');
-            if (oldTwitchBtn) oldTwitchBtn.remove();
-            
-            // Добавляем новую, если логин известен
-            if (agent.twitch) {
-                const btn = document.createElement('a');
-                btn.className = 'agent-twitch-btn';
-                btn.href = `https://twitch.tv/${agent.twitch}`;
-                btn.target = '_blank';
-                btn.innerHTML = `<i class="fab fa-twitch"></i> TWITCH`;
-                this.els.statsRow.appendChild(btn);
-            }
-
-            // Прогресс бар
-            if (agent.createdAt) {
-                this.els.expText.textContent = `${currentExp} / ${nextLevelExp} XP`;
-                this.els.expHint.textContent = `До следующего уровня (LVL.${level + 1}): ${daysLeft} дн.`;
-            } else {
-                this.els.expText.textContent = `ДАННЫЕ СКРЫТЫ`;
-                this.els.expHint.textContent = `Прогресс неизвестен`;
-            }
-            this.els.levelFill.style.width = `${progress}%`;
-
-            // Аватарка
-            const avatarContent = agent.avatarPath || agent.image 
-                ? `<img src="${agent.avatarPath || agent.image}" onerror="this.style.display='none'">` 
-                : (agent.customHtml || `<i class="${agent.mainIcon || 'fas fa-user'}"></i>`);
-            this.els.avatar.innerHTML = avatarContent;
-
-            // РЕНДЕР МИНИ-ТИРЛИСТА
-            if (agent.hasTierlist) {
-                this.els.dynamicContent.innerHTML = `
-                    <div class="agent-tierlist-block">
-                        <div class="agent-tierlist-title"><i class="fas fa-list-ul"></i> БАЗА ДАННЫХ АГЕНТА</div>
-                        <div id="mini-tierlist-root" style="text-align: center; padding: 20px;">
-                            <i class="fas fa-spinner fa-spin" style="color: var(--agent-color);"></i> СИНХРОНИЗАЦИЯ...
-                        </div>
-                    </div>
-                `;
-                this.renderMiniTierlist(agent.id);
-            } else {
-                this.renderSecretPlaceholder();
-            }
-
-        }, 150);
-    }
-
-    async renderMiniTierlist(agentId) {
-        const root = document.getElementById('mini-tierlist-root');
-        if (!root) return;
-
-        try {
-            // Для демо подгружаем статический тирлист игр (в будущем можно грузить по agentId)
-            const staticData = await loadData('tierlist-static-games.json');
-            const mediaDb = AppStore.getState().data.media || [];
-
-            if (!staticData || !staticData.tiers) {
-                root.innerHTML = '<div style="color: #666;">Данные тирлиста повреждены</div>';
-                return;
-            }
-
-            let html = `<div class="agent-tierlist-preview" id="btn-open-agent-tierlist"><div class="mini-tl-container">`;
-
-            staticData.tiers.forEach(tier => {
-                if (tier.items.length === 0) return; // Пропускаем пустые тиры для компактности
-                
-                let cardsHtml = tier.items.map(itemTitle => {
-                    const mediaItem = mediaDb.find(m => m.title === itemTitle);
-                    let imgUrl = 'https://via.placeholder.com/22x32?text=NO';
-                    if (mediaItem) {
-                        imgUrl = mediaItem.image || (mediaItem.images && mediaItem.images[0]) || imgUrl;
-                    }
-                    return `<div class="mini-tl-card"><img src="${optimizeImageUrl(imgUrl, 50, 60)}" alt="${itemTitle}"></div>`;
-                }).join('');
-
-                html += `
-                    <div class="mini-tl-row">
-                        <div class="mini-tl-label" style="background-color: ${tier.color}">${tier.name}</div>
-                        <div class="mini-tl-content">${cardsHtml}</div>
-                    </div>
-                `;
-            });
-
-            html += `</div></div>`;
-            root.innerHTML = html;
-
-            document.getElementById('btn-open-agent-tierlist').addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'expand');
-                AppRouter.navigate('/tierlist');
-            });
-
-        } catch (e) {
-            console.error("Ошибка при генерации мини-тирлиста:", e);
-            root.innerHTML = '<div style="color: #ff4444;">Ошибка синхронизации</div>';
-        }
-    }
-
-    renderSecretPlaceholder() {
-        this.els.dynamicContent.innerHTML = `
-            <div class="agent-secret-data">
-                <i class="fas fa-lock"></i><br>
-                ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ ЗАСЕКРЕЧЕНЫ<br>
-                <span style="font-size: 0.8rem; color: #555;">(Личная база данных пуста)</span>
-            </div>
-        `;
+        this.marquee.setActive(agent.id);
+        this.detailRenderer.render(agent);
     }
 }
 
@@ -10688,12 +10580,9 @@ File: js\library-controller.js
 /* js/library-controller.js */
 import EventBus from './event-bus.js';
 import { AppStore } from './store.js';
-import { AppRouter } from './router.js';
-import { CardFactory } from './archive/CardFactory.js';
-import { LazyLoader } from './archive/LazyLoader.js';
-import { SearchEngine } from './services/SearchEngine.js';
-import { optimizeImageUrl } from './utils.js';
-import { STATUS_MAP } from './media-store.js';
+import { LibrarySearch } from './library/LibrarySearch.js';
+import { LibraryUI } from './library/LibraryUI.js';
+import { LibraryGrid } from './library/LibraryGrid.js';
 
 export class LibraryController {
     constructor() {
@@ -10701,16 +10590,21 @@ export class LibraryController {
         if (!this.container) return;
 
         this.els = {
+            pageWrapper: document.getElementById('library-page'),
             backBtn: document.getElementById('btn-library-back'),
             gridMain: document.getElementById('library-grid-main'),
             
             sortBtns: document.querySelectorAll('#library-sort-switcher .sort-btn'),
             typeBtns: document.querySelectorAll('#library-type-switcher .switcher-btn'),
             typeSwitcher: document.getElementById('library-type-switcher'),
-            statusFilters: document.getElementById('library-filters-status'),
+            
             btnDetailed: document.getElementById('lib-grid-detailed'),
             btnCompact: document.getElementById('lib-grid-compact'),
-            counter: document.querySelector('.lib-counter-val'),
+            
+            tabs: document.querySelectorAll('.lib-tab-btn'),
+            
+            labelCompleted: document.getElementById('label-completed'),
+            labelPlaying: document.getElementById('label-playing'),
             
             searchModule: document.getElementById('lib-search-module'),
             searchInput: document.getElementById('lib-search-input'),
@@ -10722,24 +10616,27 @@ export class LibraryController {
 
         this.gridMode = 'detailed'; 
         this.localSearchQuery = '';
-        
-        this.searchDebounce = null;
-        this.currentSearchMatches = [];
-        this.selectedIndex = -1;
+        this.activeTab = 'completed'; 
 
-        this.factory = new CardFactory(() => this.gridMode);
-        this.lazyLoader = new LazyLoader(() => this.gridMode);
+        // Инициализация модулей
+        this.search = new LibrarySearch(this);
+        this.ui = new LibraryUI(this);
+        this.grid = new LibraryGrid(this);
 
         this.bindEvents();
     }
 
     mount() {
-        console.log('📚 [Library] Компонент смонтирован');
-        this.localSearchQuery = AppStore.getState().media.searchQuery || '';
+        console.log('📚 [Library] Компонент смонтирован (Модульный)');
+        
+        const query = AppStore.getState().route.query;
+        this.localSearchQuery = query.search || '';
         this.els.searchInput.value = this.localSearchQuery;
-        this.toggleSuggestions(false);
-        this.syncUIWithState();
-        this.renderGrid();
+        this.activeTab = query.tab || 'completed';
+
+        this.search.toggleSuggestions(false);
+        this.ui.syncUIWithState();
+        this.grid.renderGrid();
     }
 
     unmount() {
@@ -10747,122 +10644,29 @@ export class LibraryController {
     }
 
     bindEvents() {
-        this.els.backBtn.addEventListener('click', () => {
-            EventBus.emit('PLAY_SOUND', 'click');
-            const type = AppStore.getState().media.type || 'games';
-            AppRouter.navigate('/archive', { type: type });
-        });
-
-        this.els.sortBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                const state = AppStore.getState().media;
-                const newSortDir = state.sort === btn.dataset.sort 
-                    ? (state.sortDirection === 'asc' ? 'desc' : 'asc') 
-                    : (btn.dataset.sort === 'rating' ? 'desc' : 'asc');
-                
-                AppRouter.updateQuery({ sort: btn.dataset.sort, sortDir: newSortDir });
-            });
-        });
-
-        this.els.typeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const type = btn.dataset.type;
-                if (AppStore.getState().media.type !== type) {
-                    EventBus.emit('PLAY_SOUND', 'click');
-                    const currentQuery = { ...AppStore.getState().route.query };
-                    delete currentQuery.filters; 
-                    AppRouter.navigate('/library', { type }, currentQuery);
-                }
-            });
-        });
-
-        const updateGridMode = (mode) => {
-            if (this.gridMode === mode) return;
-            EventBus.emit('PLAY_SOUND', 'click');
-            this.gridMode = mode;
-            this.els.btnDetailed.classList.toggle('active', mode === 'detailed');
-            this.els.btnCompact.classList.toggle('active', mode === 'compact');
-            
-            if (mode === 'compact') this.els.gridMain.classList.add('compact-mode');
-            else this.els.gridMain.classList.remove('compact-mode');
-            
-            this.els.gridMain.style.opacity = '0';
-            setTimeout(() => { this.renderGrid(); this.els.gridMain.style.opacity = '1'; }, 200);
-        };
-
-        this.els.btnDetailed.addEventListener('click', () => updateGridMode('detailed'));
-        this.els.btnCompact.addEventListener('click', () => updateGridMode('compact'));
-
-        this.els.gridMain.addEventListener('click', (e) => {
-            const card = e.target.closest('.archive-card-container');
-            if (!card || card.classList.contains('archive-divider-row')) return;
-            const state = AppStore.getState();
-            if (!state.data.isMediaLoaded) return;
-            const item = state.data.media.find(i => i.id === card.dataset.id);
-            if (item) {
-                EventBus.emit('PLAY_SOUND', 'expand');
-                // ИСПРАВЛЕНИЕ: Добавляем метку откуда пришли
-                AppRouter.navigate('/item', { id: item.id }, { from: 'library' });
-            }
-        });
-
-        this.els.searchInput.addEventListener('input', (e) => this.handleSearchInput(e.target.value));
-        this.els.searchInput.addEventListener('keydown', (e) => this.handleSearchKeyDown(e));
-
-        this.els.searchIcon.addEventListener('click', () => {
-            EventBus.emit('PLAY_SOUND', 'click');
-            this.executeSearch(this.els.searchInput.value);
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!this.els.searchModule.contains(e.target)) this.toggleSuggestions(false);
-        });
-
-        this.els.suggestionsBox.addEventListener('click', (e) => {
-            const itemEl = e.target.closest('.suggestion-item');
-            if (itemEl) {
-                const index = parseInt(itemEl.dataset.index);
-                if (!isNaN(index) && this.currentSearchMatches[index]) {
-                    this.applySearchSelection(this.currentSearchMatches[index]);
-                }
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                if (AppStore.getState().route.path.startsWith('/library')) {
-                    e.preventDefault();
-                    this.els.searchInput.focus();
-                }
-            }
-        });
-
         AppStore.subscribe((state, prevState) => {
             const curr = state.media;
             const prev = prevState?.media;
             
             if (state.route.path.startsWith('/library')) {
-                if (
-                    curr.type !== prev?.type || 
-                    JSON.stringify(curr.filters) !== JSON.stringify(prev?.filters) ||
-                    curr.sort !== prev?.sort ||
-                    curr.sortDirection !== prev?.sortDirection
-                ) {
-                    this.syncUIWithState();
-                }
+                const currentTab = state.route.query.tab || 'completed';
                 
                 if (
-                    JSON.stringify(curr.filters) !== JSON.stringify(prev?.filters) ||
+                    curr.type !== prev?.type || 
                     curr.sort !== prev?.sort ||
                     curr.sortDirection !== prev?.sortDirection ||
-                    curr.searchQuery !== prev?.searchQuery
+                    this.activeTab !== currentTab
                 ) {
-                    if (curr.searchQuery !== undefined) {
-                        this.localSearchQuery = curr.searchQuery;
-                        this.els.searchInput.value = this.localSearchQuery;
-                    }
-                    this.renderGrid();
+                    this.activeTab = currentTab;
+                    this.ui.syncUIWithState();
+                    this.grid.renderGrid();
+                }
+                
+                const currentSearch = state.route.query.search || '';
+                if (currentSearch !== this.localSearchQuery) {
+                    this.localSearchQuery = currentSearch;
+                    this.els.searchInput.value = this.localSearchQuery;
+                    this.grid.renderGrid();
                 }
             }
         });
@@ -10870,299 +10674,14 @@ export class LibraryController {
         EventBus.on('MEDIA_STORE_LOADING', () => {
             if (AppStore.getState().route.path.startsWith('/library')) {
                 this.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:var(--color-neon-pink); font-size:1.5rem;"><i class="fas fa-circle-notch fa-spin"></i> ЗАГРУЗКА БАЗЫ ДАННЫХ...</div>';
-                this.els.counter.textContent = '0';
             }
         });
 
         EventBus.on('MEDIA_STORE_LOADED', () => {
             if (AppStore.getState().route.path.startsWith('/library')) {
-                this.renderGrid();
+                this.ui.syncUIWithState(); 
+                this.grid.renderGrid();
             }
-        });
-
-        this.els.gridMain.addEventListener('mouseenter', (e) => {
-            const card = e.target.closest('.archive-card-container');
-            if (!card || this.gridMode === 'compact') return;
-            card.querySelectorAll('.layer-back[data-lazy-bg], .layer-back-deep[data-lazy-bg]').forEach(layer => {
-                const bgUrl = layer.dataset.lazyBg;
-                if (bgUrl && !layer.style.backgroundImage) {
-                    this.lazyLoader._safeImageLoad(bgUrl, card.classList.contains('is-youtube'), layer, null, null, layer);
-                    layer.removeAttribute('data-lazy-bg');
-                }
-            });
-        }, true);
-    }
-
-    executeSearch(query) {
-        this.toggleSuggestions(false);
-        AppRouter.updateQuery({ search: query.trim() ? query : null });
-    }
-
-    handleSearchInput(text) {
-        const query = text.toLowerCase().trim();
-        if (this.els.searchHotkey) this.els.searchHotkey.style.display = query.length > 0 ? 'none' : 'flex';
-
-        clearTimeout(this.searchDebounce);
-        
-        if (query.length < 1) {
-            this.toggleSuggestions(false);
-            this.toggleLoading(false);
-            if (this.localSearchQuery !== '') {
-                this.executeSearch('');
-            }
-            return;
-        }
-
-        this.toggleLoading(true);
-        
-        this.searchDebounce = setTimeout(() => {
-            const state = AppStore.getState();
-            if (!state.data.isMediaLoaded) {
-                this.toggleLoading(false);
-                return;
-            }
-
-            let flattenedList = [];
-            state.data.media.forEach(item => {
-                if (item.type !== state.media.type) return; 
-                if (item.format === 'youtube') return; 
-                
-                if (item.format === 'collection' && item.items) {
-                    item.items.forEach(sub => flattenedList.push({ ...sub, status: sub.status || item.status }));
-                } else {
-                    flattenedList.push(item);
-                }
-            });
-
-            const uniqueMap = new Map();
-            flattenedList.forEach(item => uniqueMap.set(item.id, item));
-            flattenedList = Array.from(uniqueMap.values());
-
-            let matches = flattenedList.map(item => ({
-                ...item,
-                score: SearchEngine.scoreItemForSuggestions(item.title, query)
-            })).filter(item => item.score > 15);
-
-            matches = matches.sort((a, b) => b.score - a.score).slice(0, 5);
-            this.currentSearchMatches = matches;
-            
-            this.renderSuggestions(matches);
-            this.toggleLoading(false);
-        }, 300);
-    }
-
-    handleSearchKeyDown(e) {
-        const isDropdownOpen = this.els.searchModule.classList.contains('suggestions-open');
-        
-        if (!isDropdownOpen || this.currentSearchMatches.length === 0) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                EventBus.emit('PLAY_SOUND', 'click');
-                this.executeSearch(this.els.searchInput.value);
-            }
-            return;
-        }
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            this.selectedIndex = (this.selectedIndex + 1) % this.currentSearchMatches.length;
-            this.updateSelectionUI();
-        } 
-        else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            this.selectedIndex = (this.selectedIndex - 1 + this.currentSearchMatches.length) % this.currentSearchMatches.length;
-            this.updateSelectionUI();
-        } 
-        else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (this.selectedIndex >= 0 && this.currentSearchMatches[this.selectedIndex]) {
-                this.applySearchSelection(this.currentSearchMatches[this.selectedIndex]);
-            } else {
-                EventBus.emit('PLAY_SOUND', 'click');
-                this.executeSearch(this.els.searchInput.value);
-            }
-        } 
-        else if (e.key === 'Escape') {
-            this.toggleSuggestions(false);
-        }
-    }
-
-    updateSelectionUI() {
-        const items = this.els.suggestionsBox.querySelectorAll('.suggestion-item');
-        items.forEach((item, idx) => {
-            if (idx === this.selectedIndex) {
-                item.classList.add('keyboard-focus');
-                item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            } else {
-                item.classList.remove('keyboard-focus');
-            }
-        });
-    }
-
-    applySearchSelection(item) {
-        EventBus.emit('PLAY_SOUND', 'click');
-        this.els.searchInput.value = item.title;
-        if (this.els.searchHotkey) this.els.searchHotkey.style.display = 'none';
-        
-        this.executeSearch(item.title);
-    }
-
-    toggleSuggestions(isOpen) {
-        this.els.suggestionsBox.classList.toggle('active', isOpen);
-        this.els.searchModule.classList.toggle('suggestions-open', isOpen);
-        if (!isOpen) this.selectedIndex = -1; 
-    }
-
-    toggleLoading(isLoading) {
-        if (!this.els.searchIcon || !this.els.searchLoading) return;
-        this.els.searchIcon.style.display = isLoading ? 'none' : 'flex';
-        this.els.searchLoading.style.display = isLoading ? 'flex' : 'none';
-    }
-
-    renderSuggestions(matches) {
-        if (matches.length === 0) {
-            this.els.suggestionsBox.innerHTML = '<div class="suggestion-empty"><i class="fas fa-search"></i>Совпадений не найдено</div>';
-        } else {
-            this.els.suggestionsBox.innerHTML = matches.map((item, idx) => {
-                const img = item.image || (item.images ? item.images[0] : '') || 'https://via.placeholder.com/45x65?text=NO+IMG';
-                return `
-                    <div class="suggestion-item" data-index="${idx}">
-                        <div class="sugg-left">
-                            <div class="sugg-thumb-wrapper">
-                                <img src="${optimizeImageUrl(img, 100, 70)}" class="sugg-thumb">
-                            </div>
-                            <span class="sugg-title">${item.title}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        this.toggleSuggestions(true);
-    }
-
-    syncUIWithState() {
-        const state = AppStore.getState().media;
-        
-        if (this.els.typeSwitcher) {
-            this.els.typeSwitcher.classList.toggle('movies-active', state.type === 'movies');
-        }
-        this.els.typeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.type === state.type));
-        
-        this.els.sortBtns.forEach(btn => {
-            const icon = btn.querySelector('.sort-icon');
-            if (btn.dataset.sort === state.sort) {
-                if (!btn.classList.contains('active')) btn.classList.add('active');
-                
-                let newIconClass = btn.dataset.sort === 'name' 
-                    ? (state.sortDirection === 'asc' ? 'fas fa-sort-alpha-down' : 'fas fa-sort-alpha-up')
-                    : (state.sortDirection === 'desc' ? 'fas fa-sort-numeric-down-alt' : 'fas fa-sort-numeric-up-alt');
-                
-                if (icon && !icon.className.includes(newIconClass)) {
-                    icon.className = `${newIconClass} sort-icon`;
-                }
-            } else {
-                btn.classList.remove('active');
-                if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-star sort-icon';
-            }
-        });
-
-        let statusesOrder = state.type === 'games' 
-            ? ['completed', 'playing', 'on-hold', 'dropped']
-            : ['watched', 'watching', 'on-hold', 'dropped'];
-        
-        const isActive = (val) => state.filters.includes(val) ? 'active' : '';
-
-        this.els.statusFilters.innerHTML = statusesOrder.map(s => `
-            <div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">
-                ${STATUS_MAP[s] || s}
-            </div>
-        `).join('');
-
-        this.els.statusFilters.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                const val = chip.dataset.filter;
-                const currentFilters = AppStore.getState().media.filters;
-                const newFilters = currentFilters.includes(val) ? [] : [val];
-                AppRouter.updateQuery({ filters: newFilters.length ? newFilters.join(',') : null });
-            });
-        });
-    }
-
-    renderGrid() {
-        const storeData = AppStore.getState().data;
-        if (!storeData.isMediaLoaded) {
-            this.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:var(--color-neon-pink); font-size:1.5rem;"><i class="fas fa-circle-notch fa-spin"></i> ЗАГРУЗКА БАЗЫ ДАННЫХ...</div>';
-            this.els.counter.textContent = '0';
-            return;
-        }
-
-        const state = AppStore.getState().media;
-        const isAllSelected = state.filters.length === 0;
-        
-        let allFilteredData = storeData.media.filter(item => {
-            if (item.type !== state.type) return false;
-            if (item.format === 'youtube') return false; 
-            if (!isAllSelected && !state.filters.includes(item.status)) return false;
-
-            if (this.localSearchQuery.length > 0) {
-                let textToSearch = `${item.title || ''} ${item.description || ''}`.toLowerCase();
-                if (item.format === 'collection' && item.items) {
-                    item.items.forEach(sub => { textToSearch += ` ${sub.title || ''} ${sub.description || ''}`; });
-                }
-                const score = SearchEngine.scoreItemForGrid(textToSearch, item.title, this.localSearchQuery);
-                if (score === 0) return false;
-                item._matchScore = score;
-            }
-
-            return true;
-        });
-
-        let mainData = allFilteredData.filter(i => i.status !== 'suggested');
-        let suggData = allFilteredData.filter(i => i.status === 'suggested');
-
-        const dir = state.sortDirection === 'asc' ? 1 : -1;
-        const sortFn = (a, b) => {
-            if (this.localSearchQuery.length > 0 && Math.abs((a._matchScore||0) - (b._matchScore||0)) > 0.1) {
-                return (b._matchScore||0) - (a._matchScore||0);
-            }
-            if (state.sort === 'rating') {
-                return ((a.rating || 0) - (b.rating || 0)) * dir;
-            }
-            return (a.title || "").localeCompare(b.title || "") * dir;
-        };
-
-        mainData.sort(sortFn);
-        suggData.sort(sortFn);
-
-        this.els.counter.textContent = mainData.length + suggData.length;
-
-        if (mainData.length === 0 && suggData.length === 0) {
-            this.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:#666; font-family:\'Exo 2\'; font-size:1.2rem;">ПО ВАШИМ ПАРАМЕТРАМ НИЧЕГО НЕ НАЙДЕНО</div>';
-            return;
-        }
-
-        let htmlBuf = '';
-        let globalIndex = 0;
-
-        mainData.forEach((item) => {
-            htmlBuf += this.factory.createCardHTML(item, (globalIndex % 15) * 20);
-            globalIndex++;
-        });
-
-        if (suggData.length > 0) {
-            htmlBuf += this.factory.createCardHTML({ isDivider: true, title: 'ПРЕДЛОЖЕНИЯ АГЕНТОВ' }, 0);
-            suggData.forEach((item) => {
-                htmlBuf += this.factory.createCardHTML(item, (globalIndex % 15) * 20);
-                globalIndex++;
-            });
-        }
-        
-        this.els.gridMain.innerHTML = htmlBuf;
-
-        this.els.gridMain.querySelectorAll('.archive-card-container:not(.archive-divider-row):not(.is-observed)').forEach(card => {
-            card.classList.add('is-observed');
-            this.lazyLoader.observe(card);
         });
     }
 }
@@ -14280,12 +13799,424 @@ export class YoutubeLibraryController {
 }
 
 ================================================================================
+File: js\agents\AgentsDetailRenderer.js
+================================================================================
+
+/* js/agents/AgentsDetailRenderer.js */
+import { AgentCard } from '../components/AgentCard.js';
+import { loadData } from '../api.js';
+import { AppStore } from '../store.js';
+import { optimizeImageUrl } from '../utils.js';
+import EventBus from '../event-bus.js';
+import { AppRouter } from '../router.js';
+
+export class AgentsDetailRenderer {
+    constructor() {
+        this.els = {
+            page: document.getElementById('agents-page'),
+            detailZone: document.getElementById('agent-detail-zone'),
+            avatar: document.getElementById('agent-big-avatar'),
+            name: document.getElementById('agent-name'),
+            role: document.getElementById('agent-role'),
+            statsRow: document.getElementById('agent-stats-row'),
+            lvlBadge: document.getElementById('agent-lvl-badge').querySelector('span'),
+            timeBadge: document.getElementById('agent-time-badge').querySelector('span'),
+            expText: document.getElementById('agent-exp-text'),
+            levelFill: document.getElementById('agent-level-fill'),
+            expHint: document.getElementById('agent-exp-hint'),
+            desc: document.getElementById('agent-desc'),
+            dynamicContent: document.getElementById('agent-dynamic-content')
+        };
+    }
+
+    render(agent) {
+        if (!agent) return;
+
+        // Анимация Глитча
+        this.els.detailZone.classList.remove('is-glitching');
+        void this.els.detailZone.offsetWidth; // Reflow
+        this.els.detailZone.classList.add('is-glitching');
+
+        setTimeout(() => {
+            const colorVal = AgentCard.getRoleColor(agent.color);
+            const { level, progress, daysActive, currentExp, nextLevelExp, daysLeft } = AgentCard.calculateLevelData(agent.createdAt);
+
+            this.els.page.style.setProperty('--agent-color', colorVal);
+
+            // Тексты
+            this.els.name.textContent = agent.squadName || agent.name;
+            this.els.role.textContent = agent.role || 'Агент';
+            this.els.lvlBadge.textContent = `LVL.${level}`;
+            this.els.timeBadge.textContent = agent.createdAt ? `${daysActive} дн. в сети` : `ДАННЫЕ ЗАСЕКРЕЧЕНЫ`;
+            this.els.desc.innerHTML = agent.description || 'Информация о данном агенте отсутствует в базе.';
+
+            // Обновляем кнопку Twitch
+            const oldTwitchBtn = this.els.statsRow.querySelector('.agent-twitch-btn');
+            if (oldTwitchBtn) oldTwitchBtn.remove();
+            
+            if (agent.twitch) {
+                const btn = document.createElement('a');
+                btn.className = 'agent-twitch-btn';
+                btn.href = `https://twitch.tv/${agent.twitch}`;
+                btn.target = '_blank';
+                btn.innerHTML = `<i class="fab fa-twitch"></i> TWITCH`;
+                this.els.statsRow.appendChild(btn);
+            }
+
+            // Прогресс бар
+            if (agent.createdAt) {
+                this.els.expText.textContent = `${currentExp} / ${nextLevelExp} XP`;
+                this.els.expHint.textContent = `До следующего уровня (LVL.${level + 1}): ${daysLeft} дн.`;
+            } else {
+                this.els.expText.textContent = `ДАННЫЕ СКРЫТЫ`;
+                this.els.expHint.textContent = `Прогресс неизвестен`;
+            }
+            this.els.levelFill.style.width = `${progress}%`;
+
+            // Аватарка
+            const avatarContent = agent.avatarPath || agent.image 
+                ? `<img src="${agent.avatarPath || agent.image}" onerror="this.style.display='none'">` 
+                : (agent.customHtml || `<i class="${agent.mainIcon || 'fas fa-user'}"></i>`);
+            this.els.avatar.innerHTML = avatarContent;
+
+            // Мини-тирлист
+            if (agent.hasTierlist) {
+                this.els.dynamicContent.innerHTML = `
+                    <div class="agent-tierlist-block">
+                        <div class="agent-tierlist-title"><i class="fas fa-list-ul"></i> БАЗА ДАННЫХ АГЕНТА</div>
+                        <div id="mini-tierlist-root" style="text-align: center; padding: 20px;">
+                            <i class="fas fa-spinner fa-spin" style="color: var(--agent-color);"></i> СИНХРОНИЗАЦИЯ...
+                        </div>
+                    </div>
+                `;
+                this.renderMiniTierlist();
+            } else {
+                this.renderSecretPlaceholder();
+            }
+        }, 150);
+    }
+
+    async renderMiniTierlist() {
+        const root = document.getElementById('mini-tierlist-root');
+        if (!root) return;
+
+        try {
+            const staticData = await loadData('tierlist-static-games.json');
+            const mediaDb = AppStore.getState().data.media || [];
+
+            if (!staticData || !staticData.tiers) {
+                root.innerHTML = '<div style="color: #666;">Данные тирлиста повреждены</div>';
+                return;
+            }
+
+            let html = `<div class="agent-tierlist-preview" id="btn-open-agent-tierlist"><div class="mini-tl-container">`;
+
+            staticData.tiers.forEach(tier => {
+                if (tier.items.length === 0) return; 
+                
+                let cardsHtml = tier.items.map(itemTitle => {
+                    const mediaItem = mediaDb.find(m => m.title === itemTitle);
+                    let imgUrl = 'https://via.placeholder.com/22x32?text=NO';
+                    if (mediaItem) {
+                        imgUrl = mediaItem.image || (mediaItem.images && mediaItem.images[0]) || imgUrl;
+                    }
+                    return `<div class="mini-tl-card"><img src="${optimizeImageUrl(imgUrl, 50, 60)}" alt="${itemTitle}"></div>`;
+                }).join('');
+
+                html += `
+                    <div class="mini-tl-row">
+                        <div class="mini-tl-label" style="background-color: ${tier.color}">${tier.name}</div>
+                        <div class="mini-tl-content">${cardsHtml}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            root.innerHTML = html;
+
+            document.getElementById('btn-open-agent-tierlist').addEventListener('click', () => {
+                EventBus.emit('PLAY_SOUND', 'expand');
+                AppRouter.navigate('/tierlist');
+            });
+
+        } catch (e) {
+            console.error("Ошибка при генерации мини-тирлиста:", e);
+            root.innerHTML = '<div style="color: #ff4444;">Ошибка синхронизации</div>';
+        }
+    }
+
+    renderSecretPlaceholder() {
+        this.els.dynamicContent.innerHTML = `
+            <div class="agent-secret-data">
+                <i class="fas fa-lock"></i><br>
+                ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ ЗАСЕКРЕЧЕНЫ<br>
+                <span style="font-size: 0.8rem; color: #555;">(Личная база данных пуста)</span>
+            </div>
+        `;
+    }
+}
+
+================================================================================
+File: js\agents\AgentsMarquee.js
+================================================================================
+
+/* js/agents/AgentsMarquee.js */
+import EventBus from '../event-bus.js';
+import { AgentCard } from '../components/AgentCard.js';
+
+export class AgentsMarquee {
+    constructor(onCardClick) {
+        this.container = document.getElementById('agents-scroll-container');
+        this.track = document.getElementById('agents-vertical-track');
+        this.totalCountEl = document.getElementById('agents-total-count');
+        this.onCardClick = onCardClick;
+
+        this.speed = 0.5; 
+        this.currentY = 0;
+        this.originalHeight = 0;
+        
+        // Флаги состояний
+        this.isHovered = false;
+        this.isPointerDown = false;
+        this.isDragging = false; 
+        this.dragThreshold = 5; 
+        
+        this.startY = 0;
+        this.velocity = 0;
+        this.lastY = 0;
+        this.lastTime = 0;
+        this.animationId = null;
+
+        this.bindContext();
+    }
+
+    bindContext() {
+        this._onPointerDown = this.onPointerDown.bind(this);
+        this._onPointerMove = this.onPointerMove.bind(this);
+        this._onPointerUp = this.onPointerUp.bind(this);
+        this._onMouseLeave = this.onMouseLeave.bind(this);
+        this._onGlobalBlur = this.onGlobalBlur.bind(this);
+        this.animate = this.animate.bind(this);
+    }
+
+    render(agentsData, activeAgentId) {
+        if (!this.track || !this.totalCountEl) return;
+        
+        this.totalCountEl.textContent = agentsData.length;
+        
+        const html = agentsData.map(agent => {
+            const colorVal = AgentCard.getRoleColor(agent.color);
+            const { level } = AgentCard.calculateLevelData(agent.createdAt);
+            
+            const avatarContent = agent.avatarPath || agent.image 
+                ? `<img src="${agent.avatarPath || agent.image}" onerror="this.style.display='none'">` 
+                : (agent.customHtml || `<i class="${agent.mainIcon || 'fas fa-user'}"></i>`);
+
+            const displayName = agent.squadName || agent.name;
+
+            return `
+                <div class="agent-list-card" data-id="${agent.id}" style="--card-color: ${colorVal}">
+                    <div class="alc-avatar">${avatarContent}</div>
+                    <div class="alc-info">
+                        <div class="alc-name">${displayName}</div>
+                        <div class="alc-role">${agent.role || 'Агент'}</div>
+                    </div>
+                    <div class="alc-lvl">LVL.${level}</div>
+                </div>
+            `;
+        }).join('');
+
+        this.track.innerHTML = html;
+        this.setupInfiniteLoop(activeAgentId);
+    }
+
+    setupInfiniteLoop(activeAgentId) {
+        const cards = Array.from(this.track.children);
+        if (cards.length === 0) return;
+
+        const gap = 12; 
+        this.originalHeight = cards.reduce((sum, card) => sum + card.offsetHeight + gap, 0);
+
+        const clonesNeeded = Math.ceil(window.innerHeight / Math.max(this.originalHeight, 1)) + 1;
+
+        let fullHtml = this.track.innerHTML;
+        for (let i = 0; i < clonesNeeded; i++) {
+            this.track.innerHTML += fullHtml;
+        }
+
+        this.setActive(activeAgentId);
+        this.bindEvents();
+        this.resume(); // Безопасный запуск цикла
+    }
+
+    setActive(agentId) {
+        if (!agentId || !this.track) return;
+        this.track.querySelectorAll('.agent-list-card').forEach(card => {
+            card.classList.toggle('active', card.dataset.id === agentId);
+        });
+    }
+
+    bindEvents() {
+        this.destroy(); // Сначала убиваем старые лисенеры, чтобы не было дублей
+
+        this.track.addEventListener('pointerdown', this._onPointerDown);
+        window.addEventListener('pointermove', this._onPointerMove);
+        window.addEventListener('pointerup', this._onPointerUp);
+        window.addEventListener('pointercancel', this._onPointerUp);
+        window.addEventListener('blur', this._onGlobalBlur); // Защита от Alt+Tab
+        document.addEventListener('pointerleave', this._onMouseLeave); // Защита от увода мыши за экран
+
+        this.container.addEventListener('mouseenter', () => { this.isHovered = true; });
+        this.container.addEventListener('mouseleave', () => { this.isHovered = false; });
+        this.track.addEventListener('dragstart', e => e.preventDefault());
+        
+        this.track.addEventListener('click', (e) => {
+            const card = e.target.closest('.agent-list-card');
+            if (card && !this.isDragging) { 
+                EventBus.emit('PLAY_SOUND', 'click');
+                if (this.onCardClick) this.onCardClick(card.dataset.id);
+            }
+        });
+    }
+
+    // Жесткий сброс стейтов при потере фокуса
+    onGlobalBlur() {
+        this.isHovered = false;
+        this.forceStopDrag();
+    }
+
+    onMouseLeave(e) {
+        if (e.target === document) {
+            this.forceStopDrag();
+        }
+    }
+
+    forceStopDrag() {
+        this.isPointerDown = false;
+        if (this.isDragging) {
+            this.isDragging = false;
+            this.track.classList.remove('is-dragging');
+        }
+    }
+
+    onPointerDown(e) {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        
+        this.isPointerDown = true;
+        this.isDragging = false; 
+
+        this.startY = e.clientY;
+        this.lastY = e.clientY;
+        this.lastTime = performance.now();
+        this.velocity = 0;
+        // ВАЖНО: Мы больше НЕ убиваем анимацию (cancelAnimationFrame) на клик! 
+        // Цикл должен крутиться вечно, просто меняется ветка логики внутри него.
+    }
+
+    onPointerMove(e) {
+        if (!this.isPointerDown) return;
+        
+        const currentY = e.clientY;
+        const deltaY = currentY - this.startY;
+
+        if (!this.isDragging && Math.abs(deltaY) > this.dragThreshold) {
+            this.isDragging = true;
+            this.track.classList.add('is-dragging');
+            this.track.setPointerCapture(e.pointerId);
+        }
+
+        if (this.isDragging) {
+            this.currentY += (currentY - this.lastY);
+            
+            const now = performance.now();
+            const dt = now - this.lastTime;
+            if (dt > 0) this.velocity = (currentY - this.lastY) / dt;
+
+            // Физика обновляется тут же
+            this.checkBoundaries();
+            this.applyTransform();
+        }
+
+        this.lastY = currentY;
+        this.lastTime = performance.now();
+    }
+
+    onPointerUp(e) {
+        if (!this.isPointerDown) return;
+        this.isPointerDown = false;
+        
+        if (this.isDragging) {
+            this.isDragging = false;
+            this.track.classList.remove('is-dragging');
+            this.track.releasePointerCapture(e.pointerId);
+            this.velocity = Math.max(-15, Math.min(15, this.velocity));
+        }
+    }
+
+    checkBoundaries() {
+        if (this.originalHeight <= 0) return;
+        if (this.currentY <= -this.originalHeight) {
+            this.currentY += this.originalHeight;
+        } else if (this.currentY > 0) {
+            this.currentY -= this.originalHeight;
+        }
+    }
+
+    applyTransform() {
+        if (this.track) {
+            this.track.style.transform = `translate3d(0, ${this.currentY}px, 0)`;
+        }
+    }
+
+    resume() {
+        // Убиваем предыдущий цикл перед стартом нового, чтобы не плодить клонов
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+        }
+        this.animate();
+    }
+
+    animate() {
+        if (!this.isPointerDown) {
+            if (Math.abs(this.velocity) > 0.1) {
+                // Инерция после броска
+                this.currentY += this.velocity * 12; // Чуть снизил множитель, чтобы не улетало в космос
+                this.velocity *= 0.92;
+            } else if (!this.isHovered) {
+                // Постоянное движение
+                this.currentY -= this.speed;
+            }
+            this.checkBoundaries();
+            this.applyTransform();
+        }
+        
+        // Цикл вызывает сам себя
+        this.animationId = requestAnimationFrame(this.animate);
+    }
+
+    pause() {
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+    }
+
+    destroy() {
+        this.pause();
+        window.removeEventListener('pointermove', this._onPointerMove);
+        window.removeEventListener('pointerup', this._onPointerUp);
+        window.removeEventListener('pointercancel', this._onPointerUp);
+        window.removeEventListener('blur', this._onGlobalBlur);
+        document.removeEventListener('pointerleave', this._onMouseLeave);
+    }
+}
+
+================================================================================
 File: js\archive\ArchivePagination.js
 ================================================================================
 
 /* js/archive/ArchivePagination.js */
 import EventBus from '../event-bus.js';
-import { AppStore } from '../store.js';
 
 export class ArchivePagination {
     constructor(callbacks) {
@@ -14321,8 +14252,8 @@ export class ArchivePagination {
     }
 
     render(state) {
-        const { totalPages, currentPage, mainPages, suggPages } = state;
-
+        const { totalPages, currentPage, bucketsMeta, type } = state;
+        
         if (totalPages <= 1) {
             this.els.controlsDiv.style.display = 'none';
             return;
@@ -14337,40 +14268,101 @@ export class ArchivePagination {
         html += this.renderTunerSlot(currentPage, 'active', state); 
         html += this.renderTunerSlot(currentPage + 1, 'next', state);
 
-        // Голографическая панель выбора (Убрали YouTube)
+        // Голографическая панель выбора (Сортировка по бакетам)
         html += `<div class="holo-floor-selector" id="holo-floor-selector">
-                    <div class="holo-selector-header">ВЫБОР СЕКТОРА</div>
+                    <div class="holo-selector-header">ВЫБОР КАТЕГОРИИ</div>
                     <div class="holo-selector-body">`;
                     
-        let currentTypeRendered = null;
-        for (let i = 1; i <= totalPages; i++) {
-            const meta = this.getPageMetadata(i, state);
-            if (meta.type !== currentTypeRendered) {
-                if (currentTypeRendered !== null) html += `</div>`; 
-                let sectorTitle = meta.type === 'main' ? 'MAIN_DB' : 'SUGGESTIONS';
-                let sectorColor = meta.type === 'main' ? 'var(--neon-green)' : 'var(--neon-pink)';
-                html += `<div class="sector-label" style="color: ${sectorColor}">[ ${sectorTitle} ]</div><div class="sector-grid">`;
-                currentTypeRendered = meta.type;
+        bucketsMeta.forEach(b => {
+            if (b.pageCount > 0) {
+                let catName = this.getCategoryName(b.id, type);
+                let catColor = this.getCategoryColor(b.id);
+                
+                html += `<div class="sector-label" style="color: ${catColor}">[ ${catName} ]</div><div class="sector-grid">`;
+                
+                for (let i = b.startPage; i <= b.endPage; i++) {
+                    const activeClass = i === currentPage ? 'is-current' : '';
+                    const colorClass = `btn-${b.id}`;
+                    const localNum = i - b.startPage + 1;
+                    html += `<button class="matrix-btn ${colorClass} ${activeClass}" data-page="${i}">${localNum}</button>`;
+                }
+                
+                html += `</div>`;
             }
-            const activeClass = i === currentPage ? 'is-current' : '';
-            html += `<button class="matrix-btn ${meta.colorClass} ${activeClass}" data-page="${meta.raw}">${meta.num}</button>`;
-        }
-        html += `</div></div></div>`; 
+        });
+        html += `</div></div></div>`;
 
-        // Якоря прыжков (Категории) - Только База и Предложка
+        // 5 КНОПОК-ЯКОРЕЙ КАТЕГОРИЙ СЛЕВА
         html += `<div class="category-jumpers">`;
-        const dbState = currentPage <= mainPages ? 'active' : '';
-        const dbTarget = mainPages > 0 ? 1 : 0;
-        html += `<button class="jumper-btn db ${dbState}" ${mainPages>0?`data-page="${dbTarget}"`:''} ${mainPages===0?'disabled':''} title="База Данных"><i class="fas fa-database"></i></button>`;
-
-        const suggState = currentPage > mainPages ? 'active' : '';
-        const suggTarget = suggPages > 0 ? mainPages + 1 : 0;
-        html += `<button class="jumper-btn sugg ${suggState}" ${suggPages>0?`data-page="${suggTarget}"`:''} ${suggPages===0?'disabled':''} title="Предложка"><i class="fas fa-star"></i></button>`;
-
+        bucketsMeta.forEach(b => {
+            const isActive = (currentPage >= b.startPage && currentPage <= b.endPage);
+            const isDisabled = b.pageCount === 0;
+            const targetPage = b.pageCount > 0 ? b.startPage : 0;
+            
+            // Получаем иконку из нашего локального пака SVG
+            const icon = this.getCategoryIcon(b.id);
+            const name = this.getCategoryName(b.id, type);
+            const btnClass = `jumper-btn j-${b.id} ${isActive ? 'active' : ''}`;
+            
+            // ИСПРАВЛЕНИЕ: Прячем кнопку если категория пуста (display:none вместо disabled для красоты лифта)
+            if (!isDisabled) {
+                html += `<button class="${btnClass}" data-page="${targetPage}" title="${name}">
+                            <i class="${icon}"></i>
+                         </button>`;
+            }
+        });
         html += `</div>`;
 
         this.els.container.innerHTML = html;
         this.bindDynamicEvents();
+    }
+
+    getCategoryName(id, type) {
+        if (id === 'completed') return type === 'movies' ? 'ПОСМОТРЕНО' : 'ПРОЙДЕНО';
+        if (id === 'playing') return type === 'movies' ? 'СМОТРИМ' : 'В ПРОЦЕССЕ';
+        if (id === 'on-hold') return 'НА ПАУЗЕ';
+        if (id === 'dropped') return 'БРОШЕНО';
+        if (id === 'suggested') return 'ПРЕДЛОЖКА';
+        return 'UNKNOWN';
+    }
+
+    getCategoryColor(id) {
+        if (id === 'completed') return 'var(--color-neon-green)';
+        if (id === 'playing') return 'var(--color-accent-blue)';
+        if (id === 'on-hold') return 'var(--color-warning-yellow)';
+        if (id === 'dropped') return 'var(--color-danger-red)';
+        if (id === 'suggested') return 'var(--color-neon-pink)';
+        return '#ffffff';
+    }
+
+    getCategoryIcon(id) {
+        // ИСПРАВЛЕНИЕ: Используем только те иконки, что собраны скриптом 1_fetch_icons.py
+        if (id === 'completed') return 'fas fa-medal';
+        if (id === 'playing') return 'fas fa-play';
+        if (id === 'on-hold') return 'fas fa-pause';
+        if (id === 'dropped') return 'fas fa-times';
+        if (id === 'suggested') return 'fas fa-star';
+        return 'fas fa-circle-notch';
+    }
+
+    getPageMetadata(pageIndex, state) {
+        const { totalPages, bucketsMeta } = state;
+        if (pageIndex < 1 || pageIndex > totalPages) return null;
+        
+        const bucket = bucketsMeta.find(b => pageIndex >= b.startPage && pageIndex <= b.endPage);
+        if (!bucket) return null;
+        
+        return {
+            raw: pageIndex,
+            num: pageIndex - bucket.startPage + 1,
+            bucketId: bucket.id
+        };
+    }
+
+    renderTunerSlot(pageIndex, stateClass, state) {
+        const meta = this.getPageMetadata(pageIndex, state);
+        if (!meta) return `<button class="tuner-slot empty">[--]</button>`;
+        return `<button class="tuner-slot ${stateClass} btn-${meta.bucketId}" data-page="${meta.raw}" title="Страница ${meta.raw}">${meta.num}</button>`;
     }
 
     bindDynamicEvents() {
@@ -14388,19 +14380,6 @@ export class ArchivePagination {
                 this.toggleSelector();
             });
         }
-    }
-
-    getPageMetadata(pageIndex, state) {
-        const { totalPages, mainPages } = state;
-        if (pageIndex < 1 || pageIndex > totalPages) return null;
-        if (pageIndex <= mainPages) return { raw: pageIndex, num: pageIndex, type: 'main', colorClass: '' };
-        return { raw: pageIndex, num: pageIndex - mainPages, type: 'sugg', colorClass: 'sugg-page-btn' };
-    }
-
-    renderTunerSlot(pageIndex, stateClass, state) {
-        const meta = this.getPageMetadata(pageIndex, state);
-        if (!meta) return `<button class="tuner-slot empty">[--]</button>`;
-        return `<button class="tuner-slot ${stateClass} ${meta.colorClass}" data-page="${meta.raw}" title="Этаж ${meta.raw}">${meta.num}</button>`;
     }
 
     toggleSelector() {
@@ -14437,7 +14416,6 @@ export class CardFactory {
 
     createCardHTML(item, delay) {
         if (item.isDivider) {
-            // ИСПРАВЛЕНИЕ: Замена grid-column на width: 100% для совместимости с Flexbox
             return `
             <div class="archive-divider-row animate-entry" style="width: 100%; animation-delay: ${delay}ms">
                 <div class="divider-line"></div><div class="divider-text">${item.title}</div><div class="divider-line"></div>
@@ -14499,9 +14477,11 @@ export class CardFactory {
             ratingHtml = `<div class="cyber-rating-badge"><div class="cyber-rating"><div class="segments">${segments}</div><span class="val">${rating.toFixed(1)}</span></div></div>`;
         }
 
+        // ИСПРАВЛЕНИЕ: Оставляем статус ТОЛЬКО для предложки, чтобы было видно, от кого игра. 
+        // В остальных случаях возвращаем пустую строку.
         const statusHtml = status === 'suggested' && item.suggestedBy 
             ? `<div class="cyber-status suggested-status"><i class="fas fa-user" style="color: ${getUserColor(item.suggestedBy)}"></i> ${item.suggestedBy}</div>`
-            : `<div class="cyber-status">[ ${STATUS_MAP[status] || status} ]</div>`;
+            : ``;
 
         return `
         <div class="archive-card-container stack-${stackCount} ${isYouTube ? 'is-youtube' : ''} animate-entry" 
@@ -14534,7 +14514,6 @@ File: js\archive\FilterController.js
 
 /* js/archive/FilterController.js */
 import EventBus from '../event-bus.js';
-import { STATUS_MAP } from '../media-store.js';
 import { AppStore } from '../store.js';
 import { AppRouter } from '../router.js';
 
@@ -14542,17 +14521,13 @@ export class FilterController {
     constructor(gridManager) {
         this.gridManager = gridManager; 
         
-        // ИСПРАВЛЕНИЕ: Изолируем поиск элементов СТРОГО внутри секции Архива, 
-        // чтобы не ломать логику на других страницах (например, в Библиотеке).
         const archiveSection = document.getElementById('media-archive');
 
         this.els = {
-            statusFilters: document.getElementById('archive-filters-status'),
             typeSwitcher: archiveSection.querySelector('.type-switcher'),
             typeBtns: archiveSection.querySelectorAll('.switcher-btn'),
             sortBtns: archiveSection.querySelectorAll('.sort-btn'),
-            densityBtns: archiveSection.querySelectorAll('.density-btn'),
-            clearFiltersBtn: document.getElementById('clear-filters-btn')
+            densityBtns: archiveSection.querySelectorAll('.density-btn')
         };
 
         this.bindEvents();
@@ -14568,7 +14543,6 @@ export class FilterController {
                 curr.type !== prev?.type || 
                 curr.gridMode !== prev?.gridMode || 
                 curr.searchQuery !== prev?.searchQuery ||
-                JSON.stringify(curr.filters) !== JSON.stringify(prev?.filters) ||
                 curr.sort !== prev?.sort ||
                 curr.sortDirection !== prev?.sortDirection
             ) {
@@ -14576,7 +14550,7 @@ export class FilterController {
             }
         });
 
-        // 1. ПЕРЕКЛЮЧАТЕЛЬ ТИПА (Только для Архива)
+        // ПЕРЕКЛЮЧАТЕЛЬ ТИПА
         this.els.typeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const type = btn.dataset.type;
@@ -14584,14 +14558,12 @@ export class FilterController {
                     EventBus.emit('PLAY_SOUND', 'click');
                     
                     const currentQuery = { ...AppStore.getState().route.query };
-                    delete currentQuery.filters; 
-
                     AppRouter.navigate('/archive', { type }, currentQuery);
                 }
             });
         });
 
-        // 2. СОРТИРОВКА
+        // СОРТИРОВКА
         this.els.sortBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
@@ -14604,7 +14576,7 @@ export class FilterController {
             });
         });
 
-        // 3. ПЛОТНОСТЬ СЕТКИ
+        // ПЛОТНОСТЬ СЕТКИ
         this.els.densityBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const mode = btn.dataset.mode;
@@ -14614,17 +14586,6 @@ export class FilterController {
                 }
             });
         });
-
-        // 4. СБРОС ФИЛЬТРОВ
-        if (this.els.clearFiltersBtn) {
-            this.els.clearFiltersBtn.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                const searchInput = document.getElementById('archive-search');
-                if (searchInput) searchInput.value = '';
-                
-                AppRouter.updateQuery({ filters: null, search: null });
-            });
-        }
     }
 
     syncUIWithState() {
@@ -14660,45 +14621,6 @@ export class FilterController {
                 if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-star sort-icon';
             }
         });
-
-        this.renderChips();
-    }
-
-    renderChips() {
-        if (!this.els.statusFilters) return;
-        const state = AppStore.getState().media;
-
-        let statusesOrder = state.type === 'games' 
-            ? ['completed', 'playing', 'on-hold', 'dropped']
-            : ['watched', 'watching', 'on-hold', 'dropped'];
-        
-        const isActive = (val) => state.filters.includes(val) ? 'active' : '';
-
-        this.els.statusFilters.innerHTML = statusesOrder.map(s => `
-            <div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">
-                ${STATUS_MAP[s] || s}
-            </div>
-        `).join('');
-
-        // ИСПРАВЛЕНИЕ: Вешаем обработчики только на фильтры ВНУТРИ архива
-        this.els.statusFilters.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                const val = chip.dataset.filter;
-                const currentFilters = AppStore.getState().media.filters;
-                
-                const newFilters = currentFilters.includes(val) ? [] : [val];
-                AppRouter.updateQuery({ filters: newFilters.length ? newFilters.join(',') : null });
-            });
-        });
-
-        if (this.els.clearFiltersBtn) {
-            if (state.filters.length > 0 || state.searchQuery.length > 0) {
-                this.els.clearFiltersBtn.classList.remove('hidden');
-            } else {
-                this.els.clearFiltersBtn.classList.add('hidden');
-            }
-        }
     }
 }
 
@@ -14711,6 +14633,7 @@ import EventBus from '../event-bus.js';
 import { AppRouter } from '../router.js';
 import { AppStore } from '../store.js';
 import { ArchivePagination } from './ArchivePagination.js';
+import { SearchEngine } from '../services/SearchEngine.js';
 
 export class GridManager {
     constructor(store, cardFactory, lazyLoader) {
@@ -14726,10 +14649,7 @@ export class GridManager {
         this.currentPage = 1;
         this.stdPerPage = 12; 
         
-        this.mainPages = 0;
-        this.suggPages = 0;
         this.totalPages = 1;
-        
         this.isAnimating = false; 
         this.animationSessionId = 0; 
         
@@ -14835,7 +14755,6 @@ export class GridManager {
             const item = state.data.media.find(i => i.id === card.dataset.id);
             if (item) {
                 EventBus.emit('PLAY_SOUND', 'expand');
-                // Указываем, что пришли из Архива
                 AppRouter.navigate('/item', { id: item.id }, { from: 'archive' });
             }
         });
@@ -14867,9 +14786,7 @@ export class GridManager {
         });
     }
 
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
     async runEntrySequence(direction) {
         this.animationSessionId++;
@@ -14878,11 +14795,8 @@ export class GridManager {
 
         this.els.gridMain.classList.remove('page-slide-up-out', 'page-slide-down-out');
         
-        try {
-            this.renderGrid(false); 
-        } catch (e) {
-            console.error("Ошибка рендера карточек:", e);
-        }
+        try { this.renderGrid(false); } 
+        catch (e) { console.error("Ошибка рендера карточек:", e); }
         
         const entryClass = direction === 'bottom' ? 'entering-from-bottom' : 'entering-from-top';
         this.els.gridMain.classList.add(entryClass);
@@ -14926,20 +14840,99 @@ export class GridManager {
 
         this.lastColsCount = this.getColumnsCount();
         this.lastIsMobile = window.innerWidth <= 600;
-        
-        if (this.lastIsMobile) {
-            this.stdPerPage = 6;
-        } else {
-            this.stdPerPage = this.lastColsCount * 2; 
-        }
-        
-        const mainStd = this.store.filteredMainStandard || [];
-        const suggStd = this.store.filteredSuggStandard || [];
-        
-        this.mainPages = Math.ceil(mainStd.length / this.stdPerPage);
-        this.suggPages = Math.ceil(suggStd.length / this.stdPerPage);
+        this.stdPerPage = this.lastIsMobile ? 6 : this.lastColsCount * 2; 
 
-        this.totalPages = this.mainPages + this.suggPages;
+        const state = AppStore.getState().media;
+        const allData = this.store.combinedData || [];
+        const searchQuery = state.searchQuery || '';
+
+        const categoryDefs = [
+            { id: 'completed', match: ['completed', 'watched'] },
+            { id: 'playing', match: ['playing', 'watching'] },
+            { id: 'on-hold', match: ['on-hold'] },
+            { id: 'dropped', match: ['dropped'] },
+            { id: 'suggested', match: ['suggested'] }
+        ];
+
+        let buckets = { 'completed': [], 'playing': [], 'on-hold': [], 'dropped': [], 'suggested': [] };
+
+        // 1. УМНОЕ РАСЩЕПЛЕНИЕ КОЛЛЕКЦИЙ И СКОРИНГ ПОИСКА
+        allData.forEach(item => {
+            if (item.type !== state.type || item.format === 'youtube') return;
+
+            let matchScore = 1;
+            if (searchQuery.length > 0) {
+                let textToSearch = `${item.title || ''} ${item.description || ''}`.toLowerCase();
+                if (item.format === 'collection' && item.items) {
+                    item.items.forEach(sub => { textToSearch += ` ${sub.title || ''} ${sub.description || ''}`; });
+                }
+                matchScore = SearchEngine.scoreItemForGrid(textToSearch, item.title, searchQuery);
+            }
+
+            if (searchQuery.length > 0 && matchScore === 0) return;
+
+            if (item.format === 'collection' && item.items) {
+                categoryDefs.forEach(cat => {
+                    const matchingItems = item.items.filter(sub => cat.match.includes(sub.status || item.status));
+                    if (matchingItems.length > 0) {
+                        const virtualCollection = {
+                            ...item,
+                            // ИСПРАВЛЕНИЕ: Берем правильный статус, а массив items оставляем целым для счетчика!
+                            status: matchingItems[0].status || item.status, 
+                            items: item.items, 
+                            image: matchingItems[0].image || item.image,
+                            images: matchingItems.slice(0, 3).map(i => i.image).filter(Boolean),
+                            customColor: matchingItems[0].customColor || item.customColor,
+                            _matchScore: matchScore
+                        };
+                        virtualCollection.stackColors = [
+                            virtualCollection.customColor || '#444455',
+                            (matchingItems[1] && matchingItems[1].customColor) ? matchingItems[1].customColor : (virtualCollection.customColor || '#444455'),
+                            (matchingItems[2] && matchingItems[2].customColor) ? matchingItems[2].customColor : (virtualCollection.customColor || '#444455')
+                        ];
+                        buckets[cat.id].push(virtualCollection);
+                    }
+                });
+            } else {
+                const itemStatus = item.status || 'unknown';
+                const targetCat = categoryDefs.find(c => c.match.includes(itemStatus));
+                if (targetCat) {
+                    buckets[targetCat.id].push({ ...item, _matchScore: matchScore });
+                }
+            }
+        });
+
+        // 2. СОРТИРОВКА ВНУТРИ БАКЕТОВ И ПОДСЧЕТ СТРАНИЦ
+        const dir = state.sortDirection === 'asc' ? 1 : -1;
+        const sortFn = (a, b) => {
+            if (searchQuery.length > 0 && Math.abs((a._matchScore||0) - (b._matchScore||0)) > 0.1) {
+                return (b._matchScore||0) - (a._matchScore||0);
+            }
+            if (state.sort === 'rating') {
+                return ((a.rating || 0) - (b.rating || 0)) * dir;
+            }
+            return (a.title || "").localeCompare(b.title || "") * dir;
+        };
+
+        let totalPages = 0;
+        let bucketsMeta = [];
+
+        categoryDefs.forEach(cat => {
+            const arr = buckets[cat.id];
+            arr.sort(sortFn);
+            
+            const pages = Math.ceil(arr.length / this.stdPerPage);
+            bucketsMeta.push({
+                id: cat.id,
+                items: arr,
+                pageCount: pages,
+                startPage: totalPages + 1,
+                endPage: totalPages + pages
+            });
+            totalPages += pages;
+        });
+
+        this.totalPages = totalPages;
 
         if (this.totalPages === 0) {
             this.els.gridMain.innerHTML = '<div style="width:100%; text-align:center; padding:50px; color:#666; font-family:\'Exo 2\';">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
@@ -14949,15 +14942,13 @@ export class GridManager {
 
         if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
 
-        let pageData = [];
-        
-        if (this.currentPage <= this.mainPages) {
-            const start = (this.currentPage - 1) * this.stdPerPage;
-            pageData = mainStd.slice(start, start + this.stdPerPage);
-        } else {
-            const start = (this.currentPage - this.mainPages - 1) * this.stdPerPage;
-            pageData = suggStd.slice(start, start + this.stdPerPage);
-        }
+        // 3. ОПРЕДЕЛЕНИЕ ТЕКУЩЕГО БАКЕТА
+        let targetBucket = bucketsMeta.find(b => this.currentPage >= b.startPage && this.currentPage <= b.endPage);
+        if (!targetBucket) targetBucket = bucketsMeta.find(b => b.pageCount > 0);
+
+        const localPage = this.currentPage - targetBucket.startPage; 
+        const startIdx = localPage * this.stdPerPage;
+        const pageData = targetBucket.items.slice(startIdx, startIdx + this.stdPerPage);
 
         let mainHtmlBuf = '';
         pageData.forEach((item, index) => {
@@ -14985,8 +14976,8 @@ export class GridManager {
         this.pagination.render({
             totalPages: this.totalPages,
             currentPage: this.currentPage,
-            mainPages: this.mainPages,
-            suggPages: this.suggPages
+            bucketsMeta: bucketsMeta,
+            type: state.type 
         });
     }
 }
@@ -15423,6 +15414,505 @@ export class AgentCard {
             <div class="agent-card-hint">[ПКМ - ДОСЬЕ]</div>
         </div>
         `;
+    }
+}
+
+================================================================================
+File: js\library\library-utils.js
+================================================================================
+
+/* js/library/library-utils.js */
+
+export const TAB_COLORS = {
+    'completed': '#39ff14',
+    'playing': '#00ccff',
+    'on-hold': '#ffd700',
+    'dropped': '#ff4444',
+    'suggested': '#ff2d95'
+};
+
+// Объединяем статусы кино и игр под общие знаменатели вкладок
+export function normalizeStatus(status) {
+    if (status === 'watched') return 'completed';
+    if (status === 'watching') return 'playing';
+    return status || 'unknown';
+}
+
+================================================================================
+File: js\library\LibraryGrid.js
+================================================================================
+
+/* js/library/LibraryGrid.js */
+import EventBus from '../event-bus.js';
+import { AppStore } from '../store.js';
+import { AppRouter } from '../router.js';
+import { SearchEngine } from '../services/SearchEngine.js';
+import { normalizeStatus } from './library-utils.js';
+import { CardFactory } from '../archive/CardFactory.js';
+import { LazyLoader } from '../archive/LazyLoader.js';
+
+export class LibraryGrid {
+    constructor(ctrl) {
+        this.ctrl = ctrl;
+        this.factory = new CardFactory(() => this.ctrl.gridMode);
+        this.lazyLoader = new LazyLoader(() => this.ctrl.gridMode);
+        
+        this.bindEvents();
+    }
+
+    bindEvents() {
+        this.ctrl.els.gridMain.addEventListener('click', (e) => {
+            const card = e.target.closest('.archive-card-container');
+            if (!card || card.classList.contains('archive-divider-row')) return;
+            
+            const state = AppStore.getState();
+            if (!state.data.isMediaLoaded) return;
+            
+            const item = state.data.media.find(i => i.id === card.dataset.id);
+            if (item) {
+                EventBus.emit('PLAY_SOUND', 'expand');
+                AppRouter.navigate('/item', { id: item.id }, { from: 'library', tab: this.ctrl.activeTab });
+            }
+        });
+
+        this.ctrl.els.gridMain.addEventListener('mouseenter', (e) => {
+            const card = e.target.closest('.archive-card-container');
+            if (!card || this.ctrl.gridMode === 'compact') return;
+            
+            card.querySelectorAll('.layer-back[data-lazy-bg], .layer-back-deep[data-lazy-bg]').forEach(layer => {
+                const bgUrl = layer.dataset.lazyBg;
+                if (bgUrl && !layer.style.backgroundImage) {
+                    this.lazyLoader._safeImageLoad(bgUrl, card.classList.contains('is-youtube'), layer, null, null, layer);
+                    layer.removeAttribute('data-lazy-bg');
+                }
+            });
+        }, true);
+    }
+
+    renderGrid() {
+        const storeData = AppStore.getState().data;
+        if (!storeData.isMediaLoaded) {
+            this.ctrl.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:var(--color-neon-pink); font-size:1.5rem;"><i class="fas fa-circle-notch fa-spin"></i> ЗАГРУЗКА БАЗЫ ДАННЫХ...</div>';
+            return;
+        }
+
+        const state = AppStore.getState().media;
+        let gridData = [];
+
+        storeData.media.forEach(item => {
+            if (item.type !== state.type || item.format === 'youtube') return;
+
+            let matchScore = 1;
+            if (this.ctrl.localSearchQuery.length > 0) {
+                let textToSearch = `${item.title || ''} ${item.description || ''}`.toLowerCase();
+                if (item.format === 'collection' && item.items) {
+                    item.items.forEach(sub => { textToSearch += ` ${sub.title || ''} ${sub.description || ''}`; });
+                }
+                matchScore = SearchEngine.scoreItemForGrid(textToSearch, item.title, this.ctrl.localSearchQuery);
+            }
+
+            if (this.ctrl.localSearchQuery.length > 0 && matchScore === 0) return; 
+
+            if (item.format === 'collection' && item.items) {
+                const matchingItems = item.items.filter(sub => normalizeStatus(sub.status || item.status) === this.ctrl.activeTab);
+                
+                if (matchingItems.length > 0) {
+                    const virtualCollection = {
+                        ...item,
+                        status: matchingItems[0].status || item.status,
+                        items: item.items, 
+                        image: matchingItems[0].image || item.image,
+                        images: matchingItems.slice(0, 3).map(i => i.image).filter(Boolean),
+                        customColor: matchingItems[0].customColor || item.customColor,
+                        _matchScore: matchScore
+                    };
+                    
+                    virtualCollection.stackColors = [
+                        virtualCollection.customColor || '#444455',
+                        (matchingItems[1] && matchingItems[1].customColor) ? matchingItems[1].customColor : (virtualCollection.customColor || '#444455'),
+                        (matchingItems[2] && matchingItems[2].customColor) ? matchingItems[2].customColor : (virtualCollection.customColor || '#444455')
+                    ];
+
+                    gridData.push(virtualCollection);
+                }
+            } else if (normalizeStatus(item.status) === this.ctrl.activeTab) {
+                gridData.push({ ...item, _matchScore: matchScore });
+            }
+        });
+
+        const dir = state.sortDirection === 'asc' ? 1 : -1;
+        gridData.sort((a, b) => {
+            if (this.ctrl.localSearchQuery.length > 0 && Math.abs((a._matchScore||0) - (b._matchScore||0)) > 0.1) {
+                return (b._matchScore||0) - (a._matchScore||0);
+            }
+            if (state.sort === 'rating') {
+                return ((a.rating || 0) - (b.rating || 0)) * dir;
+            }
+            return (a.title || "").localeCompare(b.title || "") * dir;
+        });
+
+        if (gridData.length === 0) {
+            this.ctrl.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:#666; font-family:\'Exo 2\'; font-size:1.2rem;">КАТЕГОРИЯ ПУСТА</div>';
+            return;
+        }
+
+        let htmlBuf = '';
+        gridData.forEach((item, index) => {
+            htmlBuf += this.factory.createCardHTML(item, (index % 15) * 20);
+        });
+        
+        this.ctrl.els.gridMain.innerHTML = htmlBuf;
+
+        this.ctrl.els.gridMain.querySelectorAll('.archive-card-container:not(.is-observed)').forEach(card => {
+            card.classList.add('is-observed');
+            this.lazyLoader.observe(card);
+        });
+    }
+}
+
+================================================================================
+File: js\library\LibrarySearch.js
+================================================================================
+
+/* js/library/LibrarySearch.js */
+import EventBus from '../event-bus.js';
+import { AppStore } from '../store.js';
+import { AppRouter } from '../router.js';
+import { SearchEngine } from '../services/SearchEngine.js';
+import { optimizeImageUrl } from '../utils.js';
+import { normalizeStatus } from './library-utils.js';
+
+export class LibrarySearch {
+    constructor(ctrl) {
+        this.ctrl = ctrl;
+        
+        this.searchDebounce = null;
+        this.currentSearchMatches = [];
+        this.selectedIndex = -1;
+
+        this.bindEvents();
+    }
+
+    bindEvents() {
+        this.ctrl.els.searchInput.addEventListener('input', (e) => this.handleSearchInput(e.target.value));
+        this.ctrl.els.searchInput.addEventListener('keydown', (e) => this.handleSearchKeyDown(e));
+
+        this.ctrl.els.searchIcon.addEventListener('click', () => {
+            EventBus.emit('PLAY_SOUND', 'click');
+            this.executeSearch(this.ctrl.els.searchInput.value);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!this.ctrl.els.searchModule.contains(e.target)) this.toggleSuggestions(false);
+        });
+
+        this.ctrl.els.suggestionsBox.addEventListener('click', (e) => {
+            const itemEl = e.target.closest('.suggestion-item');
+            if (itemEl) {
+                const index = parseInt(itemEl.dataset.index);
+                if (!isNaN(index) && this.currentSearchMatches[index]) {
+                    this.applySearchSelection(this.currentSearchMatches[index]);
+                }
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                if (AppStore.getState().route.path.startsWith('/library')) {
+                    e.preventDefault();
+                    this.ctrl.els.searchInput.focus();
+                }
+            }
+        });
+    }
+
+    executeSearch(query) {
+        this.toggleSuggestions(false);
+        AppRouter.updateQuery({ search: query.trim() ? query : null });
+    }
+
+    handleSearchInput(text) {
+        const query = text.toLowerCase().trim();
+        if (this.ctrl.els.searchHotkey) this.ctrl.els.searchHotkey.style.display = query.length > 0 ? 'none' : 'flex';
+
+        clearTimeout(this.searchDebounce);
+        
+        if (query.length < 1) {
+            this.toggleSuggestions(false);
+            this.toggleLoading(false);
+            if (this.ctrl.localSearchQuery !== '') {
+                this.executeSearch('');
+            }
+            return;
+        }
+
+        this.toggleLoading(true);
+        
+        this.searchDebounce = setTimeout(() => {
+            const state = AppStore.getState();
+            if (!state.data.isMediaLoaded) {
+                this.toggleLoading(false);
+                return;
+            }
+
+            let flattenedList = [];
+            state.data.media.forEach(item => {
+                if (item.type !== state.media.type) return; 
+                if (item.format === 'youtube') return; 
+                
+                if (item.format === 'collection' && item.items) {
+                    item.items.forEach(sub => {
+                        if (normalizeStatus(sub.status || item.status) === this.ctrl.activeTab) {
+                            flattenedList.push({ ...sub, status: sub.status || item.status });
+                        }
+                    });
+                } else if (normalizeStatus(item.status) === this.ctrl.activeTab) {
+                    flattenedList.push(item);
+                }
+            });
+
+            const uniqueMap = new Map();
+            flattenedList.forEach(item => uniqueMap.set(item.id, item));
+            flattenedList = Array.from(uniqueMap.values());
+
+            let matches = flattenedList.map(item => ({
+                ...item,
+                score: SearchEngine.scoreItemForSuggestions(item.title, query)
+            })).filter(item => item.score > 15);
+
+            matches = matches.sort((a, b) => b.score - a.score).slice(0, 5);
+            this.currentSearchMatches = matches;
+            
+            this.renderSuggestions(matches);
+            this.toggleLoading(false);
+        }, 300);
+    }
+
+    handleSearchKeyDown(e) {
+        const isDropdownOpen = this.ctrl.els.searchModule.classList.contains('suggestions-open');
+        
+        if (!isDropdownOpen || this.currentSearchMatches.length === 0) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                EventBus.emit('PLAY_SOUND', 'click');
+                this.executeSearch(this.ctrl.els.searchInput.value);
+            }
+            return;
+        }
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            this.selectedIndex = (this.selectedIndex + 1) % this.currentSearchMatches.length;
+            this.updateSelectionUI();
+        } 
+        else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            this.selectedIndex = (this.selectedIndex - 1 + this.currentSearchMatches.length) % this.currentSearchMatches.length;
+            this.updateSelectionUI();
+        } 
+        else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (this.selectedIndex >= 0 && this.currentSearchMatches[this.selectedIndex]) {
+                this.applySearchSelection(this.currentSearchMatches[this.selectedIndex]);
+            } else {
+                EventBus.emit('PLAY_SOUND', 'click');
+                this.executeSearch(this.ctrl.els.searchInput.value);
+            }
+        } 
+        else if (e.key === 'Escape') {
+            this.toggleSuggestions(false);
+        }
+    }
+
+    updateSelectionUI() {
+        const items = this.ctrl.els.suggestionsBox.querySelectorAll('.suggestion-item');
+        items.forEach((item, idx) => {
+            if (idx === this.selectedIndex) {
+                item.classList.add('keyboard-focus');
+                item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            } else {
+                item.classList.remove('keyboard-focus');
+            }
+        });
+    }
+
+    applySearchSelection(item) {
+        EventBus.emit('PLAY_SOUND', 'click');
+        this.ctrl.els.searchInput.value = item.title;
+        if (this.ctrl.els.searchHotkey) this.ctrl.els.searchHotkey.style.display = 'none';
+        
+        this.executeSearch(item.title);
+    }
+
+    toggleSuggestions(isOpen) {
+        this.ctrl.els.suggestionsBox.classList.toggle('active', isOpen);
+        this.ctrl.els.searchModule.classList.toggle('suggestions-open', isOpen);
+        if (!isOpen) this.selectedIndex = -1; 
+    }
+
+    toggleLoading(isLoading) {
+        if (!this.ctrl.els.searchIcon || !this.ctrl.els.searchLoading) return;
+        this.ctrl.els.searchIcon.style.display = isLoading ? 'none' : 'flex';
+        this.ctrl.els.searchLoading.style.display = isLoading ? 'flex' : 'none';
+    }
+
+    renderSuggestions(matches) {
+        if (matches.length === 0) {
+            this.ctrl.els.suggestionsBox.innerHTML = '<div class="suggestion-empty"><i class="fas fa-search"></i>Совпадений не найдено</div>';
+        } else {
+            this.ctrl.els.suggestionsBox.innerHTML = matches.map((item, idx) => {
+                const img = item.image || (item.images ? item.images[0] : '') || 'https://via.placeholder.com/45x65?text=NO+IMG';
+                return `
+                    <div class="suggestion-item" data-index="${idx}">
+                        <div class="sugg-left">
+                            <div class="sugg-thumb-wrapper">
+                                <img src="${optimizeImageUrl(img, 100, 70)}" class="sugg-thumb">
+                            </div>
+                            <span class="sugg-title">${item.title}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        this.toggleSuggestions(true);
+    }
+}
+
+================================================================================
+File: js\library\LibraryUI.js
+================================================================================
+
+/* js/library/LibraryUI.js */
+import EventBus from '../event-bus.js';
+import { AppStore } from '../store.js';
+import { AppRouter } from '../router.js';
+import { TAB_COLORS, normalizeStatus } from './library-utils.js';
+
+export class LibraryUI {
+    constructor(ctrl) {
+        this.ctrl = ctrl;
+        this.bindEvents();
+    }
+
+    bindEvents() {
+        this.ctrl.els.backBtn.addEventListener('click', () => {
+            EventBus.emit('PLAY_SOUND', 'click');
+            AppRouter.navigate('/', {});
+        });
+
+        this.ctrl.els.tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                if (this.ctrl.activeTab !== targetTab) {
+                    EventBus.emit('PLAY_SOUND', 'click');
+                    AppRouter.updateQuery({ tab: targetTab });
+                }
+            });
+        });
+
+        this.ctrl.els.sortBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                EventBus.emit('PLAY_SOUND', 'click');
+                const state = AppStore.getState().media;
+                const newSortDir = state.sort === btn.dataset.sort 
+                    ? (state.sortDirection === 'asc' ? 'desc' : 'asc') 
+                    : (btn.dataset.sort === 'rating' ? 'desc' : 'asc');
+                
+                AppRouter.updateQuery({ sort: btn.dataset.sort, sortDir: newSortDir });
+            });
+        });
+
+        this.ctrl.els.typeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.type;
+                if (AppStore.getState().media.type !== type) {
+                    EventBus.emit('PLAY_SOUND', 'click');
+                    const currentQuery = { ...AppStore.getState().route.query };
+                    delete currentQuery.search; 
+                    AppRouter.navigate('/library', { type }, currentQuery);
+                }
+            });
+        });
+
+        this.ctrl.els.btnDetailed.addEventListener('click', () => this.updateGridMode('detailed'));
+        this.ctrl.els.btnCompact.addEventListener('click', () => this.updateGridMode('compact'));
+    }
+
+    updateGridMode(mode) {
+        if (this.ctrl.gridMode === mode) return;
+        EventBus.emit('PLAY_SOUND', 'click');
+        this.ctrl.gridMode = mode;
+        this.ctrl.els.btnDetailed.classList.toggle('active', mode === 'detailed');
+        this.ctrl.els.btnCompact.classList.toggle('active', mode === 'compact');
+        
+        if (mode === 'compact') this.ctrl.els.gridMain.classList.add('compact-mode');
+        else this.ctrl.els.gridMain.classList.remove('compact-mode');
+        
+        this.ctrl.els.gridMain.style.opacity = '0';
+        setTimeout(() => { 
+            this.ctrl.grid.renderGrid(); 
+            this.ctrl.els.gridMain.style.opacity = '1'; 
+        }, 200);
+    }
+
+    syncUIWithState() {
+        const state = AppStore.getState().media;
+        const mediaData = AppStore.getState().data.media || [];
+        
+        if (this.ctrl.els.typeSwitcher) {
+            this.ctrl.els.typeSwitcher.classList.toggle('movies-active', state.type === 'movies');
+        }
+        this.ctrl.els.typeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.type === state.type));
+        
+        if (this.ctrl.els.labelCompleted && this.ctrl.els.labelPlaying) {
+            this.ctrl.els.labelCompleted.textContent = state.type === 'movies' ? 'ПОСМОТРЕНО' : 'ПРОЙДЕНО';
+            this.ctrl.els.labelPlaying.textContent = state.type === 'movies' ? 'СМОТРИМ' : 'В ПРОЦЕССЕ';
+        }
+
+        this.ctrl.els.sortBtns.forEach(btn => {
+            const icon = btn.querySelector('.sort-icon');
+            if (btn.dataset.sort === state.sort) {
+                if (!btn.classList.contains('active')) btn.classList.add('active');
+                
+                let newIconClass = btn.dataset.sort === 'name' 
+                    ? (state.sortDirection === 'asc' ? 'fas fa-sort-alpha-down' : 'fas fa-sort-alpha-up')
+                    : (state.sortDirection === 'desc' ? 'fas fa-sort-numeric-down-alt' : 'fas fa-sort-numeric-up-alt');
+                
+                if (icon && !icon.className.includes(newIconClass)) {
+                    icon.className = `${newIconClass} sort-icon`;
+                }
+            } else {
+                btn.classList.remove('active');
+                if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-star sort-icon';
+            }
+        });
+
+        const counts = { completed: 0, playing: 0, 'on-hold': 0, dropped: 0, suggested: 0 };
+        
+        mediaData.forEach(item => {
+            if (item.type !== state.type || item.format === 'youtube') return;
+
+            if (item.format === 'collection' && item.items) {
+                item.items.forEach(sub => {
+                    const subStatus = normalizeStatus(sub.status || item.status);
+                    if (counts[subStatus] !== undefined) counts[subStatus]++;
+                });
+            } else {
+                const itemStatus = normalizeStatus(item.status);
+                if (counts[itemStatus] !== undefined) counts[itemStatus]++;
+            }
+        });
+
+        this.ctrl.els.tabs.forEach(tab => {
+            const tabName = tab.dataset.tab;
+            tab.classList.toggle('active', tabName === this.ctrl.activeTab);
+            
+            const countEl = document.getElementById(`count-${tabName}`);
+            if (countEl) countEl.textContent = counts[tabName] || 0;
+        });
+
+        const currentColor = TAB_COLORS[this.ctrl.activeTab] || TAB_COLORS['completed'];
+        this.ctrl.els.pageWrapper.style.setProperty('--active-tab-color', currentColor);
     }
 }
 
@@ -18175,16 +18665,18 @@ export function getAgentsView() {
     return `
     <div id="agents-page" class="agents-page-wrapper">
         <div class="agents-cinematic-bg" id="agents-cinematic-bg"></div>
-        
-        <div class="agents-top-nav">
-            <button id="btn-agents-back" class="cyber-btn btn-agents-back"><i class="fas fa-chevron-left"></i> НАЗАД В ХАБ</button>
-        </div>
 
         <div class="agents-content-wrapper container">
             <div class="agents-layout" id="agents-layout">
                 
                 <!-- ЛЕВАЯ КОЛОНКА: ДОСЬЕ -->
                 <main class="agent-detail-zone" id="agent-detail-zone">
+                    
+                    <!-- КНОПКА ВОЗВРАТА (ИНТЕГРИРОВАНА В РАМКУ) -->
+                    <button id="btn-agents-back" class="agent-back-tab" title="Вернуться в Хаб">
+                        <i class="fas fa-chevron-left"></i> НАЗАД В ХАБ
+                    </button>
+
                     <div class="agent-header-row">
                         <div class="agent-big-avatar" id="agent-big-avatar"></div>
                         <div class="agent-header-info">
@@ -18193,7 +18685,6 @@ export function getAgentsView() {
                             <div class="agent-stats-row" id="agent-stats-row">
                                 <div class="agent-stat-badge" id="agent-lvl-badge"><i class="fas fa-star"></i> <span>LVL.1</span></div>
                                 <div class="agent-stat-badge" id="agent-time-badge"><i class="fas fa-clock"></i> <span>0 дн. в сети</span></div>
-                                <!-- Сюда JS добавит кнопку твича, если логин известен -->
                             </div>
                             
                             <div class="agent-progress-block">
@@ -18216,18 +18707,19 @@ export function getAgentsView() {
                         Описание отсутствует.
                     </div>
                     
-                    <!-- Сюда JS будет вставлять либо секретные данные, либо список фаворитов -->
                     <div id="agent-dynamic-content"></div>
                 </main>
 
-                <!-- ПРАВАЯ КОЛОНКА: СПИСОК АГЕНТОВ -->
+                <!-- ПРАВАЯ КОЛОНКА: СПИСОК АГЕНТОВ (БЕСКОНЕЧНАЯ ЛЕНТА) -->
                 <aside class="agents-list-col">
                     <div class="agents-list-header">
                         <span><i class="fas fa-users"></i> БАЗА АГЕНТОВ</span>
                         <span class="agents-count" id="agents-total-count">0</span>
                     </div>
-                    <div class="agents-scroll-list" id="agents-scroll-list">
-                        <!-- Карточки генерируются в JS -->
+                    <div class="agents-scroll-container" id="agents-scroll-container">
+                        <div class="agents-vertical-track" id="agents-vertical-track">
+                            <!-- Карточки генерируются в JS -->
+                        </div>
                     </div>
                 </aside>
                 
@@ -18257,7 +18749,7 @@ export function getArchiveView() {
                     </a>
                 </div>
 
-                <!-- ЦЕНТР: УПРАВЛЕНИЕ И ФИЛЬТРЫ -->
+                <!-- ЦЕНТР: УПРАВЛЕНИЕ -->
                 <div class="archive-tools">
                     <div class="header-control-bar">
                         <div class="sort-switcher">
@@ -18274,10 +18766,6 @@ export function getArchiveView() {
                             <button class="density-btn" data-mode="compact" title="Компактная сетка"><i class="fas fa-th"></i></button>
                         </div>
                     </div>
-                    
-                    <div class="filters-wrapper">
-                        <div class="filter-row status-row" id="archive-filters-status"></div>
-                    </div>
                 </div>
 
                 <!-- ПРАВАЯ ЧАСТЬ: ПОИСК -->
@@ -18289,7 +18777,6 @@ export function getArchiveView() {
                             <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
                             <div class="search-hotkey" id="search-hotkey-hint">Ctrl+K</div>
                         </div>
-                        <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
 
@@ -18577,18 +19064,16 @@ File: js\views\libraryView.js
 export function getLibraryView() {
     return `
     <div id="library-page" class="library-page-wrapper">
+        <!-- Динамический фон, который будет менять цвет в зависимости от выбранной вкладки -->
         <div class="library-cinematic-bg" id="library-cinematic-bg"></div>
         
         <div class="library-header-sticky">
             <div class="container">
+                
+                <!-- ВЕРХНИЙ РЯД: Управление, Тип (Игры/Кино), Поиск -->
                 <div class="library-top-bar">
-                    
                     <div class="lib-action-area">
                         <button id="btn-library-back" class="cyber-btn btn-lib-back"><i class="fas fa-chevron-left"></i> ХАБ</button>
-                        <!-- ИСПРАВЛЕНИЕ: Счетчик перенесен сюда -->
-                        <div class="lib-counter" id="lib-counter">
-                            <span class="lib-counter-label">НАЙДЕНО:</span> <span class="lib-counter-val">0</span>
-                        </div>
                     </div>
 
                     <div class="lib-tools-area">
@@ -18619,14 +19104,51 @@ export function getLibraryView() {
                             <div class="search-suggestions" id="lib-search-suggestions"></div>
                         </div>
                     </div>
-
                 </div>
 
-                <div class="library-sub-bar">
-                    <div class="filters-wrapper">
-                        <div class="filter-row status-row" id="library-filters-status"></div>
-                    </div>
+                <!-- НИЖНИЙ РЯД: 5 БОЛЬШИХ ВКЛАДОК СТАТУСОВ -->
+                <div class="library-tabs-nav" id="library-tabs-nav">
+                    <button class="lib-tab-btn active" data-tab="completed">
+                        <div class="tab-icon"><i class="fas fa-medal"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label" id="label-completed">ПРОЙДЕНО</span>
+                            <span class="tab-count" id="count-completed">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="playing">
+                        <div class="tab-icon"><i class="fas fa-play"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label" id="label-playing">В ПРОЦЕССЕ</span>
+                            <span class="tab-count" id="count-playing">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="on-hold">
+                        <div class="tab-icon"><i class="fas fa-pause"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label">НА ПАУЗЕ</span>
+                            <span class="tab-count" id="count-on-hold">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="dropped">
+                        <div class="tab-icon"><i class="fas fa-times"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label">БРОШЕНО</span>
+                            <span class="tab-count" id="count-dropped">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="suggested">
+                        <div class="tab-icon"><i class="fas fa-star"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label">ПРЕДЛОЖКА</span>
+                            <span class="tab-count" id="count-suggested">0</span>
+                        </div>
+                    </button>
                 </div>
+
             </div>
         </div>
 
