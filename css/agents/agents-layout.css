@@ -1,0 +1,71 @@
+/* css/agents/agents-layout.css */
+
+/* Блокируем скролл на уровне body, чтобы страница стояла мертво (только для десктопа) */
+@media (min-width: 901px) {
+    body.route-agents {
+        overflow: hidden !important;
+    }
+}
+
+.agents-page-wrapper {
+    position: relative; 
+    width: 100vw; 
+    min-height: 100vh;
+    background: var(--color-bg-dark); 
+    display: flex; 
+    flex-direction: column; 
+    z-index: 100;
+}
+
+/* Скрываем скроллбар глобально на странице (для мобилок) */
+.agents-page-wrapper {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+.agents-page-wrapper::-webkit-scrollbar {
+    display: none !important;
+}
+
+.agents-cinematic-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: 
+        radial-gradient(circle at 30% 50%, color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 8%, transparent) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 30px 30px, 30px 30px;
+    transition: background-image 0.5s ease;
+}
+
+/* ОСНОВНАЯ СЕТКА */
+.agents-content-wrapper {
+    flex-grow: 1; position: relative; z-index: 10; max-width: 1650px; 
+    margin: 0 auto; width: 100%; 
+    padding: 40px 40px 60px 40px; /* Увеличили отступ сверху, так как отдельной панели больше нет */
+}
+
+.agents-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
+    align-items: start;
+}
+
+/* ЖЕСТКИЙ ЛОК СКРОЛЛА ДЛЯ ДЕСКТОПА */
+@media (min-width: 901px) {
+    .agents-page-wrapper { height: 100vh; overflow: hidden; }
+    .agents-content-wrapper { height: 100vh; padding-bottom: 30px; }
+    .agents-layout { height: 100%; overflow: hidden; }
+    .agents-list-col { position: relative; top: 0; height: 100%; max-height: 100%; }
+    .agent-detail-zone { height: 100%; overflow-y: auto; scrollbar-width: none; }
+    .agent-detail-zone::-webkit-scrollbar { display: none; }
+}
+
+@media (max-width: 1200px) {
+    .agents-layout { grid-template-columns: 1fr 300px; gap: 20px; }
+}
+
+@media (max-width: 900px) {
+    .agents-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .agents-list-col { max-height: 500px; width: 100%; }
+    .agents-content-wrapper { padding: 30px 15px 40px 15px; }
+}

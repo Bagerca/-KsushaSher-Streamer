@@ -124,28 +124,101 @@
 .sugg-cyber-rating .val { font-family: var(--font-header); font-size: 0.75rem; font-weight: 800; text-shadow: 0 0 5px currentColor; }
 .search-match { background: transparent; color: var(--color-neon-green); text-shadow: 0 0 8px var(--color-neon-green); font-weight: 900; }
 
-/* СТАТУСЫ */
-.filters-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; }
-.filter-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.filter-chip { padding: 6px 18px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; background: rgba(0,0,0,0.4); transition: all var(--transition-normal); font-weight: 700; user-select: none; }
-.filter-chip:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-.filter-chip.status-completed, .filter-chip.status-watched { border-color: color-mix(in srgb, var(--status-completed) 30%, transparent); color: var(--status-completed); }
-.filter-chip.status-completed.active, .filter-chip.status-watched.active { background: var(--status-completed); color: var(--color-text-dark); border-color: var(--status-completed); box-shadow: 0 0 15px color-mix(in srgb, var(--status-completed) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-playing, .filter-chip.status-watching { border-color: color-mix(in srgb, var(--status-playing) 30%, transparent); color: var(--status-playing); }
-.filter-chip.status-playing.active, .filter-chip.status-watching.active { background: var(--status-playing); color: var(--color-text-dark); border-color: var(--status-playing); box-shadow: 0 0 15px color-mix(in srgb, var(--status-playing) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-on-hold { border-color: color-mix(in srgb, var(--status-on-hold) 30%, transparent); color: var(--status-on-hold); }
-.filter-chip.status-on-hold.active { background: var(--status-on-hold); color: var(--color-text-dark); border-color: var(--status-on-hold); box-shadow: 0 0 15px color-mix(in srgb, var(--status-on-hold) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-dropped { border-color: color-mix(in srgb, var(--status-dropped) 30%, transparent); color: var(--status-dropped); }
-.filter-chip.status-dropped.active { background: var(--status-dropped); color: var(--color-text-white); border-color: var(--status-dropped); box-shadow: 0 0 15px color-mix(in srgb, var(--status-dropped) 50%, transparent); transform: translateY(-3px); }
-.filter-chip.status-suggested { border-color: color-mix(in srgb, var(--status-suggested) 50%, transparent) !important; color: var(--status-suggested) !important; }
-.filter-chip.status-suggested.active { background: var(--status-suggested) !important; color: var(--color-text-white) !important; box-shadow: 0 0 15px color-mix(in srgb, var(--status-suggested) 50%, transparent); transform: translateY(-3px); }
+/* 5 КНОПОК-ЯКОРЕЙ (КАТЕГОРИИ СЛЕВА) ИСПРАВЛЕНИЕ: Идеальное слияние с доком */
+.category-jumpers {
+    position: absolute;
+    top: 50%;
+    right: 100%; /* Прижимаем к левому краю .pagination-dock-vertical */
+    margin-right: -1px; /* Накладываем бордеры */
+    transform: translateY(-50%);
+    
+    display: flex; flex-direction: column; gap: 10px;
+    background: rgba(8, 9, 13, 0.98); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-right: none; 
+    border-radius: 16px 0 0 16px; 
+    
+    padding: 12px 10px; 
+    padding-right: 12px; /* Оставляем немного места справа для дыхания */
+    box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.9); 
+    transition: all 0.4s ease;
+    z-index: 60;
+    backdrop-filter: none;
+}
+
+/* Псевдоэлементы для бесшовного скругления */
+.category-jumpers::before,
+.category-jumpers::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    pointer-events: none;
+    z-index: 1; 
+    transition: all 0.4s ease;
+}
+
+.category-jumpers::before {
+    bottom: 100%; 
+    border-bottom-right-radius: 16px;
+    box-shadow: 
+        1px 1px 0 0 rgba(255, 255, 255, 0.1),
+        6px 6px 0 6px rgba(8, 9, 13, 0.98);
+}
+
+.category-jumpers::after {
+    top: 100%; 
+    border-top-right-radius: 16px;
+    box-shadow: 
+        1px -1px 0 0 rgba(255, 255, 255, 0.1),
+        6px -6px 0 6px rgba(8, 9, 13, 0.98);
+}
+
+.jumper-btn {
+    position: relative;
+    z-index: 5;
+    width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.02); color: #555; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden; transform-origin: top;
+}
+.jumper-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: var(--color-text-white); border-color: rgba(255,255,255,0.2); }
+.jumper-btn:disabled { opacity: 0.1; cursor: default; }
+
+.jumper-btn.active { opacity: 1; }
+.jumper-btn.j-completed.active { color: var(--color-text-dark); background: var(--color-neon-green); box-shadow: 0 0 10px var(--color-neon-green); border-color: var(--color-neon-green); }
+.jumper-btn.j-playing.active { color: var(--color-text-dark); background: var(--color-accent-blue); box-shadow: 0 0 10px var(--color-accent-blue); border-color: var(--color-accent-blue); }
+.jumper-btn.j-on-hold.active { color: var(--color-text-dark); background: var(--color-warning-yellow); box-shadow: 0 0 10px var(--color-warning-yellow); border-color: var(--color-warning-yellow); }
+.jumper-btn.j-dropped.active { color: var(--color-text-white); background: var(--color-danger-red); box-shadow: 0 0 10px var(--color-danger-red); border-color: var(--color-danger-red); }
+.jumper-btn.j-suggested.active { color: var(--color-text-dark); background: var(--color-neon-pink); box-shadow: 0 0 10px var(--color-neon-pink); border-color: var(--color-neon-pink); }
+
+/* ЦВЕТА КНОПОК В МАТРИЦЕ И ТЮНЕРЕ */
+.matrix-btn.btn-completed.is-current, .tuner-slot.btn-completed.active { --active-color: var(--color-neon-green); }
+.matrix-btn.btn-playing.is-current, .tuner-slot.btn-playing.active { --active-color: var(--color-accent-blue); }
+.matrix-btn.btn-on-hold.is-current, .tuner-slot.btn-on-hold.active { --active-color: var(--color-warning-yellow); }
+.matrix-btn.btn-dropped.is-current, .tuner-slot.btn-dropped.active { --active-color: var(--color-danger-red); }
+.matrix-btn.btn-suggested.is-current, .tuner-slot.btn-suggested.active { --active-color: var(--color-neon-pink); }
+
+.tuner-slot.active {
+    background: var(--active-color, var(--color-neon-green));
+    box-shadow: 0 0 20px color-mix(in srgb, var(--active-color, var(--color-neon-green)) 50%, transparent), inset 0 0 10px rgba(255,255,255,0.5);
+    border-color: var(--color-text-white);
+    color: var(--color-text-dark);
+}
+.tuner-slot.active:hover { box-shadow: 0 0 25px var(--active-color, var(--color-neon-green)), inset 0 0 10px rgba(255,255,255,0.8); }
+
+/* Исключение для красного, чтобы темный текст читался */
+.matrix-btn.btn-dropped.is-current, .tuner-slot.btn-dropped.active { color: #fff; } 
 
 @media (max-width: 768px) {
     .header-control-bar { width: 100%; justify-content: center; flex-wrap: wrap; padding: 6px 12px; gap: 8px; border-radius: 12px; height: auto !important; }
     .density-switcher { display: none !important; }
     .switcher-btn { padding: 6px 10px; font-size: 0.75rem; gap: 4px; }
     .sort-btn, .density-btn { width: 30px; height: 30px; font-size: 0.8rem; }
-    .filter-chip { padding: 4px 10px; font-size: 0.65rem; }
+    
     .search-module { width: 100%; max-width: none; }
     .search-hotkey { display: none !important; }
     .suggestion-item { flex-direction: column; align-items: flex-start; gap: 10px; }

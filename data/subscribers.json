@@ -22,6 +22,7 @@
     "color": "#319a24",
     "mainIcon": "fas fa-fish",
     "typeIcon": "fas fa-water",
+    "avatarPath": "assets/images/tetlabot.jpg",
     "description": "Искусственный интеллект, контролирующий систему. Любит рыб."
   },
   {
@@ -35,7 +36,8 @@
     "mainIcon": "fas fa-laptop-code",
     "typeIcon": "fas fa-code",
     "avatarPath": "assets/images/bagerca.jpg",
-    "description": "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах."
+    "description": "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах.",
+    "favorites": ["bendy-franchise", "Awaria", "Atomic Heart", "Deepest Sword", "Hyper Light Drifter", "Chainsaw Man / Человек-бензопила"]
   },
   {
     "id": "angel",
@@ -48,7 +50,8 @@
     "mainIcon": "fas fa-sun",
     "typeIcon": "fas fa-star",
     "avatarPath": "assets/images/angel.jpg",
-    "description": "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию."
+    "description": "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию.",
+    "favorites": ["dead-island-2", "unturned", "the-forest"]
   },
   {
     "id": "kiriki",

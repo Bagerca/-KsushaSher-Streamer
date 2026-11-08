@@ -852,6 +852,13 @@ File: css\agents-layout.css
 
 /* css/agents-layout.css */
 
+/* Блокируем скролл на уровне body, чтобы страница стояла мертво (только для десктопа) */
+@media (min-width: 901px) {
+    body.route-agents {
+        overflow: hidden !important;
+    }
+}
+
 .agents-page-wrapper {
     position: relative; 
     width: 100vw; 
@@ -862,7 +869,7 @@ File: css\agents-layout.css
     z-index: 100;
 }
 
-/* Скрываем скроллбар глобально на странице */
+/* Скрываем скроллбар глобально на странице (для мобилок) */
 .agents-page-wrapper {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
@@ -913,6 +920,38 @@ File: css\agents-layout.css
 }
 
 /* =========================================
+   ЖЕСТКИЙ ЛОК СКРОЛЛА ДЛЯ ДЕСКТОПА
+   ========================================= */
+@media (min-width: 901px) {
+    .agents-page-wrapper {
+        height: 100vh;
+        overflow: hidden;
+    }
+    .agents-content-wrapper {
+        height: calc(100vh - 85px); 
+        padding-bottom: 30px;
+    }
+    .agents-layout {
+        height: 100%;
+        overflow: hidden;
+    }
+    .agents-list-col {
+        position: relative;
+        top: 0;
+        height: 100%;
+        max-height: 100%;
+    }
+    .agent-detail-zone {
+        height: 100%;
+        overflow-y: auto;
+        scrollbar-width: none; 
+    }
+    .agent-detail-zone::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* =========================================
    ЛЕВАЯ ЧАСТЬ: ДЕТАЛЬНОЕ ДОСЬЕ
    ========================================= */
 .agent-detail-zone {
@@ -954,7 +993,7 @@ File: css\agents-layout.css
 
 /* Инфо */
 .agent-header-info {
-    display: flex; flex-direction: column; flex-grow: 1; justify-content: center;
+    display: flex; flex-direction: column; flex-grow: 1; justify-content: center; min-width: 0;
 }
 .agent-name {
     font-family: var(--font-header);
@@ -992,17 +1031,62 @@ File: css\agents-layout.css
 }
 .agent-stat-badge i { color: var(--agent-color, var(--color-neon-green)); }
 
-/* Полоса прогресса */
+/* Кнопка Твича */
+.agent-twitch-btn {
+    background: rgba(145, 70, 255, 0.1);
+    border: 1px solid rgba(145, 70, 255, 0.4);
+    color: #fff;
+    padding: 6px 14px; border-radius: 6px;
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+    transition: all var(--transition-normal);
+}
+.agent-twitch-btn i { color: #9146ff; transition: color var(--transition-normal); }
+.agent-twitch-btn:hover {
+    background: #9146ff;
+    border-color: #9146ff;
+    box-shadow: 0 0 15px rgba(145, 70, 255, 0.6);
+}
+.agent-twitch-btn:hover i { color: #fff; }
+
+/* Блок Прогресса */
+.agent-progress-block {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+}
+.agent-progress-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+}
+.ap-title {
+    font-family: var(--font-tech);
+    font-size: 0.75rem; font-weight: 700; color: var(--color-text-muted);
+    letter-spacing: 2px; text-transform: uppercase;
+}
+.ap-text {
+    font-family: var(--font-header);
+    font-size: 0.95rem; font-weight: 700;
+    color: var(--agent-color, var(--color-neon-green));
+    text-shadow: 0 0 10px color-mix(in srgb, var(--agent-color) 40%, transparent);
+}
 .agent-level-bar-container {
     width: 100%; background: rgba(255,255,255,0.05);
     height: 8px; border-radius: 4px; overflow: hidden;
-    margin-top: 10px;
 }
 .agent-level-fill {
     height: 100%;
     background: var(--agent-color, var(--color-neon-green));
     box-shadow: 0 0 10px var(--agent-color, var(--color-neon-green));
     transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.4s ease;
+}
+.agent-progress-footer {
+    margin-top: 10px; text-align: right;
+    font-family: var(--font-primary); font-size: 0.75rem; color: rgba(255, 255, 255, 0.3);
 }
 
 /* Описание */
@@ -1018,7 +1102,7 @@ File: css\agents-layout.css
     transition: border-color 0.4s ease;
 }
 
-/* Секретные данные (Плейсхолдер) */
+/* Секретные данные (Заглушка) */
 .agent-secret-data {
     border: 1px dashed color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 30%, transparent);
     border-radius: 8px;
@@ -1036,6 +1120,110 @@ File: css\agents-layout.css
     transition: color 0.4s ease;
 }
 
+
+/* =========================================
+   МИНИ ТИРЛИСТ (ИНТЕГРАЦИЯ)
+   ========================================= */
+.agent-tierlist-block {
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.agent-tierlist-title {
+    font-family: var(--font-header);
+    font-size: 1.1rem;
+    color: var(--color-text-white);
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    display: flex; align-items: center; gap: 10px;
+}
+
+/* Сам контейнер превью, реагирующий на ховер */
+.agent-tierlist-preview {
+    position: relative;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.agent-tierlist-preview:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px color-mix(in srgb, var(--agent-color) 40%, transparent);
+    border-color: var(--agent-color);
+}
+.agent-tierlist-preview::after {
+    content: 'ОТКРЫТЬ ПОЛНЫЙ ТИРЛИСТ';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    color: var(--agent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-header);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(3px);
+}
+.agent-tierlist-preview:hover::after {
+    opacity: 1;
+}
+
+/* Структура микро-тирлиста */
+.mini-tl-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: var(--color-bg-dark);
+    padding: 3px;
+}
+.mini-tl-row {
+    display: flex;
+    background: rgba(255,255,255,0.03);
+    min-height: 40px;
+}
+.mini-tl-label {
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-header);
+    font-weight: 900;
+    font-size: 1rem;
+    color: #111;
+    flex-shrink: 0;
+    text-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+.mini-tl-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    flex-grow: 1;
+}
+.mini-tl-card {
+    width: 28px;
+    height: 40px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.mini-tl-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
 /* =========================================
    ПРАВАЯ ЧАСТЬ: СПИСОК АГЕНТОВ
    ========================================= */
@@ -1046,9 +1234,6 @@ File: css\agents-layout.css
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    position: sticky;
-    top: 30px;
-    max-height: calc(100vh - 120px);
 }
 
 .agents-list-header {
@@ -1063,18 +1248,35 @@ File: css\agents-layout.css
 }
 .agents-count { color: var(--color-neon-green); font-family: var(--font-tech); }
 
+/* МАГИЯ ПЛАВНОГО ЗАТУХАНИЯ И СКРОЛЛА */
 .agents-scroll-list {
     flex-grow: 1;
+    min-height: 0; /* Обязательно для флекс-контейнеров со скроллом */
     overflow-y: auto;
-    padding: 15px;
+    overflow-x: hidden;
+    padding: 20px 15px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    
+    /* Эффект растворения краев списка в пустоте */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+    
+    /* Для Firefox */
     scrollbar-width: thin;
-    scrollbar-color: var(--color-text-muted) transparent;
+    scrollbar-color: var(--agent-color, var(--color-neon-green)) transparent;
 }
+
+/* Для Chrome/Safari/Edge */
 .agents-scroll-list::-webkit-scrollbar { width: 4px; }
-.agents-scroll-list::-webkit-scrollbar-thumb { background: var(--color-text-muted); border-radius: 4px; }
+.agents-scroll-list::-webkit-scrollbar-track { background: transparent; margin: 15px 0; }
+.agents-scroll-list::-webkit-scrollbar-thumb { 
+    background: var(--agent-color, var(--color-neon-green)); 
+    border-radius: 4px; 
+    box-shadow: 0 0 10px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 50%, transparent); 
+    transition: background var(--transition-normal); 
+}
 
 /* Горизонтальная карточка агента */
 .agent-list-card {
@@ -1087,6 +1289,7 @@ File: css\agents-layout.css
     padding: 10px;
     cursor: pointer;
     transition: all var(--transition-normal);
+    flex-shrink: 0; /* Чтобы карты не сплющивались */
 }
 .agent-list-card:hover {
     background: rgba(255, 255, 255, 0.06);
@@ -1137,12 +1340,19 @@ File: css\agents-layout.css
 
 @media (max-width: 900px) {
     .agents-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
-    .agents-list-col { position: static; max-height: 500px; width: 100%; }
+    .agents-list-col { max-height: 500px; width: 100%; }
     .agents-top-nav { padding: 15px 20px; }
     .agents-content-wrapper { padding: 0 15px 40px 15px; }
     
     .agent-header-row { flex-direction: column; text-align: center; gap: 15px; }
     .agent-stats-row { justify-content: center; }
+
+    /* На iOS и Android маски часто ломают отрисовку, поэтому убираем */
+    .agents-scroll-list {
+        mask-image: none;
+        -webkit-mask-image: none;
+        padding: 10px 15px;
+    }
 }
 
 ================================================================================
@@ -1410,8 +1620,8 @@ body:not(.route-dashboard) .magic-menu-container {
 .magic-items li { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); list-style: none; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transition-delay: calc(0.05s * var(--i)); }
 .magic-items li a { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; background: rgba(5, 5, 8, 0.9); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; color: var(--color-text-white); font-size: 1.1rem; transition: var(--transition-normal); backdrop-filter: blur(5px); opacity: 0; pointer-events: none; }
 
-/* ДЕЛИМ НА 4, ТАК КАК ИМЕЕМ 5 КНОПОК ОТ 0 ДО 4 */
-.magic-menu-container.active .magic-items li { transform: rotate(calc(270deg + (90deg / 4 * var(--i)))) translateX(190px) rotate(calc(-270deg - (90deg / 4 * var(--i)))); }
+/* ДЕЛИМ НА 5, ТАК КАК ИМЕЕМ 6 КНОПОК ОТ 0 ДО 5 */
+.magic-menu-container.active .magic-items li { transform: rotate(calc(270deg + (90deg / 5 * var(--i)))) translateX(190px) rotate(calc(-270deg - (90deg / 5 * var(--i)))); }
 .magic-menu-container.active .magic-items li a { opacity: 1; pointer-events: auto; }
 
 .magic-items li a:hover { background: var(--color-neon-green); color: var(--color-text-dark); box-shadow: 0 0 15px var(--color-neon-green); border-color: var(--color-neon-green); }
@@ -5048,27 +5258,52 @@ File: css\item\item-layout.css
     margin: 0 auto; width: 100%; padding: 15px 40px 60px 40px; 
 }
 
-/* ИСПРАВЛЕНИЕ: Оптимизированные пропорции колонок для страницы */
+/* =========================================
+   СЕТКИ (LAYOUTS) - УМНОЕ РАСПРЕДЕЛЕНИЕ МЕСТА
+   ========================================= */
+
+/* СТАНДАРТ (Игры/Кино, БЕЗ плейлиста) */
 .item-layout { 
     display: grid; 
-    grid-template-columns: 320px 1fr; /* Уменьшен постер, увеличен центр */
-    gap: 30px; 
+    grid-template-columns: 320px 1fr; /* Постер слева, контент по центру (на всю ширь) */
+    gap: 40px; 
     align-items: start; transition: opacity 0.3s, filter 0.3s; 
 }
 
+/* СТАНДАРТ + ПЛЕЙЛИСТ */
 .media-item-page.has-playlist .item-layout { 
     grid-template-columns: 320px 1fr 340px; 
 }
+
+/* РЕЖИМ YOUTUBE (БЕЗ плейлиста) */
 .media-item-page.is-cinema .item-layout { 
-    grid-template-columns: 1fr 340px; 
+    display: flex; /* Центрируем видео */
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
-.media-item-page.is-cinema #item-sidebar { display: none; }
-.media-item-page.is-cinema .item-text-zone { display: none; }
+.media-item-page.is-cinema #item-sidebar,
+.media-item-page.is-cinema .item-text-zone { 
+    display: none; 
+}
+.media-item-page.is-cinema .item-main {
+    width: 100%;
+}
+
+/* РЕЖИМ YOUTUBE + ПЛЕЙЛИСТ */
+.media-item-page.is-cinema.has-playlist .item-layout { 
+    display: grid; 
+    grid-template-columns: 1fr 360px; /* Видео слева, плейлист справа */
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
 
 /* АДАПТИВНОСТЬ СЕТКИ */
 @media (max-width: 1400px) {
     .item-layout { grid-template-columns: 280px 1fr; gap: 20px; }
-    .media-item-page.has-playlist .item-layout { grid-template-columns: 1fr; }
+    .media-item-page.has-playlist .item-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .media-item-page.is-cinema.has-playlist .item-layout { display: flex; flex-direction: column; }
 }
 
 @media (max-width: 768px) {
@@ -5083,20 +5318,44 @@ File: css\item\item-player.css
 
 /* css/item/item-player.css */
 
+/* =========================================
+   ВИДЕО ЗОНА
+   ========================================= */
+.item-video-zone {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
 .item-video-container { 
-    width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; 
+    width: 100%; 
+    /* Убрали жесткие лимиты, теперь плеер занимает всё место в колонке */
+    max-width: 100%; 
+    aspect-ratio: 16/9; background: #000; border-radius: 12px; 
     overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); position: relative; 
 }
 .item-video-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
 
+/* Режим YouTube (когда вообще нет сайдбара и видео строго по центру экрана) */
+.media-item-page.is-cinema:not(.has-playlist) .item-video-zone {
+    justify-content: center;
+}
+.media-item-page.is-cinema:not(.has-playlist) .item-video-container {
+    max-width: 1400px;
+}
+
+
+/* =========================================
+   ПРАВАЯ КОЛОНКА: ПЛЕЙЛИСТ
+   ========================================= */
 .item-playlist-col { 
     background: rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); 
     display: flex; flex-direction: column; overflow: hidden; 
     position: sticky; top: 30px; 
     height: auto; 
-    /* ИСПРАВЛЕНИЕ: Увеличили вычет, чтобы снизу оставалось больше свободного места */
     max-height: calc(100vh - 120px); 
     align-self: start;
+    width: 100%; /* Занимает всю отведенную колонку */
 }
 
 .item-playlist-header { 
@@ -5107,7 +5366,7 @@ File: css\item\item-player.css
 
 .item-playlist-list { 
     flex-grow: 1; 
-    min-height: 0; /* Магия Flexbox: позволяет контенту сжиматься и скроллиться */
+    min-height: 0; 
     overflow-y: auto; 
     padding: 15px; 
     display: flex; flex-direction: column; gap: 10px; 
@@ -5126,7 +5385,7 @@ File: css\item\item-player.css
 .item-playlist-card { 
     display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px; 
     border-radius: 8px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; 
-    flex-shrink: 0; /* Не даем карточкам сплющиваться */
+    flex-shrink: 0; 
 }
 .item-playlist-card:hover { background: rgba(255,255,255,0.08); transform: translateX(-5px); }
 .item-playlist-card.active { background: color-mix(in srgb, var(--item-color) 20%, transparent); border-color: var(--item-color); }
@@ -7587,54 +7846,76 @@ File: data\subscribers.json
 
 [
   {
+    "id": "ksusha",
+    "name": "ksusha__sher",
+    "squadName": "Ksusha Sher",
+    "twitch": "ksusha__sher",
+    "role": "Creator / Streamer",
+    "createdAt": "2020-04-15",
+    "color": "#ff2d95",
+    "mainIcon": "fas fa-crown",
+    "typeIcon": "fas fa-star",
+    "avatarPath": "assets/images/ksusha.jpg",
+    "description": "Создательница этого хаоса и главная стримерша. Контролирует всё.",
+    "hasTierlist": true
+  },
+  {
     "id": "tetla",
     "name": "Tetlabot",
+    "twitch": "tetlabits",
     "role": "fish",
     "createdAt": "2021-08-06",
     "color": "#319a24",
     "mainIcon": "fas fa-fish",
     "typeIcon": "fas fa-water",
-    "description": "Искусственный интеллект, контролирующий систему. Любит рыб. [Аккаунты: tetlabits, TreeBals]"
+    "avatarPath": "assets/images/tetlabot.jpg",
+    "description": "Искусственный интеллект, контролирующий систему. Любит рыб."
   },
   {
     "id": "bagerca",
     "name": "BAGERcaa",
     "squadName": "BAGERca",
+    "twitch": "bagercaa",
     "role": "DEV / TECH",
     "createdAt": "2022-01-23",
     "color": "#ff4444",
     "mainIcon": "fas fa-laptop-code",
     "typeIcon": "fas fa-code",
     "avatarPath": "assets/images/bagerca.jpg",
-    "description": "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах."
+    "description": "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах.",
+    "favorites": ["bendy-franchise", "Awaria", "Atomic Heart", "Deepest Sword", "Hyper Light Drifter", "Chainsaw Man / Человек-бензопила"]
   },
   {
     "id": "angel",
     "name": "to_be_ang",
     "squadName": "Angel",
+    "twitch": "to_be_ang",
     "role": "The Shining Angel",
     "createdAt": "2014-11-10",
     "color": "#ff4504",
     "mainIcon": "fas fa-sun",
     "typeIcon": "fas fa-star",
     "avatarPath": "assets/images/angel.jpg",
-    "description": "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию."
+    "description": "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию.",
+    "favorites": ["dead-island-2", "unturned", "the-forest"]
   },
   {
     "id": "kiriki",
     "name": "kiriki_oni",
     "squadName": "Kiriki",
+    "twitch": "kiriki_oni",
     "role": "Neuro wave",
     "createdAt": "",
     "color": "#007bff",
     "mainIcon": "fas fa-wave-square",
     "typeIcon": "fas fa-music",
     "avatarPath": "assets/images/kiriki.jpg",
-    "description": "Нейро-композитор и повелитель алгоритмов. Создает уникальную музыку с помощью нейросетей. [Аккаунты: kiriki17, kirikii1, kiriki_onni, kiriika11]"
+    "description": "Нейро-композитор и повелитель алгоритмов. Создает уникальную музыку с помощью нейросетей."
   },
   {
     "id": "dragon",
     "name": "dragonsmaddison",
+    "twitch": "dragonsmaddison",
     "role": "DragonDildo",
     "createdAt": "2021-11-01",
     "color": "#ff000a",
@@ -7644,6 +7925,7 @@ File: data\subscribers.json
   {
     "id": "dark",
     "name": "Darkl1us",
+    "twitch": "darkl1us",
     "role": "Military Beer",
     "createdAt": "2015-10-08",
     "color": "#bd00ff",
@@ -7653,26 +7935,29 @@ File: data\subscribers.json
   {
     "id": "nikita",
     "name": "Nikitakgc",
+    "twitch": "nikitakgc",
     "role": "Forest Expert",
     "createdAt": "2025-09-29",
     "color": "#2e8b57",
     "mainIcon": "fas fa-tree",
     "typeIcon": "fas fa-campground",
-    "description": "[Связанные аккаунты: nikita87727]"
+    "description": ""
   },
   {
     "id": "roma",
     "name": "Roma99...",
+    "twitch": "roma99000000",
     "role": "Orenburg Brother",
     "createdAt": "",
     "color": "#00ffff",
     "mainIcon": "fas fa-city",
     "typeIcon": "fas fa-user-friends",
-    "description": "[Связанные аккаунты: roma99000000, roma990000000, roma9900000000]"
+    "description": ""
   },
   {
     "id": "raku6chka",
     "name": "raku6chka",
+    "twitch": "raku6chka",
     "role": "Irkutsk Brother",
     "createdAt": "2021-11-18",
     "color": "#17a2b8",
@@ -7682,6 +7967,7 @@ File: data\subscribers.json
   {
     "id": "hardwell",
     "name": "h1rdwell",
+    "twitch": "h1rdwell",
     "role": "Hard Worker",
     "createdAt": "2017-02-23",
     "color": "#e67e22",
@@ -7692,6 +7978,7 @@ File: data\subscribers.json
     "id": "ih1mkaaaa",
     "name": "ih1mkaaaa",
     "squadName": "ih1mka",
+    "twitch": "ih1mkaaaa",
     "role": "Agent",
     "createdAt": "2025-10-11",
     "color": "#B21F1D",
@@ -7701,6 +7988,7 @@ File: data\subscribers.json
   {
     "id": "apalonzv",
     "name": "apalonzv",
+    "twitch": "apalonzv",
     "role": "Agent",
     "color": "#bd00ff",
     "mainIcon": "fas fa-user",
@@ -7710,6 +7998,7 @@ File: data\subscribers.json
   {
     "id": "redfyr",
     "name": "RedFyr",
+    "twitch": "redfyr",
     "role": "Agent",
     "color": "#ff4444",
     "mainIcon": "fas fa-fire",
@@ -7719,6 +8008,7 @@ File: data\subscribers.json
   {
     "id": "wotfot",
     "name": "Wotfot",
+    "twitch": "wotfot",
     "role": "Agent",
     "color": "#39ff14",
     "mainIcon": "fas fa-eye",
@@ -7727,6 +8017,7 @@ File: data\subscribers.json
   {
     "id": "akipi20",
     "name": "akipi20",
+    "twitch": "akipi20",
     "role": "Agent",
     "color": "#ffd700",
     "mainIcon": "fas fa-bolt",
@@ -7736,6 +8027,7 @@ File: data\subscribers.json
   {
     "id": "svarshik_s1d",
     "name": "svarshik_s1d",
+    "twitch": "svarshik_s1d",
     "role": "Agent",
     "color": "#e67e22",
     "mainIcon": "fas fa-hard-hat",
@@ -7745,6 +8037,7 @@ File: data\subscribers.json
   {
     "id": "pristalihe",
     "name": "pristalihe",
+    "twitch": "pristalihe",
     "role": "Agent",
     "color": "#00ffff",
     "mainIcon": "fas fa-ghost",
@@ -7754,6 +8047,7 @@ File: data\subscribers.json
   {
     "id": "ayyysms",
     "name": "ayyysms",
+    "twitch": "ayyysms",
     "role": "Agent",
     "color": "#ff2d95",
     "mainIcon": "fas fa-comment-dots",
@@ -7763,6 +8057,7 @@ File: data\subscribers.json
   {
     "id": "me1leve",
     "name": "Me1leve",
+    "twitch": "me1leve",
     "role": "Agent",
     "color": "#ff8c00",
     "mainIcon": "fas fa-heart",
@@ -7772,6 +8067,7 @@ File: data\subscribers.json
   {
     "id": "rater_12355",
     "name": "rater_12355",
+    "twitch": "rater_12355",
     "role": "Agent",
     "color": "#00ccff",
     "mainIcon": "fas fa-database",
@@ -7781,6 +8077,7 @@ File: data\subscribers.json
   {
     "id": "cotara_gold",
     "name": "cotara_gold",
+    "twitch": "cotara_gold",
     "role": "Agent",
     "color": "#ffd700",
     "mainIcon": "fas fa-sack-dollar",
@@ -8206,6 +8503,8 @@ import EventBus from './event-bus.js';
 import { AppStore } from './store.js';
 import { AppRouter } from './router.js';
 import { AgentCard } from './components/AgentCard.js';
+import { loadData } from './api.js';
+import { optimizeImageUrl } from './utils.js';
 
 export class AgentsController {
     constructor() {
@@ -8221,10 +8520,16 @@ export class AgentsController {
             avatar: document.getElementById('agent-big-avatar'),
             name: document.getElementById('agent-name'),
             role: document.getElementById('agent-role'),
+            statsRow: document.getElementById('agent-stats-row'),
             lvlBadge: document.getElementById('agent-lvl-badge').querySelector('span'),
             timeBadge: document.getElementById('agent-time-badge').querySelector('span'),
+            
+            expText: document.getElementById('agent-exp-text'),
             levelFill: document.getElementById('agent-level-fill'),
+            expHint: document.getElementById('agent-exp-hint'),
+            
             desc: document.getElementById('agent-desc'),
+            dynamicContent: document.getElementById('agent-dynamic-content'),
             
             listContainer: document.getElementById('agents-scroll-list'),
             totalCount: document.getElementById('agents-total-count')
@@ -8232,8 +8537,10 @@ export class AgentsController {
 
         this.agentsData = [];
         this.currentAgentId = null;
+        this.isListRendered = false; 
 
         this.bindEvents();
+        this.subscribeToStore();
     }
 
     mount(targetId) {
@@ -8243,6 +8550,20 @@ export class AgentsController {
 
     unmount() {
         console.log('👤 [Agents] Компонент размонтирован');
+    }
+
+    subscribeToStore() {
+        AppStore.subscribe((state, prevState) => {
+            const currentPath = state.route.path;
+            const currentId = state.route.params.id;
+            const prevId = prevState?.route?.params?.id;
+            
+            if (currentPath === '/agents' && currentId && currentId !== prevId) {
+                if (this.agentsData.length > 0) {
+                    this.switchAgent(currentId);
+                }
+            }
+        });
     }
 
     bindEvents() {
@@ -8255,9 +8576,10 @@ export class AgentsController {
     loadDataAndRender(targetId) {
         const state = AppStore.getState();
         
-        if (!state.data.isAgentsLoaded) {
+        // Нам нужна и база агентов, и медиа (для картинок тирлиста)
+        if (!state.data.isAgentsLoaded || !state.data.isMediaLoaded) {
             const unsubscribe = AppStore.subscribe((newState) => {
-                if (newState.data.isAgentsLoaded) {
+                if (newState.data.isAgentsLoaded && newState.data.isMediaLoaded) {
                     unsubscribe();
                     this.loadDataAndRender(targetId);
                 }
@@ -8272,15 +8594,23 @@ export class AgentsController {
             return;
         }
 
-        this.renderList();
+        if (!this.isListRendered) {
+            this.renderList();
+            this.isListRendered = true;
+        }
 
-        // Выбираем запрошенного агента, либо первого в списке
         let agent = this.agentsData.find(a => a.id === targetId || a.name === targetId);
         if (!agent) {
             agent = this.agentsData[0];
-            // Беззвучно обновляем URL на правильного агента
             AppRouter.navigate('/agents', { id: agent.id });
         } else {
+            this.renderDetail(agent);
+        }
+    }
+    
+    switchAgent(targetId) {
+        const agent = this.agentsData.find(a => a.id === targetId || a.name === targetId);
+        if (agent) {
             this.renderDetail(agent);
         }
     }
@@ -8322,7 +8652,7 @@ export class AgentsController {
         if (!agent) return;
         this.currentAgentId = agent.id;
 
-        // 1. Обновляем классы активности в списке
+        // 1. Обновляем классы активности
         this.els.listContainer.querySelectorAll('.agent-list-card').forEach(card => {
             card.classList.toggle('active', card.dataset.id === agent.id);
         });
@@ -8334,9 +8664,8 @@ export class AgentsController {
 
         setTimeout(() => {
             const colorVal = AgentCard.getRoleColor(agent.color);
-            const { level, progress, daysActive } = AgentCard.calculateLevelData(agent.createdAt);
+            const { level, progress, daysActive, currentExp, nextLevelExp, daysLeft } = AgentCard.calculateLevelData(agent.createdAt);
 
-            // Обновляем CSS-переменную для всего экрана
             this.els.page.style.setProperty('--agent-color', colorVal);
 
             // Тексты
@@ -8346,7 +8675,28 @@ export class AgentsController {
             this.els.timeBadge.textContent = agent.createdAt ? `${daysActive} дн. в сети` : `ДАННЫЕ ЗАСЕКРЕЧЕНЫ`;
             this.els.desc.innerHTML = agent.description || 'Информация о данном агенте отсутствует в базе.';
 
+            // Удаляем старую кнопку твича, если была
+            const oldTwitchBtn = this.els.statsRow.querySelector('.agent-twitch-btn');
+            if (oldTwitchBtn) oldTwitchBtn.remove();
+            
+            // Добавляем новую, если логин известен
+            if (agent.twitch) {
+                const btn = document.createElement('a');
+                btn.className = 'agent-twitch-btn';
+                btn.href = `https://twitch.tv/${agent.twitch}`;
+                btn.target = '_blank';
+                btn.innerHTML = `<i class="fab fa-twitch"></i> TWITCH`;
+                this.els.statsRow.appendChild(btn);
+            }
+
             // Прогресс бар
+            if (agent.createdAt) {
+                this.els.expText.textContent = `${currentExp} / ${nextLevelExp} XP`;
+                this.els.expHint.textContent = `До следующего уровня (LVL.${level + 1}): ${daysLeft} дн.`;
+            } else {
+                this.els.expText.textContent = `ДАННЫЕ СКРЫТЫ`;
+                this.els.expHint.textContent = `Прогресс неизвестен`;
+            }
             this.els.levelFill.style.width = `${progress}%`;
 
             // Аватарка
@@ -8355,7 +8705,82 @@ export class AgentsController {
                 : (agent.customHtml || `<i class="${agent.mainIcon || 'fas fa-user'}"></i>`);
             this.els.avatar.innerHTML = avatarContent;
 
+            // РЕНДЕР МИНИ-ТИРЛИСТА
+            if (agent.hasTierlist) {
+                this.els.dynamicContent.innerHTML = `
+                    <div class="agent-tierlist-block">
+                        <div class="agent-tierlist-title"><i class="fas fa-list-ul"></i> БАЗА ДАННЫХ АГЕНТА</div>
+                        <div id="mini-tierlist-root" style="text-align: center; padding: 20px;">
+                            <i class="fas fa-spinner fa-spin" style="color: var(--agent-color);"></i> СИНХРОНИЗАЦИЯ...
+                        </div>
+                    </div>
+                `;
+                this.renderMiniTierlist(agent.id);
+            } else {
+                this.renderSecretPlaceholder();
+            }
+
         }, 150);
+    }
+
+    async renderMiniTierlist(agentId) {
+        const root = document.getElementById('mini-tierlist-root');
+        if (!root) return;
+
+        try {
+            // Для демо подгружаем статический тирлист игр (в будущем можно грузить по agentId)
+            const staticData = await loadData('tierlist-static-games.json');
+            const mediaDb = AppStore.getState().data.media || [];
+
+            if (!staticData || !staticData.tiers) {
+                root.innerHTML = '<div style="color: #666;">Данные тирлиста повреждены</div>';
+                return;
+            }
+
+            let html = `<div class="agent-tierlist-preview" id="btn-open-agent-tierlist"><div class="mini-tl-container">`;
+
+            staticData.tiers.forEach(tier => {
+                if (tier.items.length === 0) return; // Пропускаем пустые тиры для компактности
+                
+                let cardsHtml = tier.items.map(itemTitle => {
+                    const mediaItem = mediaDb.find(m => m.title === itemTitle);
+                    let imgUrl = 'https://via.placeholder.com/22x32?text=NO';
+                    if (mediaItem) {
+                        imgUrl = mediaItem.image || (mediaItem.images && mediaItem.images[0]) || imgUrl;
+                    }
+                    return `<div class="mini-tl-card"><img src="${optimizeImageUrl(imgUrl, 50, 60)}" alt="${itemTitle}"></div>`;
+                }).join('');
+
+                html += `
+                    <div class="mini-tl-row">
+                        <div class="mini-tl-label" style="background-color: ${tier.color}">${tier.name}</div>
+                        <div class="mini-tl-content">${cardsHtml}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            root.innerHTML = html;
+
+            document.getElementById('btn-open-agent-tierlist').addEventListener('click', () => {
+                EventBus.emit('PLAY_SOUND', 'expand');
+                AppRouter.navigate('/tierlist');
+            });
+
+        } catch (e) {
+            console.error("Ошибка при генерации мини-тирлиста:", e);
+            root.innerHTML = '<div style="color: #ff4444;">Ошибка синхронизации</div>';
+        }
+    }
+
+    renderSecretPlaceholder() {
+        this.els.dynamicContent.innerHTML = `
+            <div class="agent-secret-data">
+                <i class="fas fa-lock"></i><br>
+                ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ ЗАСЕКРЕЧЕНЫ<br>
+                <span style="font-size: 0.8rem; color: #555;">(Личная база данных пуста)</span>
+            </div>
+        `;
     }
 }
 
@@ -9620,27 +10045,28 @@ export const DATA_REGISTRY = {
     },
 
     'subscribers.json': [
-        { id: "tetla", name: "Tetlabot", role: "fish", createdAt: "", color: "#319a24", mainIcon: "fas fa-fish", typeIcon: "fas fa-water", description: "Искусственный интеллект, контролирующий систему. Любит рыб. [Аккаунты: tetlabits, TreeBals]" },
-        { id: "bagerca", name: "BAGERcaa", squadName: "BAGERca", role: "DEV / TECH", createdAt: "2022-01-23", color: "#ff4444", mainIcon: "fas fa-laptop-code", typeIcon: "fas fa-code", avatarPath: "assets/images/bagerca.jpg", description: "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах." },
-        { id: "angel", name: "to_be_ang", squadName: "Angel", role: "The Shining Angel", createdAt: "", color: "#ff4504", mainIcon: "fas fa-sun", typeIcon: "fas fa-star", avatarPath: "assets/images/angel.jpg", description: "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию." },
-        { id: "kiriki", name: "kiriki_oni", squadName: "Kiriki", role: "Neuro wave", createdAt: "", color: "#007bff", mainIcon: "fas fa-wave-square", typeIcon: "fas fa-music", avatarPath: "assets/images/kiriki.jpg", description: "Нейро-композитор и повелитель алгоритмов. Создает уникальную музыку с помощью нейросетей. [Аккаунты: kiriki17, kirikii1, kiriki_onni, kiriika11]" },
-        { id: "dragon", name: "dragonsmaddison", role: "DragonDildo", createdAt: "", color: "#ff000a", mainIcon: "fas fa-dragon", typeIcon: "fas fa-fire" },
-        { id: "dark", name: "Darkl1us", role: "Military Beer", createdAt: "", color: "#bd00ff", mainIcon: "fas fa-beer", typeIcon: "fas fa-medal" },
-        { id: "nikita", name: "Nikitakgc", role: "Forest Expert", createdAt: "", color: "#2e8b57", mainIcon: "fas fa-tree", typeIcon: "fas fa-campground", description: "[Связанные аккаунты: nikita87727]" },
-        { id: "roma", name: "Roma99...", role: "Orenburg Brother", createdAt: "", color: "#00ffff", mainIcon: "fas fa-city", typeIcon: "fas fa-user-friends", description: "[Связанные аккаунты: roma99000000, roma990000000, roma9900000000]" },
-        { id: "raku6chka", name: "raku6chka", role: "Irkutsk Brother", createdAt: "", color: "#17a2b8", mainIcon: "far fa-handshake", typeIcon: "fas fa-map-marker-alt" },
-        { id: "hardwell", name: "h1rdwell", role: "Hard Worker", createdAt: "2017-02-23", color: "#e67e22", mainIcon: "fas fa-hammer", typeIcon: "fas fa-hard-hat" },
-        { id: "ih1mkaaaa", name: "ih1mkaaaa", squadName: "ih1mka", role: "Agent", createdAt: "", color: "#B21F1D", mainIcon: "fas fa-user", typeIcon: "fas fa-star" },
-        { id: "apalonzv", name: "apalonzv", role: "Agent", color: "#bd00ff", mainIcon: "fas fa-user", typeIcon: "fas fa-terminal" },
-        { id: "redfyr", name: "RedFyr", role: "Agent", color: "#ff4444", mainIcon: "fas fa-fire", typeIcon: "fas fa-star" },
-        { id: "wotfot", name: "Wotfot", role: "Agent", color: "#39ff14", mainIcon: "fas fa-eye", typeIcon: "fas fa-satellite-dish" },
-        { id: "akipi20", name: "akipi20", role: "Agent", color: "#ffd700", mainIcon: "fas fa-bolt", typeIcon: "fas fa-microchip" },
-        { id: "svarshik_s1d", name: "svarshik_s1d", role: "Agent", color: "#e67e22", mainIcon: "fas fa-hard-hat", typeIcon: "fas fa-hammer" },
-        { id: "pristalihe", name: "pristalihe", role: "Agent", color: "#00ffff", mainIcon: "fas fa-ghost", typeIcon: "fas fa-skull" },
-        { id: "ayyysms", name: "ayyysms", role: "Agent", color: "#ff2d95", mainIcon: "fas fa-comment-dots", typeIcon: "fas fa-terminal" },
-        { id: "me1leve", name: "Me1leve", role: "Agent", color: "#ff8c00", mainIcon: "fas fa-heart", typeIcon: "fas fa-music" },
-        { id: "rater_12355", name: "rater_12355", role: "Agent", color: "#00ccff", mainIcon: "fas fa-database", typeIcon: "fas fa-memory" },
-        { id: "cotara_gold", name: "cotara_gold", role: "Agent", color: "#ffd700", mainIcon: "fas fa-sack-dollar", typeIcon: "fas fa-medal" }
+        { id: "ksusha", name: "ksusha__sher", squadName: "Ksusha Sher", twitch: "ksusha__sher", role: "Creator / Streamer", createdAt: "2020-04-15", color: "#ff2d95", mainIcon: "fas fa-crown", typeIcon: "fas fa-star", avatarPath: "assets/images/ksusha.jpg", description: "Создательница этого хаоса и главная стримерша. Контролирует всё.", hasTierlist: true },
+        { id: "tetla", name: "Tetlabot", twitch: "tetlabits", role: "fish", createdAt: "2021-08-06", color: "#319a24", mainIcon: "fas fa-fish", typeIcon: "fas fa-water", description: "Искусственный интеллект, контролирующий систему. Любит рыб." },
+        { id: "bagerca", name: "BAGERcaa", squadName: "BAGERca", twitch: "bagercaa", role: "DEV / TECH", createdAt: "2022-01-23", color: "#ff4444", mainIcon: "fas fa-laptop-code", typeIcon: "fas fa-code", avatarPath: "assets/images/bagerca.jpg", description: "Архитектор этого хаоса и главный сектант Чернильного Демона. Уровень фанатизма по Bendy превышает системные нормы. Кодит на чистом энтузиазме и чернилах." },
+        { id: "angel", name: "to_be_ang", squadName: "Angel", twitch: "to_be_ang", role: "The Shining Angel", createdAt: "2014-11-10", color: "#ff4504", mainIcon: "fas fa-sun", typeIcon: "fas fa-star", avatarPath: "assets/images/angel.jpg", description: "Элитный оперативник кооператива. Обладает запредельным скиллом и реакцией. Пока остальные пытаются понять тактику, она уже зачистила локацию." },
+        { id: "kiriki", name: "kiriki_oni", squadName: "Kiriki", twitch: "kiriki_oni", role: "Neuro wave", createdAt: "", color: "#007bff", mainIcon: "fas fa-wave-square", typeIcon: "fas fa-music", avatarPath: "assets/images/kiriki.jpg", description: "Нейро-композитор и повелитель алгоритмов. Создает уникальную музыку с помощью нейросетей." },
+        { id: "dragon", name: "dragonsmaddison", twitch: "dragonsmaddison", role: "DragonDildo", createdAt: "2021-11-01", color: "#ff000a", mainIcon: "fas fa-dragon", typeIcon: "fas fa-fire" },
+        { id: "dark", name: "Darkl1us", twitch: "darkl1us", role: "Military Beer", createdAt: "2015-10-08", color: "#bd00ff", mainIcon: "fas fa-beer", typeIcon: "fas fa-medal" },
+        { id: "nikita", name: "Nikitakgc", twitch: "nikitakgc", role: "Forest Expert", createdAt: "2025-09-29", color: "#2e8b57", mainIcon: "fas fa-tree", typeIcon: "fas fa-campground", description: "" },
+        { id: "roma", name: "Roma99...", twitch: "roma99000000", role: "Orenburg Brother", createdAt: "", color: "#00ffff", mainIcon: "fas fa-city", typeIcon: "fas fa-user-friends", description: "" },
+        { id: "raku6chka", name: "raku6chka", twitch: "raku6chka", role: "Irkutsk Brother", createdAt: "2021-11-18", color: "#17a2b8", mainIcon: "far fa-handshake", typeIcon: "fas fa-map-marker-alt" },
+        { id: "hardwell", name: "h1rdwell", twitch: "h1rdwell", role: "Hard Worker", createdAt: "2017-02-23", color: "#e67e22", mainIcon: "fas fa-hammer", typeIcon: "fas fa-hard-hat" },
+        { id: "ih1mkaaaa", name: "ih1mkaaaa", squadName: "ih1mka", twitch: "ih1mkaaaa", role: "Agent", createdAt: "2025-10-11", color: "#B21F1D", mainIcon: "fas fa-user", typeIcon: "fas fa-star" },
+        { id: "apalonzv", name: "apalonzv", twitch: "apalonzv", role: "Agent", color: "#bd00ff", mainIcon: "fas fa-user", typeIcon: "fas fa-terminal", createdAt: "2021-06-04" },
+        { id: "redfyr", name: "RedFyr", twitch: "redfyr", role: "Agent", color: "#ff4444", mainIcon: "fas fa-fire", typeIcon: "fas fa-star", createdAt: "2017-07-27" },
+        { id: "wotfot", name: "Wotfot", twitch: "wotfot", role: "Agent", color: "#39ff14", mainIcon: "fas fa-eye", typeIcon: "fas fa-satellite-dish" },
+        { id: "akipi20", name: "akipi20", twitch: "akipi20", role: "Agent", color: "#ffd700", mainIcon: "fas fa-bolt", typeIcon: "fas fa-microchip", createdAt: "2022-02-27" },
+        { id: "svarshik_s1d", name: "svarshik_s1d", twitch: "svarshik_s1d", role: "Agent", color: "#e67e22", mainIcon: "fas fa-hard-hat", typeIcon: "fas fa-hammer", createdAt: "2025-05-08" },
+        { id: "pristalihe", name: "pristalihe", twitch: "pristalihe", role: "Agent", color: "#00ffff", mainIcon: "fas fa-ghost", typeIcon: "fas fa-skull", createdAt: "2021-07-08" },
+        { id: "ayyysms", name: "ayyysms", twitch: "ayyysms", role: "Agent", color: "#ff2d95", mainIcon: "fas fa-comment-dots", typeIcon: "fas fa-terminal", createdAt: "2025-11-28" },
+        { id: "me1leve", name: "Me1leve", twitch: "me1leve", role: "Agent", color: "#ff8c00", mainIcon: "fas fa-heart", typeIcon: "fas fa-music", createdAt: "2026-03-06" },
+        { id: "rater_12355", name: "rater_12355", twitch: "rater_12355", role: "Agent", color: "#00ccff", mainIcon: "fas fa-database", typeIcon: "fas fa-memory", createdAt: "2024-10-25" },
+        { id: "cotara_gold", name: "cotara_gold", twitch: "cotara_gold", role: "Agent", color: "#ffd700", mainIcon: "fas fa-sack-dollar", typeIcon: "fas fa-medal", createdAt: "2022-01-22" }
     ],
 
     'suggestions-games.json': [
@@ -10974,6 +11400,14 @@ export class MediaItemController {
                 AppRouter.navigate('/youtube', {}, restoreQuery);
             } else if (from === 'tierlist') {
                 AppRouter.navigate('/tierlist', { type });
+            } else if (from === 'agents') {
+                // Если пришли от агента, возвращаемся конкретно к нему
+                const agentId = state.route.query.agentId;
+                if (agentId) {
+                    AppRouter.navigate('/agents', { id: agentId });
+                } else {
+                    AppRouter.navigate('/agents');
+                }
             } else {
                 AppRouter.navigate('/archive', { type }, restoreQuery);
             }
@@ -11007,6 +11441,8 @@ export class MediaItemController {
             this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД В YOUTUBE АРХИВ';
         } else if (from === 'tierlist') {
             this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД В ТИРЛИСТ';
+        } else if (from === 'agents') {
+            this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД К АГЕНТУ';
         } else {
             this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД В БАЗУ';
         }
@@ -12128,7 +12564,8 @@ export class SettingsMenu {
                 <li style="--i:1;" title="Убрать существ"><a href="#" id="btn-clear-creatures"><i class="fas fa-skull"></i></a></li>
                 <li style="--i:2;" title="Режим Плеера"><a href="#" id="btn-toggle-music"><i class="fas fa-headphones"></i></a></li>
                 <li style="--i:3;" title="YouTube Архив"><a href="#/youtube" id="btn-yt-lib" style="color: #ff0000; border-color: rgba(255,0,0,0.3);"><i class="fab fa-youtube"></i></a></li>
-                <li style="--i:4;" title="Поддержать"><a href="#donation"><i class="fas fa-heart"></i></a></li>
+                <li style="--i:4;" title="База Агентов"><a href="#/agents/ksusha"><i class="fas fa-users"></i></a></li>
+                <li style="--i:5;" title="Поддержать"><a href="#donation"><i class="fas fa-heart"></i></a></li>
             </ul>
         `;
         
@@ -14911,8 +15348,8 @@ export class AgentCard {
      * Формула: Уровень = Корень из количества дней.
      */
     static calculateLevelData(createdAtStr) {
-        // Если дата не указана, выдаем базовый 1 уровень
-        if (!createdAtStr) return { level: 1, progress: 0, daysActive: 0 };
+        // Если дата не указана, выдаем базовый 1 уровень (заглушка)
+        if (!createdAtStr) return { level: 1, progress: 0, daysActive: 0, currentExp: 0, nextLevelExp: 100, daysLeft: 100 };
 
         const createdDate = new Date(createdAtStr);
         const now = new Date();
@@ -14922,12 +15359,12 @@ export class AgentCard {
         const daysActive = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
         // Если дата из будущего (ошибка), возвращаем 1 уровень
-        if (now < createdDate) return { level: 1, progress: 0, daysActive: 0 };
+        if (now < createdDate) return { level: 1, progress: 0, daysActive: 0, currentExp: 0, nextLevelExp: 100, daysLeft: 100 };
 
-        // Считаем уровень (например, корень из 100 дней = 10 лвл)
+        // Считаем уровень (корень из дней)
         const level = Math.floor(Math.sqrt(daysActive)) + 1;
 
-        // Считаем прогресс до следующего уровня (в процентах)
+        // Пороги для текущего и следующего уровня в днях
         const currentThreshold = Math.pow(level - 1, 2);
         const nextThreshold = Math.pow(level, 2);
         
@@ -14939,7 +15376,10 @@ export class AgentCard {
         return { 
             level, 
             progress: Math.max(0, Math.min(100, progress)), 
-            daysActive 
+            daysActive,
+            currentExp: daysInCurrentLevel,         // Выводим как "ОПЫТ"
+            nextLevelExp: daysNeededForNextLevel,   // Максимум "ОПЫТА" на этом уровне
+            daysLeft: daysNeededForNextLevel - daysInCurrentLevel // Дней до левелапа
         };
     }
 
@@ -17750,13 +18190,25 @@ export function getAgentsView() {
                         <div class="agent-header-info">
                             <h1 class="agent-name" id="agent-name">NAME</h1>
                             <div class="agent-role" id="agent-role">ROLE</div>
-                            <div class="agent-stats-row">
+                            <div class="agent-stats-row" id="agent-stats-row">
                                 <div class="agent-stat-badge" id="agent-lvl-badge"><i class="fas fa-star"></i> <span>LVL.1</span></div>
                                 <div class="agent-stat-badge" id="agent-time-badge"><i class="fas fa-clock"></i> <span>0 дн. в сети</span></div>
+                                <!-- Сюда JS добавит кнопку твича, если логин известен -->
                             </div>
-                            <div class="agent-level-bar-container">
-                                <div class="agent-level-fill" id="agent-level-fill" style="width: 0%;"></div>
+                            
+                            <div class="agent-progress-block">
+                                <div class="agent-progress-header">
+                                    <span class="ap-title">РАНГОВЫЙ ПРОГРЕСС</span>
+                                    <span class="ap-text" id="agent-exp-text">0 / 0 XP</span>
+                                </div>
+                                <div class="agent-level-bar-container">
+                                    <div class="agent-level-fill" id="agent-level-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="agent-progress-footer" id="agent-exp-hint">
+                                    До следующего уровня: 0 дн.
+                                </div>
                             </div>
+
                         </div>
                     </div>
                     
@@ -17764,11 +18216,8 @@ export function getAgentsView() {
                         Описание отсутствует.
                     </div>
                     
-                    <div class="agent-secret-data">
-                        <i class="fas fa-lock"></i><br>
-                        ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ ЗАСЕКРЕЧЕНЫ<br>
-                        <span style="font-size: 0.8rem; color: #555;">(Интеграция личных тирлистов в разработке)</span>
-                    </div>
+                    <!-- Сюда JS будет вставлять либо секретные данные, либо список фаворитов -->
+                    <div id="agent-dynamic-content"></div>
                 </main>
 
                 <!-- ПРАВАЯ КОЛОНКА: СПИСОК АГЕНТОВ -->

@@ -1,0 +1,241 @@
+/* css/agents/agent-detail.css */
+
+.agent-detail-zone {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 4px solid var(--agent-color, var(--color-neon-green));
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    padding: 60px 40px 40px 40px; /* Увеличили верхний паддинг под вкладку */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    transition: border-color 0.4s ease, opacity 0.3s ease;
+    position: relative; /* Для позиционирования вкладки Назад */
+}
+
+/* КИБЕР-ВКЛАДКА "НАЗАД" */
+.agent-back-tab {
+    position: absolute;
+    top: -4px; /* Идеальное перекрытие верхнего цветного бордера */
+    left: -1px; /* Идеальное перекрытие левого бордера */
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid var(--agent-color, var(--color-neon-green));
+    border-left: 4px solid var(--agent-color, var(--color-neon-green));
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px 0 12px 0; /* Скругление совпадает с досье */
+    
+    color: var(--color-text-white);
+    font-family: var(--font-header);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 10px 20px 10px 15px;
+    
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    backdrop-filter: blur(10px);
+    z-index: 20;
+}
+
+.agent-back-tab:hover {
+    background: var(--agent-color, var(--color-neon-green));
+    color: var(--color-text-dark);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+}
+
+.agent-back-tab i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.agent-back-tab:hover i {
+    transform: translateX(-4px);
+}
+
+/* Анимация переключения агента */
+.agent-detail-zone.is-glitching {
+    animation: text-glitch-swap 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.agent-header-row {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+/* Аватарка */
+.agent-big-avatar {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: var(--color-bg-dark);
+    border: 3px solid var(--agent-color, var(--color-neon-green));
+    box-shadow: 0 0 25px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; color: var(--agent-color, var(--color-neon-green));
+    overflow: hidden; flex-shrink: 0;
+    transition: all 0.4s ease;
+}
+.agent-big-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Инфо */
+.agent-header-info {
+    display: flex; flex-direction: column; flex-grow: 1; justify-content: center; min-width: 0;
+}
+.agent-name {
+    font-family: var(--font-header);
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0 0 5px 0;
+    text-transform: uppercase;
+    color: var(--color-text-white);
+    text-shadow: 0 0 15px color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 60%, transparent);
+    line-height: 1.1;
+    transition: text-shadow 0.4s ease;
+}
+.agent-role {
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--agent-color, var(--color-neon-green));
+    margin-bottom: 15px;
+    transition: color 0.4s ease;
+}
+
+/* Плашки уровня и возраста */
+.agent-stats-row {
+    display: flex; gap: 15px; align-items: center; flex-wrap: wrap;
+}
+.agent-stat-badge {
+    background: color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+    color: var(--color-text-white);
+    padding: 6px 14px; border-radius: 6px;
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.4s ease;
+}
+.agent-stat-badge i { color: var(--agent-color, var(--color-neon-green)); }
+
+/* Кнопка Твича */
+.agent-twitch-btn {
+    background: rgba(145, 70, 255, 0.1);
+    border: 1px solid rgba(145, 70, 255, 0.4);
+    color: #fff;
+    padding: 6px 14px; border-radius: 6px;
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+    transition: all var(--transition-normal);
+}
+.agent-twitch-btn i { color: #9146ff; transition: color var(--transition-normal); }
+.agent-twitch-btn:hover {
+    background: #9146ff;
+    border-color: #9146ff;
+    box-shadow: 0 0 15px rgba(145, 70, 255, 0.6);
+}
+.agent-twitch-btn:hover i { color: #fff; }
+
+/* Блок Прогресса */
+.agent-progress-block {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+}
+.agent-progress-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+}
+.ap-title {
+    font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; 
+    color: var(--color-text-muted); letter-spacing: 2px; text-transform: uppercase;
+}
+.ap-text {
+    font-family: var(--font-header); font-size: 0.95rem; font-weight: 700;
+    color: var(--agent-color, var(--color-neon-green));
+    text-shadow: 0 0 10px color-mix(in srgb, var(--agent-color) 40%, transparent);
+}
+.agent-level-bar-container {
+    width: 100%; background: rgba(255,255,255,0.05);
+    height: 8px; border-radius: 4px; overflow: hidden;
+}
+.agent-level-fill {
+    height: 100%; background: var(--agent-color, var(--color-neon-green));
+    box-shadow: 0 0 10px var(--agent-color, var(--color-neon-green));
+    transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.4s ease;
+}
+.agent-progress-footer {
+    margin-top: 10px; text-align: right;
+    font-family: var(--font-primary); font-size: 0.75rem; color: rgba(255, 255, 255, 0.3);
+}
+
+/* Описание */
+.agent-description {
+    font-family: var(--font-primary); font-size: 1.1rem; line-height: 1.6;
+    color: var(--color-text-light); background: rgba(255,255,255,0.02);
+    padding: 20px; border-radius: 8px;
+    border-left: 3px solid var(--agent-color, var(--color-neon-green));
+    transition: border-color 0.4s ease;
+}
+
+/* Секретные данные (Заглушка) */
+.agent-secret-data {
+    border: 1px dashed color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 30%, transparent);
+    border-radius: 8px; padding: 40px 20px; text-align: center;
+    color: var(--color-text-muted); font-family: var(--font-tech); letter-spacing: 2px;
+    transition: border-color 0.4s ease;
+}
+.agent-secret-data i {
+    font-size: 2.5rem; color: color-mix(in srgb, var(--agent-color, var(--color-neon-green)) 40%, transparent);
+    margin-bottom: 15px; transition: color 0.4s ease;
+}
+
+/* МИНИ ТИРЛИСТ */
+.agent-tierlist-block {
+    margin-top: 10px; background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px;
+    padding: 20px; display: flex; flex-direction: column;
+}
+.agent-tierlist-title {
+    font-family: var(--font-header); font-size: 1.1rem; color: var(--color-text-white);
+    letter-spacing: 2px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
+}
+.agent-tierlist-preview {
+    position: relative; cursor: pointer; border-radius: 6px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.agent-tierlist-preview:hover {
+    transform: translateY(-4px); border-color: var(--agent-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px color-mix(in srgb, var(--agent-color) 40%, transparent);
+}
+.agent-tierlist-preview::after {
+    content: 'ОТКРЫТЬ ПОЛНЫЙ ТИРЛИСТ'; position: absolute; inset: 0;
+    background: rgba(0,0,0,0.85); color: var(--agent-color); display: flex;
+    align-items: center; justify-content: center; font-family: var(--font-header);
+    font-size: 1.4rem; font-weight: 800; letter-spacing: 2px; opacity: 0;
+    transition: opacity 0.3s; backdrop-filter: blur(3px);
+}
+.agent-tierlist-preview:hover::after { opacity: 1; }
+
+.mini-tl-container { display: flex; flex-direction: column; gap: 3px; background: var(--color-bg-dark); padding: 3px; }
+.mini-tl-row { display: flex; background: rgba(255,255,255,0.03); min-height: 40px; }
+.mini-tl-label { width: 45px; display: flex; align-items: center; justify-content: center; font-family: var(--font-header); font-weight: 900; font-size: 1rem; color: #111; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+.mini-tl-content { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; flex-grow: 1; }
+.mini-tl-card { width: 28px; height: 40px; border-radius: 3px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.1); }
+.mini-tl-card img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 900px) {
+    .agent-detail-zone {
+        padding: 55px 20px 20px 20px; /* На мобилках вкладка тоже помещается */
+    }
+    .agent-header-row { flex-direction: column; text-align: center; gap: 15px; }
+    .agent-stats-row { justify-content: center; }
+}

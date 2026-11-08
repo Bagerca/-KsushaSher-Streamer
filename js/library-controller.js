@@ -6,7 +6,14 @@ import { CardFactory } from './archive/CardFactory.js';
 import { LazyLoader } from './archive/LazyLoader.js';
 import { SearchEngine } from './services/SearchEngine.js';
 import { optimizeImageUrl } from './utils.js';
-import { STATUS_MAP } from './media-store.js';
+
+const TAB_COLORS = {
+    'completed': '#39ff14',
+    'playing': '#00ccff',
+    'on-hold': '#ffd700',
+    'dropped': '#ff4444',
+    'suggested': '#ff2d95'
+};
 
 export class LibraryController {
     constructor() {
@@ -14,16 +21,22 @@ export class LibraryController {
         if (!this.container) return;
 
         this.els = {
+            pageWrapper: document.getElementById('library-page'),
             backBtn: document.getElementById('btn-library-back'),
             gridMain: document.getElementById('library-grid-main'),
             
             sortBtns: document.querySelectorAll('#library-sort-switcher .sort-btn'),
             typeBtns: document.querySelectorAll('#library-type-switcher .switcher-btn'),
             typeSwitcher: document.getElementById('library-type-switcher'),
-            statusFilters: document.getElementById('library-filters-status'),
+            
             btnDetailed: document.getElementById('lib-grid-detailed'),
             btnCompact: document.getElementById('lib-grid-compact'),
-            counter: document.querySelector('.lib-counter-val'),
+            
+            tabs: document.querySelectorAll('.lib-tab-btn'),
+            
+            // Labels for dynamic text (Games vs Movies)
+            labelCompleted: document.getElementById('label-completed'),
+            labelPlaying: document.getElementById('label-playing'),
             
             searchModule: document.getElementById('lib-search-module'),
             searchInput: document.getElementById('lib-search-input'),
@@ -35,6 +48,8 @@ export class LibraryController {
 
         this.gridMode = 'detailed'; 
         this.localSearchQuery = '';
+        // ВАЖНО: По умолчанию всегда открываем "Пройдено"
+        this.activeTab = 'completed'; 
         
         this.searchDebounce = null;
         this.currentSearchMatches = [];
@@ -48,8 +63,14 @@ export class LibraryController {
 
     mount() {
         console.log('📚 [Library] Компонент смонтирован');
-        this.localSearchQuery = AppStore.getState().media.searchQuery || '';
+        
+        const query = AppStore.getState().route.query;
+        this.localSearchQuery = query.search || '';
         this.els.searchInput.value = this.localSearchQuery;
+        
+        // Считываем вкладку из URL, иначе 'completed'
+        this.activeTab = query.tab || 'completed';
+
         this.toggleSuggestions(false);
         this.syncUIWithState();
         this.renderGrid();
@@ -63,7 +84,18 @@ export class LibraryController {
         this.els.backBtn.addEventListener('click', () => {
             EventBus.emit('PLAY_SOUND', 'click');
             const type = AppStore.getState().media.type || 'games';
-            AppRouter.navigate('/archive', { type: type });
+            AppRouter.navigate('/', {});
+        });
+
+        // ПЕРЕКЛЮЧЕНИЕ 5 ВКЛАДОК СТАТУСА
+        this.els.tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                if (this.activeTab !== targetTab) {
+                    EventBus.emit('PLAY_SOUND', 'click');
+                    AppRouter.updateQuery({ tab: targetTab });
+                }
+            });
         });
 
         this.els.sortBtns.forEach(btn => {
@@ -84,7 +116,8 @@ export class LibraryController {
                 if (AppStore.getState().media.type !== type) {
                     EventBus.emit('PLAY_SOUND', 'click');
                     const currentQuery = { ...AppStore.getState().route.query };
-                    delete currentQuery.filters; 
+                    // При смене типа (игры/кино) сбрасываем поиск
+                    delete currentQuery.search; 
                     AppRouter.navigate('/library', { type }, currentQuery);
                 }
             });
@@ -115,8 +148,7 @@ export class LibraryController {
             const item = state.data.media.find(i => i.id === card.dataset.id);
             if (item) {
                 EventBus.emit('PLAY_SOUND', 'expand');
-                // ИСПРАВЛЕНИЕ: Добавляем метку откуда пришли
-                AppRouter.navigate('/item', { id: item.id }, { from: 'library' });
+                AppRouter.navigate('/item', { id: item.id }, { from: 'library', tab: this.activeTab });
             }
         });
 
@@ -156,25 +188,23 @@ export class LibraryController {
             const prev = prevState?.media;
             
             if (state.route.path.startsWith('/library')) {
-                if (
-                    curr.type !== prev?.type || 
-                    JSON.stringify(curr.filters) !== JSON.stringify(prev?.filters) ||
-                    curr.sort !== prev?.sort ||
-                    curr.sortDirection !== prev?.sortDirection
-                ) {
-                    this.syncUIWithState();
-                }
+                const currentTab = state.route.query.tab || 'completed';
                 
                 if (
-                    JSON.stringify(curr.filters) !== JSON.stringify(prev?.filters) ||
+                    curr.type !== prev?.type || 
                     curr.sort !== prev?.sort ||
                     curr.sortDirection !== prev?.sortDirection ||
-                    curr.searchQuery !== prev?.searchQuery
+                    this.activeTab !== currentTab
                 ) {
-                    if (curr.searchQuery !== undefined) {
-                        this.localSearchQuery = curr.searchQuery;
-                        this.els.searchInput.value = this.localSearchQuery;
-                    }
+                    this.activeTab = currentTab;
+                    this.syncUIWithState();
+                    this.renderGrid();
+                }
+                
+                const currentSearch = state.route.query.search || '';
+                if (currentSearch !== this.localSearchQuery) {
+                    this.localSearchQuery = currentSearch;
+                    this.els.searchInput.value = this.localSearchQuery;
                     this.renderGrid();
                 }
             }
@@ -183,12 +213,12 @@ export class LibraryController {
         EventBus.on('MEDIA_STORE_LOADING', () => {
             if (AppStore.getState().route.path.startsWith('/library')) {
                 this.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:var(--color-neon-pink); font-size:1.5rem;"><i class="fas fa-circle-notch fa-spin"></i> ЗАГРУЗКА БАЗЫ ДАННЫХ...</div>';
-                this.els.counter.textContent = '0';
             }
         });
 
         EventBus.on('MEDIA_STORE_LOADED', () => {
             if (AppStore.getState().route.path.startsWith('/library')) {
+                this.syncUIWithState(); // Чтобы обновились каунтеры
                 this.renderGrid();
             }
         });
@@ -240,9 +270,14 @@ export class LibraryController {
                 if (item.type !== state.media.type) return; 
                 if (item.format === 'youtube') return; 
                 
+                // ВАЖНО: Ищем только среди тех, что соответствуют текущей активной вкладке
                 if (item.format === 'collection' && item.items) {
-                    item.items.forEach(sub => flattenedList.push({ ...sub, status: sub.status || item.status }));
-                } else {
+                    item.items.forEach(sub => {
+                        if (sub.status === this.activeTab || (this.activeTab === 'suggested' && sub.status === 'suggested')) {
+                            flattenedList.push({ ...sub, status: sub.status || item.status });
+                        }
+                    });
+                } else if (item.status === this.activeTab || (this.activeTab === 'suggested' && item.status === 'suggested')) {
                     flattenedList.push(item);
                 }
             });
@@ -355,12 +390,20 @@ export class LibraryController {
 
     syncUIWithState() {
         const state = AppStore.getState().media;
+        const mediaData = AppStore.getState().data.media || [];
         
+        // 1. Обновляем типы и лейблы
         if (this.els.typeSwitcher) {
             this.els.typeSwitcher.classList.toggle('movies-active', state.type === 'movies');
         }
         this.els.typeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.type === state.type));
         
+        if (this.els.labelCompleted && this.els.labelPlaying) {
+            this.els.labelCompleted.textContent = state.type === 'movies' ? 'ПОСМОТРЕНО' : 'ПРОЙДЕНО';
+            this.els.labelPlaying.textContent = state.type === 'movies' ? 'СМОТРИМ' : 'В ПРОЦЕССЕ';
+        }
+
+        // 2. Обновляем иконки сортировки
         this.els.sortBtns.forEach(btn => {
             const icon = btn.querySelector('.sort-icon');
             if (btn.dataset.sort === state.sort) {
@@ -379,63 +422,97 @@ export class LibraryController {
             }
         });
 
-        let statusesOrder = state.type === 'games' 
-            ? ['completed', 'playing', 'on-hold', 'dropped']
-            : ['watched', 'watching', 'on-hold', 'dropped'];
+        // 3. Подсчитываем каунтеры для вкладок
+        const counts = { completed: 0, playing: 0, 'on-hold': 0, dropped: 0, suggested: 0 };
         
-        const isActive = (val) => state.filters.includes(val) ? 'active' : '';
+        mediaData.forEach(item => {
+            if (item.type !== state.type || item.format === 'youtube') return;
 
-        this.els.statusFilters.innerHTML = statusesOrder.map(s => `
-            <div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">
-                ${STATUS_MAP[s] || s}
-            </div>
-        `).join('');
-
-        this.els.statusFilters.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                const val = chip.dataset.filter;
-                const currentFilters = AppStore.getState().media.filters;
-                const newFilters = currentFilters.includes(val) ? [] : [val];
-                AppRouter.updateQuery({ filters: newFilters.length ? newFilters.join(',') : null });
-            });
+            if (item.format === 'collection' && item.items) {
+                item.items.forEach(sub => {
+                    const subStatus = sub.status || item.status;
+                    if (counts[subStatus] !== undefined) counts[subStatus]++;
+                    // Считаем предложку внутри паков
+                    if (subStatus === 'suggested') counts.suggested++; 
+                });
+            } else {
+                if (counts[item.status] !== undefined) counts[item.status]++;
+            }
         });
+
+        // 4. Обновляем табы (цвета и активный класс)
+        this.els.tabs.forEach(tab => {
+            const tabName = tab.dataset.tab;
+            tab.classList.toggle('active', tabName === this.activeTab);
+            
+            const countEl = document.getElementById(`count-${tabName}`);
+            if (countEl) countEl.textContent = counts[tabName] || 0;
+        });
+
+        // Красим всю страницу под цвет вкладки
+        const currentColor = TAB_COLORS[this.activeTab] || TAB_COLORS['completed'];
+        this.els.pageWrapper.style.setProperty('--active-tab-color', currentColor);
     }
 
     renderGrid() {
         const storeData = AppStore.getState().data;
         if (!storeData.isMediaLoaded) {
             this.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:var(--color-neon-pink); font-size:1.5rem;"><i class="fas fa-circle-notch fa-spin"></i> ЗАГРУЗКА БАЗЫ ДАННЫХ...</div>';
-            this.els.counter.textContent = '0';
             return;
         }
 
         const state = AppStore.getState().media;
-        const isAllSelected = state.filters.length === 0;
         
-        let allFilteredData = storeData.media.filter(item => {
-            if (item.type !== state.type) return false;
-            if (item.format === 'youtube') return false; 
-            if (!isAllSelected && !state.filters.includes(item.status)) return false;
+        // МАГИЯ РАСЩЕПЛЕНИЯ ПАКОВ
+        let gridData = [];
 
+        storeData.media.forEach(item => {
+            if (item.type !== state.type || item.format === 'youtube') return;
+
+            let matchScore = 1;
             if (this.localSearchQuery.length > 0) {
                 let textToSearch = `${item.title || ''} ${item.description || ''}`.toLowerCase();
                 if (item.format === 'collection' && item.items) {
                     item.items.forEach(sub => { textToSearch += ` ${sub.title || ''} ${sub.description || ''}`; });
                 }
-                const score = SearchEngine.scoreItemForGrid(textToSearch, item.title, this.localSearchQuery);
-                if (score === 0) return false;
-                item._matchScore = score;
+                matchScore = SearchEngine.scoreItemForGrid(textToSearch, item.title, this.localSearchQuery);
             }
 
-            return true;
+            if (this.localSearchQuery.length > 0 && matchScore === 0) return; // Не прошел поиск
+
+            if (item.format === 'collection' && item.items) {
+                // Фильтруем элементы внутри пака по ТЕКУЩЕЙ вкладке
+                const matchingItems = item.items.filter(sub => (sub.status || item.status) === this.activeTab);
+                
+                if (matchingItems.length > 0) {
+                    // Создаем ВИРТУАЛЬНЫЙ ПАК для этой вкладки
+                    const virtualCollection = {
+                        ...item,
+                        items: matchingItems,
+                        // Обложкой пака становится обложка ПЕРВОЙ подходящей игры
+                        image: matchingItems[0].image || item.image,
+                        images: matchingItems.slice(0, 3).map(i => i.image).filter(Boolean),
+                        customColor: matchingItems[0].customColor || item.customColor,
+                        _matchScore: matchScore
+                    };
+                    
+                    // Пересчитываем stackColors для корректного отображения 3D-слоев
+                    virtualCollection.stackColors = [
+                        virtualCollection.customColor || '#444455',
+                        (matchingItems[1] && matchingItems[1].customColor) ? matchingItems[1].customColor : (virtualCollection.customColor || '#444455'),
+                        (matchingItems[2] && matchingItems[2].customColor) ? matchingItems[2].customColor : (virtualCollection.customColor || '#444455')
+                    ];
+
+                    gridData.push(virtualCollection);
+                }
+            } else if (item.status === this.activeTab) {
+                gridData.push({ ...item, _matchScore: matchScore });
+            }
         });
 
-        let mainData = allFilteredData.filter(i => i.status !== 'suggested');
-        let suggData = allFilteredData.filter(i => i.status === 'suggested');
-
+        // Сортировка
         const dir = state.sortDirection === 'asc' ? 1 : -1;
-        const sortFn = (a, b) => {
+        gridData.sort((a, b) => {
             if (this.localSearchQuery.length > 0 && Math.abs((a._matchScore||0) - (b._matchScore||0)) > 0.1) {
                 return (b._matchScore||0) - (a._matchScore||0);
             }
@@ -443,37 +520,21 @@ export class LibraryController {
                 return ((a.rating || 0) - (b.rating || 0)) * dir;
             }
             return (a.title || "").localeCompare(b.title || "") * dir;
-        };
+        });
 
-        mainData.sort(sortFn);
-        suggData.sort(sortFn);
-
-        this.els.counter.textContent = mainData.length + suggData.length;
-
-        if (mainData.length === 0 && suggData.length === 0) {
-            this.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:#666; font-family:\'Exo 2\'; font-size:1.2rem;">ПО ВАШИМ ПАРАМЕТРАМ НИЧЕГО НЕ НАЙДЕНО</div>';
+        if (gridData.length === 0) {
+            this.els.gridMain.innerHTML = '<div style="width:100%; grid-column: 1 / -1; text-align:center; padding:100px; color:#666; font-family:\'Exo 2\'; font-size:1.2rem;">КАТЕГОРИЯ ПУСТА</div>';
             return;
         }
 
         let htmlBuf = '';
-        let globalIndex = 0;
-
-        mainData.forEach((item) => {
-            htmlBuf += this.factory.createCardHTML(item, (globalIndex % 15) * 20);
-            globalIndex++;
+        gridData.forEach((item, index) => {
+            htmlBuf += this.factory.createCardHTML(item, (index % 15) * 20);
         });
-
-        if (suggData.length > 0) {
-            htmlBuf += this.factory.createCardHTML({ isDivider: true, title: 'ПРЕДЛОЖЕНИЯ АГЕНТОВ' }, 0);
-            suggData.forEach((item) => {
-                htmlBuf += this.factory.createCardHTML(item, (globalIndex % 15) * 20);
-                globalIndex++;
-            });
-        }
         
         this.els.gridMain.innerHTML = htmlBuf;
 
-        this.els.gridMain.querySelectorAll('.archive-card-container:not(.archive-divider-row):not(.is-observed)').forEach(card => {
+        this.els.gridMain.querySelectorAll('.archive-card-container:not(.is-observed)').forEach(card => {
             card.classList.add('is-observed');
             this.lazyLoader.observe(card);
         });

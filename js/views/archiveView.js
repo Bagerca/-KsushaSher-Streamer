@@ -14,7 +14,7 @@ export function getArchiveView() {
                     </a>
                 </div>
 
-                <!-- ЦЕНТР: УПРАВЛЕНИЕ И ФИЛЬТРЫ -->
+                <!-- ЦЕНТР: УПРАВЛЕНИЕ -->
                 <div class="archive-tools">
                     <div class="header-control-bar">
                         <div class="sort-switcher">
@@ -31,10 +31,6 @@ export function getArchiveView() {
                             <button class="density-btn" data-mode="compact" title="Компактная сетка"><i class="fas fa-th"></i></button>
                         </div>
                     </div>
-                    
-                    <div class="filters-wrapper">
-                        <div class="filter-row status-row" id="archive-filters-status"></div>
-                    </div>
                 </div>
 
                 <!-- ПРАВАЯ ЧАСТЬ: ПОИСК -->
@@ -46,7 +42,6 @@ export function getArchiveView() {
                             <input type="text" id="archive-search" placeholder="Поиск по базе..." autocomplete="off">
                             <div class="search-hotkey" id="search-hotkey-hint">Ctrl+K</div>
                         </div>
-                        <button id="clear-filters-btn" class="cyber-btn-outline clear-btn hidden" title="Сбросить фильтры"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
 

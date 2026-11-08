@@ -61,27 +61,52 @@
     margin: 0 auto; width: 100%; padding: 15px 40px 60px 40px; 
 }
 
-/* ИСПРАВЛЕНИЕ: Оптимизированные пропорции колонок для страницы */
+/* =========================================
+   СЕТКИ (LAYOUTS) - УМНОЕ РАСПРЕДЕЛЕНИЕ МЕСТА
+   ========================================= */
+
+/* СТАНДАРТ (Игры/Кино, БЕЗ плейлиста) */
 .item-layout { 
     display: grid; 
-    grid-template-columns: 320px 1fr; /* Уменьшен постер, увеличен центр */
-    gap: 30px; 
+    grid-template-columns: 320px 1fr; /* Постер слева, контент по центру (на всю ширь) */
+    gap: 40px; 
     align-items: start; transition: opacity 0.3s, filter 0.3s; 
 }
 
+/* СТАНДАРТ + ПЛЕЙЛИСТ */
 .media-item-page.has-playlist .item-layout { 
     grid-template-columns: 320px 1fr 340px; 
 }
+
+/* РЕЖИМ YOUTUBE (БЕЗ плейлиста) */
 .media-item-page.is-cinema .item-layout { 
-    grid-template-columns: 1fr 340px; 
+    display: flex; /* Центрируем видео */
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
-.media-item-page.is-cinema #item-sidebar { display: none; }
-.media-item-page.is-cinema .item-text-zone { display: none; }
+.media-item-page.is-cinema #item-sidebar,
+.media-item-page.is-cinema .item-text-zone { 
+    display: none; 
+}
+.media-item-page.is-cinema .item-main {
+    width: 100%;
+}
+
+/* РЕЖИМ YOUTUBE + ПЛЕЙЛИСТ */
+.media-item-page.is-cinema.has-playlist .item-layout { 
+    display: grid; 
+    grid-template-columns: 1fr 360px; /* Видео слева, плейлист справа */
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
 
 /* АДАПТИВНОСТЬ СЕТКИ */
 @media (max-width: 1400px) {
     .item-layout { grid-template-columns: 280px 1fr; gap: 20px; }
-    .media-item-page.has-playlist .item-layout { grid-template-columns: 1fr; }
+    .media-item-page.has-playlist .item-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .media-item-page.is-cinema.has-playlist .item-layout { display: flex; flex-direction: column; }
 }
 
 @media (max-width: 768px) {

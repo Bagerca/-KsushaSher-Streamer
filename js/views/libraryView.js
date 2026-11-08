@@ -3,18 +3,16 @@
 export function getLibraryView() {
     return `
     <div id="library-page" class="library-page-wrapper">
+        <!-- Динамический фон, который будет менять цвет в зависимости от выбранной вкладки -->
         <div class="library-cinematic-bg" id="library-cinematic-bg"></div>
         
         <div class="library-header-sticky">
             <div class="container">
+                
+                <!-- ВЕРХНИЙ РЯД: Управление, Тип (Игры/Кино), Поиск -->
                 <div class="library-top-bar">
-                    
                     <div class="lib-action-area">
                         <button id="btn-library-back" class="cyber-btn btn-lib-back"><i class="fas fa-chevron-left"></i> ХАБ</button>
-                        <!-- ИСПРАВЛЕНИЕ: Счетчик перенесен сюда -->
-                        <div class="lib-counter" id="lib-counter">
-                            <span class="lib-counter-label">НАЙДЕНО:</span> <span class="lib-counter-val">0</span>
-                        </div>
                     </div>
 
                     <div class="lib-tools-area">
@@ -45,14 +43,51 @@ export function getLibraryView() {
                             <div class="search-suggestions" id="lib-search-suggestions"></div>
                         </div>
                     </div>
-
                 </div>
 
-                <div class="library-sub-bar">
-                    <div class="filters-wrapper">
-                        <div class="filter-row status-row" id="library-filters-status"></div>
-                    </div>
+                <!-- НИЖНИЙ РЯД: 5 БОЛЬШИХ ВКЛАДОК СТАТУСОВ -->
+                <div class="library-tabs-nav" id="library-tabs-nav">
+                    <button class="lib-tab-btn active" data-tab="completed">
+                        <div class="tab-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label" id="label-completed">ПРОЙДЕНО</span>
+                            <span class="tab-count" id="count-completed">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="playing">
+                        <div class="tab-icon"><i class="fas fa-play"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label" id="label-playing">В ПРОЦЕССЕ</span>
+                            <span class="tab-count" id="count-playing">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="on-hold">
+                        <div class="tab-icon"><i class="fas fa-pause-circle"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label">НА ПАУЗЕ</span>
+                            <span class="tab-count" id="count-on-hold">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="dropped">
+                        <div class="tab-icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label">БРОШЕНО</span>
+                            <span class="tab-count" id="count-dropped">0</span>
+                        </div>
+                    </button>
+                    
+                    <button class="lib-tab-btn" data-tab="suggested">
+                        <div class="tab-icon"><i class="fas fa-star"></i></div>
+                        <div class="tab-info">
+                            <span class="tab-label">ПРЕДЛОЖКА</span>
+                            <span class="tab-count" id="count-suggested">0</span>
+                        </div>
+                    </button>
                 </div>
+
             </div>
         </div>
 

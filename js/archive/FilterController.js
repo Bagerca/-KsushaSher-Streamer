@@ -1,6 +1,5 @@
 /* js/archive/FilterController.js */
 import EventBus from '../event-bus.js';
-import { STATUS_MAP } from '../media-store.js';
 import { AppStore } from '../store.js';
 import { AppRouter } from '../router.js';
 
@@ -8,17 +7,13 @@ export class FilterController {
     constructor(gridManager) {
         this.gridManager = gridManager; 
         
-        // ИСПРАВЛЕНИЕ: Изолируем поиск элементов СТРОГО внутри секции Архива, 
-        // чтобы не ломать логику на других страницах (например, в Библиотеке).
         const archiveSection = document.getElementById('media-archive');
 
         this.els = {
-            statusFilters: document.getElementById('archive-filters-status'),
             typeSwitcher: archiveSection.querySelector('.type-switcher'),
             typeBtns: archiveSection.querySelectorAll('.switcher-btn'),
             sortBtns: archiveSection.querySelectorAll('.sort-btn'),
-            densityBtns: archiveSection.querySelectorAll('.density-btn'),
-            clearFiltersBtn: document.getElementById('clear-filters-btn')
+            densityBtns: archiveSection.querySelectorAll('.density-btn')
         };
 
         this.bindEvents();
@@ -34,7 +29,6 @@ export class FilterController {
                 curr.type !== prev?.type || 
                 curr.gridMode !== prev?.gridMode || 
                 curr.searchQuery !== prev?.searchQuery ||
-                JSON.stringify(curr.filters) !== JSON.stringify(prev?.filters) ||
                 curr.sort !== prev?.sort ||
                 curr.sortDirection !== prev?.sortDirection
             ) {
@@ -42,7 +36,7 @@ export class FilterController {
             }
         });
 
-        // 1. ПЕРЕКЛЮЧАТЕЛЬ ТИПА (Только для Архива)
+        // ПЕРЕКЛЮЧАТЕЛЬ ТИПА
         this.els.typeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const type = btn.dataset.type;
@@ -50,14 +44,12 @@ export class FilterController {
                     EventBus.emit('PLAY_SOUND', 'click');
                     
                     const currentQuery = { ...AppStore.getState().route.query };
-                    delete currentQuery.filters; 
-
                     AppRouter.navigate('/archive', { type }, currentQuery);
                 }
             });
         });
 
-        // 2. СОРТИРОВКА
+        // СОРТИРОВКА
         this.els.sortBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
@@ -70,7 +62,7 @@ export class FilterController {
             });
         });
 
-        // 3. ПЛОТНОСТЬ СЕТКИ
+        // ПЛОТНОСТЬ СЕТКИ
         this.els.densityBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const mode = btn.dataset.mode;
@@ -80,17 +72,6 @@ export class FilterController {
                 }
             });
         });
-
-        // 4. СБРОС ФИЛЬТРОВ
-        if (this.els.clearFiltersBtn) {
-            this.els.clearFiltersBtn.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                const searchInput = document.getElementById('archive-search');
-                if (searchInput) searchInput.value = '';
-                
-                AppRouter.updateQuery({ filters: null, search: null });
-            });
-        }
     }
 
     syncUIWithState() {
@@ -126,44 +107,5 @@ export class FilterController {
                 if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-star sort-icon';
             }
         });
-
-        this.renderChips();
-    }
-
-    renderChips() {
-        if (!this.els.statusFilters) return;
-        const state = AppStore.getState().media;
-
-        let statusesOrder = state.type === 'games' 
-            ? ['completed', 'playing', 'on-hold', 'dropped']
-            : ['watched', 'watching', 'on-hold', 'dropped'];
-        
-        const isActive = (val) => state.filters.includes(val) ? 'active' : '';
-
-        this.els.statusFilters.innerHTML = statusesOrder.map(s => `
-            <div class="filter-chip is-status status-${s} ${isActive(s)}" data-filter="${s}">
-                ${STATUS_MAP[s] || s}
-            </div>
-        `).join('');
-
-        // ИСПРАВЛЕНИЕ: Вешаем обработчики только на фильтры ВНУТРИ архива
-        this.els.statusFilters.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                const val = chip.dataset.filter;
-                const currentFilters = AppStore.getState().media.filters;
-                
-                const newFilters = currentFilters.includes(val) ? [] : [val];
-                AppRouter.updateQuery({ filters: newFilters.length ? newFilters.join(',') : null });
-            });
-        });
-
-        if (this.els.clearFiltersBtn) {
-            if (state.filters.length > 0 || state.searchQuery.length > 0) {
-                this.els.clearFiltersBtn.classList.remove('hidden');
-            } else {
-                this.els.clearFiltersBtn.classList.add('hidden');
-            }
-        }
     }
 }

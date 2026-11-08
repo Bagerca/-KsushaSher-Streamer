@@ -1,0 +1,121 @@
+/* css/agents/agent-marquee.css */
+
+.agents-list-col {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.agents-list-header {
+    padding: 20px;
+    font-family: var(--font-header);
+    font-weight: 800;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-white);
+    flex-shrink: 0;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.agents-count { color: var(--color-neon-green); font-family: var(--font-tech); }
+
+/* МАГИЯ ЛЕНТЫ И ЗАТУХАНИЯ */
+.agents-scroll-container {
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden; /* Полностью прячем нативные скроллбары */
+    position: relative;
+    padding: 20px 15px;
+    
+    /* Эффект растворения краев списка в пустоте */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.agents-vertical-track {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    cursor: grab;
+    will-change: transform;
+    touch-action: pan-x; /* Блокируем вертикальный браузерный скролл, разрешаем только гориз. свайп (на всякий случай) */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.agents-vertical-track.is-dragging {
+    cursor: grabbing;
+}
+
+/* Во время драга блокируем мышиные эвенты у всех вложенных карт */
+.agents-vertical-track.is-dragging * {
+    pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* Горизонтальная карточка агента */
+.agent-list-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    flex-shrink: 0; 
+}
+
+.agent-list-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateX(-5px);
+}
+.agent-list-card.active {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: var(--card-color);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.alc-avatar {
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    background: var(--color-bg-dark);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--card-color); border: 2px solid var(--card-color);
+    font-size: 1.2rem; flex-shrink: 0; overflow: hidden;
+}
+.alc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.agent-list-card.active .alc-avatar { box-shadow: 0 0 10px var(--card-color); }
+
+.alc-info {
+    display: flex; flex-direction: column; justify-content: center; flex-grow: 1; min-width: 0;
+}
+.alc-name {
+    font-family: var(--font-header); font-size: 0.95rem; font-weight: 700;
+    color: var(--color-text-white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    transition: color 0.3s;
+}
+.agent-list-card.active .alc-name { color: var(--card-color); text-shadow: 0 0 5px var(--card-color); }
+.alc-role {
+    font-family: var(--font-primary); font-size: 0.75rem; color: var(--color-text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.alc-lvl {
+    font-family: var(--font-tech); font-weight: 700; font-size: 0.8rem;
+    color: var(--card-color); padding: 2px 6px; background: color-mix(in srgb, var(--card-color) 15%, transparent);
+    border-radius: 4px; flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    /* На мобильных устройствах убираем маску, так как она часто вызывает баги с GPU */
+    .agents-scroll-container {
+        mask-image: none;
+        -webkit-mask-image: none;
+        padding: 10px 15px;
+    }
+}

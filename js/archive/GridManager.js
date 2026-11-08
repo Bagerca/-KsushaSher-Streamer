@@ -3,6 +3,7 @@ import EventBus from '../event-bus.js';
 import { AppRouter } from '../router.js';
 import { AppStore } from '../store.js';
 import { ArchivePagination } from './ArchivePagination.js';
+import { SearchEngine } from '../services/SearchEngine.js'; // Подключаем движок для точного скоринга
 
 export class GridManager {
     constructor(store, cardFactory, lazyLoader) {
@@ -18,10 +19,7 @@ export class GridManager {
         this.currentPage = 1;
         this.stdPerPage = 12; 
         
-        this.mainPages = 0;
-        this.suggPages = 0;
         this.totalPages = 1;
-        
         this.isAnimating = false; 
         this.animationSessionId = 0; 
         
@@ -127,7 +125,6 @@ export class GridManager {
             const item = state.data.media.find(i => i.id === card.dataset.id);
             if (item) {
                 EventBus.emit('PLAY_SOUND', 'expand');
-                // Указываем, что пришли из Архива
                 AppRouter.navigate('/item', { id: item.id }, { from: 'archive' });
             }
         });
@@ -159,9 +156,7 @@ export class GridManager {
         });
     }
 
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
     async runEntrySequence(direction) {
         this.animationSessionId++;
@@ -170,11 +165,8 @@ export class GridManager {
 
         this.els.gridMain.classList.remove('page-slide-up-out', 'page-slide-down-out');
         
-        try {
-            this.renderGrid(false); 
-        } catch (e) {
-            console.error("Ошибка рендера карточек:", e);
-        }
+        try { this.renderGrid(false); } 
+        catch (e) { console.error("Ошибка рендера карточек:", e); }
         
         const entryClass = direction === 'bottom' ? 'entering-from-bottom' : 'entering-from-top';
         this.els.gridMain.classList.add(entryClass);
@@ -218,20 +210,98 @@ export class GridManager {
 
         this.lastColsCount = this.getColumnsCount();
         this.lastIsMobile = window.innerWidth <= 600;
-        
-        if (this.lastIsMobile) {
-            this.stdPerPage = 6;
-        } else {
-            this.stdPerPage = this.lastColsCount * 2; 
-        }
-        
-        const mainStd = this.store.filteredMainStandard || [];
-        const suggStd = this.store.filteredSuggStandard || [];
-        
-        this.mainPages = Math.ceil(mainStd.length / this.stdPerPage);
-        this.suggPages = Math.ceil(suggStd.length / this.stdPerPage);
+        this.stdPerPage = this.lastIsMobile ? 6 : this.lastColsCount * 2; 
 
-        this.totalPages = this.mainPages + this.suggPages;
+        const state = AppStore.getState().media;
+        const allData = this.store.combinedData || [];
+        const searchQuery = state.searchQuery || '';
+
+        // БАКЕТЫ СТАТУСОВ (Порядок важен)
+        const categoryDefs = [
+            { id: 'completed', match: ['completed', 'watched'] },
+            { id: 'playing', match: ['playing', 'watching'] },
+            { id: 'on-hold', match: ['on-hold'] },
+            { id: 'dropped', match: ['dropped'] },
+            { id: 'suggested', match: ['suggested'] }
+        ];
+
+        let buckets = { 'completed': [], 'playing': [], 'on-hold': [], 'dropped': [], 'suggested': [] };
+
+        // 1. УМНОЕ РАСЩЕПЛЕНИЕ КОЛЛЕКЦИЙ И СКОРИНГ ПОИСКА
+        allData.forEach(item => {
+            if (item.type !== state.type || item.format === 'youtube') return;
+
+            let matchScore = 1;
+            if (searchQuery.length > 0) {
+                let textToSearch = `${item.title || ''} ${item.description || ''}`.toLowerCase();
+                if (item.format === 'collection' && item.items) {
+                    item.items.forEach(sub => { textToSearch += ` ${sub.title || ''} ${sub.description || ''}`; });
+                }
+                matchScore = SearchEngine.scoreItemForGrid(textToSearch, item.title, searchQuery);
+            }
+
+            if (searchQuery.length > 0 && matchScore === 0) return;
+
+            if (item.format === 'collection' && item.items) {
+                categoryDefs.forEach(cat => {
+                    const matchingItems = item.items.filter(sub => cat.match.includes(sub.status || item.status));
+                    if (matchingItems.length > 0) {
+                        const virtualCollection = {
+                            ...item,
+                            items: matchingItems,
+                            image: matchingItems[0].image || item.image,
+                            images: matchingItems.slice(0, 3).map(i => i.image).filter(Boolean),
+                            customColor: matchingItems[0].customColor || item.customColor,
+                            _matchScore: matchScore
+                        };
+                        virtualCollection.stackColors = [
+                            virtualCollection.customColor || '#444455',
+                            (matchingItems[1] && matchingItems[1].customColor) ? matchingItems[1].customColor : (virtualCollection.customColor || '#444455'),
+                            (matchingItems[2] && matchingItems[2].customColor) ? matchingItems[2].customColor : (virtualCollection.customColor || '#444455')
+                        ];
+                        buckets[cat.id].push(virtualCollection);
+                    }
+                });
+            } else {
+                const itemStatus = item.status || 'unknown';
+                const targetCat = categoryDefs.find(c => c.match.includes(itemStatus));
+                if (targetCat) {
+                    buckets[targetCat.id].push({ ...item, _matchScore: matchScore });
+                }
+            }
+        });
+
+        // 2. СОРТИРОВКА ВНУТРИ БАКЕТОВ И ПОДСЧЕТ СТРАНИЦ
+        const dir = state.sortDirection === 'asc' ? 1 : -1;
+        const sortFn = (a, b) => {
+            if (searchQuery.length > 0 && Math.abs((a._matchScore||0) - (b._matchScore||0)) > 0.1) {
+                return (b._matchScore||0) - (a._matchScore||0);
+            }
+            if (state.sort === 'rating') {
+                return ((a.rating || 0) - (b.rating || 0)) * dir;
+            }
+            return (a.title || "").localeCompare(b.title || "") * dir;
+        };
+
+        let totalPages = 0;
+        let bucketsMeta = [];
+
+        categoryDefs.forEach(cat => {
+            const arr = buckets[cat.id];
+            arr.sort(sortFn);
+            
+            const pages = Math.ceil(arr.length / this.stdPerPage);
+            bucketsMeta.push({
+                id: cat.id,
+                items: arr,
+                pageCount: pages,
+                startPage: totalPages + 1,
+                endPage: totalPages + pages
+            });
+            totalPages += pages;
+        });
+
+        this.totalPages = totalPages;
 
         if (this.totalPages === 0) {
             this.els.gridMain.innerHTML = '<div style="width:100%; text-align:center; padding:50px; color:#666; font-family:\'Exo 2\';">ПО ВАШЕМУ ЗАПРОСУ НИЧЕГО НЕ НАЙДЕНО</div>';
@@ -241,15 +311,13 @@ export class GridManager {
 
         if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
 
-        let pageData = [];
-        
-        if (this.currentPage <= this.mainPages) {
-            const start = (this.currentPage - 1) * this.stdPerPage;
-            pageData = mainStd.slice(start, start + this.stdPerPage);
-        } else {
-            const start = (this.currentPage - this.mainPages - 1) * this.stdPerPage;
-            pageData = suggStd.slice(start, start + this.stdPerPage);
-        }
+        // 3. ОПРЕДЕЛЕНИЕ ТЕКУЩЕГО БАКЕТА
+        let targetBucket = bucketsMeta.find(b => this.currentPage >= b.startPage && this.currentPage <= b.endPage);
+        if (!targetBucket) targetBucket = bucketsMeta.find(b => b.pageCount > 0);
+
+        const localPage = this.currentPage - targetBucket.startPage; 
+        const startIdx = localPage * this.stdPerPage;
+        const pageData = targetBucket.items.slice(startIdx, startIdx + this.stdPerPage);
 
         let mainHtmlBuf = '';
         pageData.forEach((item, index) => {
@@ -277,8 +345,8 @@ export class GridManager {
         this.pagination.render({
             totalPages: this.totalPages,
             currentPage: this.currentPage,
-            mainPages: this.mainPages,
-            suggPages: this.suggPages
+            bucketsMeta: bucketsMeta,
+            type: state.type 
         });
     }
 }
