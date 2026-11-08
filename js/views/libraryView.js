@@ -3,13 +3,11 @@
 export function getLibraryView() {
     return `
     <div id="library-page" class="library-page-wrapper">
-        <!-- Динамический фон, который будет менять цвет в зависимости от выбранной вкладки -->
         <div class="library-cinematic-bg" id="library-cinematic-bg"></div>
         
         <div class="library-header-sticky">
             <div class="container">
                 
-                <!-- ВЕРХНИЙ РЯД: Управление, Тип (Игры/Кино), Поиск -->
                 <div class="library-top-bar">
                     <div class="lib-action-area">
                         <button id="btn-library-back" class="cyber-btn btn-lib-back"><i class="fas fa-chevron-left"></i> ХАБ</button>
@@ -19,7 +17,7 @@ export function getLibraryView() {
                         <div class="header-control-bar">
                             <div class="sort-switcher" id="library-sort-switcher">
                                 <button class="sort-btn active" data-sort="name" title="По алфавиту"><i class="fas fa-sort-alpha-down sort-icon"></i></button>
-                                <button class="sort-btn" data-sort="rating" title="По рейтингу"><i class="fas fa-star sort-icon"></i></button>
+                                <button class="sort-btn" data-sort="rating" title="По рейтингу"><i class="fas fa-sort-numeric-down-alt sort-icon"></i></button>
                             </div>
                             
                             <div class="type-switcher" id="library-type-switcher">
@@ -45,10 +43,9 @@ export function getLibraryView() {
                     </div>
                 </div>
 
-                <!-- НИЖНИЙ РЯД: 5 БОЛЬШИХ ВКЛАДОК СТАТУСОВ -->
                 <div class="library-tabs-nav" id="library-tabs-nav">
                     <button class="lib-tab-btn active" data-tab="completed">
-                        <div class="tab-icon"><i class="fas fa-medal"></i></div>
+                        <div class="tab-icon"><i class="fas fa-status-completed"></i></div>
                         <div class="tab-info">
                             <span class="tab-label" id="label-completed">ПРОЙДЕНО</span>
                             <span class="tab-count" id="count-completed">0</span>
@@ -56,7 +53,7 @@ export function getLibraryView() {
                     </button>
                     
                     <button class="lib-tab-btn" data-tab="playing">
-                        <div class="tab-icon"><i class="fas fa-play"></i></div>
+                        <div class="tab-icon"><i class="fas fa-status-playing"></i></div>
                         <div class="tab-info">
                             <span class="tab-label" id="label-playing">В ПРОЦЕССЕ</span>
                             <span class="tab-count" id="count-playing">0</span>
@@ -64,7 +61,7 @@ export function getLibraryView() {
                     </button>
                     
                     <button class="lib-tab-btn" data-tab="on-hold">
-                        <div class="tab-icon"><i class="fas fa-pause"></i></div>
+                        <div class="tab-icon"><i class="fas fa-status-onhold"></i></div>
                         <div class="tab-info">
                             <span class="tab-label">НА ПАУЗЕ</span>
                             <span class="tab-count" id="count-on-hold">0</span>
@@ -72,7 +69,7 @@ export function getLibraryView() {
                     </button>
                     
                     <button class="lib-tab-btn" data-tab="dropped">
-                        <div class="tab-icon"><i class="fas fa-times"></i></div>
+                        <div class="tab-icon"><i class="fas fa-status-dropped"></i></div>
                         <div class="tab-info">
                             <span class="tab-label">БРОШЕНО</span>
                             <span class="tab-count" id="count-dropped">0</span>
@@ -80,7 +77,8 @@ export function getLibraryView() {
                     </button>
                     
                     <button class="lib-tab-btn" data-tab="suggested">
-                        <div class="tab-icon"><i class="fas fa-star"></i></div>
+                        <!-- ИСПРАВЛЕНИЕ: Звезда заменена на кастомную иконку предложки -->
+                        <div class="tab-icon"><i class="fas fa-status-suggested"></i></div>
                         <div class="tab-info">
                             <span class="tab-label">ПРЕДЛОЖКА</span>
                             <span class="tab-count" id="count-suggested">0</span>

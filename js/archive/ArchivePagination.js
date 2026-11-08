@@ -51,7 +51,6 @@ export class ArchivePagination {
         html += this.renderTunerSlot(currentPage, 'active', state); 
         html += this.renderTunerSlot(currentPage + 1, 'next', state);
 
-        // Голографическая панель выбора (Сортировка по бакетам)
         html += `<div class="holo-floor-selector" id="holo-floor-selector">
                     <div class="holo-selector-header">ВЫБОР КАТЕГОРИИ</div>
                     <div class="holo-selector-body">`;
@@ -75,19 +74,16 @@ export class ArchivePagination {
         });
         html += `</div></div></div>`;
 
-        // 5 КНОПОК-ЯКОРЕЙ КАТЕГОРИЙ СЛЕВА
         html += `<div class="category-jumpers">`;
         bucketsMeta.forEach(b => {
             const isActive = (currentPage >= b.startPage && currentPage <= b.endPage);
             const isDisabled = b.pageCount === 0;
             const targetPage = b.pageCount > 0 ? b.startPage : 0;
             
-            // Получаем иконку из нашего локального пака SVG
             const icon = this.getCategoryIcon(b.id);
             const name = this.getCategoryName(b.id, type);
             const btnClass = `jumper-btn j-${b.id} ${isActive ? 'active' : ''}`;
             
-            // ИСПРАВЛЕНИЕ: Прячем кнопку если категория пуста (display:none вместо disabled для красоты лифта)
             if (!isDisabled) {
                 html += `<button class="${btnClass}" data-page="${targetPage}" title="${name}">
                             <i class="${icon}"></i>
@@ -119,12 +115,12 @@ export class ArchivePagination {
     }
 
     getCategoryIcon(id) {
-        // ИСПРАВЛЕНИЕ: Используем только те иконки, что собраны скриптом 1_fetch_icons.py
-        if (id === 'completed') return 'fas fa-medal';
-        if (id === 'playing') return 'fas fa-play';
-        if (id === 'on-hold') return 'fas fa-pause';
-        if (id === 'dropped') return 'fas fa-times';
-        if (id === 'suggested') return 'fas fa-star';
+        if (id === 'completed') return 'fas fa-status-completed';
+        if (id === 'playing') return 'fas fa-status-playing';
+        if (id === 'on-hold') return 'fas fa-status-onhold';
+        if (id === 'dropped') return 'fas fa-status-dropped';
+        // ИСПРАВЛЕНИЕ: Звезда заменена на кастомную иконку предложки
+        if (id === 'suggested') return 'fas fa-status-suggested';
         return 'fas fa-circle-notch';
     }
 

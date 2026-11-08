@@ -36,7 +36,6 @@ export class FilterController {
             }
         });
 
-        // ПЕРЕКЛЮЧАТЕЛЬ ТИПА
         this.els.typeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const type = btn.dataset.type;
@@ -49,7 +48,6 @@ export class FilterController {
             });
         });
 
-        // СОРТИРОВКА
         this.els.sortBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 EventBus.emit('PLAY_SOUND', 'click');
@@ -62,7 +60,6 @@ export class FilterController {
             });
         });
 
-        // ПЛОТНОСТЬ СЕТКИ
         this.els.densityBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const mode = btn.dataset.mode;
@@ -104,7 +101,7 @@ export class FilterController {
                 }
             } else {
                 btn.classList.remove('active');
-                if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-star sort-icon';
+                if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-sort-numeric-down-alt sort-icon';
             }
         });
     }

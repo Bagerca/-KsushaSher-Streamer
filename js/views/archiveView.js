@@ -19,7 +19,8 @@ export function getArchiveView() {
                     <div class="header-control-bar">
                         <div class="sort-switcher">
                             <button class="sort-btn active" data-sort="name" title="По алфавиту"><i class="fas fa-sort-alpha-down sort-icon"></i></button>
-                            <button class="sort-btn" data-sort="rating" title="По рейтингу"><i class="fas fa-star sort-icon"></i></button>
+                            <!-- Убрана звездочка, заменена на цифровую сортировку -->
+                            <button class="sort-btn" data-sort="rating" title="По рейтингу"><i class="fas fa-sort-numeric-down-alt sort-icon"></i></button>
                         </div>
                         <div class="type-switcher">
                             <div class="switcher-bg"></div>

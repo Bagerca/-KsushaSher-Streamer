@@ -24,17 +24,22 @@ def bundle_icons():
         with open(filepath, 'r', encoding='utf-8') as f:
             svg_content = f.read().strip()
             
-            # Гарантируем наличие width, height и currentColor
-            if 'width=' not in svg_content:
-                svg_content = svg_content.replace('<svg ', '<svg width="1em" height="1em" ')
-            else:
-                svg_content = re.sub(r'width="[^"]+"', 'width="1em"', svg_content)
-                svg_content = re.sub(r'height="[^"]+"', 'height="1em"', svg_content)
-            
-            if 'fill=' not in svg_content:
-                svg_content = svg_content.replace('<svg ', '<svg fill="currentColor" ')
-            else:
-                svg_content = re.sub(r'fill="[^"]+"', 'fill="currentColor"', svg_content)
+            # Работаем ТОЛЬКО с открывающим тегом <svg ... > чтобы не сломать внутренние контуры
+            match = re.search(r'<svg([^>]+)>', svg_content)
+            if match:
+                attrs = match.group(1)
+                
+                # Удаляем старые width, height, fill чтобы не было дублей в корне
+                attrs = re.sub(r'\s+width="[^"]+"', '', attrs)
+                attrs = re.sub(r'\s+height="[^"]+"', '', attrs)
+                attrs = re.sub(r'\s+fill="[^"]+"', '', attrs)
+                
+                # Принудительно задаем правильные базовые атрибуты
+                attrs += ' width="1em" height="1em" fill="currentColor"'
+                
+                # Собираем тег обратно
+                new_svg = f'<svg{attrs}>'
+                svg_content = svg_content[:match.start()] + new_svg + svg_content[match.end():]
 
             svg_content = svg_content.replace('`', '\\`')
             icons_dict.append(f"    '{icon_name}': `{svg_content}`")
@@ -75,7 +80,7 @@ export function replaceIcons(root = document) {
     with open(OUTPUT_JS, 'w', encoding='utf-8') as f:
         f.write(js_content)
 
-    print("\nБандл успешно пересобран!")
+    print("\nБандл успешно пересобран. Баги с заливкой и артефактами устранены!")
 
 if __name__ == "__main__":
     bundle_icons()

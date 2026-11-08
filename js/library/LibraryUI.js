@@ -99,7 +99,7 @@ export class LibraryUI {
                 }
             } else {
                 btn.classList.remove('active');
-                if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-star sort-icon';
+                if (icon) icon.className = btn.dataset.sort === 'name' ? 'fas fa-sort-alpha-down sort-icon' : 'fas fa-sort-numeric-down-alt sort-icon';
             }
         });
 
