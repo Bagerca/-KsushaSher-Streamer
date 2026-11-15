@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "generatedAt": "2026-08-04T20:00:00.000Z",
+    "category": "movies"
+  },
+  "tiers": [
+    {
+      "id": "tier_S",
+      "name": "S",
+      "color": "#ff2d95",
+      "items": [
+        "Shrek 2 / Шрек 2",
+        "Shark Tale / Подводная братва"
+      ]
+    },
+    {
+      "id": "tier_A",
+      "name": "A",
+      "color": "#ff8c00",
+      "items": [
+        "Garfield / Гарфилд",
+        "Garfield: A Tail of Two Kitties / Гарфилд 2",
+        "Arcane: Season 1 / Аркейн: 1 Сезон",
+        "Arcane: Season 2 / Аркейн: 2 Сезон",
+        "The Wild Robot / Дикий робот"
+      ]
+    },
+    {
+      "id": "tier_B",
+      "name": "B",
+      "color": "#ffd700",
+      "items": [
+        "Gravity Falls / Гравити Фолз",
+        "Indie Cross"
+      ]
+    },
+    {
+      "id": "tier_C",
+      "name": "C",
+      "color": "#39ff14",
+      "items": [
+        "9 / Девять"
+      ]
+    },
+    {
+      "id": "tier_D",
+      "name": "D",
+      "color": "#00ccff",
+      "items": [
+        "Heroes of Envell / Герои Энвелла"
+      ]
+    },
+    {
+      "id": "tier_TRASH",
+      "name": "TRASH",
+      "color": "#555555",
+      "items": []
+    }
+  ],
+  "unassigned": [
+    "Spider-Man Noir / Паук-Нуар",
+    "The LEGO Movie / ЛЕГО Фильм",
+    "The LEGO Batman Movie / Лего Фильм: Бэтмен",
+    "Ready Player One / Первому игроку приготовиться",
+    "A Monster in Paris / Монстр в Париже"
+  ]
+}

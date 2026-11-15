@@ -1,0 +1,122 @@
+/* css/autoscroll.css */
+/* =========================================
+   КАСТОМНЫЙ АВТОСКРОЛЛ v2 — «КАПСУЛА»
+   Цельный контрол: шеврон ↑ / ромб-ядро / шеврон ↓
+   внутри неоновой капсулы. Idle — зелёный,
+   активное направление — розовый + свечение от скорости.
+   Все цвета — токены variables.css.
+   ========================================= */
+
+.autoscroll-anchor {
+    position: fixed;
+    z-index: 999998;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    --as-intensity: 0;
+    animation: autoscroll-fade-in 0.15s ease;
+}
+@keyframes autoscroll-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Мягкое расходящееся кольцо вокруг капсулы */
+.autoscroll-pulse {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 34px;
+    height: 34px;
+    transform: translate(-50%, -50%);
+    border: 1px solid color-mix(in srgb, var(--color-neon-green) 45%, transparent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: autoscroll-pulse 1.6s ease-out infinite;
+}
+@keyframes autoscroll-pulse {
+    0%   { opacity: 0.45; transform: translate(-50%, -50%) scale(0.8); }
+    100% { opacity: 0;    transform: translate(-50%, -50%) scale(2.1); }
+}
+
+/* Капсула-контрол */
+.autoscroll-capsule {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 76px;
+    padding: 9px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--color-neon-green) 65%, transparent);
+    background: color-mix(in srgb, var(--color-bg-dark) 82%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow:
+        0 0 10px color-mix(in srgb, var(--color-neon-green) 25%, transparent),
+        inset 0 0 8px color-mix(in srgb, var(--color-neon-green) 10%, transparent);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Ромб-ядро */
+.autoscroll-core {
+    width: 7px;
+    height: 7px;
+    transform: rotate(45deg);
+    background: var(--color-neon-green);
+    box-shadow: 0 0 6px var(--color-neon-green);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Шевроны */
+.autoscroll-chevron {
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in srgb, var(--color-neon-green) 55%, transparent);
+    transition: color 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+}
+.autoscroll-chevron svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Активное направление: розовый + свечение от скорости */
+.autoscroll-anchor.dir-up .autoscroll-capsule,
+.autoscroll-anchor.dir-down .autoscroll-capsule {
+    border-color: color-mix(in srgb, var(--color-neon-pink) 70%, transparent);
+    box-shadow:
+        0 0 calc(10px + 14px * var(--as-intensity)) color-mix(in srgb, var(--color-neon-pink) 40%, transparent),
+        inset 0 0 8px color-mix(in srgb, var(--color-neon-pink) 12%, transparent);
+}
+.autoscroll-anchor.dir-up .autoscroll-core,
+.autoscroll-anchor.dir-down .autoscroll-core {
+    background: var(--color-neon-pink);
+    box-shadow: 0 0 calc(6px + 8px * var(--as-intensity)) var(--color-neon-pink);
+}
+.autoscroll-anchor.dir-up .autoscroll-chevron.up,
+.autoscroll-anchor.dir-down .autoscroll-chevron.down {
+    color: var(--color-neon-pink);
+    filter: drop-shadow(0 0 calc(3px + 6px * var(--as-intensity)) var(--color-neon-pink));
+}
+.autoscroll-anchor.dir-up .autoscroll-chevron.down,
+.autoscroll-anchor.dir-down .autoscroll-chevron.up {
+    opacity: 0.25;
+}
+
+/* A11Y */
+@media (prefers-reduced-motion: reduce) {
+    .autoscroll-anchor { animation: none; }
+    .autoscroll-pulse { animation: none; opacity: 0; }
+    .autoscroll-capsule,
+    .autoscroll-core,
+    .autoscroll-chevron { transition: none; }
+}

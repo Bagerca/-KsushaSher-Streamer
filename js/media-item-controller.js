@@ -1,9 +1,41 @@
 /* js/media-item-controller.js */
-import EventBus from './event-bus.js';
+/*
+ * Оркестратор страницы медиа-объекта.
+ * Отвечает за соответствие URL <-> состояние страницы:
+ *   #/item/{id}?part={subId}&slide={n}&v={youtubeId}&from=...&tab=...&page=...
+ * Суб-состояние пишется через replace, чтобы не засорять историю браузера.
+ */
 import { AppStore } from './store.js';
 import { AppRouter } from './router.js';
-import { getYouTubeId, extractColorFromImageAsync, optimizeImageUrl } from './utils.js';
-import { STATUS_MAP } from './media-store.js';
+import { ItemNavigation } from './media-item/ItemNavigation.js';
+import { ItemRenderer } from './media-item/ItemRenderer.js';
+import { ItemPosters } from './media-item/ItemPosters.js';
+import { ItemPlayer } from './media-item/ItemPlayer.js';
+import { buildStack, SWAP_DURATION } from './media-item/item-utils.js';
+
+/** Ищет объект по id / title, включая вложенные элементы коллекций. */
+function resolveMediaItem(mediaList, needle) {
+    if (!needle || !Array.isArray(mediaList)) return null;
+    const key = String(needle);
+    const lower = key.toLowerCase();
+
+    let hit = mediaList.find(i => String(i.id) === key);
+    if (hit) return { item: hit, forcedPart: null };
+
+    hit = mediaList.find(i => String(i.title) === key);
+    if (hit) return { item: hit, forcedPart: null };
+
+    hit = mediaList.find(i => String(i.title || '').toLowerCase() === lower);
+    if (hit) return { item: hit, forcedPart: null };
+
+    // Прямая ссылка на часть коллекции: #/item/bendy-dark-revival
+    for (const parent of mediaList) {
+        if (parent.format !== 'collection' || !Array.isArray(parent.items)) continue;
+        const sub = parent.items.find(s => String(s.id) === key || String(s.title) === key);
+        if (sub) return { item: parent, forcedPart: String(sub.id) };
+    }
+    return null;
+}
 
 export class MediaItemController {
     constructor() {
@@ -16,23 +48,18 @@ export class MediaItemController {
             backBtn: document.getElementById('btn-item-back'),
             bg: document.getElementById('item-cinematic-bg'),
             statusBadge: document.getElementById('item-status-badge'),
-            
             posterWrapper: document.getElementById('item-poster-wrapper'),
             posterDots: document.getElementById('item-poster-dots'),
-            
             ratingBox: document.getElementById('item-rating-box'),
             ratingVal: document.getElementById('item-rating-val'),
             segments: document.getElementById('item-segments'),
-            
             barcodeContainer: document.getElementById('item-barcode-container'),
             sysId: document.getElementById('item-sys-id'),
             dataType: document.getElementById('item-datatype'),
-            
             mainZone: document.getElementById('item-main-zone'),
             title: document.getElementById('item-title-text'),
             googleLink: document.getElementById('item-google-link'),
             desc: document.getElementById('item-desc-text'),
-            
             videoZone: document.getElementById('item-video-zone'),
             iframe: document.getElementById('item-iframe'),
             playlistCol: document.getElementById('item-playlist-col'),
@@ -41,339 +68,301 @@ export class MediaItemController {
 
         this.fallbackColor = '#ff2d95';
         this.currentStack = [];
-        this.currentImageIndex = 0;
-        
-        this.bindEvents();
+        this.currentRouteId = null;
+        this.currentItemId = null;
+        this.currentPartKey = null;
+        this.currentVideoId = null;
+        this.isRendered = false;
+        this.swapTimer = null;
+        this.waitUnsub = null;
+        this.pendingItemId = null;
+
+        this.renderer = new ItemRenderer(this.els);
+        this.navigation = new ItemNavigation(this.els.backBtn);
+
+        this.posters = new ItemPosters(this.els.posterWrapper, this.els.posterDots, {
+            onActiveColor: (color) => this.renderer.applyThemeColor(color),
+            onSlideChange: (item, color, index) => this.handleSlideChange(item, color, index)
+        });
+
+        this.player = new ItemPlayer(this.els, {
+            onThemeColor: (color) => this.renderer.applyThemeColor(color),
+            onBackground: (url) => this.renderer.setBackground(url),
+            onTitleChange: (title) => {
+                this.renderer.setTitle(title);
+                AppRouter.setDocumentTitle(title);
+            },
+            onVideoChange: (videoId) => this.handleVideoChange(videoId)
+        });
+
+        this.subscribeToStore();
+        console.log('🎬 [ItemPage] Контроллер инициализирован (URL-driven sub-state)');
     }
 
-    bindEvents() {
-        this.els.backBtn.addEventListener('click', () => {
-            EventBus.emit('PLAY_SOUND', 'click');
-            
-            const state = AppStore.getState();
-            const from = state.route.query.from || 'archive';
-            const type = state.media.type || 'games';
-            
-            // Восстанавливаем параметры (поиск, фильтры, сортировка), чтобы они не сбросились в URL
-            const mediaState = state.media;
-            const restoreQuery = {};
-            if (mediaState.searchQuery) restoreQuery.search = mediaState.searchQuery;
-            if (mediaState.filters.length > 0) restoreQuery.filters = mediaState.filters.join(',');
-            if (mediaState.sort !== 'name') restoreQuery.sort = mediaState.sort;
-            if (mediaState.sortDirection !== 'asc') restoreQuery.sortDir = mediaState.sortDirection;
-            if (mediaState.gridMode !== 'detailed') restoreQuery.mode = mediaState.gridMode;
+    /* ==================== STORE ==================== */
 
-            // Умный возврат туда, откуда пришли
-            if (from === 'library') {
-                AppRouter.navigate('/library', { type }, restoreQuery);
-            } else if (from === 'youtube') {
-                AppRouter.navigate('/youtube', {}, restoreQuery);
-            } else if (from === 'tierlist') {
-                AppRouter.navigate('/tierlist', { type });
-            } else if (from === 'agents') {
-                // Если пришли от агента, возвращаемся конкретно к нему
-                const agentId = state.route.query.agentId;
-                if (agentId) {
-                    AppRouter.navigate('/agents', { id: agentId });
-                } else {
-                    AppRouter.navigate('/agents');
-                }
-            } else {
-                AppRouter.navigate('/archive', { type }, restoreQuery);
+    subscribeToStore() {
+        AppStore.subscribe((state) => {
+            if (state.route.path !== '/item') return;
+            const id = state.route.params.id;
+            if (!id) return;
+            if (id !== this.currentRouteId) {
+                this.mount(id);
+                return;
+            }
+            this.syncSubState(state.route.query);
+        });
+    }
+
+    waitForData(itemId) {
+        this.pendingItemId = itemId;
+        if (this.waitUnsub) return;
+        console.log('🎬 [ItemPage] База ещё грузится, ожидаем:', itemId);
+        this.waitUnsub = AppStore.subscribe((state) => {
+            if (!state.data.isMediaLoaded) return;
+            const target = this.pendingItemId;
+            this.clearWaiter();
+            if (state.route.path === '/item' && state.route.params.id === target) {
+                this.mount(target);
             }
         });
     }
 
+    clearWaiter() {
+        if (this.waitUnsub) {
+            this.waitUnsub();
+            this.waitUnsub = null;
+        }
+        this.pendingItemId = null;
+    }
+
+    /* ==================== LIFECYCLE ==================== */
+
     mount(itemId) {
+        if (!itemId) {
+            console.warn('⚠️ [ItemPage] Пустой ID — возврат в базу.');
+            this.redirectToArchive();
+            return;
+        }
+
         const state = AppStore.getState();
+
         if (!state.data.isMediaLoaded) {
-            const unsubscribe = AppStore.subscribe((newState) => {
-                if (newState.data.isMediaLoaded) {
-                    unsubscribe();
-                    this.mount(itemId);
-                }
-            });
+            this.waitForData(itemId);
             return;
         }
 
-        const item = state.data.media.find(i => i.id === itemId || i.title === itemId);
-        if (!item) {
-            console.warn(`[ItemPage] Объект с ID "${itemId}" не найден.`);
-            AppRouter.navigate('/archive');
+        if (this.currentRouteId === itemId && this.isRendered) {
+            this.syncSubState(state.route.query);
             return;
         }
 
-        // Динамический текст кнопки "НАЗАД" в зависимости от того, откуда пришли
-        const from = state.route.query.from || 'archive';
-        if (from === 'library') {
-            this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД В БИБЛИОТЕКУ';
-        } else if (from === 'youtube') {
-            this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД В YOUTUBE АРХИВ';
-        } else if (from === 'tierlist') {
-            this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД В ТИРЛИСТ';
-        } else if (from === 'agents') {
-            this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД К АГЕНТУ';
-        } else {
-            this.els.backBtn.innerHTML = '<i class="fas fa-chevron-left"></i> НАЗАД В БАЗУ';
+        const resolved = resolveMediaItem(state.data.media, itemId);
+        if (!resolved) {
+            console.warn(`⚠️ [ItemPage] Объект "${itemId}" не найден. Мягкий редирект (replace).`);
+            this.redirectToArchive();
+            return;
         }
 
-        this.renderPage(item);
+        this.renderPage(resolved.item, itemId, resolved.forcedPart);
+    }
+
+    redirectToArchive() {
+        const type = AppStore.getState().media.type || 'games';
+        // replace — иначе кнопка "Назад" зацикливается на битой ссылке.
+        AppRouter.navigate('/archive', { type }, {}, { replace: true });
     }
 
     unmount() {
-        this.els.iframe.src = ''; 
+        this.cancelSwap();
+        this.clearWaiter();
+        this.posters.invalidate();
+        this.player.stop();
+        if (this.els.layout) this.els.layout.classList.remove('page-enter');
+        this.currentStack = [];
+        this.currentRouteId = null;
+        this.currentItemId = null;
+        this.currentPartKey = null;
+        this.currentVideoId = null;
+        this.isRendered = false;
+        console.log('🎬 [ItemPage] Компонент размонтирован');
     }
 
-    async renderPage(item) {
-        window.scrollTo(0, 0); 
-        
-        this.fallbackColor = item.customColor || (item.format === 'youtube' ? '#ff0000' : '#ff2d95');
-        
-        if (item.format === 'youtube') {
-            this.els.page.classList.add('is-cinema');
-        } else {
-            this.els.page.classList.remove('is-cinema');
-        }
+    /* ==================== РЕНДЕР ==================== */
 
-        if (item.format === 'collection' && item.items && item.items.length > 0) {
-            this.currentStack = [...item.items];
-        } else {
-            let images = (item.images && item.images.length > 0) ? item.images : [item.image];
-            this.currentStack = images.map(img => ({ ...item, isImageOnly: true, overrideImage: img }));
-        }
+    renderPage(item, routeId, forcedPart) {
+        try {
+            this.isRendered = false;
+            this.currentRouteId = routeId;
+            this.currentItemId = item.id;
+            this.cancelSwap();
+            window.scrollTo(0, 0);
 
-        this.renderPosters3D();
-        this.updateDataFields(this.currentStack[0], item.format, item.type, this.fallbackColor);
-        this.renderPlayer(this.currentStack[0].videos, item.format, this.currentStack[0].status);
-    }
-
-    updateDataFields(currentItem, format, type, initColor) {
-        this.applyThemeColor(initColor);
-
-        this.els.mainZone.classList.remove('is-glitching');
-        void this.els.mainZone.offsetWidth;
-        this.els.mainZone.classList.add('is-glitching');
-        
-        setTimeout(() => {
-            this.els.title.textContent = currentItem.title;
-            this.els.googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(currentItem.title)}`;
-            
-            if (!currentItem.description || currentItem.description.trim() === '...' || currentItem.description.trim() === '') {
-                this.els.desc.style.display = 'none';
-            } else {
-                this.els.desc.style.display = 'block';
-                this.els.desc.textContent = currentItem.description;
+            /* Тип выводим из самого объекта: ссылка не зависит от того,
+               в какой вкладке пользователь находился. Это же чинит
+               кнопку "Назад" при холодном открытии карточки кино. */
+            if (item.type && AppStore.getState().media.type !== item.type) {
+                AppStore.dispatch({ type: 'MEDIA_SYNC_STATE', payload: { type: item.type } });
             }
 
-            const effectiveStatus = currentItem.status || 'unknown';
-            
-            if (effectiveStatus === 'suggested') {
-                this.els.ratingBox.style.display = 'none';
-                this.els.statusBadge.innerHTML = `<i class="fas fa-user"></i> Предложил: ${currentItem.suggestedBy || 'Агент'}`;
-            } else {
-                this.els.ratingBox.style.display = 'flex';
-                this.els.statusBadge.textContent = STATUS_MAP[effectiveStatus] || effectiveStatus;
-                
-                let rating = currentItem.rating || 0;
-                if (rating > 0) {
-                    this.els.ratingVal.textContent = rating.toFixed(1);
-                    const rScore = Math.round(rating);
-                    this.els.segments.innerHTML = Array.from({length: 5}, (_, i) => 
-                        `<div class="modal-segment-line ${i < rScore ? 'filled' : ''}"></div>`
-                    ).join('');
-                } else {
-                    this.els.ratingVal.textContent = "N/A";
-                    this.els.segments.innerHTML = `<span style="font-family:monospace;font-size:0.7rem;color:#666;">NO_DATA</span>`;
-                }
-            }
-            
-            this.els.sysId.textContent = currentItem.id || "SYS_UNKNOWN";
-            this.els.dataType.textContent = type ? type.toUpperCase() : "UNKNOWN";
-            
-            this.generateBarcode(this.els.sysId.textContent.toUpperCase(), initColor);
-            
-            const bgImg = currentItem.overrideImage || currentItem.image || (currentItem.videos ? `https://img.youtube.com/vi/${getYouTubeId(currentItem.videos[0])}/hqdefault.jpg` : null);
-            if (bgImg) this.els.bg.style.backgroundImage = `url('${optimizeImageUrl(bgImg, 1200, 80)}')`;
+            const query = AppStore.getState().route.query;
 
-        }, 150); 
-    }
+            this.fallbackColor = item.customColor || (item.format === 'youtube' ? '#ff0000' : '#ff2d95');
+            this.els.page.classList.toggle('is-cinema', item.format === 'youtube');
 
-    renderPosters3D() {
-        this.currentImageIndex = 0;
-        this.els.posterWrapper.innerHTML = '<div class="modal-poster-glow"></div>';
-        this.els.posterDots.innerHTML = '';
-        
-        this.els.posterWrapper.classList.remove('stack-1', 'stack-2', 'stack-3');
-        const stackCount = Math.min(this.currentStack.length, 3);
-        this.els.posterWrapper.classList.add(`stack-${stackCount}`);
+            this.currentStack = buildStack(item);
+            const startIndex = this.resolveStartIndex(query, forcedPart);
+            const active = this.currentStack[startIndex] || this.currentStack[0];
 
-        this.imgElements = [];
+            this.posters.render(this.currentStack, this.fallbackColor, startIndex);
+            this.currentPartKey = this.partKeyFor(active, startIndex);
 
-        this.currentStack.forEach((data, index) => {
-            const img = document.createElement('img');
-            img.crossOrigin = "Anonymous"; 
-            img.decoding = "async"; 
-            
-            img.onload = async () => {
-                const neonColor = await extractColorFromImageAsync(img) || data.customColor || this.fallbackColor;
-                img.dataset.neonColor = neonColor;
-                if (index === this.currentImageIndex) this.applyThemeColor(neonColor);
-            };
+            this.renderer.applyDataFields(active, item.type, this.fallbackColor);
 
-            img.onerror = () => {
-                img.dataset.neonColor = this.fallbackColor;
-                img.src = 'https://via.placeholder.com/600x900/1a1a24/ffffff?text=NO+IMAGE'; 
-                if (index === this.currentImageIndex) this.applyThemeColor(this.fallbackColor);
-            };
-            
-            let rawSrc = data.overrideImage || data.image || (data.videos ? `https://img.youtube.com/vi/${getYouTubeId(data.videos[0])}/hqdefault.jpg` : 'https://via.placeholder.com/600x900/1a1a24/ffffff?text=NO+IMAGE');
-            img.src = optimizeImageUrl(rawSrc, 600, 90); 
-            img.className = 'modal-poster-img'; 
-            
-            this.els.posterWrapper.appendChild(img); 
-            this.imgElements.push(img);
-            
-            if (this.currentStack.length > 1) {
-                const dot = document.createElement('div');
-                dot.className = 'poster-dot';
-                this.els.posterDots.appendChild(dot);
-            }
-        });
+            this.player.render(active.videos, active.format || item.format, active.status, {
+                initialVideoId: query.v || null
+            });
+            this.currentVideoId = this.player.getActiveVideoId();
 
-        this.updatePosterClasses();
+            this.navigation.updateLabel(query.from || 'archive');
+            AppRouter.setDocumentTitle(active.title || item.title);
 
-        if (this.currentStack.length > 1) {
-            this.els.posterWrapper.classList.add('is-interactive');
-            this.els.posterWrapper.onclick = () => { 
-                EventBus.emit('PLAY_SOUND', 'hover'); 
-                this.currentImageIndex = (this.currentImageIndex + 1) % this.imgElements.length; 
-                this.updatePosterClasses(); 
-                
-                const currentItem = this.currentStack[this.currentImageIndex];
-                const activeImg = this.imgElements[this.currentImageIndex];
-                const currentExtractedColor = activeImg.dataset.neonColor || this.fallbackColor;
-                
-                if (!currentItem.isImageOnly) {
-                    this.updateDataFields(currentItem, currentItem.format, currentItem.type, currentExtractedColor);
-                    this.renderPlayer(currentItem.videos, currentItem.format, currentItem.status);
-                } else {
-                    this.applyThemeColor(currentExtractedColor);
-                    const bgImg = currentItem.overrideImage || currentItem.image;
-                    if (bgImg) this.els.bg.style.backgroundImage = `url('${optimizeImageUrl(bgImg, 1200, 80)}')`;
-                }
-            };
-        } else {
-            this.els.posterWrapper.classList.remove('is-interactive');
-            this.els.posterWrapper.onclick = null;
+            this.els.layout.classList.remove('page-enter');
+            void this.els.layout.offsetWidth;
+            this.els.layout.classList.add('page-enter');
+
+            this.isRendered = true;
+            this.syncUrlSubState();
+
+            console.log(`🎬 [ItemPage] Отрендерен объект: ${item.id} (part index ${startIndex})`);
+        } catch (error) {
+            console.error('❌ [ItemPage] Ошибка рендера страницы:', error);
+            this.isRendered = true;
         }
     }
 
-    updatePosterClasses() {
-        this.imgElements.forEach((img, index) => {
-            img.classList.remove('is-front', 'is-back', 'is-back-2', 'is-hidden');
-            let relIndex = (index - this.currentImageIndex + this.imgElements.length) % this.imgElements.length;
-            if (relIndex === 0) { img.classList.add('is-front'); img.style.zIndex = 30; }
-            else if (relIndex === 1) { img.classList.add('is-back'); img.style.zIndex = 20; }
-            else if (relIndex === 2) { img.classList.add('is-back-2'); img.style.zIndex = 10; }
-            else { img.classList.add('is-hidden'); img.style.zIndex = 0; }
-        });
-        
-        if (this.currentStack.length > 1) {
-            const dots = this.els.posterDots.querySelectorAll('.poster-dot');
-            dots.forEach((dot, index) => { dot.classList.toggle('active', index === this.currentImageIndex); });
+    resolveStartIndex(query, forcedPart = null) {
+        const partId = query.part || forcedPart;
+        if (partId) {
+            const idx = this.currentStack.findIndex(
+                s => !s.isImageOnly && String(s.id) === String(partId)
+            );
+            if (idx >= 0) return idx;
+            console.warn(`⚠️ [ItemPage] Часть "${partId}" не найдена в стеке — открываю первую.`);
         }
+        if (query.slide !== undefined) {
+            const n = parseInt(query.slide, 10);
+            if (Number.isFinite(n) && n >= 0 && n < this.currentStack.length) return n;
+        }
+        return 0;
     }
 
-    renderPlayer(videos, format, status) {
-        if (!videos || videos.length === 0) {
-            this.els.videoZone.style.display = 'none';
-            this.els.playlistCol.style.display = 'none';
-            this.els.iframe.src = '';
-            this.els.page.classList.remove('has-playlist');
+    partKeyFor(stackItem, index) {
+        if (!stackItem) return 'none';
+        return stackItem.isImageOnly ? `slide:${index}` : `part:${stackItem.id}`;
+    }
+
+    /* ==================== URL <-> СОСТОЯНИЕ ==================== */
+
+    /** Пишет part/slide/v в адрес, только если они реально отличаются. */
+    syncUrlSubState() {
+        if (!this.isRendered) return;
+        const state = AppStore.getState();
+        if (state.route.path !== '/item') return;
+        if (state.route.params.id !== this.currentRouteId) return;
+
+        const index = this.posters.getCurrentIndex();
+        const active = this.currentStack[index];
+        const patch = { part: null, slide: null, v: null };
+
+        if (active && index > 0) {
+            if (active.isImageOnly) patch.slide = String(index);
+            else patch.part = String(active.id);
+        }
+
+        const firstVideo = this.player.getFirstVideoId();
+        if (this.currentVideoId && this.currentVideoId !== firstVideo) {
+            patch.v = this.currentVideoId;
+        }
+
+        const query = state.route.query;
+        const changed = ['part', 'slide', 'v'].some(
+            key => (query[key] || null) !== (patch[key] || null)
+        );
+        if (!changed) return;
+
+        AppRouter.updateQuery(patch, { replace: true });
+    }
+
+    /** Применяет состояние из URL (кнопки браузера, вставка ссылки). */
+    syncSubState(query) {
+        if (!this.isRendered) return;
+
+        const index = this.resolveStartIndex(query);
+        const active = this.currentStack[index];
+        const key = this.partKeyFor(active, index);
+
+        if (key !== this.currentPartKey) {
+            this.posters.goTo(index);
             return;
         }
 
-        this.els.videoZone.style.display = 'block';
-        this.els.playlistList.innerHTML = '';
-        let firstValidId = null;
+        const target = query.v || this.player.getFirstVideoId();
+        if (target && target !== this.currentVideoId) {
+            this.player.selectByVideoId(target);
+        }
+    }
 
-        videos.forEach((url, index) => {
-            const vidId = getYouTubeId(url);
-            if (!vidId) return;
-            if (!firstValidId) firstValidId = vidId;
+    /* ==================== СОБЫТИЯ ==================== */
 
-            const card = document.createElement('div');
-            card.className = `item-playlist-card ${index === 0 ? 'active' : ''}`;
-            card.innerHTML = `
-                <div class="p-thumb">
-                    <img src="https://img.youtube.com/vi/${vidId}/hqdefault.jpg" alt="thumbnail">
-                    <div class="p-overlay"><i class="fas fa-play play-icon"></i><div class="p-equalizer"><span></span><span></span><span></span></div></div>
-                </div>
-                <div class="p-info">
-                    <div class="p-title">Запись #${index + 1}</div>
-                    <div class="p-status">СМОТРЕТЬ</div>
-                </div>
-            `;
+    handleSlideChange(item, color, index) {
+        this.currentPartKey = this.partKeyFor(item, index);
 
-            const titleEl = card.querySelector('.p-title');
-
-            card.addEventListener('click', () => {
-                EventBus.emit('PLAY_SOUND', 'click');
-                this.els.playlistList.querySelectorAll('.item-playlist-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                this.els.iframe.src = `https://www.youtube.com/embed/${vidId}?autoplay=0&rel=0&modestbranding=1`;
-                
-                if (status === 'suggested') {
-                    this.els.title.textContent = titleEl.textContent;
-                    this.els.googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(titleEl.textContent)}`;
-                }
-            });
-
-            this.els.playlistList.appendChild(card);
-
-            fetch(`https://noembed.com/embed?url=${url}`).then(r => r.json()).then(d => {
-                if (d.title) {
-                    titleEl.textContent = d.title;
-                    if (card.classList.contains('active') && status === 'suggested') {
-                        this.els.title.textContent = d.title;
-                        this.els.googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(d.title)}`;
-                    }
-                }
-            }).catch(() => {});
-        });
-
-        if (videos.length > 1) {
-            this.els.playlistCol.style.display = 'flex';
-            this.els.page.classList.add('has-playlist');
+        if (!item.isImageOnly) {
+            this.currentVideoId = null; // старый ролик относится к другой части
+            this.swapToItem(item, color);
         } else {
-            this.els.playlistCol.style.display = 'none';
-            this.els.page.classList.remove('has-playlist');
+            this.renderer.applyThemeColor(color);
+            this.renderer.setBackground(item.overrideImage || item.image);
         }
-
-        if (firstValidId) {
-            this.els.iframe.src = `https://www.youtube.com/embed/${firstValidId}?autoplay=0&rel=0&modestbranding=1`;
-        }
+        this.syncUrlSubState();
     }
 
-    applyThemeColor(color) {
-        this.els.page.style.setProperty('--item-color', color);
-        
-        this.els.ratingVal.style.color = color;
-        this.els.segments.querySelectorAll('.filled').forEach(s => s.style.color = color);
+    handleVideoChange(videoId) {
+        this.currentVideoId = videoId || null;
+        this.syncUrlSubState();
     }
 
-    generateBarcode(textId, color) {
-        const linesContainer = this.els.barcodeContainer.querySelector('.barcode-lines');
-        if (!linesContainer) return;
-        linesContainer.innerHTML = '';
-        try {
-            if (window.JsBarcode) {
-                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                svg.style.height = "100%";
-                svg.style.filter = `drop-shadow(0 0 3px ${color})`;
-                linesContainer.appendChild(svg);
-                window.JsBarcode(svg, textId, { format: "CODE39", displayValue: false, background: "transparent", lineColor: color, margin: 0, width: 2, height: 40 });
+    swapToItem(currentItem, color) {
+        this.cancelSwap();
+        this.els.mainZone.classList.add('is-swapping');
+
+        this.swapTimer = setTimeout(() => {
+            this.swapTimer = null;
+            try {
+                this.renderer.applyDataFields(currentItem, currentItem.type, color);
+
+                const desiredVideo = AppStore.getState().route.query.v || null;
+                this.player.render(currentItem.videos, currentItem.format, currentItem.status, {
+                    initialVideoId: desiredVideo
+                });
+                this.currentVideoId = this.player.getActiveVideoId();
+
+                AppRouter.setDocumentTitle(currentItem.title);
+                this.els.mainZone.classList.remove('is-swapping');
+                this.syncUrlSubState();
+            } catch (error) {
+                console.error('❌ [ItemPage] Ошибка переключения части коллекции:', error);
+                this.els.mainZone.classList.remove('is-swapping');
             }
-        } catch (e) {}
+        }, SWAP_DURATION);
+    }
+
+    cancelSwap() {
+        if (this.swapTimer) {
+            clearTimeout(this.swapTimer);
+            this.swapTimer = null;
+        }
+        if (this.els.mainZone) this.els.mainZone.classList.remove('is-swapping');
     }
 }

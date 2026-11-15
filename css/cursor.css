@@ -1,117 +1,190 @@
 /* css/cursor.css */
-
-/* Отключаем системный курсор АБСОЛЮТНО ВЕЗДЕ на устройствах с точной мышью */
+/* Системный курсор прячем только когда JS-курсор реально жив. */
 @media (pointer: fine) {
-    *, *::before, *::after {
+    html.has-cyber-cursor,
+    html.has-cyber-cursor *,
+    html.has-cyber-cursor *::before,
+    html.has-cyber-cursor *::after {
         cursor: none !important;
     }
 }
 
-/* 
- * ОСНОВНОЙ КОНТЕЙНЕР
- * Используем position: fixed, чтобы не зависеть от скролла. 
- * Координаты будем обновлять через clientX/clientY.
- */
 #cyber-cursor-dot,
 #cyber-cursor-ring {
     position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 999999; /* Поверх вообще всего, включая модалки и прелоадер */
+    z-index: 999999;
     will-change: transform;
+    opacity: 1;
+    transition: opacity 0.2s ease;
 }
 
-/* 1. МГНОВЕННАЯ ЦЕНТРАЛЬНАЯ ТОЧКА */
+#cyber-cursor-dot.is-hidden,
+#cyber-cursor-ring.is-hidden {
+    opacity: 0 !important;
+}
+
+/* Центральная точка / каретка */
 #cyber-cursor-dot {
     width: 4px;
     height: 4px;
+    margin: -2px 0 0 -2px;
     background-color: var(--color-neon-green);
     border-radius: 50%;
     box-shadow: 0 0 8px var(--color-neon-green);
-    margin: -2px 0 0 -2px; 
-    transition: background-color 0.2s, box-shadow 0.2s, width 0.2s, height 0.2s, margin 0.2s, border-radius 0.2s;
+    transition:
+        opacity 0.2s ease,
+        background-color 0.3s ease,
+        box-shadow 0.3s ease,
+        width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        margin 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        border-radius 0.3s ease;
 }
 
-/* 2. ПЛАВНЫЙ ВНЕШНИЙ ПРИЦЕЛ (LERP) */
+/* Внешнее кольцо: позиция от JS, размер от внутреннего frame. */
 #cyber-cursor-ring {
-    width: 32px;
-    height: 32px;
-    margin: -16px 0 0 -16px;
-    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), margin 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
 }
 
-/* 4 Уголка прицела */
+/* Внутренний frame масштабируется через transform (GPU). */
+.cursor-ring-frame {
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    transform: scale(0.8);
+    transition:
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.3s ease,
+        border-radius 0.3s ease,
+        background-color 0.3s ease;
+}
+
 .cursor-corner {
     position: absolute;
     width: 8px;
     height: 8px;
     border: 1.5px solid var(--color-neon-green);
-    transition: border-color 0.3s, filter 0.3s, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    opacity: 1;
+    transition:
+        border-color 0.3s ease,
+        filter 0.3s ease,
+        opacity 0.3s ease;
+}
+.cursor-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+.cursor-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+.cursor-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+.cursor-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* Стрелка внешней ссылки (центр) */
+.cursor-external-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent-blue);
+    opacity: 0;
+    transform: rotate(45deg) scale(0.3);
+    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+    filter: drop-shadow(0 0 5px var(--color-accent-blue));
+}
+.cursor-external-badge svg { width: 100%; height: 100%; display: block; }
+
+/* Лёгкая пульсация размера стрелки внешней ссылки.
+   Анимируем внутренний svg, чтобы не конфликтовать с rotate/scale бейджа. */
+#cyber-cursor-ring.is-external .cursor-external-badge svg {
+    animation: cursor-external-pulse 1.6s ease-in-out infinite;
+}
+@keyframes cursor-external-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.14); }
 }
 
-.cursor-corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; transform: translate(3px, 3px); }
-.cursor-corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; transform: translate(-3px, 3px); }
-.cursor-corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; transform: translate(3px, -3px); }
-.cursor-corner.br { bottom: 0; right: 0; border-left: none; border-top: none; transform: translate(-3px, -3px); }
-
-/* =========================================
-   СОСТОЯНИЯ (HOVER, CLICK, TEXT)
-   ========================================= */
-
-/* A. Наведение на кликабельный элемент (TARGET LOCK) */
-#cyber-cursor-ring.is-hovering {
-    width: 44px;
-    height: 44px;
-    margin: -22px 0 0 -22px;
+/* Глиф автоскролла (центр) */
+.cursor-autoscroll-glyph {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--color-neon-green);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
+.cursor-autoscroll-glyph span { width: 10px; height: 10px; display: flex; }
+.cursor-autoscroll-glyph svg { width: 100%; height: 100%; display: block; }
 
+/* ============ СОСТОЯНИЯ ============ */
+
+/* Hover */
+#cyber-cursor-ring.is-hovering .cursor-ring-frame { transform: scale(1.1); }
 #cyber-cursor-ring.is-hovering .cursor-corner {
     border-color: var(--color-neon-pink);
     filter: drop-shadow(0 0 5px var(--color-neon-pink));
-    transform: translate(0, 0); /* Уголки разъезжаются по краям */
 }
-
 #cyber-cursor-dot.is-hovering {
     background-color: var(--color-neon-pink);
     box-shadow: 0 0 10px var(--color-neon-pink);
 }
 
-/* B. Клик (Импульс) */
-#cyber-cursor-ring.is-clicking {
-    width: 24px;
-    height: 24px;
-    margin: -12px 0 0 -12px;
-}
-
+/* Click */
+#cyber-cursor-ring.is-clicking .cursor-ring-frame { transform: scale(0.6); }
 #cyber-cursor-ring.is-clicking .cursor-corner {
-    border-width: 3px;
     filter: drop-shadow(0 0 10px var(--color-neon-pink));
-    transform: translate(2px, 2px); /* Резко сжимаются */
 }
+#cyber-cursor-dot.is-clicking { width: 2px; height: 2px; margin: -1px 0 0 -1px; }
 
-#cyber-cursor-ring.is-clicking .cursor-corner.tr { transform: translate(-2px, 2px); }
-#cyber-cursor-ring.is-clicking .cursor-corner.bl { transform: translate(2px, -2px); }
-#cyber-cursor-ring.is-clicking .cursor-corner.br { transform: translate(-2px, -2px); }
-
-/* Уменьшаем саму точку при клике через размеры, чтобы не сбивать translate3d в JS */
-#cyber-cursor-dot.is-clicking {
-    width: 2px;
-    height: 2px;
-    margin: -1px 0 0 -1px;
+/* Text: каретка + четыре угла. Каретка мигает как настоящий caret. */
+#cyber-cursor-ring.is-text .cursor-ring-frame { transform: scale(1); }
+#cyber-cursor-ring.is-text .cursor-corner {
+    border-color: var(--color-neon-green);
+    filter: drop-shadow(0 0 4px var(--color-neon-green));
+    opacity: 1;
 }
-
-/* C. Наведение на текст (Кибер-каретка) */
-#cyber-cursor-ring.is-text {
-    opacity: 0;
-    transform: scale(0.5);
-}
-
 #cyber-cursor-dot.is-text {
     width: 2px;
     height: 20px;
     margin: -10px 0 0 -1px;
     border-radius: 0;
     background-color: var(--color-neon-green);
-    animation: blink 1s infinite;
+    animation: cursor-caret-blink 1s step-end infinite;
 }
+@keyframes cursor-caret-blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* External */
+#cyber-cursor-ring.is-external .cursor-ring-frame { transform: scale(1.1); }
+#cyber-cursor-ring.is-external .cursor-corner {
+    border-color: var(--color-accent-blue);
+    filter: drop-shadow(0 0 5px var(--color-accent-blue));
+}
+#cyber-cursor-ring.is-external .cursor-external-badge { opacity: 1; transform: rotate(45deg) scale(1); }
+#cyber-cursor-dot.is-external { opacity: 0; }
+
+/* Autoscroll */
+#cyber-cursor-ring.is-autoscroll .cursor-ring-frame {
+    transform: scale(0.9);
+    border-radius: 50%;
+    border-color: color-mix(in srgb, var(--color-neon-green) 60%, transparent);
+    background: color-mix(in srgb, var(--color-neon-green) 8%, transparent);
+}
+#cyber-cursor-ring.is-autoscroll .cursor-corner { opacity: 0; }
+#cyber-cursor-ring.is-autoscroll .cursor-autoscroll-glyph { opacity: 1; transform: scale(1); }
+#cyber-cursor-dot.is-autoscroll { opacity: 0; }

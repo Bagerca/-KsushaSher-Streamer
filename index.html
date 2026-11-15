@@ -2,108 +2,98 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
-    
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- БАЗОВЫЕ И ГЛОБАЛЬНЫЕ СТИЛИ -->
-    <link rel="stylesheet" href="css/global.css">           
-    <link rel="stylesheet" href="css/preloader.css">
-    <link rel="stylesheet" href="css/cursor.css"> <!-- КАСТОМНЫЙ КУРСОР -->
-    <link rel="stylesheet" href="css/music-player.css">           
-    <link rel="stylesheet" href="css/hero/hero-layout.css">
-    <link rel="stylesheet" href="css/hero/hud-terminal.css">
-    <link rel="stylesheet" href="css/hero/hud-squad.css">
-    <link rel="stylesheet" href="css/hero/hud-center.css">
-    <link rel="stylesheet" href="css/about/about-layout.css">
-    <link rel="stylesheet" href="css/about/dossier.css">
-    <link rel="stylesheet" href="css/about/cyber-monitor.css">
-    <link rel="stylesheet" href="css/about/holo-carousel.css">
-    <link rel="stylesheet" href="css/hub/hub-layout.css">
-    <link rel="stylesheet" href="css/hub/hub-stats.css">
-    <link rel="stylesheet" href="css/hub/hub-twitch.css">
-    <link rel="stylesheet" href="css/hub/hub-radar.css">
-    <link rel="stylesheet" href="css/archive/archive-layout.css">
-    <link rel="stylesheet" href="css/archive/archive-controls.css">
-    <link rel="stylesheet" href="css/archive/archive-card.css">
-    <link rel="stylesheet" href="css/archive/archive-stacks-3d.css">
-    
-    <link rel="stylesheet" href="css/library.css">
-    <link rel="stylesheet" href="css/youtube-library.css">
-    
-    <!-- ДЕКОМПОЗИРОВАННЫЕ СТИЛИ СТРАНИЦЫ АГЕНТОВ -->
-    <link rel="stylesheet" href="css/agents/agents-layout.css">
-    <link rel="stylesheet" href="css/agents/agent-detail.css">
-    <link rel="stylesheet" href="css/agents/agent-marquee.css">
-
-    <link rel="stylesheet" href="css/donation/donation-layout.css">        
-    <link rel="stylesheet" href="css/donation/donation-cards.css">        
-    <link rel="stylesheet" href="css/donation/donation-terminal.css">
-    <link rel="stylesheet" href="css/specs/specs-layout.css">     
-    <link rel="stylesheet" href="css/footer/footer-layout.css">
-    <link rel="stylesheet" href="css/footer/footer-typography.css">
-    <link rel="stylesheet" href="css/footer/social-hud.css">
-    
-    <!-- СТРАНИЦЫ И SPA МОДУЛИ -->
-    <link rel="stylesheet" href="css/tierlist.css">
-    
-    <!-- ДЕКОМПОЗИРОВАННЫЕ СТИЛИ СТРАНИЦЫ ИГРЫ/КИНО -->
-    <link rel="stylesheet" href="css/item/item-layout.css">
-    <link rel="stylesheet" href="css/item/item-posters.css">
-    <link rel="stylesheet" href="css/item/item-typography.css">
-    <link rel="stylesheet" href="css/item/item-player.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    
-    <!-- ЗАЩИТА ОТ МОРГАНИЯ ПРЕЛОАДЕРА ПРИ ПОВТОРНОМ ЗАХОДЕ -->
-    <script>
-        if (sessionStorage.getItem('tetla_os_booted') === 'true') {
-            document.documentElement.classList.add('skip-preloader');
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading...</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- БАЗОВЫЕ И ГЛОБАЛЬНЫЕ СТИЛИ -->
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/preloader.css">
+<link rel="stylesheet" href="css/cursor.css"> <!-- КАСТОМНЫЙ КУРСОР -->
+<link rel="stylesheet" href="css/autoscroll.css"> <!-- КАСТОМНЫЙ АВТОСКРОЛЛ КОЛЕСОМ -->
+<link rel="stylesheet" href="css/music-player.css">
+<!-- ПЕРЕИСПОЛЬЗУЕМЫЕ КОМПОНЕНТЫ -->
+<link rel="stylesheet" href="css/components/search.css"> <!-- ЕДИНЫЙ ПОИСКОВИК -->
+<link rel="stylesheet" href="css/hero/hero-layout.css">
+<link rel="stylesheet" href="css/hero/hud-terminal.css">
+<link rel="stylesheet" href="css/hero/hud-squad.css">
+<link rel="stylesheet" href="css/hero/hud-center.css">
+<link rel="stylesheet" href="css/about/about-layout.css">
+<link rel="stylesheet" href="css/about/dossier.css">
+<link rel="stylesheet" href="css/about/cyber-monitor.css">
+<link rel="stylesheet" href="css/about/holo-carousel.css">
+<link rel="stylesheet" href="css/hub/hub-layout.css">
+<link rel="stylesheet" href="css/hub/hub-stats.css">
+<link rel="stylesheet" href="css/hub/hub-twitch.css">
+<link rel="stylesheet" href="css/hub/hub-radar.css">
+<link rel="stylesheet" href="css/archive/archive-layout.css">
+<link rel="stylesheet" href="css/archive/archive-controls.css">
+<link rel="stylesheet" href="css/archive/archive-card.css">
+<link rel="stylesheet" href="css/archive/archive-stacks-3d.css">
+<link rel="stylesheet" href="css/library.css">
+<link rel="stylesheet" href="css/youtube-library.css">
+<!-- ДЕКОМПОЗИРОВАННЫЕ СТИЛИ СТРАНИЦЫ АГЕНТОВ -->
+<link rel="stylesheet" href="css/agents/agents-layout.css">
+<link rel="stylesheet" href="css/agents/agent-detail.css">
+<link rel="stylesheet" href="css/agents/agent-marquee.css">
+<link rel="stylesheet" href="css/donation/donation-layout.css">
+<link rel="stylesheet" href="css/donation/donation-cards.css">
+<link rel="stylesheet" href="css/donation/donation-terminal.css">
+<link rel="stylesheet" href="css/specs/specs-layout.css">
+<link rel="stylesheet" href="css/footer/footer-layout.css">
+<link rel="stylesheet" href="css/footer/footer-typography.css">
+<link rel="stylesheet" href="css/footer/social-hud.css">
+<!-- СТРАНИЦЫ И SPA МОДУЛИ -->
+<link rel="stylesheet" href="css/tierlist.css">
+<!-- ДЕКОМПОЗИРОВАННЫЕ СТИЛИ СТРАНИЦЫ ИГРЫ/КИНО -->
+<link rel="stylesheet" href="css/item/item-layout.css">
+<link rel="stylesheet" href="css/item/item-posters.css">
+<link rel="stylesheet" href="css/item/item-typography.css">
+<link rel="stylesheet" href="css/item/item-player.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<!-- ЗАЩИТА ОТ МОРГАНИЯ ПРЕЛОАДЕРА ПРИ ПОВТОРНОМ ЗАХОДЕ -->
+<script>
+if (sessionStorage.getItem('tetla_os_booted') === 'true') {
+document.documentElement.classList.add('skip-preloader');
+}
+</script>
 </head>
 <body>
-    <!-- CYBER FOX PRELOADER -->
-    <div id="app-preloader">
-        <div class="preloader-core">
-            <div class="preloader-rings"></div>
-            <div class="preloader-fox">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
-                    <g stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" fill="none" class="fox-mesh">
-                        <polygon points="60,105 30,80 12,55 22,15 42,40 60,32 78,40 98,15 108,55 90,80" />
-                        <polygon points="30,80 12,55 48,65" />
-                        <polygon points="90,80 108,55 72,65" />
-                        <polygon points="60,75 48,65 60,32 72,65" />
-                        <polyline points="22,15 48,65 42,40" />
-                        <polyline points="98,15 72,65 78,40" />
-                        <polyline points="12,55 48,65 42,40" />
-                        <polyline points="108,55 72,65 78,40" />
-                    </g>
-                    <g class="fox-eyes">
-                        <polygon points="32,58 44,62 40,65 30,61" />
-                        <polygon points="88,58 76,62 80,65 90,61" />
-                    </g>
-                </svg>
-            </div>
-        </div>
-        <div class="preloader-status">
-            <div class="p-text">DECRYPTING CORE PROTOCOLS... [<span id="p-percent">0</span>%]</div>
-            <div class="p-bar"><div class="p-bar-fill" id="p-bar-fill"></div></div>
-            <div class="p-hint">Нажми любую клавишу для пропуска</div>
-        </div>
-    </div>
-
-    <div id="comet-system"></div>
-    <div id="comet-system-fg"></div>
-
-    <main id="app"></main>
-
-    <script type="module" src="js/app.js"></script>
+<!-- CYBER FOX PRELOADER -->
+<div id="app-preloader">
+<div class="preloader-core">
+<div class="preloader-rings"></div>
+<div class="preloader-fox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+<g stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" fill="none" class="fox-mesh">
+<polygon points="60,105 30,80 12,55 22,15 42,40 60,32 78,40 98,15 108,55 90,80" />
+<polygon points="30,80 12,55 48,65" />
+<polygon points="90,80 108,55 72,65" />
+<polygon points="60,75 48,65 60,32 72,65" />
+<polyline points="22,15 48,65 42,40" />
+<polyline points="98,15 72,65 78,40" />
+<polyline points="12,55 48,65 42,40" />
+<polyline points="108,55 72,65 78,40" />
+</g>
+<g class="fox-eyes">
+<polygon points="32,58 44,62 40,65 30,61" />
+<polygon points="88,58 76,62 80,65 90,61" />
+</g>
+</svg>
+</div>
+</div>
+<div class="preloader-status">
+<div class="p-text">DECRYPTING CORE PROTOCOLS... [<span id="p-percent">0</span>%]</div>
+<div class="p-bar"><div class="p-bar-fill" id="p-bar-fill"></div></div>
+<div class="p-hint">Нажми любую клавишу для пропуска</div>
+</div>
+</div>
+<div id="comet-system"></div>
+<div id="comet-system-fg"></div>
+<main id="app"></main>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

@@ -1,19 +1,28 @@
 /* js/tierlist/TierlistDragDrop.js */
 import EventBus from '../event-bus.js';
+import { AppStore } from '../store.js';
 import { AppRouter } from '../router.js';
 
+/**
+ * Drag & Drop тирлиста.
+ * Dropzone-слушатели навешиваются один раз на узел (WeakSet),
+ * поэтому повторные рендеры не размножают обработчики.
+ */
 export class TierlistDragDrop {
     constructor(controller) {
         this.ctrl = controller;
         this.draggedCard = null;
         this.draggedRow = null;
-        
+        this.boundZones = new WeakSet();
         this.setupBoardDropzone();
     }
 
     bindRowDragEvents(row) {
+        if (row.dataset.dragBound === '1') return;
+        row.dataset.dragBound = '1';
+
         row.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('t-card') || e.target.closest('.t-card')) return;
+            if (e.target.closest('.t-card')) return;
             this.draggedRow = row;
             e.dataTransfer.effectAllowed = 'move';
             setTimeout(() => row.classList.add('is-dragging-row'), 0);
@@ -30,58 +39,57 @@ export class TierlistDragDrop {
     }
 
     setupBoardDropzone() {
-        this.ctrl.board.boardEl.addEventListener('dragover', e => {
-            if (!this.ctrl.isEditMode || !this.draggedRow) return; 
+        const boardEl = this.ctrl.board.boardEl;
+        if (!boardEl || this.boundZones.has(boardEl)) return;
+        this.boundZones.add(boardEl);
+
+        boardEl.addEventListener('dragover', (e) => {
+            if (!this.ctrl.isEditMode || !this.draggedRow) return;
             e.preventDefault();
-            const afterElement = this.getDragAfterRow(this.ctrl.board.boardEl, e.clientY);
-            if (afterElement == null) {
-                this.ctrl.board.boardEl.appendChild(this.draggedRow);
-            } else {
-                this.ctrl.board.boardEl.insertBefore(this.draggedRow, afterElement);
-            }
+            const after = this.getDragAfterRow(boardEl, e.clientY);
+            if (after == null) boardEl.appendChild(this.draggedRow);
+            else boardEl.insertBefore(this.draggedRow, after);
         });
     }
 
     getDragAfterRow(container, y) {
-        const draggableElements = [...container.querySelectorAll('.tier-row:not(.is-dragging-row)')];
-        return draggableElements.reduce((closest, child) => {
+        const rows = [...container.querySelectorAll('.tier-row:not(.is-dragging-row)')];
+        return rows.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; }
+            if (offset < 0 && offset > closest.offset) return { offset, element: child };
             return closest;
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     getDragAfterElement(container, x, y) {
-        const draggableElements = [...container.querySelectorAll('.t-card:not(.is-dragging)')];
-        return draggableElements.reduce((closest, child) => {
+        const cards = [...container.querySelectorAll('.t-card:not(.is-dragging)')];
+        return cards.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
-            const inSameRow = y >= box.top && y <= box.bottom;
-            if (inSameRow) {
+            if (y >= box.top && y <= box.bottom) {
                 const offset = x - box.left - box.width / 2;
-                if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; }
+                if (offset < 0 && offset > closest.offset) return { offset, element: child };
             }
             return closest;
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     setupDropzone(zone) {
-        zone.addEventListener('dragover', e => {
-            if (!this.ctrl.isEditMode || !this.draggedCard) return; 
-            e.preventDefault(); 
-            zone.classList.add('drag-over');
+        if (!zone || this.boundZones.has(zone)) return;
+        this.boundZones.add(zone);
 
-            const afterElement = this.getDragAfterElement(zone, e.clientX, e.clientY);
-            if (afterElement == null) {
-                zone.appendChild(this.draggedCard);
-            } else {
-                zone.insertBefore(this.draggedCard, afterElement);
-            }
+        zone.addEventListener('dragover', (e) => {
+            if (!this.ctrl.isEditMode || !this.draggedCard) return;
+            e.preventDefault();
+            zone.classList.add('drag-over');
+            const after = this.getDragAfterElement(zone, e.clientX, e.clientY);
+            if (after == null) zone.appendChild(this.draggedCard);
+            else zone.insertBefore(this.draggedCard, after);
         });
 
-        zone.addEventListener('dragleave', () => { zone.classList.remove('drag-over'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
 
-        zone.addEventListener('drop', e => {
+        zone.addEventListener('drop', (e) => {
             if (!this.ctrl.isEditMode || !this.draggedCard) return;
             e.preventDefault();
             zone.classList.remove('drag-over');
@@ -91,36 +99,42 @@ export class TierlistDragDrop {
     }
 
     bindCardEvents() {
-        const cards = document.querySelectorAll('.t-card');
-        cards.forEach(card => {
-            
+        const root = this.ctrl.container;
+        if (!root) return;
+
+        root.querySelectorAll('.t-card').forEach(card => {
+            if (card.dataset.bound === '1') return;
+            card.dataset.bound = '1';
+
             card.addEventListener('dragstart', (e) => {
                 if (!this.ctrl.isEditMode) { e.preventDefault(); return; }
-                e.stopPropagation(); 
+                e.stopPropagation();
                 this.draggedCard = card;
                 setTimeout(() => card.classList.add('is-dragging'), 0);
             });
-            
+
             card.addEventListener('dragend', () => {
                 if (!this.ctrl.isEditMode) return;
-                if(this.draggedCard) {
+                if (this.draggedCard) {
                     this.draggedCard.classList.remove('is-dragging');
-                    this.ctrl.saveState(); 
+                    this.ctrl.saveState();
                     this.ctrl.updateCounter();
                 }
                 this.draggedCard = null;
             });
 
             card.addEventListener('contextmenu', (e) => {
-                e.preventDefault(); 
-                const itemTitle = card.dataset.id;
-                const item = this.ctrl.dataBank.find(i => i.title === itemTitle);
-                
-                if (item) {
-                    EventBus.emit('PLAY_SOUND', 'expand'); 
-                    // ИСПРАВЛЕНИЕ: Добавляем метку откуда пришли
-                    AppRouter.navigate('/item', { id: item.id || item.title }, { from: 'tierlist' });
+                e.preventDefault();
+                const title = card.dataset.id;
+                const item = this.ctrl.findBankItem(title);
+                if (!item) {
+                    console.warn(`⚠️ [Tierlist] Объект "${title}" не найден в базе категории.`);
+                    return;
                 }
+                EventBus.emit('PLAY_SOUND', 'expand');
+                const query = { from: 'tierlist' };
+                if (this.ctrl.isEditMode) query.edit = '1';
+                AppRouter.navigate('/item', { id: item.id || item.title }, query);
             });
         });
     }

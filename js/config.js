@@ -11,7 +11,7 @@ export const AppConfig = {
         botAvatar: 'assets/images/tetlabot.jpg',
         squadTitle: 'КОМАНДОВАНИЕ',
         // Убрали лишних людей из боковой панели Hero, оставили только костяк
-        squadMembers: ['bagerca', 'angel','nikita','dragon','tetla'] 
+        squadMembers: ['bagerca', 'angel','nikita','dragon','ayyysms','roma',] 
     },
     system: {
         osVersion: 'v5.6',

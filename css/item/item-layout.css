@@ -1,116 +1,185 @@
 /* css/item/item-layout.css */
 
 .media-item-page {
-    position: relative; 
-    width: 100vw; 
-    min-height: 100vh;
-    background: var(--color-bg-dark); 
-    display: flex; 
-    flex-direction: column; 
-    z-index: 100;
-    --item-color: #ff2d95; /* Дефолтный цвет, переопределяется в JS */
+position: relative;
+width: 100vw;
+min-height: 100vh;
+background: var(--color-bg-dark);
+display: flex;
+flex-direction: column;
+z-index: 100;
+--item-color: #ff2d95;
 }
 
 /* =========================================
-   ПОЛНОЕ СКРЫТИЕ СКРОЛЛБАРОВ НА СТРАНИЦЕ
-   ========================================= */
-.media-item-page, 
+ПОЛНОЕ СКРЫТИЕ СКРОЛЛБАРОВ НА СТРАНИЦЕ
+========================================= */
+.media-item-page,
 .media-item-page * {
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* IE/Edge */
+scrollbar-width: none !important;
+-ms-overflow-style: none !important;
 }
 .media-item-page::-webkit-scrollbar,
 .media-item-page *::-webkit-scrollbar {
-    display: none !important; /* Chrome/Safari/Opera */
-    width: 0 !important;
-    height: 0 !important;
+display: none !important;
+width: 0 !important;
+height: 0 !important;
 }
 
 .item-cinematic-bg {
-    position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background-size: cover; background-position: center 20%;
-    filter: blur(40px) brightness(0.3) saturate(1.2);
-    opacity: 0.6; transition: background-image 0.5s ease;
-    mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+position: absolute; inset: 0; z-index: 0; pointer-events: none;
+background-size: cover; background-position: center 20%;
+filter: blur(40px) brightness(0.3) saturate(1.2);
+opacity: 0.6; transition: background-image 0.5s ease;
+mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+-webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
 }
 
 .item-top-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    max-width: 1650px; width: 100%; margin: 0 auto;
-    padding: 30px 40px 15px 40px; position: relative; z-index: 10;
+display: flex; justify-content: space-between; align-items: center;
+max-width: 1650px; width: 100%; margin: 0 auto;
+padding: 30px 40px 15px 40px; position: relative; z-index: 10;
+flex-shrink: 0;
 }
 
 .btn-item-back {
-    background: rgba(0,0,0,0.8); border-color: var(--item-color); color: var(--item-color);
+background: rgba(0,0,0,0.8); border-color: var(--item-color); color: var(--item-color);
 }
-
 .btn-item-back:hover {
-    background: var(--item-color); color: var(--color-text-dark); box-shadow: 0 0 15px var(--item-color);
+background: var(--item-color); color: var(--color-text-dark); box-shadow: 0 0 15px var(--item-color);
 }
 
 .item-status-badge {
-    padding: 8px 16px; background: color-mix(in srgb, var(--item-color) 20%, transparent);
-    color: var(--item-color); border: 1px solid var(--item-color); border-radius: 6px;
-    font-family: var(--font-tech); font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
-    box-shadow: 0 0 15px color-mix(in srgb, var(--item-color) 40%, transparent); transition: all var(--transition-normal);
+padding: 8px 16px; background: color-mix(in srgb, var(--item-color) 20%, transparent);
+color: var(--item-color); border: 1px solid var(--item-color); border-radius: 6px;
+font-family: var(--font-tech); font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+box-shadow: 0 0 15px color-mix(in srgb, var(--item-color) 40%, transparent); transition: all var(--transition-normal);
 }
 
-.item-content-wrapper { 
-    flex-grow: 1; position: relative; z-index: 10; max-width: 1650px; 
-    margin: 0 auto; width: 100%; padding: 15px 40px 60px 40px; 
+.item-content-wrapper {
+flex-grow: 1; position: relative; z-index: 10; max-width: 1650px;
+margin: 0 auto; width: 100%; padding: 15px 40px 60px 40px;
 }
 
 /* =========================================
-   СЕТКИ (LAYOUTS) - УМНОЕ РАСПРЕДЕЛЕНИЕ МЕСТА
-   ========================================= */
-
-/* СТАНДАРТ (Игры/Кино, БЕЗ плейлиста) */
-.item-layout { 
-    display: grid; 
-    grid-template-columns: 320px 1fr; /* Постер слева, контент по центру (на всю ширь) */
-    gap: 40px; 
-    align-items: start; transition: opacity 0.3s, filter 0.3s; 
+СЕТКИ (LAYOUTS)
+========================================= */
+.item-layout {
+display: grid;
+grid-template-columns: 320px 1fr;
+gap: 40px;
+align-items: start; transition: opacity 0.3s, filter 0.3s;
 }
 
-/* СТАНДАРТ + ПЛЕЙЛИСТ */
-.media-item-page.has-playlist .item-layout { 
-    grid-template-columns: 320px 1fr 340px; 
+.media-item-page.has-playlist .item-layout {
+grid-template-columns: 320px 1fr 340px;
 }
 
-/* РЕЖИМ YOUTUBE (БЕЗ плейлиста) */
-.media-item-page.is-cinema .item-layout { 
-    display: flex; /* Центрируем видео */
-    justify-content: center;
-    max-width: 1200px;
-    margin: 0 auto;
+.media-item-page.is-cinema .item-layout {
+display: flex;
+justify-content: center;
+max-width: 1200px;
+margin: 0 auto;
 }
+
 .media-item-page.is-cinema #item-sidebar,
-.media-item-page.is-cinema .item-text-zone { 
-    display: none; 
+.media-item-page.is-cinema .item-text-zone {
+display: none;
 }
+
 .media-item-page.is-cinema .item-main {
-    width: 100%;
+width: 100%;
 }
 
-/* РЕЖИМ YOUTUBE + ПЛЕЙЛИСТ */
-.media-item-page.is-cinema.has-playlist .item-layout { 
-    display: grid; 
-    grid-template-columns: 1fr 360px; /* Видео слева, плейлист справа */
-    max-width: 1500px;
-    margin: 0 auto;
+.media-item-page.is-cinema.has-playlist .item-layout {
+display: grid;
+grid-template-columns: 1fr 360px;
+max-width: 1500px;
+margin: 0 auto;
 }
 
+/* =========================================
+МЯГКОЕ ПОЯВЛЕНИЕ СТРАНИЦЫ
+========================================= */
+.item-layout.page-enter {
+animation: item-soft-enter 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes item-soft-enter {
+from { opacity: 0; transform: translateY(14px); }
+to { opacity: 1; transform: translateY(0); }
+}
 
 /* АДАПТИВНОСТЬ СЕТКИ */
 @media (max-width: 1400px) {
-    .item-layout { grid-template-columns: 280px 1fr; gap: 20px; }
-    .media-item-page.has-playlist .item-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
-    .media-item-page.is-cinema.has-playlist .item-layout { display: flex; flex-direction: column; }
+.item-layout { grid-template-columns: 280px 1fr; gap: 20px; }
+.media-item-page.has-playlist .item-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+.media-item-page.is-cinema.has-playlist .item-layout { display: flex; flex-direction: column; }
 }
 
 @media (max-width: 768px) {
-    .item-top-nav { padding: 15px 20px; }
-    .item-content-wrapper { padding: 0 15px 40px 15px; }
-    .item-layout { display: flex; flex-direction: column; gap: 20px; }
+.item-top-nav { padding: 15px 20px; }
+.item-content-wrapper { padding: 0 15px 40px 15px; }
+.item-layout { display: flex; flex-direction: column; gap: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.item-layout.page-enter { animation: none; }
+}
+
+/* ============================================================
+ЭКРАН-КОКПИТ: ЛОК ВЫСОТЫ НА ДЕСКТОПЕ
+============================================================ */
+@media (min-width: 769px) {
+body.route-item {
+overflow: hidden !important;
+}
+
+.media-item-page {
+height: 100vh;
+height: 100dvh;
+min-height: 0;
+overflow: hidden;
+}
+
+.item-content-wrapper {
+flex: 1 1 auto;
+min-height: 0;
+display: flex;
+flex-direction: column;
+padding-bottom: 30px;
+}
+
+.item-layout {
+flex: 1 1 auto;
+min-height: 0;
+align-items: stretch;
+/* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ:
+В колонном flex-родителе автоматические боковые margin (margin:0 auto
+у кино-сетки) отменяют stretch и переводят элемент в shrink-to-fit.
+Так как iframe абсолютный (intrinsic-ширина = 0), сетка схлопывалась
+до ширины плейлиста и плеер исчезал. Явная ширина 100% делает размер
+определённым, и auto-margin снова просто центрирует в пределах max-width. */
+width: 100%;
+}
+}
+
+/* Гарантируем правильную сетку кино-режима на широких экранах:
+плеер слева, плейлист строго справа (не по центру). */
+@media (min-width: 1401px) {
+.media-item-page.is-cinema:not(.has-playlist) .item-layout {
+display: flex;
+justify-content: center;
+}
+.media-item-page.is-cinema.has-playlist .item-layout {
+display: grid;
+grid-template-columns: minmax(0, 1fr) 360px;
+}
+}
+
+/* СТЕК-РЕЖИМ (769–1400 с плейлистом): скроллится сам layout. */
+@media (min-width: 769px) and (max-width: 1400px) {
+.media-item-page.has-playlist .item-layout {
+overflow-y: auto;
+overscroll-behavior: contain;
+}
 }

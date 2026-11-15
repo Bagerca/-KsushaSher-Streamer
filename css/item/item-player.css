@@ -1,73 +1,70 @@
 /* css/item/item-player.css */
 
 /* =========================================
-   ВИДЕО ЗОНА
-   ========================================= */
+ВИДЕО ЗОНА
+========================================= */
 .item-video-zone {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
+width: 100%;
+display: flex;
+justify-content: flex-start;
 }
 
-.item-video-container { 
-    width: 100%; 
-    /* Убрали жесткие лимиты, теперь плеер занимает всё место в колонке */
-    max-width: 100%; 
-    aspect-ratio: 16/9; background: #000; border-radius: 12px; 
-    overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); position: relative; 
+.item-video-container {
+width: 100%;
+max-width: 100%;
+aspect-ratio: 16/9; background: #000; border-radius: 12px;
+overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); position: relative;
 }
 .item-video-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-/* Режим YouTube (когда вообще нет сайдбара и видео строго по центру экрана) */
+/* Режим YouTube (видео по центру) */
 .media-item-page.is-cinema:not(.has-playlist) .item-video-zone {
-    justify-content: center;
+justify-content: center;
 }
 .media-item-page.is-cinema:not(.has-playlist) .item-video-container {
-    max-width: 1400px;
+max-width: 1400px;
 }
-
 
 /* =========================================
-   ПРАВАЯ КОЛОНКА: ПЛЕЙЛИСТ
-   ========================================= */
-.item-playlist-col { 
-    background: rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); 
-    display: flex; flex-direction: column; overflow: hidden; 
-    position: sticky; top: 30px; 
-    height: auto; 
-    max-height: calc(100vh - 120px); 
-    align-self: start;
-    width: 100%; /* Занимает всю отведенную колонку */
+ПРАВАЯ КОЛОНКА: ПЛЕЙЛИСТ
+========================================= */
+.item-playlist-col {
+background: rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+display: flex; flex-direction: column; overflow: hidden;
+position: sticky; top: 30px;
+height: auto;
+max-height: calc(100vh - 120px);
+align-self: start;
+width: 100%;
 }
 
-.item-playlist-header { 
-    padding: 20px; font-family: var(--font-header); font-weight: 800; 
-    background: rgba(0,0,0,0.8); border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--color-text-white); 
-    flex-shrink: 0;
+.item-playlist-header {
+padding: 20px; font-family: var(--font-header); font-weight: 800;
+background: rgba(0,0,0,0.8); border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--color-text-white);
+flex-shrink: 0;
 }
 
-.item-playlist-list { 
-    flex-grow: 1; 
-    min-height: 0; 
-    overflow-y: auto; 
-    padding: 15px; 
-    display: flex; flex-direction: column; gap: 10px; 
-    scrollbar-width: thin;
-    scrollbar-color: var(--item-color) transparent;
+.item-playlist-list {
+flex-grow: 1;
+min-height: 0;
+overflow-y: auto;
+padding: 15px;
+display: flex; flex-direction: column; gap: 10px;
+scrollbar-width: thin;
+scrollbar-color: var(--item-color) transparent;
 }
-
 .item-playlist-list::-webkit-scrollbar { width: 4px; }
 .item-playlist-list::-webkit-scrollbar-track { background: transparent; }
-.item-playlist-list::-webkit-scrollbar-thumb { 
-    background: var(--item-color); 
-    border-radius: 4px; 
-    box-shadow: 0 0 10px var(--item-color); 
+.item-playlist-list::-webkit-scrollbar-thumb {
+background: var(--item-color);
+border-radius: 4px;
+box-shadow: 0 0 10px var(--item-color);
 }
 
-.item-playlist-card { 
-    display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px; 
-    border-radius: 8px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; 
-    flex-shrink: 0; 
+.item-playlist-card {
+display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px;
+border-radius: 8px; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+flex-shrink: 0;
 }
 .item-playlist-card:hover { background: rgba(255,255,255,0.08); transform: translateX(-5px); }
 .item-playlist-card.active { background: color-mix(in srgb, var(--item-color) 20%, transparent); border-color: var(--item-color); }
@@ -94,19 +91,73 @@
 .p-equalizer span:nth-child(1) { animation-delay: 0.0s; }
 .p-equalizer span:nth-child(2) { animation-delay: 0.2s; }
 .p-equalizer span:nth-child(3) { animation-delay: 0.4s; }
-
 @keyframes eq-play { 0% { height: 3px; } 100% { height: 14px; } }
 
 @media (max-width: 1400px) {
-    .item-playlist-col { position: static; max-height: 500px; }
+.item-playlist-col { position: static; max-height: 500px; }
 }
 
 @media (max-width: 768px) {
-    .item-playlist-list { 
-        flex-direction: row; overflow-x: auto; overflow-y: hidden; 
-        padding: 10px 15px; -webkit-overflow-scrolling: touch;
-    }
-    .item-playlist-card { flex-direction: column; width: 160px; align-items: flex-start; }
-    .item-playlist-card:hover { transform: translateY(-3px); transform: translateX(0); }
-    .p-thumb { width: 100%; height: 90px; }
+.item-playlist-list {
+flex-direction: row; overflow-x: auto; overflow-y: hidden;
+padding: 10px 15px; -webkit-overflow-scrolling: touch;
+}
+.item-playlist-card { flex-direction: column; width: 160px; align-items: flex-start; }
+.item-playlist-card:hover { transform: translateY(-3px); transform: translateX(0); }
+.p-thumb { width: 100%; height: 90px; }
+}
+
+/* ============================================================
+ЭКРАН-КОКПИТ: ПЛЕЕР
+Без container-queries (они ломали YouTube-режим). Плеер просто
+ограничивается по высоте через viewport-формулу и центрируется.
+Так он всегда видим и никогда не выпадает из потока.
+============================================================ */
+@media (min-width: 769px) {
+.item-video-zone {
+flex: 0 0 auto;
+min-height: 0;
+}
+
+/* Игры / Кино: оставляем место под шапку и текстовую зону */
+.media-item-page:not(.is-cinema) .item-video-container {
+width: 100%;
+max-width: calc((100vh - 300px) * 16 / 9);
+max-width: calc((100dvh - 300px) * 16 / 9);
+margin-inline: auto;
+}
+
+/* YouTube: текстовой зоны нет, поэтому плеер крупнее и по центру */
+.media-item-page.is-cinema:not(.has-playlist) .item-video-container,
+.media-item-page.is-cinema.has-playlist .item-video-container {
+width: 100%;
+max-width: calc((100vh - 180px) * 16 / 9);
+max-width: calc((100dvh - 180px) * 16 / 9);
+margin-inline: auto;
+}
+
+.item-playlist-col {
+position: static;
+top: auto;
+align-self: stretch;
+max-height: none;
+min-height: 0;
+}
+}
+
+/* СТЕК-РЕЖИМ (769–1400 с плейлистом): плеер на всю ширину,
+скроллится весь layout, плейлист фиксирует высоту. */
+@media (min-width: 769px) and (max-width: 1400px) {
+.media-item-page.has-playlist .item-video-zone {
+flex: 0 0 auto;
+}
+.media-item-page.has-playlist .item-video-container {
+width: 100%;
+max-width: none;
+margin-inline: 0;
+}
+.media-item-page.has-playlist .item-playlist-col {
+flex: 0 0 auto;
+max-height: 500px;
+}
 }

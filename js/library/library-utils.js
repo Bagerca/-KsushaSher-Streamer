@@ -1,16 +1,13 @@
 /* js/library/library-utils.js */
+// Нормализация статусов теперь живёт в едином сервисе области поиска.
+// Ре-экспорт сохраняет совместимость всех существующих импортов.
+export { normalizeStatus } from '../services/search-scope.js';
 
+// Цвета вкладок — только токены из variables.css, без хардкода.
 export const TAB_COLORS = {
-    'completed': '#39ff14',
-    'playing': '#00ccff',
-    'on-hold': '#ffd700',
-    'dropped': '#ff4444',
-    'suggested': '#ff2d95'
+  'completed': 'var(--color-neon-green)',
+  'playing': 'var(--color-accent-blue)',
+  'on-hold': 'var(--color-warning-yellow)',
+  'dropped': 'var(--color-danger-red)',
+  'suggested': 'var(--color-neon-pink)'
 };
-
-// Объединяем статусы кино и игр под общие знаменатели вкладок
-export function normalizeStatus(status) {
-    if (status === 'watched') return 'completed';
-    if (status === 'watching') return 'playing';
-    return status || 'unknown';
-}
