@@ -1,88 +1,84 @@
 /* css/archive/archive-card.css */
 
 .archive-card-container.fold-out {
-    opacity: 0 !important;
-    transform: scale(0.85) translateY(30px) !important;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    pointer-events: none;
+  opacity: 0 !important;
+  transform: scale(0.85) translateY(30px) !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: none;
 }
 
 @keyframes card-load { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 .archive-card-container.animate-entry { opacity: 0; animation: card-load 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
-.archive-card-container { 
-    display: block; position: relative; z-index: 1; background: transparent; 
-    perspective: 1000px; transform-style: preserve-3d; 
-    aspect-ratio: 2/3; 
+.archive-card-container {
+  display: block; position: relative; z-index: 1; background: transparent;
+  perspective: 1000px; transform-style: preserve-3d;
+  aspect-ratio: 2/3;
 }
 .archive-card-container.is-youtube { aspect-ratio: 16/9; }
 
-.procedural-placeholder { 
-    position: absolute; inset: 0; border-radius: 11px; 
-    display: flex; align-items: center; justify-content: center; 
-    background: radial-gradient(circle at center, rgba(10,12,18,0.9), var(--color-bg-dark) 100%); 
-    z-index: 1; overflow: hidden; transition: opacity 0.5s ease; 
+.procedural-placeholder {
+  position: absolute; inset: 0; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at center, rgba(10,12,18,0.9), var(--color-bg-dark) 100%);
+  z-index: 1; overflow: hidden; transition: opacity 0.5s ease;
 }
 .procedural-placeholder::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 20px 20px; background-position: center; }
 .placeholder-letter { font-family: var(--font-header); font-size: 3.5rem; font-weight: 900; z-index: 2; user-select: none; opacity: 0.8; }
 
-.card-layer { 
-    position: absolute; inset: 0; border-radius: 12px; 
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    background-clip: padding-box; box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
-    background-size: cover; background-position: center center; 
-    background-repeat: no-repeat; min-width: 0; backface-visibility: hidden; 
+.card-layer {
+  position: absolute; inset: 0; border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-clip: padding-box; box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+  background-size: cover; background-position: center center;
+  background-repeat: no-repeat; min-width: 0; backface-visibility: hidden;
 }
-
-.layer-front { 
-    z-index: 10; background-color: var(--color-text-dark); overflow: hidden; display: flex; flex-direction: column; 
-    transition: border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1); transform: translateZ(0); 
+.layer-front {
+  z-index: 10; background-color: var(--color-text-dark); overflow: hidden; display: flex; flex-direction: column;
+  transition: border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1); transform: translateZ(0);
 }
-
-.layer-front::after { 
-    content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; 
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.0) 20%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.0) 80%, transparent 100%); 
-    transform: rotate(30deg); pointer-events: none; z-index: 5; opacity: 0; 
-    transition: left 0.8s ease-in-out, opacity 0.4s ease; 
+.layer-front::after {
+  content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.0) 20%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.0) 80%, transparent 100%);
+  transform: rotate(30deg); pointer-events: none; z-index: 5; opacity: 0;
+  transition: left 0.8s ease-in-out, opacity 0.4s ease;
 }
 .archive-card-container:hover .layer-front::after { left: 150%; opacity: 1; }
 
-.layer-img-bg { 
-    position: absolute; inset: -2px; background-size: cover; background-position: center center; 
-    z-index: 3; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
+.layer-img-bg {
+  position: absolute; inset: -2px; background-size: cover; background-position: center center;
+  z-index: 3; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
 }
 .archive-card-container:hover .layer-front .layer-img-bg { transform: scale(1.08); filter: brightness(0.65); }
 
 .layer-content { position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10; border-radius: 11px; box-shadow: inset 0 0 0 1px var(--color-text-dark); pointer-events: none; }
-
 .card-info, .youtube-play-overlay, .yt-playlist-badge, .cyber-rating-badge { pointer-events: auto; }
 
 /* ИСПРАВЛЕНИЕ: Центрирование контента внутри инфоблока */
-.card-info { 
-    margin-top: auto; padding: 30px 15px 15px 15px;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.7) 60%, transparent 100%); 
-    display: flex; flex-direction: column; align-items: center; /* Центрируем по горизонтали */
-    border-radius: 0 0 11px 11px; min-width: 0; 
+.card-info {
+  margin-top: auto; padding: 30px 15px 15px 15px;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.7) 60%, transparent 100%);
+  display: flex; flex-direction: column; align-items: center; /* Центрируем по горизонтали */
+  border-radius: 0 0 11px 11px; min-width: 0;
 }
 
 /* ИСПРАВЛЕНИЕ: Центрирование текста заголовка */
-.card-title { 
-    font-family: var(--font-tech); color: var(--color-text-white); font-size: 1.05rem; font-weight: 700; margin-bottom: 0; 
-    line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.9); white-space: nowrap; overflow: hidden; 
-    text-overflow: ellipsis; width: 100%; display: block; text-align: center; 
+.card-title {
+  font-family: var(--font-tech); color: var(--color-text-white); font-size: 1.05rem; font-weight: 700; margin-bottom: 0;
+  line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.9); white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; width: 100%; display: block; text-align: center;
 }
 
-.cyber-status { 
-    font-family: var(--font-tech); font-size: 0.75rem; color: var(--custom-color); 
-    text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; 
-    text-shadow: 0 0 5px rgba(0,0,0,0.8); transition: color 0.5s ease; display: flex; align-items: center;
-    justify-content: center;
+.cyber-status {
+  font-family: var(--font-tech); font-size: 0.75rem; color: var(--custom-color);
+  text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px;
+  text-shadow: 0 0 5px rgba(0,0,0,0.8); transition: color 0.5s ease; display: flex; align-items: center;
+  justify-content: center;
 }
-
-.suggested-status { 
-    color: var(--color-text-white); background: rgba(0,0,0,0.65); padding: 3px 8px; border-radius: 4px; 
-    border: 1px solid rgba(255,255,255,0.15); display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px; width: fit-content; margin-bottom: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
+.suggested-status {
+  color: var(--color-text-white); background: rgba(0,0,0,0.65); padding: 3px 8px; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.15); display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; width: fit-content; margin-bottom: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 .suggested-status i { font-size: 0.7rem; }
 
@@ -110,8 +106,108 @@
 .archive-card-container:hover .youtube-play-overlay { background: rgba(0,0,0,0.4); }
 .archive-card-container:hover .youtube-play-overlay i { transform: scale(1.1); filter: drop-shadow(0 0 5px rgba(0,0,0,1)) drop-shadow(0 0 15px #ff0000); opacity: 1; }
 
+/* =========================================
+   СОСТОЯНИЕ «ПРОСМОТРЕНО» (YouTube)
+   Гаснет ВЕСЬ пак: передний слой через filter,
+   задние слои — через тёмную вуаль (::after), чтобы
+   зелёная рамка задних слоёв не обесцвечивалась фильтром.
+   Табличка — визуальный близнец бейджа количества видео.
+   ========================================= */
+
+/* Передний слой: рамка зелёная в покое */
+.archive-card-container.is-watched .layer-front {
+  border-color: color-mix(in srgb, var(--status-completed) 45%, transparent);
+}
+.archive-card-container.is-watched .layer-img-bg {
+  filter: grayscale(0.65) brightness(0.55);
+}
+.archive-card-container.is-watched .procedural-placeholder { opacity: 0.6; }
+
+/* Задние слои: тёмная вуаль поверх картинки + зелёная рамка.
+  特异性 .card-layer.layer-back специально выше, чем у hover-правил
+   в archive-stacks-3d.css (он подключён позже и иначе перекрасил бы рамку). */
+.archive-card-container.is-watched .card-layer.layer-back,
+.archive-card-container.is-watched .card-layer.layer-back-deep {
+  border-color: color-mix(in srgb, var(--status-completed) 40%, transparent);
+}
+.archive-card-container.is-watched .layer-back::after,
+.archive-card-container.is-watched .layer-back-deep::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: color-mix(in srgb, var(--color-bg-dark) 62%, transparent);
+  pointer-events: none;
+  transition: background 0.5s ease;
+}
+
+/* Ховер: пак «оживает», но остаётся в зелёной семантике */
+.archive-card-container.is-watched:hover .layer-front .layer-img-bg {
+  filter: grayscale(0.3) brightness(0.75);
+}
+.archive-card-container.is-watched:hover .card-layer.layer-front {
+  border-color: color-mix(in srgb, var(--status-completed) 70%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-text-dark) 30%, transparent),
+    0 0 20px color-mix(in srgb, var(--status-completed) 45%, transparent);
+}
+.archive-card-container.is-watched:hover .card-layer.layer-back,
+.archive-card-container.is-watched:hover .card-layer.layer-back-deep {
+  border-color: color-mix(in srgb, var(--status-completed) 60%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--status-completed) 35%, transparent);
+}
+.archive-card-container.is-watched:hover .layer-back::after,
+.archive-card-container.is-watched:hover .layer-back-deep::after {
+  background: color-mix(in srgb, var(--color-bg-dark) 30%, transparent);
+}
+
+/* Табличка «ПРОСМОТРЕНО» — тот же стиль, что .yt-playlist-badge */
+.watched-stamp {
+  position: absolute; top: 10px; left: 10px; z-index: 31;
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 6px;
+  font-family: var(--font-tech); font-weight: 700; font-size: 0.85rem;
+  color: var(--color-text-white);
+  background: rgba(5, 5, 8, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+  animation: watched-stamp-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.watched-stamp i {
+  color: var(--status-completed);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--status-completed) 50%, transparent));
+  transition: opacity 0.5s ease;
+}
+.archive-card-container:hover .watched-stamp {
+  border-color: var(--status-completed);
+  box-shadow: 0 0 10px var(--status-completed);
+}
+.archive-card-container:hover .watched-stamp i { opacity: 1; }
+
+@keyframes watched-stamp-in {
+  0%   { opacity: 0; transform: scale(0.7); }
+  60%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Компакт и мобильные: табличка сжимается до иконки */
+.compact-mode .watched-stamp .watched-stamp-text { display: none; }
+.compact-mode .watched-stamp { padding: 5px 7px; }
+
 @media (max-width: 768px) {
-    .cyber-status { display: none !important; }
-    .card-info { padding: 20px 10px 10px 10px !important; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%) !important; }
-    .card-title { font-size: 0.85rem !important; margin-bottom: 0 !important; text-align: center !important; }
+  .cyber-status { display: none !important; }
+  .card-info { padding: 20px 10px 10px 10px !important; background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.4) 100%) !important; }
+  .card-title { font-size: 0.85rem !important; margin-bottom: 0 !important; text-align: center !important; }
+  .watched-stamp .watched-stamp-text { display: none; }
+  .watched-stamp { padding: 5px 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watched-stamp { animation: none; }
+  .archive-card-container.is-watched .layer-img-bg { transition: none; }
+  .archive-card-container.is-watched .layer-back::after,
+  .archive-card-container.is-watched .layer-back-deep::after { transition: none; }
 }
